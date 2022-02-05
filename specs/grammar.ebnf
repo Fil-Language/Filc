@@ -1,0 +1,87 @@
+/* _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+ *     Created by Kevin Traini
+ *
+ *     Fil compiler
+ *
+ *     GNU General Public License v3.0
+ * _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+ */
+
+// Grammar of the language
+// without lambda, interface, abstract (to add later)
+// The entry point is 'program'
+
+program ::= package { import } { expr };
+
+package ::= 'package' identifier;
+
+import ::= 'import' identifier [ 'as' identifier ] 'from' file_identifier;
+
+expr ::= decl_class
+       | decl_var
+       | decl_function
+       | assign
+       | control
+       | loop
+       | calcul
+       | function_call
+       | method_call
+       | return
+       | new
+       | 'this' | 'null'
+       | '(' expr ')';
+list_expr ::= expr { ',' expr };
+
+decl_class ::= [ 'export' ] [ visibility ] [ 'open' ] 'class' identifier '(' [ list_param ] ')' [ ':' identifier ] '{' [ class_body ] '}';
+class_body ::= { decl_var | decl_function | constructor };
+constructor ::= 'constructor' '{' { expr } '}';
+
+decl_var ::= [ 'export' ] visibility ('val' | 'var') identifier [ ':' [ '*' ] identifier ] [ '=' expr ] { ',' identifier [ ':' identifier ] [ '=' expr ]};
+
+decl_function ::= [ 'export' ] visibility 'fun' identifier '(' [ list_param ] ')' [ ':' identifier ] function_body;
+function_body ::= ('=' expr)
+                | ('(' expr ')')
+                | ('{' { expr } '}');
+
+assign ::= identifier assign_operator expr;
+assign_operator ::= [ binary_operator ] '=';
+
+control ::= if | switch;
+if ::= 'if' '(' expr ')' control_body { 'elif' '(' expr ')' control_body } [ 'else' control_body ];
+control_body ::= expr
+          | ('{' { expr } '}');
+switch ::= 'switch' '(' expr ')' '{' switch_body '}';
+switch_body ::= { (('case' expr) | 'default') '->' control_body };
+
+loop ::= for | while;
+for ::= 'for' for_condition control_body;
+for_condition ::= (identifier 'in' expr)
+                | ([ expr ] ';' [ expr ] ';' [ expr ]);
+while ::= 'while' '(' expr ')' control_body;
+
+calcul ::= unary_calcul | binary_calcul;
+unary_calcul ::= (unary_operator expr)
+               | (expr unary_operator);
+binary_calcul ::= expr binary_operator expr;
+unary_operator ::= '-' | '!' | '*' | '&' | '++' | '--';
+binary_operator ::= '+' | '-' | '*' | '/' | '%' | '<<' | '>>' | '&&' | '||' | '&' | '|' | '^';
+
+function_call ::= identifier '(' [ list_expr ] ')';
+method_call ::= expr '.' function_call;
+
+return ::= 'return' expr;
+
+new ::= 'new' identifier '(' [ list_expr ] ')';
+
+visibility ::= 'public' | 'protected' | 'internal' | 'private';
+list_param ::= param { ',' param };
+param ::= visibility ('val' | 'var') identifier ':' [ '*' | '&' ] identifier [ '=' expr ];
+
+identifier ::= letter { letter | digit };
+file_identifier ::= (identifier { '.' identifier })
+                  | string;
+
+letter ::= 'a'-'z' | 'A'-'Z';
+digit ::= '0'-'9';
+
+string ::= '"' { '[~"]' } '"';
