@@ -1,0 +1,12 @@
+name: CI
+
+on:
+  [ push, pull_request ]
+
+jobs:
+  nothing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: do nothing
+        run: echo "Hello World!"
