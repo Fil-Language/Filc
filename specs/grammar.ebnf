@@ -53,12 +53,13 @@ lambda_type ::= '(' type_list ')' '->' type;
 assign ::= identifier assign_operator expr;
 assign_operator ::= [ binary_operator ] '=';
 
-control ::= if | switch;
+control ::= if | switch | exception;
 if ::= 'if' '(' expr ')' control_body { 'elif' '(' expr ')' control_body } [ 'else' control_body ];
 control_body ::= expr
           | ('{' { expr } '}');
 switch ::= 'switch' '(' expr ')' '{' switch_body '}';
 switch_body ::= { (('case' expr) | 'default') '->' control_body };
+exception ::= 'try' '{' { expr } '}' { 'catch' '(' identifier identifier ')' '{' { expr } '}' };
 
 loop ::= for | while;
 for ::= 'for' for_condition control_body;
