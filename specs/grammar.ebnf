@@ -13,7 +13,7 @@
 
 program ::= package { import } { expr };
 
-package ::= 'package' identifier;
+package ::= 'package' (identifier { '.' identifier });
 
 import ::= 'import' identifier [ 'as' identifier ] 'from' file_identifier;
 
