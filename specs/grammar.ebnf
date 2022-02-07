@@ -8,7 +8,7 @@
  */
 
 // Grammar of the language
-// without lambda, interface, abstract (TODO add later)
+// without interface, abstract (TODO add later)
 // The entry point is 'program'
 
 program ::= package { import } { expr };
@@ -20,6 +20,7 @@ import ::= 'import' [ identifier [ 'as' identifier ] 'from' ] file_identifier;
 expr ::= decl_class
        | decl_var
        | decl_function
+       | lambda
        | assign
        | control
        | loop
@@ -36,13 +37,16 @@ decl_class ::= [ 'export' ] [ visibility ] [ 'open' ] 'class' identifier '(' [ l
 class_body ::= { decl_var | decl_method | constructor };
 constructor ::= 'constructor' '{' { expr } '}';
 
-decl_var ::= [ 'export' ] visibility ('val' | 'var') identifier [ ':' [ '*' ] identifier ] [ '=' expr ] { ',' identifier [ ':' identifier ] [ '=' expr ]};
+decl_var ::= [ 'export' ] visibility ('val' | 'var') identifier [ ':' [ '*' ] type ] [ '=' expr ] { ',' identifier [ ':' type ] [ '=' expr ]};
 
-decl_method ::= visibility 'fun' identifier '(' [ list_param ] ')' [ ':' identifier ] function_body;
-decl_function ::= [ 'export' ] 'fun' identifier '(' [ list_param ] ')' [ ':' identifier ] function_body;
+decl_method ::= visibility 'fun' identifier '(' [ list_param ] ')' [ ':' type ] function_body;
+decl_function ::= [ 'export' ] 'fun' identifier '(' [ list_param ] ')' [ ':' type ] function_body;
 function_body ::= ('=' expr)
                 | ('(' expr ')')
                 | ('{' { expr } '}');
+
+lambda ::= '(' list_identifier ')' '->' function_body;
+lambda_type ::= '(' type_list ')' '->' type;
 
 assign ::= identifier assign_operator expr;
 assign_operator ::= [ binary_operator ] '=';
@@ -76,11 +80,15 @@ new ::= 'new' identifier '(' [ list_expr ] ')';
 
 visibility ::= 'public' | 'protected' | 'internal' | 'private';
 list_param ::= param { ',' param };
-param ::= visibility ('val' | 'var') identifier ':' [ '*' | '&' ] identifier [ '=' expr ];
+param ::= visibility ('val' | 'var') identifier ':' [ '*' | '&' ] type [ '=' expr ];
 
 identifier ::= letter { letter | digit };
+list_identifier ::= identifier { ',' identifier };
 file_identifier ::= (identifier { '.' identifier })
                   | string;
+
+type ::= identifier | lambda_type;
+type_list ::= type { ',' type };
 
 letter ::= 'a'-'z' | 'A'-'Z';
 digit ::= '0'-'9';
