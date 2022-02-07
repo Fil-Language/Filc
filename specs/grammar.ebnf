@@ -8,7 +8,7 @@
  */
 
 // Grammar of the language
-// without lambda, interface, abstract (to add later)
+// without lambda, interface, abstract (TODO add later)
 // The entry point is 'program'
 
 program ::= package { import } { expr };
@@ -33,12 +33,13 @@ expr ::= decl_class
 list_expr ::= expr { ',' expr };
 
 decl_class ::= [ 'export' ] [ visibility ] [ 'open' ] 'class' identifier '(' [ list_param ] ')' [ ':' identifier ] '{' [ class_body ] '}';
-class_body ::= { decl_var | decl_function | constructor };
+class_body ::= { decl_var | decl_method | constructor };
 constructor ::= 'constructor' '{' { expr } '}';
 
 decl_var ::= [ 'export' ] visibility ('val' | 'var') identifier [ ':' [ '*' ] identifier ] [ '=' expr ] { ',' identifier [ ':' identifier ] [ '=' expr ]};
 
-decl_function ::= [ 'export' ] visibility 'fun' identifier '(' [ list_param ] ')' [ ':' identifier ] function_body;
+decl_method ::= visibility 'fun' identifier '(' [ list_param ] ')' [ ':' identifier ] function_body;
+decl_function ::= [ 'export' ] 'fun' identifier '(' [ list_param ] ')' [ ':' identifier ] function_body;
 function_body ::= ('=' expr)
                 | ('(' expr ')')
                 | ('{' { expr } '}');
