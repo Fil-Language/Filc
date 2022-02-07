@@ -15,7 +15,7 @@ program ::= package { import } { expr };
 
 package ::= 'package' (identifier { '.' identifier });
 
-import ::= 'import' identifier [ 'as' identifier ] 'from' file_identifier;
+import ::= 'import' [ identifier [ 'as' identifier ] 'from' ] file_identifier;
 
 expr ::= decl_class
        | decl_var
