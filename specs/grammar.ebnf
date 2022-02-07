@@ -8,7 +8,6 @@
  */
 
 // Grammar of the language
-// without interface (TODO add later)
 // The entry point is 'program'
 
 program ::= package { import } { expr };
@@ -18,6 +17,7 @@ package ::= 'package' (identifier { '.' identifier });
 import ::= 'import' [ identifier [ 'as' identifier ] 'from' ] file_identifier;
 
 expr ::= decl_class
+       | decl_interface
        | decl_var
        | decl_function
        | lambda
@@ -33,7 +33,9 @@ expr ::= decl_class
        | '(' expr ')';
 list_expr ::= expr { ',' expr };
 
-decl_class ::= [ 'export' ] [ visibility ] [ 'open' | 'abstract' ] 'class' identifier '(' [ list_param ] ')' [ ':' identifier ] '{' [ class_body ] '}';
+decl_interface ::= [ 'export' ] 'interface' identifier '(' [ list_param ] ')' [ ':' list_identifier ] [ '{' class_body '}' ];
+
+decl_class ::= [ 'export' ] [ 'open' | 'abstract' ] 'class' identifier '(' [ list_param ] ')' [ ':' list_identifier ] [ '{' class_body '}' ];
 class_body ::= { decl_var | decl_method | constructor };
 constructor ::= 'constructor' '{' { expr } '}';
 
@@ -82,7 +84,7 @@ visibility ::= 'public' | 'protected' | 'internal' | 'private';
 list_param ::= param { ',' param };
 param ::= visibility ('val' | 'var') identifier ':' [ '*' | '&' ] type [ '=' expr ];
 
-identifier ::= letter { letter | digit };
+identifier ::= letter { char };
 list_identifier ::= identifier { ',' identifier };
 file_identifier ::= (identifier { '.' identifier })
                   | string;
@@ -92,5 +94,6 @@ type_list ::= type { ',' type };
 
 letter ::= 'a'-'z' | 'A'-'Z';
 digit ::= '0'-'9';
+char ::= letter | digit | '_' | '-';
 
 string ::= '"' { '[~"]' } '"';
