@@ -29,14 +29,14 @@ expr ::= decl_class
        | method_call
        | return
        | new
-       | 'this' | 'null'
+       | 'this' | 'null' | 'super'
        | '(' expr ')';
 list_expr ::= expr { ',' expr };
 
 decl_interface ::= [ 'export' ] 'interface' identifier '(' [ list_field ] ')' [ ':' list_identifier ] [ '{' interface_body '}' ];
 interface_body ::= { decl_var | decl_method };
 
-decl_class ::= [ 'export' ] [ 'open' | 'abstract' ] 'class' identifier '(' [ list_field ] ')' [ ':' list_identifier ] [ '{' class_body '}' ];
+decl_class ::= [ 'export' ] [ 'open' | 'abstract' ] 'class' identifier [ '(' [ list_field ] ')' ] [ ':' list_identifier ] [ '{' class_body '}' ];
 class_body ::= { decl_var | decl_method | constructor };
 constructor ::= 'constructor' '{' { expr } '}';
 
