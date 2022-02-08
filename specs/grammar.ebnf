@@ -33,9 +33,9 @@ expr ::= decl_class
        | '(' expr ')';
 list_expr ::= expr { ',' expr };
 
-decl_interface ::= [ 'export' ] 'interface' identifier '(' [ list_param ] ')' [ ':' list_identifier ] [ '{' class_body '}' ];
+decl_interface ::= [ 'export' ] 'interface' identifier '(' [ list_field ] ')' [ ':' list_identifier ] [ '{' class_body '}' ];
 
-decl_class ::= [ 'export' ] [ 'open' | 'abstract' ] 'class' identifier '(' [ list_param ] ')' [ ':' list_identifier ] [ '{' class_body '}' ];
+decl_class ::= [ 'export' ] [ 'open' | 'abstract' ] 'class' identifier '(' [ list_field ] ')' [ ':' list_identifier ] [ '{' class_body '}' ];
 class_body ::= { decl_var | decl_method | constructor };
 constructor ::= 'constructor' '{' { expr } '}';
 
@@ -82,8 +82,10 @@ return ::= 'return' expr;
 new ::= 'new' identifier '(' [ list_expr ] ')';
 
 visibility ::= 'public' | 'protected' | 'internal' | 'private';
+list_field ::= field { ',' field };
+field ::= visibility ('val' | 'var') identifier ':' [ '*' | '&' ] type [ '=' expr ];
 list_param ::= param { ',' param };
-param ::= visibility ('val' | 'var') identifier ':' [ '*' | '&' ] type [ '=' expr ];
+param ::= identifier ':' [ '*' | '&' ] type [ '=' expr ];
 
 identifier ::= letter { char };
 list_identifier ::= identifier { ',' identifier };
