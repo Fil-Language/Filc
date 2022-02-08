@@ -40,7 +40,7 @@ decl_class ::= [ 'export' ] [ 'open' | 'abstract' ] 'class' identifier '(' [ lis
 class_body ::= { decl_var | decl_method | constructor };
 constructor ::= 'constructor' '{' { expr } '}';
 
-decl_var ::= [ 'export' ] visibility ('val' | 'var') identifier [ ':' [ '*' ] type ] [ '=' expr ] { ',' identifier [ ':' type ] [ '=' expr ]};
+decl_var ::= [ 'export' ] visibility ('val' | 'var') identifier [ ':' type ] [ '=' expr ] { ',' identifier [ ':' type ] [ '=' expr ]};
 
 decl_method ::= visibility [ 'abstract' ] 'fun' identifier '(' [ list_param ] ')' [ ':' type ] [ function_body ];
 decl_function ::= [ 'export' ] 'fun' identifier '(' [ list_param ] ')' [ ':' type ] function_body;
@@ -93,7 +93,7 @@ list_identifier ::= identifier { ',' identifier };
 file_identifier ::= (identifier { '.' identifier })
                   | string;
 
-type ::= identifier | lambda_type;
+type ::= (identifier | lambda_type) { '*' | '[]' };
 type_list ::= type { ',' type };
 
 letter ::= 'a'-'z' | 'A'-'Z';
