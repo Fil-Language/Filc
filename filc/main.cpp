@@ -7,10 +7,13 @@
  * _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
  */
 
-#include <iostream>
+#include "CompilerOptions.h"
 
-int main()
+int main(int argc, char **argv)
 {
-    std::cout << "Hello, World!" << std::endl;
+    int parse_result = CompilerOptions::parse(argc, argv);
+    if (parse_result != 0)
+        return parse_result;
+
     return 0;
 }
