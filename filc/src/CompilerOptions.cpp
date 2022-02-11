@@ -10,8 +10,9 @@
 #include "CompilerOptions.h"
 
 #include <iostream>
-#include <string>
+#include <fstream>
 #include <cstring>
+#include "tools.h"
 
 using namespace std;
 
@@ -25,7 +26,7 @@ int CompilerOptions::parse(int argc, char **argv)
     }
 
     // Parse options
-    for (int i = 0; i < argc; ++i)
+    for (int i = 1; i < argc; ++i)
     {
         char *arg = argv[i];
 
@@ -35,20 +36,43 @@ int CompilerOptions::parse(int argc, char **argv)
             help();
             exit(0);
         }
-        if (strcmp(arg, "-v") == 0 ||
-            strcmp(arg, "--version") == 0)
+        else if (strcmp(arg, "-v") == 0 ||
+                 strcmp(arg, "--version") == 0)
         {
             version();
             exit(0);
         }
-        if (strcmp(arg, "-cpp") == 0)
+        else if (strcmp(arg, "-cpp") == 0)
         {
             _dest_language = CPP;
+        }
+        else // Input file
+        {
+            _input_file = arg;
         }
     }
 
     // Verify options
-    // nothing to verify
+    // Verify input file is specified
+    if (_input_file.empty())
+    {
+        cerr << "No input file specified" << endl;
+        exit(1);
+    }
+    // Verify input file correct extension
+    if (!tools::endsWith(_input_file, ".fil"))
+    {
+        cerr << "Input file must be a .fil file" << endl;
+        exit(1);
+    }
+    // Verify input file exists
+    ifstream input_file(_input_file);
+    if (!input_file.good())
+    {
+        cerr << "Input file does not exist" << endl;
+        exit(1);
+    }
+    input_file.close();
 
     return 0;
 }
@@ -57,6 +81,8 @@ void CompilerOptions::help()
 {
     version(false);
 
+    cout << endl;
+    cout << "Usage : filc <input file> [options...]" << endl;
     cout << endl;
     cout << "\t-h, --help       " << "Show this help" << endl;
     cout << "\t-v, --version    " << "Show the version" << endl;

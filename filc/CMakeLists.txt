@@ -54,11 +54,11 @@ include_directories(
 )
 
 set(filc_SRC
+        ${antlr4-GENERATED_SRC}
         ${PROJECT_SOURCE_DIR}/src/main.cpp
         ${PROJECT_SOURCE_DIR}/src/CompilerOptions.h
         ${PROJECT_SOURCE_DIR}/src/CompilerOptions.cpp
-        ${antlr4-GENERATED_SRC}
-        )
+        ${PROJECT_SOURCE_DIR}/src/tools.h)
 
 if (NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     set(flags_1 "-Wno-overloaded-virtual")

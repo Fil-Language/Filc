@@ -10,6 +10,8 @@
 #ifndef FILC_COMPILEROPTIONS_H
 #define FILC_COMPILEROPTIONS_H
 
+#include <string>
+
 #define VERSION "1.0"
 #define AUTHORS "Kevin Traini"
 #define LICENSE "GNU General Public License v3.0"
@@ -40,6 +42,7 @@ private:
 
 private: // Attributes
     inline static dest_language _dest_language = CPP;
+    inline static std::string _input_file;
 };
 
 
