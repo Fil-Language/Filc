@@ -18,6 +18,12 @@ using namespace std;
 
 int CompilerOptions::parse(int argc, char **argv)
 {
+    if (argc == 1)
+    { // If no arguments are given
+        help();
+        exit(0);
+    }
+
     // Parse options
     for (int i = 0; i < argc; ++i)
     {
@@ -49,7 +55,7 @@ int CompilerOptions::parse(int argc, char **argv)
 
 void CompilerOptions::help()
 {
-    version();
+    version(false);
 
     cout << endl;
     cout << "\t-h, --help       " << "Show this help" << endl;
@@ -57,15 +63,22 @@ void CompilerOptions::help()
     cout << "\t-cpp             " << "Pre-compile to cpp before use cpp compiler to obtain ass code" << endl;
 }
 
-void CompilerOptions::version()
+void CompilerOptions::version(bool isCalledDirectly)
 {
-    cout << "    _______ __    \n"
-            "   / ____(_) /____\n"
-            "  / /_  / / / ___/\n"
-            " / __/ / / / /__  \n"
-            "/_/   /_/_/\\___/  \n"
-            "                  " << endl;
-    cout << "Filc v" << VERSION << endl;
+    if (isCalledDirectly)
+    {
+        cout << "    _______ __             ___  ____ \n"
+                "   / ____(_) /____   _   _<  / / __ \\\n"
+                "  / /_  / / / ___/  | | / / / / / / /\n"
+                " / __/ / / / /__    | |/ / /_/ /_/ / \n"
+                "/_/   /_/_/\\___/    |___/_/(_)____/  \n"
+                "                                     " << endl;
+    }
+    else
+    {
+        cout << "Filc v" << VERSION << endl;
+    }
+
     cout << "Created by : " << AUTHORS << endl;
     cout << LICENSE << endl;
 }

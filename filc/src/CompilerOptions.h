@@ -34,7 +34,7 @@ public: // Methods
 private:
     static void help();
 
-    static void version();
+    static void version(bool isCalledDirectly = true);
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
