@@ -48,9 +48,9 @@ def pr_blue(to_print):
 os.mkdir(make_path)
 os.chdir(make_path)
 # Cmake
-subprocess.getoutput('cmake ..')
+subprocess.call(['cmake', '..'])
 # Make
-subprocess.getoutput('make')
+subprocess.call(['make'])
 
 filc = make_path + '/filc'
 
