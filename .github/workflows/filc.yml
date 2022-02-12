@@ -4,10 +4,15 @@ on:
   [ push, pull_request ]
 
 jobs:
-  test-options:
+  nothing:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: run script test_options
-        run: python3 filc/test/test_options
-      - run: ls
+      - run: echo "nothing"
+#  test-options:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: run script test_options
+#        run: python3 filc/test/test_options
+#      - run: ls
