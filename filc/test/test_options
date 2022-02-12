@@ -1,0 +1,129 @@
+#!/usr/bin/python3
+
+import os
+import subprocess
+import sys
+
+# _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+# Args
+
+show_pr = True
+path = ''
+first = True
+for arg in sys.argv:
+    if first:
+        path = arg
+        first = False
+        continue
+    if arg == '-np':
+        show_pr = False
+
+path = os.path.abspath(path)
+path = path[:-len('test_options')]
+make_path = path + '../out'
+
+
+# _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+# Utilities
+
+def pr_red(to_print):
+    if show_pr:
+        print("\033[31m {}\033[00m".format(to_print))
+
+
+def pr_green(to_print):
+    if show_pr:
+        print("\033[32m {}\033[00m".format(to_print))
+
+
+def pr_blue(to_print):
+    if show_pr:
+        print("\033[34m {}\033[00m".format(to_print))
+
+
+# _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+# Main code
+
+# Go to out dir
+os.chdir(make_path)
+# Cmake
+subprocess.getoutput('cmake ..')
+# Make
+subprocess.getoutput('make')
+
+filc = make_path + '/filc'
+
+# Tests
+nb_ok = 0
+nb = 0
+
+# Run with no args
+pr_blue('No args')
+out = subprocess.getoutput(filc)
+nb += 1
+if out.__contains__('Usage :'):
+    pr_green('Success')
+    nb_ok += 1
+else:
+    pr_red('Fail')
+# Run with -h and --help
+pr_blue('-h and --help')
+out = subprocess.getoutput(filc + ' -h')
+nb += 1
+if out.__contains__('Usage :'):
+    pr_green('Success')
+    nb_ok += 1
+else:
+    pr_red('Fail')
+out = subprocess.getoutput(filc + ' --help')
+nb += 1
+if out.__contains__('Usage :'):
+    pr_green('Success')
+    nb_ok += 1
+else:
+    pr_red('Fail')
+
+# Run with -v and --version
+pr_blue('-v and --version')
+out = subprocess.getoutput(filc + ' -v')
+nb += 1
+if out.__contains__('    _______ __      '):  # Begin of figlet Filc
+    pr_green('Success')
+    nb_ok += 1
+else:
+    pr_red('Fail')
+out = subprocess.getoutput(filc + ' --version')
+nb += 1
+if out.__contains__('    _______ __      '):  # Begin of figlet Filc
+    pr_green('Success')
+    nb_ok += 1
+else:
+    pr_red('Fail')
+
+# Run with a file not .fil
+pr_blue('a file not .fil')
+out = subprocess.getoutput(filc + ' test_options.py')
+nb += 1
+if out.__contains__('Input file must be a .fil file'):
+    pr_green('Success')
+    nb_ok += 1
+else:
+    pr_red('Fail')
+
+# Run with a file not existing
+pr_blue('a file not existing')
+out = subprocess.getoutput(filc + ' test_options_not_existing.fil')
+nb += 1
+if out.__contains__('Input file does not exist'):
+    pr_green('Success')
+    nb_ok += 1
+else:
+    pr_red('Fail')
+
+# Results
+print('\n')
+pr_blue('Results')
+if nb_ok == nb:
+    pr_green(f"Success on {nb_ok}/{nb} tests")
+else:
+    pr_red(f"Fail on {nb_ok}/{nb} tests")
