@@ -1,12 +1,12 @@
-name: CI
+name: filc
 
 on:
   [ push, pull_request ]
 
 jobs:
-  nothing:
+  test-options:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: do nothing
-        run: echo "Hello World!"
+      - name: run script test_options
+        run: python3 test/test_options.py
