@@ -48,6 +48,11 @@ int CompilerOptions::parse(int argc, char **argv)
         }
         else // Input file
         {
+            if (!_input_file.empty())
+            {
+                cerr << "Multiple input files given" << endl;
+                exit(1);
+            }
             _input_file = arg;
         }
     }
