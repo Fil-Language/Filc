@@ -45,6 +45,7 @@ def pr_blue(to_print):
 # Main code
 
 # Go to out dir
+os.mkdir(make_path)
 os.chdir(make_path)
 # Cmake
 subprocess.getoutput('cmake ..')
@@ -125,5 +126,7 @@ print('\n')
 pr_blue('Results')
 if nb_ok == nb:
     pr_green(f"Success on {nb_ok}/{nb} tests")
+    sys.exit(0)
 else:
     pr_red(f"Fail on {nb_ok}/{nb} tests")
+    sys.exit(1)
