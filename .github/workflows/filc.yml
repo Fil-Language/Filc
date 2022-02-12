@@ -10,3 +10,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: run script test_options
         run: python3 filc/test/test_options
+      - run: ls
