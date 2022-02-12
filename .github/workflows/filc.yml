@@ -9,4 +9,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: run script test_options
-        run: python3 test/test_options.py
+        run: python3 filc/test/test_options
