@@ -80,7 +80,7 @@ method_call ::= expr '.' function_call;
 
 return ::= 'return' expr;
 
-new ::= 'new' identifier '(' [ list_expr ] ')';
+new ::= 'new' identifier (('(' [ list_expr ] ')') | ('[' expr ']'));
 
 visibility ::= 'public' | 'protected' | 'internal' | 'private';
 list_field ::= field { ',' field };
