@@ -43,4 +43,4 @@ options {
 @parser::basevisitordefinitions {}
 
 main:
-    TOKEN* EOF;
+    EOF;

@@ -1,6 +1,6 @@
 package test.fil
 
-import sout from fil.ios.iostream
+import fil.ios.iostream
 
 fun main() {
     sout << "Hello World!" << endl

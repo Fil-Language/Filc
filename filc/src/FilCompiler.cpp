@@ -19,7 +19,7 @@ void FilCompiler::compile(const string &inputFileName)
 {
     ifstream inputFile(inputFileName);
     antlr4::ANTLRInputStream input(inputFile);
-    antlrcpp::FilLexer lexer(&input);
+    FilLexer lexer(&input);
 
     antlr4::CommonTokenStream tokens(&lexer);
     tokens.fill();
