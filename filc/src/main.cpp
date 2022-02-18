@@ -8,12 +8,16 @@
  */
 
 #include "CompilerOptions.h"
+#include "FilCompiler.h"
 
 int main(int argc, char **argv)
 {
     int parse_result = CompilerOptions::parse(argc, argv);
     if (parse_result != 0)
         return parse_result;
+
+    FilCompiler compiler = FilCompiler();
+    compiler.compile(CompilerOptions::getInputFile());
 
     return 0;
 }

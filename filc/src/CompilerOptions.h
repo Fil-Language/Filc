@@ -18,7 +18,7 @@
 
 class CompilerOptions
 {
-private: // Structures declarations
+public: // Structures declarations
     /**
      * The destination language for the compiler
      * - CPP : pre-compilation, use cpp compiler after to have assembler code
@@ -33,10 +33,18 @@ private: // Structures declarations
 public: // Methods
     static int parse(int argc, char **argv);
 
+    static dest_language getDestLanguage();
+
+    static const std::string &getInputFile();
+
 private:
     static void help();
 
     static void version(bool isCalledDirectly = true);
+
+    CompilerOptions() = default;
+
+    ~CompilerOptions() = default;
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

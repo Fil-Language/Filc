@@ -113,3 +113,13 @@ void CompilerOptions::version(bool isCalledDirectly)
     cout << "Created by : " << AUTHORS << endl;
     cout << LICENSE << endl;
 }
+
+CompilerOptions::dest_language CompilerOptions::getDestLanguage()
+{
+    return _dest_language;
+}
+
+const string &CompilerOptions::getInputFile()
+{
+    return _input_file;
+}
