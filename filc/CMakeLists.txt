@@ -50,15 +50,17 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/antlr4/runtime/src/dfa
         ${PROJECT_SOURCE_DIR}/antlr4/runtime/src/tree
         ${PROJECT_SOURCE_DIR}/antlr4/runtime/src/support
-        ${PROJECT_SOURCE_DIR}/generated/grammar
+        ${PROJECT_SOURCE_DIR}/generated
 )
 
 set(filc_SRC
-        ${antlr4-GENERATED_SRC}
+        ${filc-GENERATED_SRC}
         ${PROJECT_SOURCE_DIR}/src/main.cpp
         ${PROJECT_SOURCE_DIR}/src/CompilerOptions.h
         ${PROJECT_SOURCE_DIR}/src/CompilerOptions.cpp
-        ${PROJECT_SOURCE_DIR}/src/tools.h)
+        ${PROJECT_SOURCE_DIR}/src/tools.h
+        ${PROJECT_SOURCE_DIR}/src/FilCompiler.cpp
+        ${PROJECT_SOURCE_DIR}/src/FilCompiler.h)
 
 if (NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     set(flags_1 "-Wno-overloaded-virtual")
@@ -82,7 +84,7 @@ endif ()
 
 add_dependencies(filc GenerateParser)
 
-#target_link_libraries(filc antlr4_static)
+target_link_libraries(filc antlr4-runtime)
 
 install(TARGETS filc
         DESTINATION "share"
