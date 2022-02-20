@@ -1,3 +1,11 @@
+/* _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+ *     Created by Kevin Traini
+ *
+ *     Fil compiler
+ *
+ *     GNU General Public License v3.0
+ * _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+ */
 lexer grammar FilLexer;
 
 
@@ -34,6 +42,7 @@ PUBLIC: 'public';
 PROTECTED: 'protected';
 INTERNAL: 'internal';
 PRIVATE: 'private';
+IS: 'is';
 
 // Identifiers
 fragment LETTER: 'a'..'z' | 'A'..'Z' | '_';
@@ -62,6 +71,8 @@ ASSIGN: '=';
 BINAND: '&';
 BINOR: '|';
 BINXOR: '^';
+LTLT: '<<';
+GTGT: '>>';
 DOT: '.';
 COMMA: ',';
 SEMICOLON: ';';
@@ -87,3 +98,6 @@ CHARACTER: SIMPLEQUOTE STRINGCHAR* SIMPLEQUOTE;
 // Comments
 COMMENT: '//' ~('\n') { skip(); };
 MULTILINECOMMENT: '/*' .*? '*/' { skip(); };
+
+// Separators
+WS: (' ' | '\t' | '\r' | '\n')+ { skip(); };

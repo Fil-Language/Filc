@@ -14,14 +14,16 @@
 #include "FilLexer.h"
 
 using namespace std;
+using namespace antlr4;
+using namespace antlrcpp;
 
 void FilCompiler::compile(const string &inputFileName)
 {
     ifstream inputFile(inputFileName);
-    antlr4::ANTLRInputStream input(inputFile);
+    ANTLRInputStream input(inputFile);
     FilLexer lexer(&input);
 
-    antlr4::CommonTokenStream tokens(&lexer);
+    CommonTokenStream tokens(&lexer);
     tokens.fill();
     for (auto token: tokens.getTokens())
     {
