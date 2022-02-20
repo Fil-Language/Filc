@@ -8,6 +8,10 @@
  */
 lexer grammar FilLexer;
 
+options {
+    language = CPP;
+}
+
 
 // Reserved words
 PACKAGE: 'package';
