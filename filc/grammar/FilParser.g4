@@ -53,12 +53,10 @@ expr
     | decl_var
     | decl_function
     | lambda
-    | assign
     | control
     | loop
-    | calcul
     | function_call
-    | method_call
+    | expr DOT function_call
     | return
     | new
     | THIS
@@ -66,6 +64,9 @@ expr
     | SUPER
     | LPAREN expr RPAREN
     | expr SEMICOLON expr
+    | expr assign_operator expr
+    | expr binary_operator expr
+    | unary_operator expr | expr unary_operator
     | value;
 
 list_expr
@@ -116,8 +117,6 @@ lambda_type
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 // Assign
-assign
-    : expr assign_operator expr;
 
 assign_operator
     : binary_operator? ASSIGN;
@@ -162,16 +161,6 @@ while
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 // Calcul
-calcul
-    : unary_calcul | binary_calcul;
-
-unary_calcul
-    : unary_operator expr
-    | expr unary_operator;
-
-binary_calcul
-    : expr binary_operator expr;
-
 unary_operator
     : MINUS | NOT | MULT | BINAND | PLUSPLUS | MINUSMINUS
     | LBRACKET expr RBRACKET;
@@ -183,9 +172,6 @@ binary_operator
 // Others
 function_call
     : IDENTIFIER LPAREN list_expr? RPAREN;
-
-method_call
-    : expr DOT function_call;
 
 return
     : RETURN expr;
