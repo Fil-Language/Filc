@@ -57,8 +57,8 @@ expr
     | loop
     | function_call
     | expr DOT function_call
-    | return
-    | new
+    | return_
+    | new_
     | THIS
     | NULL_
     | SUPER
@@ -124,18 +124,18 @@ assign_operator
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 // Control
 control
-    : if
-    | switch
+    : if_
+    | switch_
     | exception;
 
-if
+if_
     : IF LPAREN expr RPAREN control_body (ELIF LPAREN expr RPAREN control_body)* (ELSE control_body)?;
 
 control_body
     : expr
     | LBRACE expr* RBRACE;
 
-switch
+switch_
     : SWITCH LPAREN expr RPAREN LBRACE switch_body RBRACE;
 
 switch_body
@@ -147,16 +147,16 @@ exception
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 // Loop
 loop
-    : for | while;
+    : for_ | while_;
 
-for
+for_
     : FOR for_condition control_body;
 
 for_condition
     : (IDENTIFIER IN expr)
     | expr? SEMICOLON expr? SEMICOLON expr?;
 
-while
+while_
     : WHILE LPAREN expr RPAREN control_body;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -173,10 +173,10 @@ binary_operator
 function_call
     : IDENTIFIER LPAREN list_expr? RPAREN;
 
-return
+return_
     : RETURN expr;
 
-new
+new_
     : NEW IDENTIFIER ((LPAREN list_expr? RPAREN) | (LBRACKET expr RBRACKET));
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
