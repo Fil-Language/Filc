@@ -47,6 +47,14 @@ PROTECTED: 'protected';
 INTERNAL: 'internal';
 PRIVATE: 'private';
 IS: 'is';
+TRUE: 'true';
+FALSE: 'false';
+INT_TYPE: 'int';
+FLOAT_TYPE: 'float';
+DOUBLE_TYPE: 'double';
+BOOLEAN_TYPE: 'boolean';
+CHAR_TYPE: 'char';
+IN: 'in';
 
 // Identifiers
 fragment LETTER: 'a'..'z' | 'A'..'Z' | '_';
@@ -57,7 +65,7 @@ IDENTIFIER: LETTER CHAR*;
 // Special symbols
 PLUS: '+';
 MINUS: '-';
-MUL: '*';
+MULT: '*';
 DIV: '/';
 MOD: '%';
 PLUSPLUS: '++';
@@ -89,19 +97,19 @@ LBRACE: '{';
 RBRACE: '}';
 ARROW: '->';
 QUOTE: '"';
-SIMPLEQUOTE: '\'';
+SIMPLE_QUOTE: '\'';
 
 // Literals
 INTEGER: DIGIT+;
 FLOAT: DIGIT+ '.' DIGIT* | '.' DIGIT+;
-STRINGCHAR: ~('"' | '\\' | '\n');
-STRING: QUOTE STRINGCHAR* QUOTE;
-MULILINESTRING: (QUOTE QUOTE QUOTE) CHAR (QUOTE QUOTE QUOTE);
-CHARACTER: SIMPLEQUOTE STRINGCHAR* SIMPLEQUOTE;
+STRING_CHAR: ~('"' | '\\' | '\n');
+STRING: QUOTE STRING_CHAR* QUOTE;
+MULTILINE_STRING: (QUOTE QUOTE QUOTE) CHAR (QUOTE QUOTE QUOTE);
+CHARACTER: SIMPLE_QUOTE STRING_CHAR* SIMPLE_QUOTE;
 
 // Comments
 COMMENT: '//' ~('\n') { skip(); };
-MULTILINECOMMENT: '/*' .*? '*/' { skip(); };
+MULTILINE_COMMENT: '/*' .*? '*/' { skip(); };
 
 // Separators
 WS: (' ' | '\t' | '\r' | '\n')+ { skip(); };

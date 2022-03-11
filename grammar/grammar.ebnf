@@ -30,7 +30,9 @@ expr ::= decl_class
        | return
        | new
        | 'this' | 'null' | 'super'
-       | '(' expr ')';
+       | '(' expr ')'
+       | expr ';' expr
+       | value;
 list_expr ::= expr { ',' expr };
 
 decl_interface ::= [ 'export' ] 'interface' identifier '(' [ list_field ] ')' [ ':' list_identifier ] [ '{' interface_body '}' ];
@@ -48,10 +50,10 @@ function_body ::= ('=' expr)
                 | ('(' expr ')')
                 | ('{' { expr } '}');
 
-lambda ::= '(' list_identifier ')' '->' function_body;
-lambda_type ::= '(' type_list ')' '->' type;
+lambda ::= '(' [ list_identifier ] ')' '->' function_body;
+lambda_type ::= '(' [ type_list ] ')' '->' type;
 
-assign ::= identifier assign_operator expr;
+assign ::= expr assign_operator expr;
 assign_operator ::= [ binary_operator ] '=';
 
 control ::= if | switch | exception;
@@ -72,7 +74,7 @@ calcul ::= unary_calcul | binary_calcul;
 unary_calcul ::= (unary_operator expr)
                | (expr unary_operator);
 binary_calcul ::= expr binary_operator expr;
-unary_operator ::= '-' | '!' | '*' | '&' | '++' | '--';
+unary_operator ::= '-' | '!' | '*' | '&' | '++' | '--' | '[' expr ']';
 binary_operator ::= '+' | '-' | '*' | '/' | '%' | '<<' | '>>' | '&&' | '||' | '==' | '!=' | '<=' | '>=' | '<' | '>' | '&' | '|' | '^';
 
 function_call ::= identifier '(' [ list_expr ] ')';
@@ -93,11 +95,19 @@ list_identifier ::= identifier { ',' identifier };
 file_identifier ::= (identifier { '.' identifier })
                   | string;
 
-type ::= (identifier | lambda_type) { '*' | '[]' };
+type ::= (identifier | lambda_type | generic_type) { '*' | '[]' };
+generic_type ::= 'int' | 'float' | 'double' | 'boolean' | 'char';
 type_list ::= type { ',' type };
+
+value ::= int | float | boolean | char_value | string | multiline_string;
+int ::= digit { digit };
+float ::= (int '.' { digit }) | ('.' int);
+boolean ::= 'true' | 'false';
+char_value ::= '\'' char '\'';
 
 letter ::= 'a'-'z' | 'A'-'Z';
 digit ::= '0'-'9';
 char ::= letter | digit | '_' | '-';
 
 string ::= '"' { '[~"]' } '"';
+multiline_string ::= '"""' { '[~"]' } '"""';

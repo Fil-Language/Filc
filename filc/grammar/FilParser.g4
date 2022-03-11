@@ -10,45 +10,221 @@ parser grammar FilParser;
 
 options {
 	tokenVocab = FilLexer;
+
+	language = CPP;
 }
 
-@parser::header {}
+// TODO : Add AbstractProgram();
+@parser::declarations {
 
-@parser::preinclude {}
+}
 
-@parser::postinclude {}
+// TODO : Add AbstractProgram() returns prog().tree;
+@parser::definitions {
 
-@parser::context {}
+}
 
-@parser::members {}
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Begin of the program
+prog
+    : package import_* expr* EOF;
 
-@parser::declarations {}
+package
+    : PACKAGE IDENTIFIER (DOT IDENTIFIER)*;
 
-@parser::definitions {}
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Import
+import_
+    : IMPORT import_what file_identifier;
 
-@parser::listenerpreinclude {}
-@parser::listenerpostinclude {}
-@parser::listenerdeclarations {}
-@parser::listenermembers {}
-@parser::listenerdefinitions {}
+import_what
+    : /* Nothing */
+    | IDENTIFIER import_as FROM;
 
-@parser::baselistenerpreinclude {}
-@parser::baselistenerpostinclude {}
-@parser::baselistenerdeclarations {}
-@parser::baselistenermembers {}
-@parser::baselistenerdefinitions {}
+import_as
+    : /* Nothing */
+    | AS IDENTIFIER;
 
-@parser::visitorpreinclude {}
-@parser::visitorpostinclude {}
-@parser::visitordeclarations {}
-@parser::visitormembers {}
-@parser::visitordefinitions {}
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Expressions
+expr
+    : decl_class
+    | decl_interface
+    | decl_var
+    | decl_function
+    | lambda
+    | assign
+    | control
+    | loop
+    | calcul
+    | function_call
+    | method_call
+    | return
+    | new
+    | THIS
+    | NULL_
+    | SUPER
+    | LPAREN expr RPAREN
+    | expr SEMICOLON expr
+    | value;
 
-@parser::basevisitorpreinclude {}
-@parser::basevisitorpostinclude {}
-@parser::basevisitordeclarations {}
-@parser::basevisitormembers {}
-@parser::basevisitordefinitions {}
+list_expr
+    : expr (COMMA expr)*;
 
-main:
-    EOF;
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Interfaces
+decl_interface
+    : EXPORT? INTERFACE IDENTIFIER LPAREN list_field? RPAREN (COLON list_identifier)? (LBRACE interface_body RBRACE)?;
+
+interface_body
+    : (decl_var | decl_method)*;
+
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Classes
+decl_class
+    : EXPORT? (OPEN | ABSTRACT)? CLASS IDENTIFIER (LPAREN ((field | param) (COMMA (field | param))*)? RPAREN)? (COLON list_identifier)? (LBRACE class_body RBRACE)?;
+
+class_body
+    : (decl_var | decl_method | constructor)*;
+
+constructor
+    : CONSTRUCTOR LBRACE (expr)* RBRACE;
+
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Variables
+decl_var
+    : EXPORT? visibility (VAL | VAR) IDENTIFIER (COLON type)? (ASSIGN expr)? (COMMA IDENTIFIER (COLON type)? (ASSIGN expr)?)*;
+
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Methods & functions & lambda
+decl_method
+    : visibility ABSTRACT? FUN IDENTIFIER LPAREN list_param? RPAREN (COLON type)? function_body?;
+
+decl_function
+    : EXPORT? FUN IDENTIFIER LPAREN list_param RPAREN (COLON type)? function_body;
+
+function_body
+    : ASSIGN expr
+    | LPAREN expr RPAREN
+    | LBRACE expr* RPAREN;
+
+lambda
+    : LPAREN list_identifier? RPAREN ARROW function_body;
+
+lambda_type
+    : LPAREN type_list? RPAREN ARROW type;
+
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Assign
+assign
+    : expr assign_operator expr;
+
+assign_operator
+    : binary_operator? ASSIGN;
+
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Control
+control
+    : if
+    | switch
+    | exception;
+
+if
+    : IF LPAREN expr RPAREN control_body (ELIF LPAREN expr RPAREN control_body)* (ELSE control_body)?;
+
+control_body
+    : expr
+    | LBRACE expr* RBRACE;
+
+switch
+    : SWITCH LPAREN expr RPAREN LBRACE switch_body RBRACE;
+
+switch_body
+    : ((CASE expr | DEFAULT) ARROW control_body)*;
+
+exception
+    : TRY LBRACE expr* RBRACE (CATCH LPAREN IDENTIFIER IDENTIFIER RPAREN LBRACE expr* RBRACE)*;
+
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Loop
+loop
+    : for | while;
+
+for
+    : FOR for_condition control_body;
+
+for_condition
+    : (IDENTIFIER IN expr)
+    | expr? SEMICOLON expr? SEMICOLON expr?;
+
+while
+    : WHILE LPAREN expr RPAREN control_body;
+
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Calcul
+calcul
+    : unary_calcul | binary_calcul;
+
+unary_calcul
+    : unary_operator expr
+    | expr unary_operator;
+
+binary_calcul
+    : expr binary_operator expr;
+
+unary_operator
+    : MINUS | NOT | MULT | BINAND | PLUSPLUS | MINUSMINUS
+    | LBRACKET expr RBRACKET;
+
+binary_operator
+    : PLUS | MINUS | MULT | DIV | MOD | LTLT | GTGT | AND | OR | EQ | NEQ | LTE | GTE | LT | GT | BINAND | BINOR | BINXOR;
+
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Others
+function_call
+    : IDENTIFIER LPAREN list_expr? RPAREN;
+
+method_call
+    : expr DOT function_call;
+
+return
+    : RETURN expr;
+
+new
+    : NEW IDENTIFIER ((LPAREN list_expr? RPAREN) | (LBRACKET expr RBRACKET));
+
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+// Utils
+visibility
+    : PUBLIC | PROTECTED | INTERNAL | PRIVATE;
+
+list_field
+    : field (COMMA field);
+
+field
+    : visibility (VAL | VAR) IDENTIFIER COLON (MULT | BINAND)? type (ASSIGN expr)?;
+
+list_param
+    : param (COMMA param)*;
+
+param
+    : IDENTIFIER COLON (MULT | BINAND)? type (ASSIGN expr)?;
+
+list_identifier
+    : IDENTIFIER (COMMA IDENTIFIER)*;
+
+file_identifier
+    : (IDENTIFIER (DOT IDENTIFIER)*)
+    | STRING;
+
+type
+    : (IDENTIFIER | lambda_type | generic_type) (MULT | LBRACKET RBRACKET)*;
+
+generic_type
+    : INT_TYPE | FLOAT_TYPE | DOUBLE_TYPE | BOOLEAN_TYPE | CHAR_TYPE;
+
+type_list
+    : type (COMMA type);
+
+value
+    : INTEGER | FLOAT | TRUE | FALSE | CHARACTER | STRING | MULTILINE_STRING;
