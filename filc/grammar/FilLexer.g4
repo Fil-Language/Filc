@@ -99,6 +99,9 @@ ARROW: '->';
 QUOTE: '"';
 SIMPLE_QUOTE: '\'';
 
+// Separators
+WS: (' ' | '\t' | '\r' | '\n')+ { skip(); };
+
 // Literals
 INTEGER: DIGIT+;
 FLOAT: DIGIT+ '.' DIGIT* | '.' DIGIT+;
@@ -110,6 +113,3 @@ CHARACTER: SIMPLE_QUOTE STRING_CHAR* SIMPLE_QUOTE;
 // Comments
 COMMENT: '//' ~('\n') { skip(); };
 MULTILINE_COMMENT: '/*' .*? '*/' { skip(); };
-
-// Separators
-WS: (' ' | '\t' | '\r' | '\n')+ { skip(); };

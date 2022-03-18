@@ -67,7 +67,8 @@ expr
     | expr assign_operator expr
     | expr binary_operator expr
     | unary_operator expr | expr unary_operator
-    | value;
+    | value
+    | IDENTIFIER;
 
 list_expr
     : expr (COMMA expr)*;
@@ -107,7 +108,7 @@ decl_function
 function_body
     : ASSIGN expr
     | LPAREN expr RPAREN
-    | LBRACE expr* RPAREN;
+    | LBRACE expr* RBRACE;
 
 lambda
     : LPAREN list_identifier? RPAREN ARROW function_body;

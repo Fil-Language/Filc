@@ -12,6 +12,7 @@
 #include <iostream>
 #include <antlr4-runtime.h>
 #include "FilLexer.h"
+#include "FilParser.h"
 
 using namespace std;
 using namespace antlr4;
@@ -25,8 +26,13 @@ void FilCompiler::compile(const string &inputFileName)
 
     CommonTokenStream tokens(&lexer);
     tokens.fill();
-    for (auto token: tokens.getTokens())
-    {
+    for (auto token : tokens.getTokens()) {
         cout << token->toString() << endl;
     }
+
+    FilParser parser(&tokens);
+
+    tree::ParseTree *tree = parser.prog();
+
+    cout << tree->toStringTree(&parser, true) << endl;
 }
