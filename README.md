@@ -1,4 +1,6 @@
-# Fil
+# Filc
+
+Compilateur du langage de programmation Fil
 
 ![Fil](https://img.shields.io/badge/Fil-v1.0-brightgreen)
 ![Status](https://img.shields.io/badge/Status-WIP-informational)
