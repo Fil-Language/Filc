@@ -14,12 +14,12 @@ options {
 	language = CPP;
 }
 
-// TODO : Add AbstractProgram();
+// TODO : Add abstractProgram();
 @parser::declarations {
 
 }
 
-// TODO : Add AbstractProgram() returns prog().tree;
+// TODO : Add abstractProgram() returns prog().tree;
 @parser::definitions {
 
 }
