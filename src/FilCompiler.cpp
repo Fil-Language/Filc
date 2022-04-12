@@ -9,30 +9,30 @@
 
 #include "FilCompiler.h"
 
-#include <iostream>
-#include <antlr4-runtime.h>
-#include "FilLexer.h"
-#include "FilParser.h"
+//#include <iostream>
+//#include <antlr4-runtime.h>
+//#include "FilLexer.h"
+//#include "FilParser.h"
 
 using namespace std;
-using namespace antlr4;
-using namespace antlrcpp;
+//using namespace antlr4;
+//using namespace antlrcpp;
 
 void FilCompiler::compile(const string &inputFileName)
 {
-    ifstream inputFile(inputFileName);
-    ANTLRInputStream input(inputFile);
-    FilLexer lexer(&input);
-
-    CommonTokenStream tokens(&lexer);
-    tokens.fill();
-    for (auto token : tokens.getTokens()) {
-        cout << token->toString() << endl;
-    }
-
-    FilParser parser(&tokens);
-
-    tree::ParseTree *tree = parser.prog();
-
-    cout << tree->toStringTree(&parser, true) << endl;
+//    ifstream inputFile(inputFileName);
+//    ANTLRInputStream input(inputFile);
+//    FilLexer lexer(&input);
+//
+//    CommonTokenStream tokens(&lexer);
+//    tokens.fill();
+//    for (auto token : tokens.getTokens()) {
+//        cout << token->toString() << endl;
+//    }
+//
+//    FilParser parser(&tokens);
+//
+//    tree::ParseTree *tree = parser.prog();
+//
+//    cout << tree->toStringTree(&parser, true) << endl;
 }
