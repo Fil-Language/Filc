@@ -23,7 +23,6 @@ add_custom_command(OUTPUT ${filc-GENERATED_SRC}
         cd "${PROJECT_SOURCE_DIR}/owl" && make
         COMMAND
         cd "${PROJECT_SOURCE_DIR}" && "${PROJECT_SOURCE_DIR}/owl/owl" -c ${PROJECT_SOURCE_DIR}/grammar/FilParser.owl -o ${PROJECT_SOURCE_DIR}/generated/FilParser.h
-        #WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
         DEPENDS ${PROJECT_SOURCE_DIR}/grammar/FilParser.owl
         )
 
