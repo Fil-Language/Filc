@@ -1,0 +1,3 @@
+[submodule "owl"]
+	path = owl
+	url = git@github.com:ianh/owl.git
