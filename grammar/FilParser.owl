@@ -1,0 +1,127 @@
+#using owl.v4
+#  _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+#      Created by Kevin Traini
+#
+#      Fil compiler
+#
+#      GNU General Public License v3.0
+#  _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+program = package import* expr*
+
+package = 'package' identifier{'.', 1+}
+
+import = 'import' (identifier ('as' identifier)? 'from')? file_identifier
+
+expr =
+    decl_class
+    decl_interface
+    decl_var
+    decl_function
+    lambda
+    assign
+    control
+    loop
+    calcul
+    function_call
+    method_call
+    _return
+    new
+    'this'
+    'null'
+    'super'
+    [ '(' expr ')' ]
+    expr ';' expr
+    value
+
+list_expr = expr{',', 1+}
+
+decl_interface = 'export'? 'interface' identifier '(' list_field? ')' (':' list_identifier)? ('{' interface_body '}')?
+interface_body = (decl_var | decl_method)*
+
+decl_class = 'export'? ('open' | 'abstract')? 'class' identifier ('(' (field | param){','} ')')? (':' list_identifier)? ('{' class_body '}')?
+class_body = (decl_var | decl_method | constructor)*
+constructor = 'constructor' '{' expr* '}'
+
+decl_var = 'export'? visibility ('val' | 'var') identifier (':' type)? ('=' expr)? (',' identifier (':' type)? ('=' expr)?)*
+
+decl_method = visibility ('abstract')? 'fun' identifier '(' list_param? ')' (':' type)? function_body?
+decl_function = 'export'? 'fun' identifier '(' list_param? ')' (':' type)? function_body?
+function_body =
+    '=' expr
+    '(' expr ')'
+    '{' expr* '}'
+
+lambda = '(' list_identifier? ')' '->' function_body
+lambda_type = '(' type_list? ')' '->' type
+
+assign = expr assign_operator expr
+assign_operator = binary_operator? '='
+
+control =
+    if
+    switch
+    exception
+
+if = 'if' '(' expr ')' control_body ('elif' '(' expr ')' control_body)* ('else' control_body)?
+control_body =
+    expr
+    '{' expr* '}'
+switch = 'switch' '(' expr ')' '{' switch_body* '}'
+switch_body =
+    'case' expr '->' control_body
+    'default' '->' control_body
+exception = 'try' '{' expr* '}' ('catch' '(' identifier identifier ')' '{' expr* '}')*
+
+loop =
+    for
+    while
+for = 'for' for_condition control_body
+for_condition =
+    identifier 'in' expr
+    expr? ';' expr? ';' expr?
+while = 'while' '(' expr ')' control_body
+
+calcul =
+    unary_calcul
+    binary_calcul
+unary_calcul =
+    unary_operator expr
+    expr unary_operator
+binary_calcul = expr binary_operator expr
+unary_operator = '-' | '!' | '*' | '&' | '++' | '--' | '[' expr ']'
+binary_operator = '+' | '-' | '*' | '/' | '%' | '<<' | '>>' | '&&' | '||' | '==' | '!=' | '<=' | '>=' | '<' | '>' | '&' | '|' | '^'
+
+function_call = identifier '(' list_expr? ')'
+method_call = expr '.' function_call
+
+_return = 'return' expr
+
+new = 'new' identifier (('(' list_expr? ')') | ('[' expr ']'))
+
+visibility = 'public' | 'protected' | 'internal' | 'private'
+list_field = field{',', 1+}
+field = visibility ('val' | 'var') identifier ':' ('*' | '&')? type ('=' expr)?
+list_param = param{',', 1+}
+param = identifier ':' ('*' | '&')? type ('=' expr)?
+
+list_identifier = identifier{',', 1+}
+file_identifier =
+    identifier{'.', 1+}
+    string
+
+type = (identifier | lambda_type | generic_type) ('*' | '[]')*
+generic_type = 'int' | 'float' | 'double' | 'boolean' | 'char'
+type_list = type{',', 1+}
+
+value = integer | number | boolean | char_value | string | multiline_string
+boolean = 'true' | 'false'
+char_value = '\'' char '\''
+
+letter = '[a-zA-Z]'
+digit = '[0-9]'
+char = letter | digit | '_' | '-'
+
+multiline_string = '"""' { '[~"]' } '"""'
+
+.line-comment-token '//'
