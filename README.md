@@ -4,7 +4,7 @@ Compilateur du langage Fil
 
 ## Grammaire
 
-Se référer à la documentation pour la grammaire utilisé : [https://github.com/Fil-Language/Documentation](https://github.com/Fil-Language/Documentation).
+Se référer à la documentation pour la grammaire utilisée : [https://github.com/Fil-Language/Documentation](https://github.com/Fil-Language/Documentation).
 
 ## Librairies externes
 
