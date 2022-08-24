@@ -26,7 +26,7 @@ TRY: 'try';
 CATCH: 'catch';
 TRUE: 'true';
 FALSE: 'false';
-NULL: 'null';
+NULL_: 'null';
 
 // Identifier
 fragment LETTER: ('a' .. 'z') | ('A' .. 'Z') | '_';

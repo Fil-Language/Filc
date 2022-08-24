@@ -214,7 +214,7 @@ type: IDENTIFIER (TIMES | (LBRAK INT? RBRAK))?;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-litteral: INT | FLOAT | STRING | CHAR | TRUE | FALSE | NULL;
+litteral: INT | FLOAT | STRING | CHAR | TRUE | FALSE | NULL_;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

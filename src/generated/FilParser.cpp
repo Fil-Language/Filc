@@ -110,7 +110,7 @@ FilParser::ProgramContext* FilParser::program() {
       | (1ULL << FilParser::TRY)
       | (1ULL << FilParser::TRUE)
       | (1ULL << FilParser::FALSE)
-      | (1ULL << FilParser::NULL)
+      | (1ULL << FilParser::NULL_)
       | (1ULL << FilParser::IDENTIFIER)
       | (1ULL << FilParser::LPAREN)
       | (1ULL << FilParser::LBRAK)
@@ -2815,7 +2815,7 @@ FilParser::Switch_bodyContext* FilParser::switch_body() {
       ((1ULL << _la) & ((1ULL << FilParser::DEFAULT)
       | (1ULL << FilParser::TRUE)
       | (1ULL << FilParser::FALSE)
-      | (1ULL << FilParser::NULL)
+      | (1ULL << FilParser::NULL_)
       | (1ULL << FilParser::INT)
       | (1ULL << FilParser::FLOAT)
       | (1ULL << FilParser::STRING)
@@ -2896,7 +2896,7 @@ FilParser::Switch_caseContext* FilParser::switch_case() {
     switch (_input->LA(1)) {
       case FilParser::TRUE:
       case FilParser::FALSE:
-      case FilParser::NULL:
+      case FilParser::NULL_:
       case FilParser::INT:
       case FilParser::FLOAT:
       case FilParser::STRING:
@@ -3190,7 +3190,7 @@ FilParser::Fori_conditionContext* FilParser::fori_condition() {
       | (1ULL << FilParser::TRY)
       | (1ULL << FilParser::TRUE)
       | (1ULL << FilParser::FALSE)
-      | (1ULL << FilParser::NULL)
+      | (1ULL << FilParser::NULL_)
       | (1ULL << FilParser::IDENTIFIER)
       | (1ULL << FilParser::LPAREN)
       | (1ULL << FilParser::LBRAK)
@@ -3231,7 +3231,7 @@ FilParser::Fori_conditionContext* FilParser::fori_condition() {
       | (1ULL << FilParser::TRY)
       | (1ULL << FilParser::TRUE)
       | (1ULL << FilParser::FALSE)
-      | (1ULL << FilParser::NULL)
+      | (1ULL << FilParser::NULL_)
       | (1ULL << FilParser::IDENTIFIER)
       | (1ULL << FilParser::LPAREN)
       | (1ULL << FilParser::LBRAK)
@@ -4339,7 +4339,7 @@ FilParser::Function_call_paramsContext* FilParser::function_call_params() {
       | (1ULL << FilParser::TRY)
       | (1ULL << FilParser::TRUE)
       | (1ULL << FilParser::FALSE)
-      | (1ULL << FilParser::NULL)
+      | (1ULL << FilParser::NULL_)
       | (1ULL << FilParser::IDENTIFIER)
       | (1ULL << FilParser::LPAREN)
       | (1ULL << FilParser::LBRAK)
@@ -4666,8 +4666,8 @@ tree::TerminalNode* FilParser::LitteralContext::FALSE() {
   return getToken(FilParser::FALSE, 0);
 }
 
-tree::TerminalNode* FilParser::LitteralContext::NULL() {
-  return getToken(FilParser::NULL, 0);
+tree::TerminalNode* FilParser::LitteralContext::NULL_() {
+  return getToken(FilParser::NULL_, 0);
 }
 
 
@@ -4698,7 +4698,7 @@ FilParser::LitteralContext* FilParser::litteral() {
     if (!((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << FilParser::TRUE)
       | (1ULL << FilParser::FALSE)
-      | (1ULL << FilParser::NULL)
+      | (1ULL << FilParser::NULL_)
       | (1ULL << FilParser::INT)
       | (1ULL << FilParser::FLOAT)
       | (1ULL << FilParser::STRING)
@@ -4887,7 +4887,7 @@ FilParser::Expr_blockContext* FilParser::expr_block() {
       | (1ULL << FilParser::TRY)
       | (1ULL << FilParser::TRUE)
       | (1ULL << FilParser::FALSE)
-      | (1ULL << FilParser::NULL)
+      | (1ULL << FilParser::NULL_)
       | (1ULL << FilParser::IDENTIFIER)
       | (1ULL << FilParser::LPAREN)
       | (1ULL << FilParser::LBRAK)
@@ -4984,7 +4984,7 @@ std::vector<std::string> FilParser::_symbolicNames = {
   "", "EXPORT", "MODULE", "FUN", "INTERFACE", "CLASS", "ABSTRACT", "OPEN", 
   "PRIVATE", "PUBLIC", "INTERNAL", "PROTECTED", "CONSTRUCTOR", "ENUM", "IF", 
   "ELSE", "SWITCH", "DEFAULT", "FOR", "VAL", "VAR", "WHILE", "TRY", "CATCH", 
-  "TRUE", "FALSE", "NULL", "IDENTIFIER", "DOT", "ARROW", "LBRACE", "RBRACE", 
+  "TRUE", "FALSE", "NULL_", "IDENTIFIER", "DOT", "ARROW", "LBRACE", "RBRACE", 
   "LPAREN", "RPAREN", "LBRAK", "RBRAK", "COLON", "COMMA", "SEMICOLON", "EQ", 
   "PLUS", "MINUS", "DIVIDE", "TIMES", "MOD", "FLEFT", "FRIGHT", "AND", "OR", 
   "LE", "GE", "EQEQ", "LEQ", "GEQ", "NEQ", "NOT", "BAND", "BOR", "BXOR", 

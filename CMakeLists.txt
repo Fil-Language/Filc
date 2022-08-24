@@ -14,6 +14,12 @@ add_executable(filc
         src/utils/cxxopts.hpp
         src/generated/FilLexer.cpp
         src/generated/FilLexer.h
+        src/generated/FilParser.cpp
+        src/generated/FilParser.h
+        src/generated/FilParserBaseVisitor.cpp
+        src/generated/FilParserBaseVisitor.h
+        src/generated/FilParserVisitor.cpp
+        src/generated/FilParserVisitor.h
         )
 
 target_link_libraries(filc  antlr4-runtime.a)
