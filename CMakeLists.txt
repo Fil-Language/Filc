@@ -17,3 +17,5 @@ add_executable(filc
         )
 
 target_link_libraries(filc  antlr4-runtime.a)
+
+install(TARGETS filc DESTINATION bin)
