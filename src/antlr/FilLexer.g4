@@ -26,6 +26,7 @@ TRY: 'try';
 CATCH: 'catch';
 TRUE: 'true';
 FALSE: 'false';
+NULL: 'null';
 
 // Identifier
 fragment LETTER: ('a' .. 'z') | ('A' .. 'Z') | '_';
@@ -60,6 +61,7 @@ EQEQ: '==';
 LEQ: '<=';
 GEQ: '>=';
 NEQ: '!=';
+NOT: '!';
 BAND: '&';
 BOR: '|';
 BXOR: '^';
@@ -80,6 +82,7 @@ STRING:
             setText(text);
         }
 };
+CHAR: '\'' ~('\'' | '\\' | '\n') '\'';
 
 // Comments
 COMMENT: '//' (~('\n' | '\r'))* -> skip;
@@ -89,7 +92,7 @@ COMMENT_BLOCK: '/*' .*? '*/' -> skip;
 SEPARATOR: (' ' | '\t' | '\r' | '\n' | EOF) -> skip;
 
 // Imports
-fragment MODULE_NAME: IDENTIFIER ('.' IDENTIFIER)*;
+MODULE_NAME: IDENTIFIER ('.' IDENTIFIER)*;
 IMPORT:
 	'import' (' ')* MODULE_NAME {
     // TODO : implement the import of file and subfiles
