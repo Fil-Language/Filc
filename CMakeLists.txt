@@ -2,6 +2,8 @@ project(Filc)
 
 cmake_minimum_required(VERSION 3.10)
 
+set (CMAKE_CXX_STANDARD 17)
+
 set(antlr4-jar ${PROJECT_SOURCE_DIR}/bin/antlr-4.8-complete.jar)
 
 set(antlr4-output
