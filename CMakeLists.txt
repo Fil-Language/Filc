@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.10)
 
 set (CMAKE_CXX_STANDARD 17)
 
-set(antlr4-jar ${PROJECT_SOURCE_DIR}/bin/antlr-4.8-complete.jar)
+set(antlr4-jar ${PROJECT_SOURCE_DIR}/bin/antlr-4.11.1-complete.jar)
 
 set(antlr4-output
         ${PROJECT_SOURCE_DIR}/src/generated/FilLexer.cpp
@@ -34,7 +34,7 @@ include_directories(
         src
         src/generated
         src/utils
-        antlr-runtime/runtime/src
+        antlr-runtime/src
 )
 
 add_executable(filc
