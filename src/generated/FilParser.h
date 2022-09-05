@@ -7,6 +7,7 @@
 #include "antlr4-runtime.h"
 
 
+namespace antlrcppfil {
 
 
 class  FilParser : public antlr4::Parser {
@@ -1143,3 +1144,4 @@ private:
   static Initializer _init;
 };
 
+}  // namespace antlrcppfil

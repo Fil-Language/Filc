@@ -7,6 +7,7 @@
 #include "antlr4-runtime.h"
 
 
+namespace antlrcppfil {
 
 
 class  FilLexer : public antlr4::Lexer {
@@ -67,3 +68,4 @@ private:
   static Initializer _init;
 };
 
+}  // namespace antlrcppfil

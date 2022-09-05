@@ -7,6 +7,7 @@
 
 using namespace antlr4;
 
+using namespace antlrcppfil;
 
 FilLexer::FilLexer(CharStream *input) : Lexer(input) {
   _interpreter = new atn::LexerATNSimulator(this, _atn, _decisionToDFA, _sharedContextCache);

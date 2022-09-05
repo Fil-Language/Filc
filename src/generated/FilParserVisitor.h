@@ -8,6 +8,7 @@
 #include "FilParser.h"
 
 
+namespace antlrcppfil {
 
 /**
  * This class defines an abstract visitor for a parse tree
@@ -144,3 +145,4 @@ public:
 
 };
 
+}  // namespace antlrcppfil
