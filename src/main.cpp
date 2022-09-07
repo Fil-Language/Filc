@@ -1,17 +1,17 @@
 #include "utils/cxxopts.hpp"
 #include <string>
 
-#define VERSION "0.0.1"
+#define VERSION "0.0.1-alpha"
 
 int main(int argc, char **argv) {
-    cxxopts::Options options("filc", "Fil language compiler");
+    cxxopts::Options options("filc", "Fil compiler \nVersion: " VERSION);
     options.custom_help("[options...]");
     options.positional_help("<main source filename>");
     options.add_options()
             ("f,filename", "Main filename", cxxopts::value<std::string>())
             ("h,help", "Display help message")
             ("v,version", "Display version of compiler")
-            ("verbose", "Verbose level (0-5)", cxxopts::value<int>()->default_value("0"));
+            ("verbose", "Verbose level (0-5)", cxxopts::value<int>()->default_value("0")->implicit_value("1"));
     options.parse_positional({"filename"});
 
     cxxopts::ParseResult result;
@@ -34,7 +34,6 @@ int main(int argc, char **argv) {
     }
 
     if (!result.count("filename")) {
-        std::cout << "\033[1;31mNo filename specified\033[00m" << std::endl << std::endl;
         std::cout << options.help() << std::endl;
         return 1;
     }
