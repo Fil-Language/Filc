@@ -10,7 +10,6 @@ set(antlr4-output
         ${PROJECT_SOURCE_DIR}/src/generated/FilLexer.cpp
         ${PROJECT_SOURCE_DIR}/src/generated/FilLexer.h
         ${PROJECT_SOURCE_DIR}/src/generated/FilParser.cpp
-        ${PROJECT_SOURCE_DIR}/src/generated/FilParser.h
         ${PROJECT_SOURCE_DIR}/src/generated/FilParserBaseVisitor.cpp
         ${PROJECT_SOURCE_DIR}/src/generated/FilParserBaseVisitor.h
         ${PROJECT_SOURCE_DIR}/src/generated/FilParserVisitor.cpp
@@ -32,19 +31,18 @@ include_directories(
 add_executable(filc
         src/main.cpp
         src/utils/cxxopts.hpp
-#        src/generated/FilLexer.cpp
-#        src/generated/FilLexer.h
-#        src/generated/FilParser.cpp
-#        src/generated/FilParser.h
-#        src/generated/FilParserBaseVisitor.cpp
-#        src/generated/FilParserBaseVisitor.h
-#        src/generated/FilParserVisitor.cpp
-#        src/generated/FilParserVisitor.h
+        src/generated/FilLexer.cpp
+        src/generated/FilLexer.h
+        src/generated/FilParser.cpp
+        src/generated/FilParserBaseVisitor.cpp
+        src/generated/FilParserBaseVisitor.h
+        src/generated/FilParserVisitor.cpp
+        src/generated/FilParserVisitor.h
 )
 
-#add_dependencies(filc  GenerateLexerParser)
+add_dependencies(filc  GenerateLexerParser)
 
 target_link_libraries(filc  antlr4-runtime.a)
-target_compile_options(filc PRIVATE -Wall -O3)
+target_compile_options(filc PRIVATE -O3)
 
 install(TARGETS filc DESTINATION bin)
