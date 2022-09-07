@@ -21,19 +21,15 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitModule(FilParser::ModuleContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitImport_(FilParser::Import_Context *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitExpr(FilParser::ExprContext *ctx) override {
     return visitChildren(ctx);
   }
 
   virtual std::any visitFunction(FilParser::FunctionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitFunction_name(FilParser::Function_nameContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -74,6 +70,14 @@ public:
   }
 
   virtual std::any visitClass_modifier(FilParser::Class_modifierContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitClass_identifier(FilParser::Class_identifierContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitClass_generic(FilParser::Class_genericContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -205,7 +209,11 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitUnary_calcul(FilParser::Unary_calculContext *ctx) override {
+  virtual std::any visitUnary_op_pre(FilParser::Unary_op_preContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitUnary_op_post(FilParser::Unary_op_postContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -241,15 +249,15 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitArray_assign(FilParser::Array_assignContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitType(FilParser::TypeContext *ctx) override {
     return visitChildren(ctx);
   }
 
   virtual std::any visitLitteral(FilParser::LitteralContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitTemp(FilParser::TempContext *ctx) override {
     return visitChildren(ctx);
   }
 

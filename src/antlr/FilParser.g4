@@ -4,11 +4,7 @@ options {
 	tokenVocab = FilLexer;
 }
 
-program: module import_* expr*;
-
-module: MODULE MODULE_NAME;
-
-import_: IMPORT MODULE_NAME;
+program: MODULE IMPORT* (EXPORT? expr)*;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
@@ -18,25 +14,32 @@ expr:
 	| interface
 	| class_
 	| enum_
+	| variable_decl
 	| condition
 	| loop
+	| function_call
 	| exception
-	| unary_calcul
-    | expr binary_operator expr
-	| expr assignation
 	| expr DOT expr
 	| expr ARROW expr
+	| unary_op_pre expr
+    | expr unary_op_post
+    | expr binary_operator expr
+	| expr assignation
 	| cast
 	| IDENTIFIER
-	| function_call
+	| class_identifier
 	| litteral
-	| variable_decl
+	| NEW class_identifier function_call_params
 	| expr_parenthesis
-	| expr_block;
+	| expr_block
+	| array_assign;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-function: FUN IDENTIFIER fun_params (COLON type)? fun_body;
+function: FUN function_name fun_params (COLON type)? fun_body;
+
+function_name: IDENTIFIER
+             | OPERATOR binary_operator;
 
 fun_params: LPAREN fun_param_list? RPAREN;
 
@@ -46,7 +49,7 @@ fun_param: IDENTIFIER COLON type;
 
 fun_body: assignation | expr_parenthesis | expr_block;
 
-function_decl: FUN IDENTIFIER fun_params (COLON type)?;
+function_decl: FUN function_name fun_params (COLON type)?;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
@@ -61,9 +64,13 @@ interface_body: LBRACE function_decl* RBRACE;
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 class_:
-	class_modifier CLASS IDENTIFIER class_params? class_extends? class_body?;
+	class_modifier? CLASS class_identifier class_params? class_extends? class_body?;
 
 class_modifier: ABSTRACT | OPEN;
+
+class_identifier: IDENTIFIER TIMES? class_generic?;
+
+class_generic: LT IDENTIFIER (COMMA IDENTIFIER)* GT;
 
 class_params: LPAREN class_param_list? RPAREN;
 
@@ -77,12 +84,12 @@ class_extends: COLON class_extend_list;
 
 class_extend_list: class_extend (COMMA class_extend)*;
 
-class_extend: IDENTIFIER function_call_params;
+class_extend: class_identifier function_call_params?;
 
 class_body:
-	LBRACE class_constructor (class_variable | class_function)* RBRACE;
+	LBRACE class_constructor? (class_variable | class_function)* RBRACE;
 
-class_function: ABSTRACT? class_atr_modifier function;
+class_function: (ABSTRACT | OVERRIDE)? class_atr_modifier? (function | function_decl);
 
 class_variable: class_atr_modifier variable_decl;
 
@@ -104,7 +111,7 @@ if_: IF if_condition if_body else_if* else_?;
 
 if_condition: expr_parenthesis;
 
-if_body: expr | expr_block | expr_parenthesis;
+if_body: expr_block | expr_parenthesis | expr;
 
 else_if: ELSE IF if_condition if_body;
 
@@ -162,8 +169,8 @@ binary_operator:
 	| FRIGHT
 	| AND
 	| OR
-	| LE
-	| GE
+	| LT
+	| GT
 	| EQEQ
 	| LEQ
 	| GEQ
@@ -172,10 +179,19 @@ binary_operator:
 	| BOR
 	| BXOR;
 
-unary_calcul: unary_operator expr;
+unary_op_pre:
+	PLUS PLUS
+	| MINUS MINUS
+	| TIMES
+	| BAND;
+
+unary_op_post:
+    PLUS PLUS
+    | MINUS MINUS
+    | (LBRAK expr RBRAK);
 
 unary_operator:
-	PLUS
+    PLUS
 	| MINUS
 	| DIVIDE
 	| TIMES
@@ -183,8 +199,7 @@ unary_operator:
 	| NOT
 	| BAND
 	| BXOR
-	| BOR
-	| (LBRAK INT RBRAK);
+	| BOR;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
@@ -198,7 +213,7 @@ cast: LPAREN type RPAREN expr;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-function_call: IDENTIFIER function_call_params;
+function_call: function_name function_call_params;
 
 function_call_params: LPAREN function_call_param_list? RPAREN;
 
@@ -206,7 +221,9 @@ function_call_param_list: expr (COMMA expr)*;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-variable_decl: (VAL | VAR) IDENTIFIER ((COLON type) | ((COLON type)? assignation));
+variable_decl: (VAL | VAR) IDENTIFIER (((COLON type)? assignation) | (COLON type));
+
+array_assign: LBRACE expr (COMMA expr)* RBRACE;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
@@ -214,11 +231,9 @@ type: IDENTIFIER (TIMES | (LBRAK INT? RBRAK))?;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-litteral: INT | FLOAT | STRING | CHAR | TRUE | FALSE | NULL_;
+litteral: INT | FLOAT | STRING | FSTRING | CHAR | TRUE | FALSE | NULL_;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-temp: DOT; // TODO: remove this
-
-expr_parenthesis: LPAREN expr RPAREN;
-expr_block: LBRAK expr* RBRAK;
+expr_parenthesis: LPAREN expr* RPAREN;
+expr_block: LBRACE expr* RBRACE;

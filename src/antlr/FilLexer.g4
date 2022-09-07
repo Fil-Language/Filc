@@ -2,11 +2,11 @@ lexer grammar FilLexer;
 
 // Keywords
 EXPORT: 'export';
-MODULE: 'module';
 FUN: 'fun';
 INTERFACE: 'interface';
 CLASS: 'class';
 ABSTRACT: 'abstract';
+OVERRIDE: 'override';
 OPEN: 'open';
 PRIVATE: 'private';
 PUBLIC: 'public';
@@ -27,6 +27,8 @@ CATCH: 'catch';
 TRUE: 'true';
 FALSE: 'false';
 NULL_: 'null';
+NEW: 'new';
+OPERATOR: 'operator';
 
 // Identifier
 fragment LETTER: ('a' .. 'z') | ('A' .. 'Z') | '_';
@@ -55,8 +57,8 @@ FLEFT: '<<';
 FRIGHT: '>>';
 AND: '&&';
 OR: '||';
-LE: '<';
-GE: '>';
+LT: '<';
+GT: '>';
 EQEQ: '==';
 LEQ: '<=';
 GEQ: '>=';
@@ -82,6 +84,14 @@ STRING:
             setText(text);
         }
 };
+FSTRING:
+    'f"' (STRING_CHAR | '\\"' | '\\\\')* '"' {
+        {
+            auto text = getText();
+            text = text.substr(1, text.size() - 2);
+            setText(text);
+        }
+};
 CHAR: '\'' ~('\'' | '\\' | '\n') '\'';
 
 // Comments
@@ -92,8 +102,6 @@ COMMENT_BLOCK: '/*' .*? '*/' -> skip;
 SEPARATOR: (' ' | '\t' | '\r' | '\n' | EOF) -> skip;
 
 // Imports
-MODULE_NAME: IDENTIFIER ('.' IDENTIFIER)*;
-IMPORT:
-	'import' (' ')* MODULE_NAME {
-    // TODO : implement the import of file and subfiles
-};
+fragment MODULE_NAME: IDENTIFIER ('.' IDENTIFIER)*;
+MODULE: 'module' ' '* MODULE_NAME;
+IMPORT: 'import' ' '* MODULE_NAME; // TODO : implement the import of file and subfiles

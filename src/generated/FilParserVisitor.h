@@ -22,13 +22,11 @@ public:
    */
     virtual std::any visitProgram(FilParser::ProgramContext *context) = 0;
 
-    virtual std::any visitModule(FilParser::ModuleContext *context) = 0;
-
-    virtual std::any visitImport_(FilParser::Import_Context *context) = 0;
-
     virtual std::any visitExpr(FilParser::ExprContext *context) = 0;
 
     virtual std::any visitFunction(FilParser::FunctionContext *context) = 0;
+
+    virtual std::any visitFunction_name(FilParser::Function_nameContext *context) = 0;
 
     virtual std::any visitFun_params(FilParser::Fun_paramsContext *context) = 0;
 
@@ -49,6 +47,10 @@ public:
     virtual std::any visitClass_(FilParser::Class_Context *context) = 0;
 
     virtual std::any visitClass_modifier(FilParser::Class_modifierContext *context) = 0;
+
+    virtual std::any visitClass_identifier(FilParser::Class_identifierContext *context) = 0;
+
+    virtual std::any visitClass_generic(FilParser::Class_genericContext *context) = 0;
 
     virtual std::any visitClass_params(FilParser::Class_paramsContext *context) = 0;
 
@@ -114,7 +116,9 @@ public:
 
     virtual std::any visitBinary_operator(FilParser::Binary_operatorContext *context) = 0;
 
-    virtual std::any visitUnary_calcul(FilParser::Unary_calculContext *context) = 0;
+    virtual std::any visitUnary_op_pre(FilParser::Unary_op_preContext *context) = 0;
+
+    virtual std::any visitUnary_op_post(FilParser::Unary_op_postContext *context) = 0;
 
     virtual std::any visitUnary_operator(FilParser::Unary_operatorContext *context) = 0;
 
@@ -132,11 +136,11 @@ public:
 
     virtual std::any visitVariable_decl(FilParser::Variable_declContext *context) = 0;
 
+    virtual std::any visitArray_assign(FilParser::Array_assignContext *context) = 0;
+
     virtual std::any visitType(FilParser::TypeContext *context) = 0;
 
     virtual std::any visitLitteral(FilParser::LitteralContext *context) = 0;
-
-    virtual std::any visitTemp(FilParser::TempContext *context) = 0;
 
     virtual std::any visitExpr_parenthesis(FilParser::Expr_parenthesisContext *context) = 0;
 

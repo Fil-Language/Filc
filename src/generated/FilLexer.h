@@ -13,17 +13,18 @@ namespace antlrcppfil {
 class  FilLexer : public antlr4::Lexer {
 public:
   enum {
-    EXPORT = 1, MODULE = 2, FUN = 3, INTERFACE = 4, CLASS = 5, ABSTRACT = 6, 
+    EXPORT = 1, FUN = 2, INTERFACE = 3, CLASS = 4, ABSTRACT = 5, OVERRIDE = 6, 
     OPEN = 7, PRIVATE = 8, PUBLIC = 9, INTERNAL = 10, PROTECTED = 11, CONSTRUCTOR = 12, 
     ENUM = 13, IF = 14, ELSE = 15, SWITCH = 16, DEFAULT = 17, FOR = 18, 
     VAL = 19, VAR = 20, WHILE = 21, TRY = 22, CATCH = 23, TRUE = 24, FALSE = 25, 
-    NULL_ = 26, IDENTIFIER = 27, DOT = 28, ARROW = 29, LBRACE = 30, RBRACE = 31, 
-    LPAREN = 32, RPAREN = 33, LBRAK = 34, RBRAK = 35, COLON = 36, COMMA = 37, 
-    SEMICOLON = 38, EQ = 39, PLUS = 40, MINUS = 41, DIVIDE = 42, TIMES = 43, 
-    MOD = 44, FLEFT = 45, FRIGHT = 46, AND = 47, OR = 48, LE = 49, GE = 50, 
-    EQEQ = 51, LEQ = 52, GEQ = 53, NEQ = 54, NOT = 55, BAND = 56, BOR = 57, 
-    BXOR = 58, INT = 59, FLOAT = 60, STRING = 61, CHAR = 62, COMMENT = 63, 
-    COMMENT_BLOCK = 64, SEPARATOR = 65, MODULE_NAME = 66, IMPORT = 67
+    NULL_ = 26, NEW = 27, OPERATOR = 28, IDENTIFIER = 29, DOT = 30, ARROW = 31, 
+    LBRACE = 32, RBRACE = 33, LPAREN = 34, RPAREN = 35, LBRAK = 36, RBRAK = 37, 
+    COLON = 38, COMMA = 39, SEMICOLON = 40, EQ = 41, PLUS = 42, MINUS = 43, 
+    DIVIDE = 44, TIMES = 45, MOD = 46, FLEFT = 47, FRIGHT = 48, AND = 49, 
+    OR = 50, LT = 51, GT = 52, EQEQ = 53, LEQ = 54, GEQ = 55, NEQ = 56, 
+    NOT = 57, BAND = 58, BOR = 59, BXOR = 60, INT = 61, FLOAT = 62, STRING = 63, 
+    FSTRING = 64, CHAR = 65, COMMENT = 66, COMMENT_BLOCK = 67, SEPARATOR = 68, 
+    MODULE = 69, IMPORT = 70
   };
 
   explicit FilLexer(antlr4::CharStream *input);
@@ -56,7 +57,7 @@ private:
 
   // Individual action functions triggered by action() above.
   void STRINGAction(antlr4::RuleContext *context, size_t actionIndex);
-  void IMPORTAction(antlr4::RuleContext *context, size_t actionIndex);
+  void FSTRINGAction(antlr4::RuleContext *context, size_t actionIndex);
 
   // Individual semantic predicate functions triggered by sempred() above.
 
