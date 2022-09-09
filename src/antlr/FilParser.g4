@@ -183,6 +183,7 @@ unary_op_pre:
 	PLUS PLUS
 	| MINUS MINUS
 	| TIMES
+	| NOT
 	| BAND;
 
 unary_op_post:
@@ -198,8 +199,8 @@ unary_operator:
 	| MOD
 	| NOT
 	| BAND
-	| BXOR
-	| BOR;
+	| BOR
+	| BXOR;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
