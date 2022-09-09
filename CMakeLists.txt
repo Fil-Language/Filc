@@ -54,7 +54,8 @@ add_executable(filc
         src/main.cpp
         src/utils/cxxopts.hpp
         ${ANTLR_Lexer_CXX_OUTPUTS}
-        ${ANTLR_Parser_CXX_OUTPUTS})
+        ${ANTLR_Parser_CXX_OUTPUTS}
+        src/VERSION.h)
 target_link_libraries(filc antlr4_static)
 
 target_compile_options(filc PUBLIC -O3)

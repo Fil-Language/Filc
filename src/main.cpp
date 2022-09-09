@@ -1,10 +1,15 @@
+/**
+ *   === Fil compiler ===
+ * Created by Kevin Traini
+ *      Under GPL-3.0
+ * -----------------------
+ */
 #include "utils/cxxopts.hpp"
+#include "VERSION.h"
 #include <string>
 
-#define VERSION "0.0.1-alpha"
-
 int main(int argc, char **argv) {
-    cxxopts::Options options("filc", "Fil compiler \nVersion: " VERSION);
+    cxxopts::Options options("filc", "Fil compiler \nVersion: " FILC_VERSION_STRING);
     options.custom_help("[options...]");
     options.positional_help("<main source filename>");
     options.add_options()
@@ -29,7 +34,7 @@ int main(int argc, char **argv) {
     }
 
     if (result.count("version")) {
-        std::cout << "Filc version " VERSION << std::endl;
+        std::cout << "Filc version " FILC_VERSION_STRING << " - " << FILC_VERSION << std::endl;
         return 0;
     }
 
