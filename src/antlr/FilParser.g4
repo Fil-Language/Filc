@@ -18,7 +18,7 @@ expr:
 	| condition
 	| loop
 	| function_call
-	| exception
+	| exception_
 	| expr DOT expr
 	| expr ARROW expr
 	| unary_op_pre expr
@@ -147,7 +147,7 @@ while_: WHILE if_condition if_body;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-exception:
+exception_:
 	TRY (expr | expr_block | expr_parenthesis) catch_body+;
 
 catch_body:

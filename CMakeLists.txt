@@ -1,48 +1,62 @@
 project(Filc)
 
-cmake_minimum_required(VERSION 3.10)
+# minimum required CMAKE version
+cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 
-set (CMAKE_CXX_STANDARD 17)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-set(antlr4-jar ${PROJECT_SOURCE_DIR}/bin/antlr-4.11.1-complete.jar)
+# compiler must be 17
+set(CMAKE_CXX_STANDARD 17)
 
-set(antlr4-output
-        ${PROJECT_SOURCE_DIR}/src/generated/FilLexer.cpp
-        ${PROJECT_SOURCE_DIR}/src/generated/FilLexer.h
-        ${PROJECT_SOURCE_DIR}/src/generated/FilParser.cpp
-        ${PROJECT_SOURCE_DIR}/src/generated/FilParserBaseVisitor.cpp
-        ${PROJECT_SOURCE_DIR}/src/generated/FilParserBaseVisitor.h
-        ${PROJECT_SOURCE_DIR}/src/generated/FilParserVisitor.cpp
-        ${PROJECT_SOURCE_DIR}/src/generated/FilParserVisitor.h
-)
+# required if linking to static library
+add_definitions(-DANTLR4CPP_STATIC)
 
-add_custom_target(GenerateLexerParser
-        COMMAND java -jar ${antlr4-jar} -Dlanguage=Cpp -visitor -no-listener -o ${PROJECT_SOURCE_DIR}/src/generated/ -package antlrcppfil ${PROJECT_SOURCE_DIR}/src/antlr/FilLexer.g4 ${PROJECT_SOURCE_DIR}/src/antlr/FilParser.g4
-        DEPENDS ${PROJECT_SOURCE_DIR}/src/antlr/FilLexer.g4 ${PROJECT_SOURCE_DIR}/src/antlr/FilParser.g4
-)
+# using /MD flag for antlr4_runtime (for Visual C++ compilers only)
+set(ANTLR4_WITH_STATIC_CRT OFF)
+
+# Specify the version of the antlr4 library needed for this project.
+# By default the latest version of antlr4 will be used.  You can specify a
+# specific, stable version by setting a repository tag value or a link
+# to a zip file containing the libary source.
+set(ANTLR4_TAG 4.11.1)
+set(ANTLR4_ZIP_REPOSITORY https://github.com/antlr/antlr4/archive/refs/tags/4.11.1.zip)
+
+# add external build for antlrcpp
+include(ExternalAntlr4Cpp)
+# add antlr4cpp artifacts to project environment
+include_directories(${ANTLR4_INCLUDE_DIRS})
+
+# set variable pointing to the antlr tool that supports C++
+# this is not required if the jar file can be found under PATH environment
+set(ANTLR_EXECUTABLE ${PROJECT_SOURCE_DIR}/bin/antlr-4.11.1-complete.jar)
+# add macros to generate ANTLR Cpp code from grammar
+find_package(ANTLR REQUIRED)
+
+# Call macro to add lexer and grammar to your build dependencies.
+antlr_target(Lexer ${PROJECT_SOURCE_DIR}/src/antlr/FilLexer.g4 LEXER
+        PACKAGE antlrcppfil)
+antlr_target(Parser ${PROJECT_SOURCE_DIR}/src/antlr/FilParser.g4 PARSER
+        PACKAGE antlrcppfil
+        DEPENDS_ANTLR Lexer
+        COMPILE_FLAGS -lib ${ANTLR_Lexer_OUTPUT_DIR})
+
+# include generated files in project environment
+include_directories(${ANTLR_Lexer_OUTPUT_DIR})
+include_directories(${ANTLR_Parser_OUTPUT_DIR})
 
 include_directories(
         src
-        src/generated
         src/utils
-        antlr-runtime/src
 )
 
+# add generated grammar to binary target
 add_executable(filc
         src/main.cpp
         src/utils/cxxopts.hpp
-        src/generated/FilLexer.cpp
-        src/generated/FilLexer.h
-        src/generated/FilParser.cpp
-        src/generated/FilParserBaseVisitor.cpp
-        src/generated/FilParserBaseVisitor.h
-        src/generated/FilParserVisitor.cpp
-        src/generated/FilParserVisitor.h
-)
+        ${ANTLR_Lexer_CXX_OUTPUTS}
+        ${ANTLR_Parser_CXX_OUTPUTS})
+target_link_libraries(filc antlr4_static)
 
-add_dependencies(filc  GenerateLexerParser)
-
-target_link_libraries(filc  antlr4-runtime.a)
-target_compile_options(filc PRIVATE -O3)
+target_compile_options(filc PUBLIC -O3)
 
 install(TARGETS filc DESTINATION bin)
