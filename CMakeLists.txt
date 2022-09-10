@@ -47,6 +47,7 @@ include_directories(${ANTLR_Parser_OUTPUT_DIR})
 include_directories(
         src
         src/utils
+        src/utils/logger
 )
 
 # add generated grammar to binary target
@@ -55,6 +56,8 @@ add_executable(filc
         src/utils/cxxopts.hpp
         ${ANTLR_Lexer_CXX_OUTPUTS}
         ${ANTLR_Parser_CXX_OUTPUTS}
+        src/utils/logger/Logger.cpp
+        src/utils/logger/Logger.hpp
         src/VERSION.h)
 target_link_libraries(filc antlr4_static)
 
