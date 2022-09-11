@@ -46,6 +46,8 @@ include_directories(${ANTLR_Parser_OUTPUT_DIR})
 
 include_directories(
         src
+        src/fil
+        src/fil/ast
         src/utils
         src/utils/logger
 )
@@ -58,7 +60,8 @@ add_executable(filc
         ${ANTLR_Parser_CXX_OUTPUTS}
         src/utils/logger/Logger.cpp
         src/utils/logger/Logger.hpp
-        src/VERSION.h)
+        src/VERSION.h
+        src/fil/ast/AST.h src/fil/ast/Program.hpp)
 target_link_libraries(filc antlr4_static)
 
 target_compile_options(filc PUBLIC -O3)

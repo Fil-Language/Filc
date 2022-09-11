@@ -4,7 +4,24 @@ options {
 	tokenVocab = FilLexer;
 }
 
-program: MODULE IMPORT* (EXPORT? expr)*;
+@parser::header {
+#include "AST.h"
+}
+
+@parser::postinclude {
+using namespace ast;
+}
+
+@parser::members {
+Program parseTree() {
+    return prog()->tree;
+}
+}
+
+prog returns[Program tree]
+    : MODULE IMPORT* (EXPORT? expr)* EOF {
+    $tree = Program($MODULE.text);
+};
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

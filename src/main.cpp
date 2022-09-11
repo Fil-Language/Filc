@@ -4,8 +4,8 @@
  *      Under GPL-3.0
  * -----------------------
  */
-#include "utils/cxxopts.hpp"
-#include "utils/logger/Logger.hpp"
+#include "cxxopts.hpp"
+#include "Logger.hpp"
 #include "VERSION.h"
 #include <string>
 #include <vector>
