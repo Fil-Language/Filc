@@ -12,7 +12,7 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-    cxxopts::Options options("filc", "Fil compiler \nVersion: " FILC_VERSION_STRING);
+    cxxopts::Options options("filc", "Fil compiler \nVersion: " + FILC_VERSION_STRING);
     options.custom_help("[options...]");
     options.positional_help("<main source filename>");
     options.add_options()
@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
     }
 
     if (result.count("version")) {
-        cout << "Filc version " FILC_VERSION_STRING << " - " << FILC_VERSION << endl;
+        cout << "Filc version " << FILC_VERSION_STRING << " - " << FILC_VERSION << endl;
         return 0;
     }
 
