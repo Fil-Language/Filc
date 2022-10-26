@@ -6,10 +6,14 @@ options {
 
 @parser::header {
 #include "AST.h"
+#include "FilCompiler.h"
+
+#include <string>
 }
 
 @parser::postinclude {
 using namespace ast;
+using namespace std;
 }
 
 @parser::members {
@@ -19,9 +23,9 @@ Program parseTree() {
 }
 
 prog returns[Program tree]
-    : MODULE IMPORT* (EXPORT? expr)* EOF {
-    $tree = Program($MODULE.text);
-};
+    : m=MODULE (EXPORT? expr)* EOF {
+        $tree = Program($m.text);
+    };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

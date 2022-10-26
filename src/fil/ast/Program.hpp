@@ -12,7 +12,7 @@
 #include <string>
 
 namespace ast {
-    class Program {
+    class Program : public AST {
     public:
         Program() = default;
 
@@ -20,7 +20,11 @@ namespace ast {
             _moduleName = moduleName;
         }
 
-        ~Program() = default;
+        ~Program() override = default;
+
+        std::string toString() const override {
+            return "Program: " + _moduleName;
+        }
 
     private:
         std::string _moduleName;

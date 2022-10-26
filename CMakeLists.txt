@@ -18,8 +18,8 @@ set(ANTLR4_WITH_STATIC_CRT OFF)
 # By default the latest version of antlr4 will be used.  You can specify a
 # specific, stable version by setting a repository tag value or a link
 # to a zip file containing the libary source.
-set(ANTLR4_TAG 4.11.1)
-set(ANTLR4_ZIP_REPOSITORY https://github.com/antlr/antlr4/archive/refs/tags/4.11.1.zip)
+set(ANTLR4_TAG 4.9.3)
+set(ANTLR4_ZIP_REPOSITORY https://github.com/antlr/antlr4/archive/refs/tags/${ANTLR4_TAG}.zip)
 
 # add external build for antlrcpp
 include(ExternalAntlr4Cpp)
@@ -28,7 +28,7 @@ include_directories(${ANTLR4_INCLUDE_DIRS})
 
 # set variable pointing to the antlr tool that supports C++
 # this is not required if the jar file can be found under PATH environment
-set(ANTLR_EXECUTABLE ${PROJECT_SOURCE_DIR}/bin/antlr-4.11.1-complete.jar)
+set(ANTLR_EXECUTABLE ${PROJECT_SOURCE_DIR}/bin/antlr-${ANTLR4_TAG}-complete.jar)
 # add macros to generate ANTLR Cpp code from grammar
 find_package(ANTLR REQUIRED)
 
@@ -49,21 +49,20 @@ include_directories(
         src/fil
         src/fil/ast
         src/utils
-        src/utils/logger
 )
 
 # add generated grammar to binary target
 add_executable(filc
         src/main.cpp
-        src/utils/cxxopts.hpp
+        src/utils/cxxopts.hpp src/utils/utils.h src/utils/utils.cpp
         ${ANTLR_Lexer_CXX_OUTPUTS}
         ${ANTLR_Parser_CXX_OUTPUTS}
-        src/utils/logger/Logger.cpp
-        src/utils/logger/Logger.hpp
         src/VERSION.h
-        src/fil/ast/AST.h src/fil/ast/Program.hpp)
+        src/fil/FilCompiler.cpp src/fil/FilCompiler.h
+        src/fil/Logger.hpp
+        src/fil/ast/AST.h src/fil/ast/AST.hpp src/fil/ast/AST.cpp src/fil/ast/Program.hpp)
 target_link_libraries(filc antlr4_static)
 
-target_compile_options(filc PUBLIC -O3)
+target_compile_options(filc PUBLIC)
 
 install(TARGETS filc DESTINATION bin)

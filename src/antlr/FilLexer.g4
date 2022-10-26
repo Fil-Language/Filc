@@ -1,5 +1,9 @@
 lexer grammar FilLexer;
 
+@lexer::header {
+#include "utils.h"
+}
+
 // Keywords
 EXPORT: 'export';
 FUN: 'fun';
@@ -103,5 +107,7 @@ SEPARATOR: (' ' | '\t' | '\r' | '\n' | EOF) -> skip;
 
 // Imports
 fragment MODULE_NAME: IDENTIFIER ('.' IDENTIFIER)*;
-MODULE: 'module' ' '* MODULE_NAME;
-IMPORT: 'import' ' '* MODULE_NAME; // TODO : implement the import of file and subfiles
+MODULE: 'module' ' '+ MODULE_NAME {
+    setText(ltrim(getText().erase(0, 7)));
+};
+IMPORT: 'import' ' '* MODULE_NAME -> skip; // TODO : implement the import of file and subfiles

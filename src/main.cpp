@@ -5,10 +5,9 @@
  * -----------------------
  */
 #include "cxxopts.hpp"
-#include "Logger.hpp"
 #include "VERSION.h"
+#include "FilCompiler.h"
 #include <string>
-#include <vector>
 
 using namespace std;
 
@@ -47,16 +46,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    auto types = vector{DEBUG, SUCCESS, INFO, WARNING, ERROR};
-    vector<LoggerType> logTypes;
-    for (int i = 0; i < result["verbose"].as<int>(); ++i) {
-        logTypes.push_back(types[i]);
-    }
-    Logger::init(CONSOLE_ONLY, logTypes);
+    auto compiler = FilCompiler(result["filename"].as<string>());
 
-    cout << "filename:" << result["filename"].as<string>() << endl;
-
-    // TODO : Compile $filename
-
-    return 0;
+    return compiler.compile();
 }
