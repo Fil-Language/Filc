@@ -7,18 +7,30 @@
 #ifndef FILC_AST_HPP
 #define FILC_AST_HPP
 
-#include "AST.h"
-
-#include <iostream>
+#include <string>
 
 namespace ast {
     class AST {
     public:
-        AST() = default;
+        AST();
 
-        virtual ~AST() = default;
+        ~AST();
 
         virtual std::string toString() const = 0;
+    };
+
+    // ====================
+
+    class Program : public AST {
+    public:
+        Program();
+
+        explicit Program(std::string moduleName);
+
+        std::string toString() const override;
+
+    private:
+        std::string _moduleName;
     };
 }
 

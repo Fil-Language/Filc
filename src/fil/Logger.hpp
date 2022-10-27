@@ -26,7 +26,7 @@ public:
         return _instance;
     }
 
-    void log(int line, const std::string& filename, const std::string &msg) {
+    void log(int line, const std::string &filename, const std::string &msg) {
         _logs.push_back(filename + ":" + std::to_string(line) + " -> " + msg);
     }
 

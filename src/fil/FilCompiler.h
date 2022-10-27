@@ -7,7 +7,7 @@
 #ifndef FILC_FILCOMPILER_H
 #define FILC_FILCOMPILER_H
 
-#include "AST.h"
+#include "AST.hpp"
 #include <string>
 
 class FilCompiler {
@@ -16,7 +16,7 @@ public:
 
     int compile();
 
-    static ast::Program import(const std::string& moduleName);
+    static ast::Program import(const std::string &moduleName);
 
 private:
     std::string _filename;

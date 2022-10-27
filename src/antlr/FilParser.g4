@@ -5,7 +5,7 @@ options {
 }
 
 @parser::header {
-#include "AST.h"
+#include "AST.hpp"
 #include "FilCompiler.h"
 
 #include <string>

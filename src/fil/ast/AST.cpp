@@ -4,9 +4,16 @@
  *      Under GPL-3.0
  * -----------------------
  */
-#include "AST.h"
+#include "AST.hpp"
 
-std::ostream &operator<<(std::ostream &os, const ast::AST &ast) {
+using namespace std;
+using namespace ast;
+
+ostream &operator<<(ostream &os, const AST &ast) {
     os << ast.toString();
     return os;
 }
+
+AST::~AST() = default;
+
+AST::AST() = default;
