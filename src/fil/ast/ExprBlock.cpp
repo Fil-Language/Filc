@@ -17,14 +17,16 @@ ExprBlock::ExprBlock(std::vector<AbstractExpr> &exprs) : _exprs(exprs) {
     _export = false;
 }
 
-std::string ExprBlock::toString() const {
-    string res = "{\n";
+IndentPrinter *ExprBlock::print(IndentPrinter *printer) const {
+    printer->writeIndent("ExprBlock =>\n")
+            ->indent();
 
     for (const auto &expr: _exprs) {
-        res += "\t" + expr.toString() + "\n";
+        expr.print(printer);
     }
 
-    res += "}\n";
+    printer->unindent()
+            ->writeIndent("}\n");
 
-    return res;
+    return printer;
 }

@@ -19,17 +19,19 @@ Program::Program(string moduleName) : _moduleName(std::move(moduleName)), _impor
 Program::Program(string moduleName, vector<Program> &imports, vector<AbstractExpr> &exprs) :
         _moduleName(std::move(moduleName)), _imports(imports), _exprs(exprs) {}
 
-std::string Program::toString() const {
-    string res;
-    res += "Program: " + _moduleName + "\n";
+IndentPrinter *Program::print(IndentPrinter *printer) const {
+    printer->writeIndent("Program => " + _moduleName + "\n")
+            ->indent();
 
     for (const auto &import: _imports) {
-        res += "\t" + import.toString() + "\n";
+        import.print(printer);
     }
 
     for (const auto &expr: _exprs) {
-        res += "\t" + expr.toString() + "\n";
+        expr.print(printer);
     }
 
-    return res;
+    printer->unindent();
+
+    return printer;
 }

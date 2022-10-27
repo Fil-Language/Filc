@@ -10,6 +10,8 @@
 #include <string>
 #include <vector>
 
+#include "utils.h"
+
 namespace ast {
     class AST {
     public:
@@ -17,7 +19,7 @@ namespace ast {
 
         ~AST();
 
-        virtual std::string toString() const = 0;
+        virtual IndentPrinter *print(IndentPrinter *printer) const = 0;
     };
 
     // ====================
@@ -28,7 +30,7 @@ namespace ast {
 
         void setExport(bool export_);
 
-        std::string toString() const override;
+        IndentPrinter *print(IndentPrinter *printer) const override;
 
     protected:
         bool _export;
@@ -44,7 +46,7 @@ namespace ast {
 
         Program(std::string moduleName, std::vector<Program> &imports, std::vector<AbstractExpr> &exprs);
 
-        std::string toString() const override;
+        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::string _moduleName;
@@ -60,7 +62,7 @@ namespace ast {
 
         explicit ExprBlock(std::vector<AbstractExpr> &exprs);
 
-        std::string toString() const override;
+        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::vector<AbstractExpr> _exprs;

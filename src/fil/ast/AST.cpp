@@ -10,8 +10,7 @@ using namespace std;
 using namespace ast;
 
 ostream &operator<<(ostream &os, const AST &ast) {
-    os << ast.toString();
-    return os;
+    return os << ast.print(new IndentPrinter("\t"));
 }
 
 AST::~AST() = default;

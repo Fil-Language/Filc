@@ -539,7 +539,7 @@ namespace cxxopts
     // If CXXOPTS_NO_EXCEPTIONS is not defined, just throw
     throw T{text};
 #else
-    // Otherwise manually instantiate the exception, print what() to stderr,
+    // Otherwise manually instantiate the exception, write what() to stderr,
     // and exit
     T exception{text};
     std::cerr << exception.what() << std::endl;
