@@ -110,4 +110,6 @@ fragment MODULE_NAME: IDENTIFIER ('.' IDENTIFIER)*;
 MODULE: 'module' ' '+ MODULE_NAME {
     setText(ltrim(getText().erase(0, 7)));
 };
-IMPORT: 'import' ' '* MODULE_NAME -> skip; // TODO : implement the import of file and subfiles
+IMPORT: 'import' ' '* MODULE_NAME {
+    setText(ltrim(getText().erase(0, 7)));
+};

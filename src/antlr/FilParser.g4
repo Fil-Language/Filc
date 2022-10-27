@@ -9,6 +9,7 @@ options {
 #include "FilCompiler.h"
 
 #include <string>
+#include <vector>
 }
 
 @parser::postinclude {
@@ -23,8 +24,17 @@ Program parseTree() {
 }
 
 prog returns[Program tree]
-    : m=MODULE (EXPORT? expr)* EOF {
-        $tree = Program($m.text);
+@init {
+    auto imports = vector<Program>();
+}
+@after {
+    $tree = Program($m.text, imports);
+}
+    : m=MODULE import_[&imports]* (EXPORT? expr)* EOF;
+
+import_[vector<Program>* imports]
+    : i=IMPORT {
+        $imports->push_back(FilCompiler::import($i.text));
     };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

@@ -8,6 +8,7 @@
 #define FILC_AST_HPP
 
 #include <string>
+#include <vector>
 
 namespace ast {
     class AST {
@@ -27,10 +28,13 @@ namespace ast {
 
         explicit Program(std::string moduleName);
 
+        Program(std::string moduleName, std::vector<Program> &imports);
+
         std::string toString() const override;
 
     private:
         std::string _moduleName;
+        std::vector<Program> _imports;
     };
 }
 

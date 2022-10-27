@@ -7,14 +7,24 @@
 #include "AST.hpp"
 
 #include <utility>
+#include <sstream>
 
 using namespace std;
 using namespace ast;
 
-Program::Program(string moduleName) : _moduleName(std::move(moduleName)) {}
+Program::Program() : _imports(vector<Program>()) {}
+
+Program::Program(string moduleName) : _moduleName(std::move(moduleName)), _imports(vector<Program>()) {}
+
+Program::Program(string moduleName, vector<Program> &imports) : _moduleName(std::move(moduleName)), _imports(imports) {}
 
 std::string Program::toString() const {
-    return "Program: " + _moduleName;
-}
+    string res;
+    res += "Program: " + _moduleName + "\n";
 
-Program::Program() = default;
+    for (const auto &import: _imports) {
+        res += "\t" + import.toString() + "\n";
+    }
+
+    return res;
+}
