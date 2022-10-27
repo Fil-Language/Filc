@@ -55,232 +55,246 @@ expr returns[AbstractExpr tree]
 @init {
     $tree = AbstractExpr();
 }
-    : function
-	| lambda
-	| interface
-	| class_
-	| enum_
-	| variable_decl
-	| condition
-	| loop
-	| function_call
-	| exception_
-	| expr DOT expr
-	| expr ARROW expr
-	| unary_op_pre expr
-    | expr unary_op_post
-    | expr binary_operator expr
-	| expr assignation
-	| cast
-	| IDENTIFIER
-	| class_identifier
-	| litteral
-	| NEW class_identifier function_call_params
-	| expr_parenthesis
-	| expr_block
-	| array_assign;
+    : function // TODO
+	| lambda // TODO
+	| interface // TODO
+	| class_ // TODO
+	| enum_ // TODO
+	| variable_decl // TODO
+	| condition // TODO
+	| loop // TODO
+	| function_call // TODO
+	| exception_ // TODO
+	| expr DOT expr // TODO
+	| expr ARROW expr // TODO
+	| unary_op_pre expr // TODO
+    | expr unary_op_post // TODO
+    | expr binary_operator expr // TODO
+	| expr assignation // TODO
+	| cast // TODO
+	| IDENTIFIER // TODO
+	| class_identifier // TODO
+	| litteral // TODO
+	| NEW class_identifier function_call_params // TODO
+	| expr_parenthesis // TODO
+	| expr_block // TODO
+	| array_assign; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-function: FUN function_name fun_params (COLON type)? fun_body;
+function: FUN function_name fun_params (COLON type)? fun_body; // TODO
 
-function_name: IDENTIFIER
-             | OPERATOR binary_operator;
+function_name: IDENTIFIER // TODO
+             | OPERATOR binary_operator; // TODO
 
-fun_params: LPAREN fun_param_list? RPAREN;
+fun_params: LPAREN fun_param_list? RPAREN; // TODO
 
-fun_param_list: fun_param (COMMA fun_param)*;
+fun_param_list: fun_param (COMMA fun_param)*; // TODO
 
-fun_param: IDENTIFIER COLON type;
+fun_param: IDENTIFIER COLON type; // TODO
 
-fun_body: assignation | expr_parenthesis | expr_block;
+fun_body: assignation | expr_parenthesis | expr_block; // TODO
 
-function_decl: FUN function_name fun_params (COLON type)?;
-
-// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-
-lambda: fun_params ARROW (expr_block | expr_parenthesis);
+function_decl: FUN function_name fun_params (COLON type)?; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-interface: INTERFACE IDENTIFIER class_params? interface_body?;
+lambda: fun_params ARROW (expr_block | expr_parenthesis); // TODO
 
-interface_body: LBRACE function_decl* RBRACE;
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+interface: INTERFACE IDENTIFIER class_params? interface_body?; // TODO
+
+interface_body: LBRACE function_decl* RBRACE; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 class_:
-	class_modifier? CLASS class_identifier class_params? class_extends? class_body?;
+	class_modifier? CLASS class_identifier class_params? class_extends? class_body?; // TODO
 
-class_modifier: ABSTRACT | OPEN;
+class_modifier:
+    ABSTRACT // TODO
+    | OPEN; // TODO
 
-class_identifier: IDENTIFIER TIMES? class_generic?;
+class_identifier: IDENTIFIER TIMES? class_generic?; // TODO
 
-class_generic: LT IDENTIFIER (COMMA IDENTIFIER)* GT;
+class_generic: LT IDENTIFIER (COMMA IDENTIFIER)* GT; // TODO
 
-class_params: LPAREN class_param_list? RPAREN;
+class_params: LPAREN class_param_list? RPAREN; // TODO
 
-class_param_list: class_param (COMMA class_param)*;
+class_param_list: class_param (COMMA class_param)*; // TODO
 
 class_param:
-	variable_decl
-	| IDENTIFIER COLON type (EQ litteral)?;
+	variable_decl // TODO
+	| IDENTIFIER COLON type (EQ litteral)?; // TODO
 
-class_extends: COLON class_extend_list;
+class_extends: COLON class_extend_list; // TODO
 
-class_extend_list: class_extend (COMMA class_extend)*;
+class_extend_list: class_extend (COMMA class_extend)*; // TODO
 
-class_extend: class_identifier function_call_params?;
+class_extend: class_identifier function_call_params?; // TODO
 
 class_body:
-	LBRACE class_constructor? (class_variable | class_function)* RBRACE;
+	LBRACE class_constructor? (class_variable | class_function)* RBRACE; // TODO
 
-class_function: (ABSTRACT | OVERRIDE)? class_atr_modifier? (function | function_decl);
+class_function: (ABSTRACT | OVERRIDE)? class_atr_modifier? (function | function_decl); // TODO
 
-class_variable: class_atr_modifier variable_decl;
+class_variable: class_atr_modifier variable_decl; // TODO
 
-class_atr_modifier: PRIVATE | PUBLIC | INTERNAL | PROTECTED;
+class_atr_modifier:
+    PRIVATE // TODO
+    | PUBLIC // TODO
+    | INTERNAL // TODO
+    | PROTECTED; // TODO
 
-class_constructor: CONSTRUCTOR expr_block;
-
-// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-
-enum_: ENUM IDENTIFIER enum_body?;
-
-enum_body: LBRACE (IDENTIFIER (COMMA IDENTIFIER)*)? RBRACE;
+class_constructor: CONSTRUCTOR expr_block; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-condition: if_ | switch_;
+enum_: ENUM IDENTIFIER enum_body?; // TODO
 
-if_: IF if_condition if_body else_if* else_?;
+enum_body: LBRACE (IDENTIFIER (COMMA IDENTIFIER)*)? RBRACE; // TODO
 
-if_condition: expr_parenthesis;
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-if_body: expr_block | expr_parenthesis | expr;
+condition: if_ | switch_; // TODO
 
-else_if: ELSE IF if_condition if_body;
+if_: IF if_condition if_body else_if* else_?; // TODO
 
-else_: ELSE if_body;
+if_condition: expr_parenthesis; // TODO
 
-switch_: SWITCH switch_condition switch_body;
+if_body: expr_block | expr_parenthesis | expr; // TODO
 
-switch_condition: expr_parenthesis;
+else_if: ELSE IF if_condition if_body; // TODO
 
-switch_body: LBRACE switch_case* RBRACE;
+else_: ELSE if_body; // TODO
 
-switch_case: (litteral | DEFAULT) ARROW (
-		expr
-		| expr_block
-		| expr_parenthesis
+switch_: SWITCH switch_condition switch_body; // TODO
+
+switch_condition: expr_parenthesis; // TODO
+
+switch_body: LBRACE switch_case* RBRACE; // TODO
+
+switch_case: (litteral | DEFAULT) ARROW ( // TODO
+		expr // TODO
+		| expr_block // TODO
+		| expr_parenthesis // TODO
 	);
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-loop: fori | foriter | while_;
+loop: fori | foriter | while_; // TODO
 
-fori: FOR fori_condition (expr | expr_block);
+fori: FOR fori_condition (expr | expr_block); // TODO
 
 fori_condition:
-	LPAREN variable_decl? SEMICOLON expr? SEMICOLON expr? RPAREN;
+	LPAREN variable_decl? SEMICOLON expr? SEMICOLON expr? RPAREN; // TODO
 
-foriter: FOR foriter_condition (expr | expr_block);
+foriter: FOR foriter_condition (expr | expr_block); // TODO
 
 foriter_condition:
-	LPAREN (VAL | VAR) IDENTIFIER COLON IDENTIFIER RPAREN;
+	LPAREN (VAL | VAR) IDENTIFIER COLON IDENTIFIER RPAREN; // TODO
 
-while_: WHILE if_condition if_body;
+while_: WHILE if_condition if_body; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 exception_:
-	TRY (expr | expr_block | expr_parenthesis) catch_body+;
+	TRY (expr | expr_block | expr_parenthesis) catch_body+; // TODO
 
-catch_body:
+catch_body: // TODO
 	CATCH LPAREN fun_param RPAREN (
-		expr
-		| expr_block
-		| expr_parenthesis
+		expr // TODO
+		| expr_block // TODO
+		| expr_parenthesis // TODO
 	);
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 binary_operator:
-	PLUS
-	| MINUS
-	| DIVIDE
-	| TIMES
-	| MOD
-	| FLEFT
-	| FRIGHT
-	| AND
-	| OR
-	| LT
-	| GT
-	| EQEQ
-	| LEQ
-	| GEQ
-	| NEQ
-	| BAND
-	| BOR
-	| BXOR;
+	PLUS // TODO
+	| MINUS // TODO
+	| DIVIDE // TODO
+	| TIMES // TODO
+	| MOD // TODO
+	| FLEFT // TODO
+	| FRIGHT // TODO
+	| AND // TODO
+	| OR // TODO
+	| LT // TODO
+	| GT // TODO
+	| EQEQ // TODO
+	| LEQ // TODO
+	| GEQ // TODO
+	| NEQ // TODO
+	| BAND // TODO
+	| BOR // TODO
+	| BXOR; // TODO
 
 unary_op_pre:
-	PLUS PLUS
-	| MINUS MINUS
-	| TIMES
-	| NOT
-	| BAND;
+	PLUS PLUS // TODO
+	| MINUS MINUS // TODO
+	| TIMES // TODO
+	| NOT // TODO
+	| BAND; // TODO
 
 unary_op_post:
-    PLUS PLUS
-    | MINUS MINUS
-    | (LBRAK expr RBRAK);
+    PLUS PLUS // TODO
+    | MINUS MINUS // TODO
+    | (LBRAK expr RBRAK); // TODO
 
 unary_operator:
-    PLUS
-	| MINUS
-	| DIVIDE
-	| TIMES
-	| MOD
-	| NOT
-	| BAND
-	| BOR
-	| BXOR;
+    PLUS // TODO
+	| MINUS // TODO
+	| DIVIDE // TODO
+	| TIMES // TODO
+	| MOD // TODO
+	| NOT // TODO
+	| BAND // TODO
+	| BOR // TODO
+	| BXOR; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-assignation: assignation_operator expr;
+assignation: assignation_operator expr; // TODO
 
-assignation_operator: unary_operator? EQ;
-
-// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-
-cast: LPAREN type RPAREN expr;
+assignation_operator: unary_operator? EQ; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-function_call: function_name function_call_params;
-
-function_call_params: LPAREN function_call_param_list? RPAREN;
-
-function_call_param_list: expr (COMMA expr)*;
+cast: LPAREN type RPAREN expr; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-variable_decl: (VAL | VAR) IDENTIFIER (((COLON type)? assignation) | (COLON type));
+function_call: function_name function_call_params; // TODO
 
-array_assign: LBRACE expr (COMMA expr)* RBRACE;
+function_call_params: LPAREN function_call_param_list? RPAREN; // TODO
 
-// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-
-type: IDENTIFIER (TIMES | (LBRAK INT? RBRAK))?;
+function_call_param_list: expr (COMMA expr)*; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-litteral: INT | FLOAT | STRING | FSTRING | CHAR | TRUE | FALSE | NULL_;
+variable_decl: (VAL | VAR) IDENTIFIER (((COLON type)? assignation) | (COLON type)); // TODO
+
+array_assign: LBRACE expr (COMMA expr)* RBRACE; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-expr_parenthesis: LPAREN expr* RPAREN;
-expr_block: LBRACE expr* RBRACE;
+type: IDENTIFIER (TIMES | (LBRAK INT? RBRAK))?; // TODO
+
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+litteral:
+    INT // TODO
+    | FLOAT // TODO
+    | STRING // TODO
+    | FSTRING // TODO
+    | CHAR // TODO
+    | TRUE // TODO
+    | FALSE // TODO
+    | NULL_; // TODO
+
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+expr_parenthesis: LPAREN expr* RPAREN; // TODO
+expr_block: LBRACE expr* RBRACE; // TODO
