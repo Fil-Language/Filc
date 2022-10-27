@@ -74,7 +74,9 @@ expr returns[AbstractExpr tree]
 	| cast // TODO
 	| IDENTIFIER // TODO
 	| class_identifier // TODO
-	| litteral // TODO
+	| (e27=literal {
+	    $tree = $e27.tree;
+	})
 	| NEW class_identifier function_call_params // TODO
 	| (e31=expr_parenthesis {
 	    $tree = $e31.tree;
@@ -130,7 +132,7 @@ class_param_list: class_param (COMMA class_param)*; // TODO
 
 class_param:
 	variable_decl // TODO
-	| IDENTIFIER COLON type (EQ litteral)?; // TODO
+	| IDENTIFIER COLON type (EQ literal)?; // TODO
 
 class_extends: COLON class_extend_list; // TODO
 
@@ -179,7 +181,7 @@ switch_condition: expr_parenthesis; // TODO
 
 switch_body: LBRACE switch_case* RBRACE; // TODO
 
-switch_case: (litteral | DEFAULT) ARROW ( // TODO
+switch_case: (literal | DEFAULT) ARROW ( // TODO
 		expr // TODO
 		| expr_block // TODO
 		| expr_parenthesis // TODO
@@ -284,19 +286,35 @@ array_assign: LBRACE expr (COMMA expr)* RBRACE; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-type: IDENTIFIER (TIMES | (LBRAK INT? RBRAK))?; // TODO
+type: (IDENTIFIER | INT_TYPE | FLOAT_TYPE | DOUBLE_TYPE | BOOL_TYPE | CHAR_TYPE) (TIMES | (LBRAK INT? RBRAK))?; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-litteral:
-    INT // TODO
-    | FLOAT // TODO
-    | STRING // TODO
-    | FSTRING // TODO
-    | CHAR // TODO
-    | TRUE // TODO
-    | FALSE // TODO
-    | NULL_; // TODO
+literal returns[AbstractLiteral tree]
+    : (l1=INT {
+        $tree = Integer(stoi($l1.text));
+    })
+    | (l2=FLOAT {
+        $tree = Double(stod($l2.text));
+    })
+    | (l3=STRING {
+        $tree = String($l3.text);
+    })
+    | (l4=FSTRING {
+        $tree = FString($l4.text);
+    })
+    | (l5=CHAR {
+        $tree = Char($l5.text[0]);
+    })
+    | (TRUE {
+        $tree = True();
+    })
+    | (FALSE {
+        $tree = False();
+    })
+    | (NULL_ {
+        $tree = Null();
+    });
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

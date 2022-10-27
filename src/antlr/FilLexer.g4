@@ -33,6 +33,11 @@ FALSE: 'false';
 NULL_: 'null';
 NEW: 'new';
 OPERATOR: 'operator';
+INT_TYPE: 'int';
+FLOAT_TYPE: 'float';
+DOUBLE_TYPE: 'double';
+BOOL_TYPE: 'bool';
+CHAR_TYPE: 'char';
 
 // Identifier
 fragment LETTER: ('a' .. 'z') | ('A' .. 'Z') | '_';
@@ -96,7 +101,9 @@ FSTRING:
             setText(text);
         }
 };
-CHAR: '\'' ~('\'' | '\\' | '\n') '\'';
+CHAR: '\'' ~('\'' | '\\' | '\n') '\'' {
+    setText(std::to_string(getText()[1]));
+};
 
 // Comments
 COMMENT: '//' (~('\n' | '\r'))* -> skip;

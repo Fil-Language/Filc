@@ -81,6 +81,130 @@ namespace ast {
     private:
         std::vector<AbstractExpr> _exprs;
     };
+
+    // ====================
+
+    class AbstractLiteral : public AbstractExpr {
+    public:
+        AbstractLiteral();
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+    };
+
+    // ====================
+
+    class Integer : public AbstractLiteral {
+    public:
+        Integer();
+
+        explicit Integer(int value);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        int _value;
+    };
+
+    // ====================
+
+    class Float : public AbstractLiteral {
+    public:
+        Float();
+
+        explicit Float(float value);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        float _value;
+    };
+
+    // ====================
+
+    class Double : public AbstractLiteral {
+    public:
+        Double();
+
+        explicit Double(double value);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        double _value;
+    };
+
+    // ====================
+
+    class String : public AbstractLiteral {
+    public:
+        String();
+
+        explicit String(const std::string &value);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    protected:
+        std::string _value;
+    };
+
+    // ====================
+
+    class FString : public String {
+    public:
+        explicit FString(const std::string &value);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+    };
+
+    // ====================
+
+    class Char : public AbstractLiteral {
+    public:
+        Char();
+
+        explicit Char(char value);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        char _value;
+    };
+
+    // ====================
+
+    class AbstractBool : public AbstractLiteral {
+    public:
+        AbstractBool();
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+    };
+
+    // ====================
+
+    class True : public AbstractBool {
+    public:
+        True();
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+    };
+
+    // ====================
+
+    class False : public AbstractBool {
+    public:
+        False();
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+    };
+
+    // ====================
+
+    class Null : public AbstractLiteral {
+    public:
+        Null();
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);

@@ -60,7 +60,7 @@ add_executable(filc
         src/VERSION.h
         src/fil/FilCompiler.cpp src/fil/FilCompiler.h
         src/fil/Logger.hpp
-        src/fil/ast/AST.hpp src/fil/ast/AST.cpp src/fil/ast/Program.cpp src/fil/ast/AbstractExpr.cpp src/fil/ast/ExprBlock.cpp src/fil/ast/ExprParenthesis.cpp)
+        src/fil/ast/AST.hpp src/fil/ast/AST.cpp src/fil/ast/Program.cpp src/fil/ast/AbstractExpr.cpp src/fil/ast/ExprBlock.cpp src/fil/ast/ExprParenthesis.cpp src/fil/ast/AbstractLiteral.cpp)
 target_link_libraries(filc antlr4_static)
 
 target_compile_options(filc PUBLIC)
