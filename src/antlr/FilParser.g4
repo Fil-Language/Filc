@@ -77,7 +77,9 @@ expr returns[AbstractExpr tree]
 	| litteral // TODO
 	| NEW class_identifier function_call_params // TODO
 	| expr_parenthesis // TODO
-	| expr_block // TODO
+	| e32=expr_block {
+	    $tree = $e32.tree;
+	}
 	| array_assign; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -297,4 +299,12 @@ litteral:
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 expr_parenthesis: LPAREN expr* RPAREN; // TODO
-expr_block: LBRACE expr* RBRACE; // TODO
+
+expr_block returns[ExprBlock tree]
+@init {
+    auto exprs_ = vector<AbstractExpr>();
+}
+@after {
+    $tree = ExprBlock(exprs_);
+}
+    : LBRACE exprs[&exprs_] RBRACE;

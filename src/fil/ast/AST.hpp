@@ -30,7 +30,7 @@ namespace ast {
 
         std::string toString() const override;
 
-    private:
+    protected:
         bool _export;
     };
 
@@ -49,6 +49,20 @@ namespace ast {
     private:
         std::string _moduleName;
         std::vector<Program> _imports;
+        std::vector<AbstractExpr> _exprs;
+    };
+
+    // ====================
+
+    class ExprBlock : public AbstractExpr {
+    public:
+        ExprBlock();
+
+        explicit ExprBlock(std::vector<AbstractExpr> &exprs);
+
+        std::string toString() const override;
+
+    private:
         std::vector<AbstractExpr> _exprs;
     };
 }
