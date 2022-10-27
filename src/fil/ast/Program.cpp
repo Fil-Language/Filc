@@ -7,16 +7,17 @@
 #include "AST.hpp"
 
 #include <utility>
-#include <sstream>
 
 using namespace std;
 using namespace ast;
 
-Program::Program() : _imports(vector<Program>()) {}
+Program::Program() : _imports(vector<Program>()), _exprs(vector<AbstractExpr>()) {}
 
-Program::Program(string moduleName) : _moduleName(std::move(moduleName)), _imports(vector<Program>()) {}
+Program::Program(string moduleName) : _moduleName(std::move(moduleName)), _imports(vector<Program>()),
+                                      _exprs(vector<AbstractExpr>()) {}
 
-Program::Program(string moduleName, vector<Program> &imports) : _moduleName(std::move(moduleName)), _imports(imports) {}
+Program::Program(string moduleName, vector<Program> &imports, vector<AbstractExpr> &exprs) :
+        _moduleName(std::move(moduleName)), _imports(imports), _exprs(exprs) {}
 
 std::string Program::toString() const {
     string res;
@@ -24,6 +25,10 @@ std::string Program::toString() const {
 
     for (const auto &import: _imports) {
         res += "\t" + import.toString() + "\n";
+    }
+
+    for (const auto &expr: _exprs) {
+        res += "\t" + expr.toString() + "\n";
     }
 
     return res;

@@ -22,19 +22,34 @@ namespace ast {
 
     // ====================
 
+    class AbstractExpr : public AST {
+    public:
+        AbstractExpr();
+
+        void setExport(bool export_);
+
+        std::string toString() const override;
+
+    private:
+        bool _export;
+    };
+
+    // ====================
+
     class Program : public AST {
     public:
         Program();
 
         explicit Program(std::string moduleName);
 
-        Program(std::string moduleName, std::vector<Program> &imports);
+        Program(std::string moduleName, std::vector<Program> &imports, std::vector<AbstractExpr> &exprs);
 
         std::string toString() const override;
 
     private:
         std::string _moduleName;
         std::vector<Program> _imports;
+        std::vector<AbstractExpr> _exprs;
     };
 }
 

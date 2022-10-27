@@ -26,11 +26,12 @@ Program parseTree() {
 prog returns[Program tree]
 @init {
     auto imports = vector<Program>();
+    auto exprs_ = vector<AbstractExpr>();
 }
 @after {
-    $tree = Program($m.text, imports);
+    $tree = Program($m.text, imports, exprs_);
 }
-    : m=MODULE import_[&imports]* (EXPORT? expr)* EOF;
+    : m=MODULE import_[&imports]* exprs[&exprs_]* EOF;
 
 import_[vector<Program>* imports]
     : i=IMPORT {
@@ -39,8 +40,22 @@ import_[vector<Program>* imports]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-expr:
-	function
+exprs[vector<AbstractExpr>* exprs_]
+@init {
+    bool exp = false;
+}
+    : (EXPORT {
+        exp = true;
+    })? e=expr {
+        $e.tree.setExport(exp);
+        $exprs_->push_back($e.tree);
+    };
+
+expr returns[AbstractExpr tree]
+@init {
+    $tree = AbstractExpr();
+}
+    : function
 	| lambda
 	| interface
 	| class_
