@@ -67,6 +67,20 @@ namespace ast {
     private:
         std::vector<AbstractExpr> _exprs;
     };
+
+    // ====================
+
+    class ExprParenthesis : public AbstractExpr {
+    public:
+        ExprParenthesis();
+
+        explicit ExprParenthesis(std::vector<AbstractExpr> &exprs);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::vector<AbstractExpr> _exprs;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);
