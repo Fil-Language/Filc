@@ -205,6 +205,20 @@ namespace ast {
 
         IndentPrinter *print(IndentPrinter *printer) const override;
     };
+
+    // ====================
+
+    class Function : public AbstractExpr {
+    public:
+        Function();
+
+        explicit Function(const std::string &name);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::string _name;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);

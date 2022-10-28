@@ -55,7 +55,9 @@ expr returns[AbstractExpr tree]
 @init {
     $tree = AbstractExpr();
 }
-    : function // TODO
+    : (e1=function {
+        $tree = $e1.tree;
+    })
 	| lambda // TODO
 	| interface // TODO
 	| class_ // TODO
@@ -88,10 +90,18 @@ expr returns[AbstractExpr tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-function: FUN function_name fun_params (COLON type)? fun_body; // TODO
+function returns[Function tree]
+    : FUN n=function_name fun_params (COLON type)? fun_body {
+        $tree = Function($n.text);
+    };
 
-function_name: IDENTIFIER // TODO
-             | OPERATOR binary_operator; // TODO
+function_name returns[std::string text]
+    : (i=IDENTIFIER {
+        $text = $i.text;
+    })
+    | (OPERATOR binary_operator {
+        $text = "temp";
+    }); // TODO
 
 fun_params: LPAREN fun_param_list? RPAREN; // TODO
 
