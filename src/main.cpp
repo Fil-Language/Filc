@@ -39,6 +39,12 @@ int main(int argc, char **argv) {
     }
 
     if (result.count("version")) {
+        cout << "     _______ __    \n"
+                "    / ____(_) /____\n"
+                "   / /_  / / / ___/\n"
+                "  / __/ / / / /__  \n"
+                " /_/   /_/_/\\___/  \n"
+                "                   " << endl;
         cout << "Filc version " << FILC_VERSION_STRING << " - " << FILC_VERSION << endl;
         return 0;
     }
