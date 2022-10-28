@@ -18,7 +18,7 @@ using namespace antlrcppfil;
 
 FilCompiler::FilCompiler(string filename) : _filename(std::move(filename)) {}
 
-int FilCompiler::compile() {
+int FilCompiler::compile(int flag) {
     ifstream file(_filename);
     if (!file.is_open()) {
         cout << "File " << _filename << " not found" << endl;
@@ -36,7 +36,18 @@ int FilCompiler::compile() {
         FilParser parser(&tokens);
         ast::Program program = parser.parseTree();
 
-        cout << program << endl;
+        if (file.is_open()) {
+            file.close();
+        }
+
+        if (flag == FLAGS::AST) {
+            /*ofstream ast("ast.out");
+            if (ast.good()) {
+                ast << program << endl;
+                ast.close();
+            }*/
+            cout << program << endl; // FIXME : remove this line and uncomment file writing
+        }
     } catch (exception &e) {
         cout << e.what() << endl;
         return 1;

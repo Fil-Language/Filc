@@ -14,13 +14,17 @@ class FilCompiler {
 public:
     explicit FilCompiler(std::string filename);
 
-    int compile();
+    int compile(int flag);
 
     static ast::Program import(const std::string &moduleName);
 
 private:
     std::string _filename;
 };
+
+typedef enum FLAGS {
+    AST,
+} FLAGS;
 
 
 #endif //FILC_FILCOMPILER_H

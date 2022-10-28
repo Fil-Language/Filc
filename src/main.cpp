@@ -15,11 +15,13 @@ int main(int argc, char **argv) {
     cxxopts::Options options("filc", "Fil compiler \nVersion: " + FILC_VERSION_STRING);
     options.custom_help("[options...]");
     options.positional_help("<main source filename>");
-    options.add_options()
+    options.add_options("General")
             ("f,filename", "Main filename", cxxopts::value<string>())
             ("h,help", "Display help message")
             ("v,version", "Display version of compiler")
             ("verbose", "Verbose level (0-5)", cxxopts::value<int>()->default_value("0")->implicit_value("1"));
+    options.add_options("Compile flags")
+            ("a,ast", "Print AST structure in file ast.out");
     options.parse_positional({"filename"});
 
     cxxopts::ParseResult result;
@@ -46,7 +48,13 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    // Flags
+    int flag = -1;
+    if (result.count("ast")) {
+        flag = FLAGS::AST;
+    }
+
     auto compiler = FilCompiler(result["filename"].as<string>());
 
-    return compiler.compile();
+    return compiler.compile(flag);
 }
