@@ -4,6 +4,8 @@
 
 Fil language compiler (version in `src/VERSION.h`)
 
+Have used `figlet -f slant "Filc"` for the version message.
+
 ## Grammar
 
 Refer to documentation for used grammar : [https://github.com/Fil-Language/Documentation](https://github.com/Fil-Language/Documentation).
