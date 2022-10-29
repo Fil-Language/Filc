@@ -26,32 +26,23 @@ Program* parseTree() {
 prog returns[Program *tree]
 @init {
     auto imports = vector<Program *>();
-    auto exprs_ = vector<AbstractExpr *>();
+    auto exprs = vector<AbstractExpr *>();
 }
 @after {
-    $tree = new Program($m.text, imports, exprs_);
+    $tree = new Program($m.text, imports, exprs);
 }
-    : m=MODULE import_[&imports]* exprs[&exprs_]* EOF;
+    : m=MODULE (i=import_ {
+        imports.push_back($i.tree);
+    })* (e=expr {
+        exprs.push_back($e.tree);
+    })* EOF;
 
-import_[vector<Program *> *imports]
+import_ returns[Program *tree]
     : i=IMPORT {
-        $imports->push_back(FilCompiler::import($i.text));
+        $tree = FilCompiler::import($i.text);
     };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-
-exprs[vector<AbstractExpr *> *exprs_]
-@init {
-    bool exp = false;
-}
-    : (EXPORT {
-        exp = true;
-    })? e=expr {
-        if ($e.tree) {
-            $e.tree->setExport(exp);
-            $exprs_->push_back($e.tree);
-        }
-    };
 
 expr returns[AbstractExpr *tree]
 @init {
@@ -126,11 +117,15 @@ fun_param_list returns[std::vector<FunctionParam *> tree]
 @init {
     $tree = std::vector<FunctionParam *>();
 }
-    : fun_param[&$tree] (COMMA fun_param[&$tree])*;
+    : p1=fun_param {
+        $tree.push_back($p1.tree);
+    } (COMMA pi=fun_param {
+        $tree.push_back($pi.tree);
+    })*;
 
-fun_param[std::vector<FunctionParam *> *p]
+fun_param returns[FunctionParam *tree]
     : i=IDENTIFIER COLON t=type {
-        p->push_back(new FunctionParam($i.text, $t.tree));
+        $tree = new FunctionParam($i.text, $t.tree);
     };
 
 fun_body returns[AbstractExpr *tree]
@@ -284,10 +279,7 @@ exception_:
 	TRY (expr | expr_block | expr_parenthesis) catch_body+; // TODO
 
 catch_body // TODO
-@init {
-    auto temp = std::vector<FunctionParam *>();
-}
-	: CATCH LPAREN fun_param[&temp] RPAREN ( // FIXME : remove temp
+	: CATCH LPAREN fun_param RPAREN (
 		expr // TODO
 		| expr_block // TODO
 		| expr_parenthesis // TODO
@@ -437,18 +429,22 @@ literal returns[AbstractLiteral *tree]
 
 expr_parenthesis returns[ExprParenthesis *tree]
 @init {
-    auto exprs_ = vector<AbstractExpr *>();
+    auto exprs = vector<AbstractExpr *>();
 }
 @after {
-    $tree = new ExprParenthesis(exprs_);
+    $tree = new ExprParenthesis(exprs);
 }
-    : LPAREN exprs[&exprs_] RPAREN;
+    : LPAREN (e=expr {
+        exprs.push_back($e.tree);
+    })* RPAREN;
 
 expr_block returns[ExprBlock *tree]
 @init {
-    auto exprs_ = vector<AbstractExpr *>();
+    auto exprs = vector<AbstractExpr *>();
 }
 @after {
-    $tree = new ExprBlock(exprs_);
+    $tree = new ExprBlock(exprs);
 }
-    : LBRACE exprs[&exprs_] RBRACE;
+    : LBRACE (e=expr {
+        exprs.push_back($e.tree);
+    })* RBRACE;

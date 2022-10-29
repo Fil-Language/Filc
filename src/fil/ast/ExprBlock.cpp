@@ -18,7 +18,8 @@ IndentPrinter *ExprBlock::print(IndentPrinter *printer) const {
             ->indent();
 
     for (const auto &expr: _exprs) {
-        expr->print(printer);
+        if (expr)
+            expr->print(printer);
     }
 
     printer->unindent();
