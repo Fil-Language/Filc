@@ -6,16 +6,26 @@
  */
 #include "AST.hpp"
 
+using namespace std;
 using namespace ast;
 
 Function::Function() : _body(nullptr) {}
 
-Function::Function(const std::string &name, AbstractExpr *body) : _name(name), _body(body) {}
+Function::Function(const string &name, vector<FunctionParam *> &params, AbstractExpr *body)
+        : _name(name), _params(params), _body(body) {}
 
 IndentPrinter *Function::print(IndentPrinter *printer) const {
     printer->writeIndent("Function => ")
             ->write(_name)
-            ->write("\n") // TODO : write params and return type
+            ->write(" (");
+
+    for (auto it = _params.begin(); it != _params.end(); it++) {
+        (*it)->print(printer);
+        if (it != _params.end() - 1) {
+            printer->write(", ");
+        }
+    }
+    printer->write(")\n")
             ->indent();
 
     _body->print(printer);

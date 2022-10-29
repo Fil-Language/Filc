@@ -93,8 +93,8 @@ expr returns[AbstractExpr *tree]
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 function returns[Function *tree]
-    : FUN n=function_name fun_params (COLON type)? b=fun_body {
-        $tree = new Function($n.text, $b.tree);
+    : FUN n=function_name p=fun_params (COLON type)? b=fun_body {
+        $tree = new Function($n.text, $p.tree, $b.tree);
     };
 
 function_name returns[std::string text]
@@ -105,11 +105,24 @@ function_name returns[std::string text]
         $text = "temp";
     }); // TODO
 
-fun_params: LPAREN fun_param_list? RPAREN; // TODO
+fun_params returns[std::vector<FunctionParam *> tree]
+@init {
+    $tree = std::vector<FunctionParam *>();
+}
+    : LPAREN (p=fun_param_list {
+        $tree = $p.tree;
+    })? RPAREN;
 
-fun_param_list: fun_param (COMMA fun_param)*; // TODO
+fun_param_list returns[std::vector<FunctionParam *> tree]
+@init {
+    $tree = std::vector<FunctionParam *>();
+}
+    : fun_param[&$tree] (COMMA fun_param[&$tree])*;
 
-fun_param: IDENTIFIER COLON type; // TODO
+fun_param[std::vector<FunctionParam *> *p]
+    : i=IDENTIFIER COLON type {
+        p->push_back(new FunctionParam($i.text));
+    }; // TODO
 
 fun_body returns[AbstractExpr *tree]
     : (e1=assignation {
@@ -229,8 +242,11 @@ while_: WHILE if_condition if_body; // TODO
 exception_:
 	TRY (expr | expr_block | expr_parenthesis) catch_body+; // TODO
 
-catch_body: // TODO
-	CATCH LPAREN fun_param RPAREN (
+catch_body // TODO
+@init {
+    auto temp = std::vector<FunctionParam *>();
+}
+	: CATCH LPAREN fun_param[&temp] RPAREN ( // FIXME : remove temp
 		expr // TODO
 		| expr_block // TODO
 		| expr_parenthesis // TODO

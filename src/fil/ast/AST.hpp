@@ -208,17 +208,32 @@ namespace ast {
 
     // ====================
 
-    class Function : public AbstractExpr {
+    class FunctionParam : public AbstractExpr {
     public:
-        Function();
+        FunctionParam();
 
-        explicit Function(const std::string &name, AbstractExpr* _body);
+        explicit FunctionParam(const std::string &name);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::string _name;
-        AbstractExpr* _body;
+    };
+
+    // ====================
+
+    class Function : public AbstractExpr {
+    public:
+        Function();
+
+        Function(const std::string &name, std::vector<FunctionParam *> &params, AbstractExpr *body);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::string _name;
+        std::vector<FunctionParam *> _params;
+        AbstractExpr *_body;
     };
 }
 
