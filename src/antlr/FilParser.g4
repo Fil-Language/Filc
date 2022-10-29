@@ -194,7 +194,7 @@ class_ returns[Class *tree]
     : (m=class_modifier {
         modifier = $m.text;
     })? CLASS n=class_identifier class_params? class_extends? class_body? {
-        $tree = new Class(modifier, $n.text);
+        $tree = new Class(modifier, $n.tree);
     }; // TODO : class_params, class_extends, class_body
 
 class_modifier returns[std::string text]
@@ -205,9 +205,25 @@ class_modifier returns[std::string text]
         $text = $m2.text;
     });
 
-class_identifier: IDENTIFIER TIMES? class_generic?; // TODO
+class_identifier returns[ClassIdentifier *tree]
+@init {
+    auto generic = std::vector<std::string>();
+}
+    : i=IDENTIFIER (g=class_generic {
+        generic = $g.tree;
+    })? {
+        $tree = new ClassIdentifier($i.text, generic);
+    };
 
-class_generic: LT IDENTIFIER (COMMA IDENTIFIER)* GT; // TODO
+class_generic returns[std::vector<std::string> tree]
+@init {
+    $tree = std::vector<std::string>();
+}
+    : LT i1=IDENTIFIER {
+        $tree.push_back($i1.text);
+    } (COMMA ii=IDENTIFIER {
+        $tree.push_back($ii.text);
+    })* GT;
 
 class_params: LPAREN class_param_list? RPAREN; // TODO
 

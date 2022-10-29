@@ -300,17 +300,32 @@ namespace ast {
 
     // ====================
 
+    class ClassIdentifier : public AbstractExpr {
+    public:
+        ClassIdentifier();
+
+        explicit ClassIdentifier(const std::string &name, std::vector<std::string> &generics);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::string _name;
+        std::vector<std::string> _generics;
+    };
+
+    // ====================
+
     class Class : public AbstractExpr {
     public:
         Class();
 
-        Class(const std::string &modifier, const std::string &name);
+        Class(const std::string &modifier, ClassIdentifier *name);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::string _modifier;
-        std::string _name;
+        ClassIdentifier *_name;
     };
 }
 
