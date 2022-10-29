@@ -235,6 +235,21 @@ namespace ast {
         std::vector<FunctionParam *> _params;
         AbstractExpr *_body;
     };
+
+    // ====================
+
+    class Lambda : public AbstractExpr {
+    public:
+        Lambda();
+
+        Lambda(std::vector<FunctionParam *> &params, AbstractExpr *body);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::vector<FunctionParam *> _params;
+        AbstractExpr *_body;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);

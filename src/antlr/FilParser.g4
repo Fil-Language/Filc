@@ -60,7 +60,9 @@ expr returns[AbstractExpr *tree]
     : (e1=function {
         $tree = $e1.tree;
     })
-	| lambda // TODO
+	| (e2=lambda {
+	    $tree = $e2.tree;
+	})
 	| interface // TODO
 	| class_ // TODO
 	| enum_ // TODO
@@ -139,7 +141,17 @@ function_decl: FUN function_name fun_params (COLON type)?; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-lambda: fun_params ARROW (expr_block | expr_parenthesis); // TODO
+lambda returns[Lambda *tree]
+@init {
+    AbstractExpr *body;
+}
+    : p=fun_params ARROW ((b1=expr_block {
+        body = $b1.tree;
+    }) | (b2=expr_parenthesis {
+        body = $b2.tree;
+    })) {
+        $tree = new Lambda($p.tree, body);
+    };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
