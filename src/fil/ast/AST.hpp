@@ -226,12 +226,13 @@ namespace ast {
     public:
         FunctionParam();
 
-        explicit FunctionParam(const std::string &name);
+        FunctionParam(const std::string &name, Type *type);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::string _name;
+        Type *_type;
     };
 
     // ====================

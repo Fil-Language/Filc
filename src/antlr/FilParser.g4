@@ -127,9 +127,9 @@ fun_param_list returns[std::vector<FunctionParam *> tree]
     : fun_param[&$tree] (COMMA fun_param[&$tree])*;
 
 fun_param[std::vector<FunctionParam *> *p]
-    : i=IDENTIFIER COLON type {
-        p->push_back(new FunctionParam($i.text));
-    }; // TODO
+    : i=IDENTIFIER COLON t=type {
+        p->push_back(new FunctionParam($i.text, $t.tree));
+    };
 
 fun_body returns[AbstractExpr *tree]
     : (e1=assignation {
