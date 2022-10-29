@@ -95,7 +95,7 @@ expr returns[AbstractExpr *tree]
 function returns[Function *tree]
     : FUN n=function_name p=fun_params (COLON type)? b=fun_body {
         $tree = new Function($n.text, $p.tree, $b.tree);
-    };
+    }; // TODO : return type
 
 function_name returns[std::string text]
     : (i=IDENTIFIER {
