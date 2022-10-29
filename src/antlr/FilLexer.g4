@@ -33,11 +33,6 @@ FALSE: 'false';
 NULL_: 'null';
 NEW: 'new';
 OPERATOR: 'operator';
-INT_TYPE: 'int';
-FLOAT_TYPE: 'float';
-DOUBLE_TYPE: 'double';
-BOOL_TYPE: 'bool';
-CHAR_TYPE: 'char';
 
 // Identifier
 fragment LETTER: ('a' .. 'z') | ('A' .. 'Z') | '_';

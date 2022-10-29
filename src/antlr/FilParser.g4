@@ -95,17 +95,22 @@ expr returns[AbstractExpr *tree]
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 function returns[Function *tree]
-    : FUN n=function_name p=fun_params (COLON type)? b=fun_body {
-        $tree = new Function($n.text, $p.tree, $b.tree);
-    }; // TODO : return type
+@init {
+    Type *rType = 0;
+}
+    : FUN n=function_name p=fun_params (COLON t=type {
+        rType = $t.tree;
+    })? b=fun_body {
+        $tree = new Function($n.text, $p.tree, $b.tree, rType);
+    };
 
 function_name returns[std::string text]
     : (i=IDENTIFIER {
         $text = $i.text;
     })
     | (OPERATOR binary_operator {
-        $text = "temp";
-    }); // TODO
+        $text = "operator";
+    }); // TODO : binary_operator
 
 fun_params returns[std::vector<FunctionParam *> tree]
 @init {
@@ -335,7 +340,10 @@ array_assign: LBRACE expr (COMMA expr)* RBRACE; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-type: (IDENTIFIER | INT_TYPE | FLOAT_TYPE | DOUBLE_TYPE | BOOL_TYPE | CHAR_TYPE) (TIMES | (LBRAK INT? RBRAK))?; // TODO
+type returns[Type *tree]
+    : i=IDENTIFIER (TIMES | (LBRAK INT? RBRAK))? {
+        $tree = new Type($i.text);
+    }; // TODO : get * and []
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

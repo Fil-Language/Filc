@@ -24,6 +24,20 @@ namespace ast {
 
     // ====================
 
+    class Type : public AST {
+    public:
+        Type();
+
+        explicit Type(const std::string &name);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::string _name;
+    };
+
+    // ====================
+
     class AbstractExpr : public AST {
     public:
         AbstractExpr();
@@ -226,7 +240,7 @@ namespace ast {
     public:
         Function();
 
-        Function(const std::string &name, std::vector<FunctionParam *> &params, AbstractExpr *body);
+        Function(const std::string &name, std::vector<FunctionParam *> &params, AbstractExpr *body, Type *returnType);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
@@ -234,6 +248,7 @@ namespace ast {
         std::string _name;
         std::vector<FunctionParam *> _params;
         AbstractExpr *_body;
+        Type *_returnType;
     };
 
     // ====================
