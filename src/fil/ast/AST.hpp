@@ -254,6 +254,22 @@ namespace ast {
 
     // ====================
 
+    class FunctionDecl : public AbstractExpr {
+    public:
+        FunctionDecl();
+
+        FunctionDecl(const std::string &name, std::vector<FunctionParam *> &params, Type *returnType);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::string _name;
+        std::vector<FunctionParam *> _params;
+        Type *_returnType;
+    };
+
+    // ====================
+
     class Lambda : public AbstractExpr {
     public:
         Lambda();

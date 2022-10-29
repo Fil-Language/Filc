@@ -142,7 +142,15 @@ fun_body returns[AbstractExpr *tree]
         $tree = $e3.tree;
     });
 
-function_decl: FUN function_name fun_params (COLON type)?; // TODO
+function_decl returns[FunctionDecl *tree]
+@init {
+    Type *rType = 0;
+}
+    : FUN n=function_name p=fun_params (COLON t=type {
+        rType = $t.tree;
+    })? {
+        $tree = new FunctionDecl($n.text, $p.tree, rType);
+    };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
