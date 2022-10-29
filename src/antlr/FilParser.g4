@@ -108,9 +108,9 @@ function_name returns[std::string text]
     : (i=IDENTIFIER {
         $text = $i.text;
     })
-    | (OPERATOR binary_operator {
-        $text = "operator";
-    }); // TODO : binary_operator
+    | (o=OPERATOR b=binary_operator {
+        $text = $o.text + $b.text;
+    });
 
 fun_params returns[std::vector<FunctionParam *> tree]
 @init {
@@ -271,25 +271,61 @@ catch_body // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-binary_operator:
-	PLUS // TODO
-	| MINUS // TODO
-	| DIVIDE // TODO
-	| TIMES // TODO
-	| MOD // TODO
-	| FLEFT // TODO
-	| FRIGHT // TODO
-	| AND // TODO
-	| OR // TODO
-	| LT // TODO
-	| GT // TODO
-	| EQEQ // TODO
-	| LEQ // TODO
-	| GEQ // TODO
-	| NEQ // TODO
-	| BAND // TODO
-	| BOR // TODO
-	| BXOR; // TODO
+binary_operator returns[std::string text]
+    : (b1=PLUS {
+        $text = $b1.text;
+    })
+	| (b2=MINUS {
+	    $text = $b2.text;
+	})
+	| (b3=DIVIDE {
+	    $text = $b3.text;
+	})
+	| (b4=TIMES {
+	    $text = $b4.text;
+	})
+	| (b5=MOD {
+	    $text = $b5.text;
+	})
+	| (b6=FLEFT {
+	    $text = $b6.text;
+	})
+	| (b7=FRIGHT {
+	    $text = $b7.text;
+	})
+	| (b8=AND {
+	    $text = $b8.text;
+	})
+	| (b9=OR {
+	    $text = $b9.text;
+	})
+	| (b10=LT {
+	    $text = $b10.text;
+	})
+	| (b11=GT {
+	    $text = $b11.text;
+	})
+	| (b12=EQEQ {
+	    $text = $b12.text;
+	})
+	| (b13=LEQ {
+	    $text = $b13.text;
+	})
+	| (b14=GEQ {
+	    $text = $b14.text;
+	})
+	| (b15=NEQ {
+	    $text = $b15.text;
+	})
+	| (b16=BAND {
+	    $text = $b16.text;
+	})
+	| (b17=BOR {
+	    $text = $b17.text;
+	})
+	| (b18=BXOR {
+	    $text = $b18.text;
+	});
 
 unary_op_pre:
 	PLUS PLUS // TODO
