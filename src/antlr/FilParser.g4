@@ -63,7 +63,9 @@ expr returns[AbstractExpr *tree]
 	| (e2=lambda {
 	    $tree = $e2.tree;
 	})
-	| interface // TODO
+	| (e3=interface {
+	    $tree = $e3.tree;
+	})
 	| class_ // TODO
 	| enum_ // TODO
 	| variable_decl // TODO
@@ -168,9 +170,23 @@ lambda returns[Lambda *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-interface: INTERFACE IDENTIFIER class_params? interface_body?; // TODO
+interface returns[Interface *tree]
+@init {
+    auto body = vector<FunctionDecl *>();
+}
+    : INTERFACE i=IDENTIFIER class_params? (b=interface_body {
+        body = $b.tree;
+    })? {
+        $tree = new Interface($i.text, body);
+    }; // TODO : class_params
 
-interface_body: LBRACE function_decl* RBRACE; // TODO
+interface_body returns[std::vector<FunctionDecl *> tree]
+@init {
+    $tree = std::vector<FunctionDecl *>();
+}
+    : LBRACE (d=function_decl {
+        $tree.push_back($d.tree);
+    })* RBRACE;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

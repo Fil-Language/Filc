@@ -282,6 +282,21 @@ namespace ast {
         std::vector<FunctionParam *> _params;
         AbstractExpr *_body;
     };
+
+    // ====================
+
+    class Interface : public AbstractExpr {
+    public:
+        Interface();
+
+        Interface(const std::string &name, std::vector<FunctionDecl *> &functions);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::string _name;
+        std::vector<FunctionDecl *> _functions;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);
