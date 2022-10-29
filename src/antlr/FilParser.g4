@@ -57,7 +57,9 @@ expr returns[AbstractExpr *tree]
 	| (e3=interface {
 	    $tree = $e3.tree;
 	})
-	| class_ // TODO
+	| (e4=class_ {
+	    $tree = $e4.tree;
+	})
 	| enum_ // TODO
 	| variable_decl // TODO
 	| condition // TODO
@@ -185,12 +187,23 @@ interface_body returns[std::vector<FunctionDecl *> tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-class_:
-	class_modifier? CLASS class_identifier class_params? class_extends? class_body?; // TODO
+class_ returns[Class *tree]
+@init {
+    std::string modifier;
+}
+    : (m=class_modifier {
+        modifier = $m.text;
+    })? CLASS n=class_identifier class_params? class_extends? class_body? {
+        $tree = new Class(modifier, $n.text);
+    }; // TODO : class_params, class_extends, class_body
 
-class_modifier:
-    ABSTRACT // TODO
-    | OPEN; // TODO
+class_modifier returns[std::string text]
+    : (m1=ABSTRACT {
+        $text = $m1.text;
+    })
+    | (m2=OPEN {
+        $text = $m2.text;
+    });
 
 class_identifier: IDENTIFIER TIMES? class_generic?; // TODO
 

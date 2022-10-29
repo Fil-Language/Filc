@@ -297,6 +297,21 @@ namespace ast {
         std::string _name;
         std::vector<FunctionDecl *> _functions;
     };
+
+    // ====================
+
+    class Class : public AbstractExpr {
+    public:
+        Class();
+
+        Class(const std::string &modifier, const std::string &name);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::string _modifier;
+        std::string _name;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);
