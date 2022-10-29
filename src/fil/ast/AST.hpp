@@ -285,21 +285,6 @@ namespace ast {
 
     // ====================
 
-    class Interface : public AbstractExpr {
-    public:
-        Interface();
-
-        Interface(const std::string &name, std::vector<FunctionDecl *> &functions);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
-    private:
-        std::string _name;
-        std::vector<FunctionDecl *> _functions;
-    };
-
-    // ====================
-
     class ClassIdentifier : public AbstractExpr {
     public:
         ClassIdentifier();
@@ -315,17 +300,54 @@ namespace ast {
 
     // ====================
 
+    class ClassParam : public AbstractExpr {
+    public:
+        ClassParam();
+
+        explicit ClassParam(AbstractExpr *decl); // FIXME : replace AbstractExpr by VariableDecl
+
+        ClassParam(const std::string &name, Type *type, AbstractLiteral *defaultValue);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        bool _isDecl;
+        AbstractExpr *_decl;
+        std::string _name;
+        Type *_type;
+        AbstractLiteral *_defaultValue;
+    };
+
+    // ====================
+
     class Class : public AbstractExpr {
     public:
         Class();
 
-        Class(const std::string &modifier, ClassIdentifier *name);
+        Class(const std::string &modifier, ClassIdentifier *name, std::vector<ClassParam *> &params);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::string _modifier;
         ClassIdentifier *_name;
+        std::vector<ClassParam *> _params;
+    };
+
+    // ====================
+
+    class Interface : public AbstractExpr {
+    public:
+        Interface();
+
+        Interface(const std::string &name, std::vector<ClassParam *> &params, std::vector<FunctionDecl *> &functions);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::string _name;
+        std::vector<ClassParam *> _params;
+        std::vector<FunctionDecl *> _functions;
     };
 }
 

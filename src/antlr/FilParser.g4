@@ -170,12 +170,15 @@ lambda returns[Lambda *tree]
 interface returns[Interface *tree]
 @init {
     auto body = vector<FunctionDecl *>();
+    std::vector<ClassParam *> params;
 }
-    : INTERFACE i=IDENTIFIER class_params? (b=interface_body {
+    : INTERFACE i=IDENTIFIER (p=class_params {
+        params = $p.tree;
+    })? (b=interface_body {
         body = $b.tree;
     })? {
-        $tree = new Interface($i.text, body);
-    }; // TODO : class_params
+        $tree = new Interface($i.text, params, body);
+    };
 
 interface_body returns[std::vector<FunctionDecl *> tree]
 @init {
@@ -190,12 +193,15 @@ interface_body returns[std::vector<FunctionDecl *> tree]
 class_ returns[Class *tree]
 @init {
     std::string modifier;
+    auto params = std::vector<ClassParam *>();
 }
     : (m=class_modifier {
         modifier = $m.text;
-    })? CLASS n=class_identifier class_params? class_extends? class_body? {
-        $tree = new Class(modifier, $n.tree);
-    }; // TODO : class_params, class_extends, class_body
+    })? CLASS n=class_identifier (p=class_params {
+        params = $p.tree;
+    })? class_extends? class_body? {
+        $tree = new Class(modifier, $n.tree, params);
+    }; // TODO : class_extends, class_body
 
 class_modifier returns[std::string text]
     : (m1=ABSTRACT {
@@ -225,13 +231,36 @@ class_generic returns[std::vector<std::string> tree]
         $tree.push_back($ii.text);
     })* GT;
 
-class_params: LPAREN class_param_list? RPAREN; // TODO
+class_params returns[std::vector<ClassParam *> tree]
+@init {
+    $tree = std::vector<ClassParam *>();
+}
+    : LPAREN (p=class_param_list {
+        $tree = $p.tree;
+    })? RPAREN;
 
-class_param_list: class_param (COMMA class_param)*; // TODO
+class_param_list returns[std::vector<ClassParam *> tree]
+@init {
+    $tree = std::vector<ClassParam *>();
+}
+    : (p1=class_param {
+        $tree.push_back($p1.tree);
+    }) (COMMA pi=class_param {
+        $tree.push_back($pi.tree);
+    })*;
 
-class_param:
-	variable_decl // TODO
-	| IDENTIFIER COLON type (EQ literal)?; // TODO
+class_param returns[ClassParam *tree]
+@init {
+    AbstractLiteral *value = 0;
+}
+    : (d=variable_decl {
+        $tree = new ClassParam(new AbstractExpr());
+    }) // TODO : variable_decl
+	| (n=IDENTIFIER COLON t=type (EQ l=literal {
+	    value = $l.tree;
+	})? {
+	    $tree = new ClassParam($n.text, $t.tree, value);
+	});
 
 class_extends: COLON class_extend_list; // TODO
 
