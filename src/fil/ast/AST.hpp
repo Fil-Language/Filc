@@ -44,14 +44,14 @@ namespace ast {
 
         explicit Program(std::string moduleName);
 
-        Program(std::string moduleName, std::vector<Program> &imports, std::vector<AbstractExpr> &exprs);
+        Program(std::string moduleName, std::vector<Program *> &imports, std::vector<AbstractExpr *> &exprs);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::string _moduleName;
-        std::vector<Program> _imports;
-        std::vector<AbstractExpr> _exprs;
+        std::vector<Program *> _imports;
+        std::vector<AbstractExpr *> _exprs;
     };
 
     // ====================
@@ -60,12 +60,12 @@ namespace ast {
     public:
         ExprBlock();
 
-        explicit ExprBlock(std::vector<AbstractExpr> &exprs);
+        explicit ExprBlock(std::vector<AbstractExpr *> &exprs);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
-        std::vector<AbstractExpr> _exprs;
+        std::vector<AbstractExpr *> _exprs;
     };
 
     // ====================
@@ -74,12 +74,12 @@ namespace ast {
     public:
         ExprParenthesis();
 
-        explicit ExprParenthesis(std::vector<AbstractExpr> &exprs);
+        explicit ExprParenthesis(std::vector<AbstractExpr *> &exprs);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
-        std::vector<AbstractExpr> _exprs;
+        std::vector<AbstractExpr *> _exprs;
     };
 
     // ====================
@@ -212,12 +212,13 @@ namespace ast {
     public:
         Function();
 
-        explicit Function(const std::string &name);
+        explicit Function(const std::string &name, AbstractExpr* _body);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::string _name;
+        AbstractExpr* _body;
     };
 }
 

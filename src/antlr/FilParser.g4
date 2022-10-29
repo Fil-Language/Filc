@@ -18,42 +18,44 @@ using namespace std;
 }
 
 @parser::members {
-Program parseTree() {
+Program* parseTree() {
     return prog()->tree;
 }
 }
 
-prog returns[Program tree]
+prog returns[Program *tree]
 @init {
-    auto imports = vector<Program>();
-    auto exprs_ = vector<AbstractExpr>();
+    auto imports = vector<Program *>();
+    auto exprs_ = vector<AbstractExpr *>();
 }
 @after {
-    $tree = Program($m.text, imports, exprs_);
+    $tree = new Program($m.text, imports, exprs_);
 }
     : m=MODULE import_[&imports]* exprs[&exprs_]* EOF;
 
-import_[vector<Program>* imports]
+import_[vector<Program *> *imports]
     : i=IMPORT {
         $imports->push_back(FilCompiler::import($i.text));
     };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-exprs[vector<AbstractExpr>* exprs_]
+exprs[vector<AbstractExpr *> *exprs_]
 @init {
     bool exp = false;
 }
     : (EXPORT {
         exp = true;
     })? e=expr {
-        $e.tree.setExport(exp);
-        $exprs_->push_back($e.tree);
+        if ($e.tree) {
+            $e.tree->setExport(exp);
+            $exprs_->push_back($e.tree);
+        }
     };
 
-expr returns[AbstractExpr tree]
+expr returns[AbstractExpr *tree]
 @init {
-    $tree = AbstractExpr();
+    $tree = new AbstractExpr();
 }
     : (e1=function {
         $tree = $e1.tree;
@@ -90,9 +92,9 @@ expr returns[AbstractExpr tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-function returns[Function tree]
-    : FUN n=function_name fun_params (COLON type)? fun_body {
-        $tree = Function($n.text);
+function returns[Function *tree]
+    : FUN n=function_name fun_params (COLON type)? b=fun_body {
+        $tree = new Function($n.text, $b.tree);
     };
 
 function_name returns[std::string text]
@@ -109,7 +111,16 @@ fun_param_list: fun_param (COMMA fun_param)*; // TODO
 
 fun_param: IDENTIFIER COLON type; // TODO
 
-fun_body: assignation | expr_parenthesis | expr_block; // TODO
+fun_body returns[AbstractExpr *tree]
+    : (e1=assignation {
+        $tree = new AbstractExpr();
+    })
+    | (e2=expr_parenthesis {
+        $tree = $e2.tree;
+    })
+    | (e3=expr_block {
+        $tree = $e3.tree;
+    });
 
 function_decl: FUN function_name fun_params (COLON type)?; // TODO
 
@@ -300,48 +311,48 @@ type: (IDENTIFIER | INT_TYPE | FLOAT_TYPE | DOUBLE_TYPE | BOOL_TYPE | CHAR_TYPE)
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-literal returns[AbstractLiteral tree]
+literal returns[AbstractLiteral *tree]
     : (l1=INT {
-        $tree = Integer(stoi($l1.text));
+        $tree = new Integer(stoi($l1.text));
     })
     | (l2=FLOAT {
-        $tree = Double(stod($l2.text));
+        $tree = new Double(stod($l2.text));
     })
     | (l3=STRING {
-        $tree = String($l3.text);
+        $tree = new String($l3.text);
     })
     | (l4=FSTRING {
-        $tree = FString($l4.text);
+        $tree = new FString($l4.text);
     })
     | (l5=CHAR {
-        $tree = Char($l5.text[0]);
+        $tree = new Char($l5.text[0]);
     })
     | (TRUE {
-        $tree = True();
+        $tree = new True();
     })
     | (FALSE {
-        $tree = False();
+        $tree = new False();
     })
     | (NULL_ {
-        $tree = Null();
+        $tree = new Null();
     });
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-expr_parenthesis returns[ExprParenthesis tree]
+expr_parenthesis returns[ExprParenthesis *tree]
 @init {
-    auto exprs_ = vector<AbstractExpr>();
+    auto exprs_ = vector<AbstractExpr *>();
 }
 @after {
-    $tree = ExprParenthesis(exprs_);
+    $tree = new ExprParenthesis(exprs_);
 }
     : LPAREN exprs[&exprs_] RPAREN;
 
-expr_block returns[ExprBlock tree]
+expr_block returns[ExprBlock *tree]
 @init {
-    auto exprs_ = vector<AbstractExpr>();
+    auto exprs_ = vector<AbstractExpr *>();
 }
 @after {
-    $tree = ExprBlock(exprs_);
+    $tree = new ExprBlock(exprs_);
 }
     : LBRACE exprs[&exprs_] RBRACE;

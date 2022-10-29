@@ -8,10 +8,17 @@
 
 using namespace ast;
 
-Function::Function() = default;
+Function::Function() : _body(nullptr) {}
 
-Function::Function(const std::string &name) : _name(name) {}
+Function::Function(const std::string &name, AbstractExpr *body) : _name(name), _body(body) {}
 
 IndentPrinter *Function::print(IndentPrinter *printer) const {
-    return printer->writeIndent("Function =>\n");
+    printer->writeIndent("Function => ")
+            ->write(_name)
+            ->write("\n") // TODO : write params and return type
+            ->indent();
+
+    _body->print(printer);
+
+    return printer->unindent();
 }

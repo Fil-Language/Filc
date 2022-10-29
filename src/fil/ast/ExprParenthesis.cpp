@@ -9,20 +9,16 @@
 using namespace std;
 using namespace ast;
 
-ExprParenthesis::ExprParenthesis() : _exprs(vector<AbstractExpr>()) {
-    _export = false;
-}
+ExprParenthesis::ExprParenthesis() : _exprs(vector<AbstractExpr *>()) {}
 
-ExprParenthesis::ExprParenthesis(vector<AbstractExpr> &exprs) : _exprs(exprs) {
-    _export = false;
-}
+ExprParenthesis::ExprParenthesis(vector<AbstractExpr *> &exprs) : _exprs(exprs) {}
 
 IndentPrinter *ExprParenthesis::print(IndentPrinter *printer) const {
     printer->writeIndent("ExprParenthesis =>\n")
             ->indent();
 
     for (const auto &expr: _exprs) {
-        expr.print(printer);
+        expr->print(printer);
     }
 
     printer->unindent();

@@ -11,12 +11,12 @@
 using namespace std;
 using namespace ast;
 
-Program::Program() : _imports(vector<Program>()), _exprs(vector<AbstractExpr>()) {}
+Program::Program() : _imports(vector<Program *>()), _exprs(vector<AbstractExpr *>()) {}
 
-Program::Program(string moduleName) : _moduleName(std::move(moduleName)), _imports(vector<Program>()),
-                                      _exprs(vector<AbstractExpr>()) {}
+Program::Program(string moduleName) : _moduleName(std::move(moduleName)), _imports(vector<Program *>()),
+                                      _exprs(vector<AbstractExpr *>()) {}
 
-Program::Program(string moduleName, vector<Program> &imports, vector<AbstractExpr> &exprs) :
+Program::Program(string moduleName, vector<Program *> &imports, vector<AbstractExpr *> &exprs) :
         _moduleName(std::move(moduleName)), _imports(imports), _exprs(exprs) {}
 
 IndentPrinter *Program::print(IndentPrinter *printer) const {
@@ -24,11 +24,11 @@ IndentPrinter *Program::print(IndentPrinter *printer) const {
             ->indent();
 
     for (const auto &import: _imports) {
-        import.print(printer);
+        import->print(printer);
     }
 
     for (const auto &expr: _exprs) {
-        expr.print(printer);
+        expr->print(printer);
     }
 
     printer->unindent();
