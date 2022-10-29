@@ -48,6 +48,14 @@ int FilCompiler::compile(int flag) {
             }*/
             cout << *program << endl; // FIXME : remove this line and uncomment file writing
         }
+
+        // TODO : generate symbols tables
+
+        // TODO : type inference and checking
+
+        // TODO : code structure checking
+
+        // TODO : LLVM IR generation
     } catch (exception &e) {
         cout << e.what() << endl;
         return 1;
