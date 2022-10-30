@@ -74,7 +74,9 @@ expr returns[AbstractExpr *tree]
 	| expr assignation // TODO
 	| cast // TODO
 	| IDENTIFIER // TODO
-	| class_identifier // TODO
+	| (e26=class_identifier {
+	    $tree = $e26.tree;
+	})
 	| (e27=literal {
 	    $tree = $e27.tree;
 	})
