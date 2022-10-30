@@ -289,8 +289,10 @@ class_extend returns[ClassExtend *tree]
         $tree = new ClassExtend($i.tree);
     }; // TODO : function_call_params
 
-class_body:
-	LBRACE class_constructor? (class_variable | class_function)* RBRACE; // TODO
+class_body returns[ExprBlock *constructor]
+    : LBRACE (c=class_constructor {
+        $constructor = $c.tree;
+    })? (class_variable | class_function)* RBRACE; // TODO
 
 class_function: (ABSTRACT | OVERRIDE)? class_atr_modifier? (function | function_decl); // TODO
 
@@ -302,7 +304,10 @@ class_atr_modifier:
     | INTERNAL // TODO
     | PROTECTED; // TODO
 
-class_constructor: CONSTRUCTOR expr_block; // TODO
+class_constructor returns[ExprBlock *tree]
+    : CONSTRUCTOR e=expr_block {
+        $tree = $e.tree;
+    };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
