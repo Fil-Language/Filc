@@ -9,11 +9,12 @@
 using namespace std;
 using namespace ast;
 
-FunctionParam::FunctionParam() : _type(nullptr) {}
+FunctionParam::FunctionParam() : _name(nullptr), _type(nullptr) {}
 
-FunctionParam::FunctionParam(const std::string &name, Type *type) : _name(name), _type(type) {}
+FunctionParam::FunctionParam(Identifier *name, Type *type) : _name(name), _type(type) {}
 
 IndentPrinter *FunctionParam::print(IndentPrinter *printer) const {
-    printer->write(_name)->write(": ");
+    _name->print(printer);
+    printer->write(": ");
     return _type->print(printer);
 }

@@ -9,15 +9,15 @@
 using namespace std;
 using namespace ast;
 
-FunctionDecl::FunctionDecl() : _returnType(nullptr) {}
+FunctionDecl::FunctionDecl() : _name(nullptr), _returnType(nullptr) {}
 
-FunctionDecl::FunctionDecl(const string &name, vector<FunctionParam *> &params, Type *returnType)
+FunctionDecl::FunctionDecl(Identifier *name, vector<FunctionParam *> &params, Type *returnType)
         : _name(name), _params(params), _returnType(returnType) {}
 
 IndentPrinter *FunctionDecl::print(IndentPrinter *printer) const {
-    printer->writeIndent("FunctionDecl => ")
-            ->write(_name)
-            ->write(" (");
+    printer->writeIndent("FunctionDecl => ");
+    _name->print(printer);
+    printer->write(" (");
 
     for (auto it = _params.begin(); it != _params.end(); it++) {
         (*it)->print(printer);

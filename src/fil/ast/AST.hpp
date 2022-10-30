@@ -52,6 +52,20 @@ namespace ast {
 
     // ====================
 
+    class Identifier : public AbstractExpr {
+    public:
+        Identifier();
+
+        explicit Identifier(const std::string &name);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    protected:
+        std::string _name;
+    };
+
+    // ====================
+
     class Program : public AST {
     public:
         Program();
@@ -226,12 +240,12 @@ namespace ast {
     public:
         FunctionParam();
 
-        FunctionParam(const std::string &name, Type *type);
+        FunctionParam(Identifier *name, Type *type);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
-        std::string _name;
+        Identifier *_name;
         Type *_type;
     };
 
@@ -241,12 +255,12 @@ namespace ast {
     public:
         Function();
 
-        Function(const std::string &name, std::vector<FunctionParam *> &params, AbstractExpr *body, Type *returnType);
+        Function(Identifier *name, std::vector<FunctionParam *> &params, AbstractExpr *body, Type *returnType);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
-        std::string _name;
+        Identifier *_name;
         std::vector<FunctionParam *> _params;
         AbstractExpr *_body;
         Type *_returnType;
@@ -258,12 +272,12 @@ namespace ast {
     public:
         FunctionDecl();
 
-        FunctionDecl(const std::string &name, std::vector<FunctionParam *> &params, Type *returnType);
+        FunctionDecl(Identifier *name, std::vector<FunctionParam *> &params, Type *returnType);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
-        std::string _name;
+        Identifier *_name;
         std::vector<FunctionParam *> _params;
         Type *_returnType;
     };
@@ -285,17 +299,16 @@ namespace ast {
 
     // ====================
 
-    class ClassIdentifier : public AbstractExpr {
+    class ClassIdentifier : public Identifier {
     public:
         ClassIdentifier();
 
-        explicit ClassIdentifier(const std::string &name, std::vector<std::string> &generics);
+        explicit ClassIdentifier(const std::string &name, std::vector<Type *> &generics);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
-        std::string _name;
-        std::vector<std::string> _generics;
+        std::vector<Type *> _generics;
     };
 
     // ====================
@@ -306,14 +319,14 @@ namespace ast {
 
         explicit ClassParam(AbstractExpr *decl); // FIXME : replace AbstractExpr by VariableDecl
 
-        ClassParam(const std::string &name, Type *type, AbstractLiteral *defaultValue);
+        ClassParam(Identifier *name, Type *type, AbstractLiteral *defaultValue);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         bool _isDecl;
         AbstractExpr *_decl;
-        std::string _name;
+        Identifier *_name;
         Type *_type;
         AbstractLiteral *_defaultValue;
     };
@@ -358,12 +371,12 @@ namespace ast {
     public:
         Interface();
 
-        Interface(const std::string &name, std::vector<ClassParam *> &params, std::vector<FunctionDecl *> &functions);
+        Interface(Identifier *name, std::vector<ClassParam *> &params, std::vector<FunctionDecl *> &functions);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
-        std::string _name;
+        Identifier *_name;
         std::vector<ClassParam *> _params;
         std::vector<FunctionDecl *> _functions;
     };

@@ -9,14 +9,14 @@
 using namespace std;
 using namespace ast;
 
-Interface::Interface() = default;
+Interface::Interface() : _name(nullptr) {}
 
-Interface::Interface(const std::string &name, std::vector<ClassParam *> &params, std::vector<FunctionDecl *> &functions)
+Interface::Interface(Identifier *name, std::vector<ClassParam *> &params, std::vector<FunctionDecl *> &functions)
         : _name(name), _params(params), _functions(functions) {}
 
 IndentPrinter *Interface::print(IndentPrinter *printer) const {
-    printer->writeIndent("Interface => ")
-            ->write(_name);
+    printer->writeIndent("Interface => ");
+    _name->print(printer);
 
     if (!_params.empty()) {
         printer->write(" (");

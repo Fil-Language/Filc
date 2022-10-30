@@ -73,7 +73,9 @@ expr returns[AbstractExpr *tree]
     | expr binary_operator expr // TODO
 	| expr assignation // TODO
 	| cast // TODO
-	| IDENTIFIER // TODO
+	| (e25=IDENTIFIER {
+	    $tree = new Identifier($e25.text);
+	})
 	| (e26=class_identifier {
 	    $tree = $e26.tree;
 	})
@@ -98,15 +100,15 @@ function returns[Function *tree]
     : FUN n=function_name p=fun_params (COLON t=type {
         rType = $t.tree;
     })? b=fun_body {
-        $tree = new Function($n.text, $p.tree, $b.tree, rType);
+        $tree = new Function($n.tree, $p.tree, $b.tree, rType);
     };
 
-function_name returns[std::string text]
+function_name returns[Identifier *tree]
     : (i=IDENTIFIER {
-        $text = $i.text;
+        $tree = new Identifier($i.text);
     })
     | (o=OPERATOR b=binary_operator {
-        $text = $o.text + $b.text;
+        $tree = new Identifier($o.text + $b.text);
     });
 
 fun_params returns[std::vector<FunctionParam *> tree]
@@ -129,7 +131,7 @@ fun_param_list returns[std::vector<FunctionParam *> tree]
 
 fun_param returns[FunctionParam *tree]
     : i=IDENTIFIER COLON t=type {
-        $tree = new FunctionParam($i.text, $t.tree);
+        $tree = new FunctionParam(new Identifier($i.text), $t.tree);
     };
 
 fun_body returns[AbstractExpr *tree]
@@ -150,7 +152,7 @@ function_decl returns[FunctionDecl *tree]
     : FUN n=function_name p=fun_params (COLON t=type {
         rType = $t.tree;
     })? {
-        $tree = new FunctionDecl($n.text, $p.tree, rType);
+        $tree = new FunctionDecl($n.tree, $p.tree, rType);
     };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -179,7 +181,7 @@ interface returns[Interface *tree]
     })? (b=interface_body {
         body = $b.tree;
     })? {
-        $tree = new Interface($i.text, params, body);
+        $tree = new Interface(new Identifier($i.text), params, body);
     };
 
 interface_body returns[std::vector<FunctionDecl *> tree]
@@ -218,7 +220,7 @@ class_modifier returns[std::string text]
 
 class_identifier returns[ClassIdentifier *tree]
 @init {
-    auto generic = std::vector<std::string>();
+    auto generic = std::vector<Type *>();
 }
     : i=IDENTIFIER (g=class_generic {
         generic = $g.tree;
@@ -226,14 +228,14 @@ class_identifier returns[ClassIdentifier *tree]
         $tree = new ClassIdentifier($i.text, generic);
     };
 
-class_generic returns[std::vector<std::string> tree]
+class_generic returns[std::vector<Type *> tree]
 @init {
-    $tree = std::vector<std::string>();
+    $tree = std::vector<Type *>();
 }
     : LT i1=IDENTIFIER {
-        $tree.push_back($i1.text);
+        $tree.push_back(new Type($i1.text));
     } (COMMA ii=IDENTIFIER {
-        $tree.push_back($ii.text);
+        $tree.push_back(new Type($ii.text));
     })* GT;
 
 class_params returns[std::vector<ClassParam *> tree]
@@ -264,7 +266,7 @@ class_param returns[ClassParam *tree]
 	| (n=IDENTIFIER COLON t=type (EQ l=literal {
 	    value = $l.tree;
 	})? {
-	    $tree = new ClassParam($n.text, $t.tree, value);
+	    $tree = new ClassParam(new Identifier($n.text), $t.tree, value);
 	});
 
 class_extends returns[std::vector<ClassExtend *> tree]

@@ -45,8 +45,10 @@ IndentPrinter *Class::print(IndentPrinter *printer) const {
 
 ClassIdentifier::ClassIdentifier() = default;
 
-ClassIdentifier::ClassIdentifier(const string &name, vector<string> &generics)
-        : _name(name), _generics(generics) {}
+ClassIdentifier::ClassIdentifier(const string &name, vector<Type *> &generics)
+        : _generics(generics) {
+    _name = name;
+}
 
 IndentPrinter *ClassIdentifier::print(IndentPrinter *printer) const {
     printer->write(_name);
@@ -54,7 +56,7 @@ IndentPrinter *ClassIdentifier::print(IndentPrinter *printer) const {
     if (!_generics.empty()) {
         printer->write("<");
         for (auto it = _generics.begin(); it != _generics.end(); ++it) {
-            printer->write(*it);
+            (*it)->print(printer);
             if (it != _generics.end() - 1)
                 printer->write(", ");
         }
@@ -67,19 +69,19 @@ IndentPrinter *ClassIdentifier::print(IndentPrinter *printer) const {
 // ====================
 
 ClassParam::ClassParam()
-        : _isDecl(false), _decl(nullptr), _type(nullptr), _defaultValue(nullptr) {}
+        : _isDecl(false), _decl(nullptr), _name(nullptr), _type(nullptr), _defaultValue(nullptr) {}
 
 ClassParam::ClassParam(AbstractExpr *decl)
-        : _isDecl(true), _decl(decl), _type(nullptr), _defaultValue(nullptr) {}
+        : _isDecl(true), _decl(decl), _name(nullptr), _type(nullptr), _defaultValue(nullptr) {}
 
-ClassParam::ClassParam(const string &name, Type *type, AbstractLiteral *defaultValue)
+ClassParam::ClassParam(Identifier *name, Type *type, AbstractLiteral *defaultValue)
         : _isDecl(false), _decl(nullptr), _name(name), _type(type), _defaultValue(defaultValue) {}
 
 IndentPrinter *ClassParam::print(IndentPrinter *printer) const {
     if (_isDecl) {
         _decl->print(printer);
     } else {
-        printer->write(_name);
+        _name->print(printer);
         if (_type)
             _type->print(printer);
         if (_defaultValue)
