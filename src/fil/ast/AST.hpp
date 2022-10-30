@@ -222,7 +222,7 @@ namespace ast {
 
     // ====================
 
-    class FunctionParam : public AbstractExpr {
+    class FunctionParam : public AST {
     public:
         FunctionParam();
 
@@ -254,7 +254,7 @@ namespace ast {
 
     // ====================
 
-    class FunctionDecl : public AbstractExpr {
+    class FunctionDecl : public AST {
     public:
         FunctionDecl();
 
@@ -300,7 +300,7 @@ namespace ast {
 
     // ====================
 
-    class ClassParam : public AbstractExpr {
+    class ClassParam : public AST {
     public:
         ClassParam();
 
@@ -320,7 +320,7 @@ namespace ast {
 
     // ====================
 
-    class ClassExtend : public AbstractExpr {
+    class ClassExtend : public AST {
     public:
         ClassExtend();
 
