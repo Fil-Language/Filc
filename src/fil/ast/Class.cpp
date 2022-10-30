@@ -11,8 +11,11 @@ using namespace ast;
 
 Class::Class() : _name(nullptr) {};
 
-Class::Class(const string &modifier, ClassIdentifier *name, vector<ClassParam *> &params)
-        : _modifier(modifier), _name(name), _params(params) {}
+Class::Class(const string &modifier,
+             ClassIdentifier *name,
+             vector<ClassParam *> &params,
+             vector<ClassExtend *> &extends)
+        : _modifier(modifier), _name(name), _params(params), _extends(extends) {}
 
 IndentPrinter *Class::print(IndentPrinter *printer) const {
     printer->writeIndent("Class => [")
@@ -82,6 +85,19 @@ IndentPrinter *ClassParam::print(IndentPrinter *printer) const {
         if (_defaultValue)
             _defaultValue->print(printer);
     }
+
+    return printer;
+}
+
+// ====================
+
+ClassExtend::ClassExtend() : _identifier(nullptr) {}
+
+ClassExtend::ClassExtend(ClassIdentifier *identifier)
+        : _identifier(identifier) {}
+
+IndentPrinter *ClassExtend::print(IndentPrinter *printer) const {
+    _identifier->print(printer);
 
     return printer;
 }

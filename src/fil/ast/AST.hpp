@@ -320,11 +320,28 @@ namespace ast {
 
     // ====================
 
+    class ClassExtend : public AbstractExpr {
+    public:
+        ClassExtend();
+
+        explicit ClassExtend(ClassIdentifier *identifier);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        ClassIdentifier *_identifier;
+    };
+
+    // ====================
+
     class Class : public AbstractExpr {
     public:
         Class();
 
-        Class(const std::string &modifier, ClassIdentifier *name, std::vector<ClassParam *> &params);
+        Class(const std::string &modifier,
+              ClassIdentifier *name,
+              std::vector<ClassParam *> &params,
+              std::vector<ClassExtend *> &extends);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
@@ -332,6 +349,7 @@ namespace ast {
         std::string _modifier;
         ClassIdentifier *_name;
         std::vector<ClassParam *> _params;
+        std::vector<ClassExtend *> _extends;
     };
 
     // ====================

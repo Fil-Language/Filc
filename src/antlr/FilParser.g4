@@ -194,14 +194,17 @@ class_ returns[Class *tree]
 @init {
     std::string modifier;
     auto params = std::vector<ClassParam *>();
+    auto extends = std::vector<ClassExtend *>();
 }
     : (m=class_modifier {
         modifier = $m.text;
     })? CLASS n=class_identifier (p=class_params {
         params = $p.tree;
-    })? class_extends? class_body? {
-        $tree = new Class(modifier, $n.tree, params);
-    }; // TODO : class_extends, class_body
+    })? (e=class_extends {
+        extends = $e.tree;
+    })? class_body? {
+        $tree = new Class(modifier, $n.tree, params, extends);
+    }; // TODO : class_body
 
 class_modifier returns[std::string text]
     : (m1=ABSTRACT {
@@ -262,11 +265,25 @@ class_param returns[ClassParam *tree]
 	    $tree = new ClassParam($n.text, $t.tree, value);
 	});
 
-class_extends: COLON class_extend_list; // TODO
+class_extends returns[std::vector<ClassExtend *> tree]
+    : COLON e=class_extend_list {
+        $tree = $e.tree;
+    };
 
-class_extend_list: class_extend (COMMA class_extend)*; // TODO
+class_extend_list returns[std::vector<ClassExtend *> tree]
+@init {
+    $tree = std::vector<ClassExtend *>();
+}
+    : e1=class_extend {
+        $tree.push_back($e1.tree);
+    } (COMMA ei=class_extend {
+        $tree.push_back($ei.tree);
+    })*;
 
-class_extend: class_identifier function_call_params?; // TODO
+class_extend returns[ClassExtend *tree]
+    : i=class_identifier function_call_params? {
+        $tree = new ClassExtend($i.tree);
+    }; // TODO : function_call_params
 
 class_body:
 	LBRACE class_constructor? (class_variable | class_function)* RBRACE; // TODO
