@@ -63,7 +63,9 @@ expr returns[AbstractExpr *tree]
 	| (e5=enum_ {
 	    $tree = $e5.tree;
 	})
-	| variable_decl // TODO
+	| (e6=variable_decl {
+	    $tree = $e6.tree;
+	})
 	| condition // TODO
 	| loop // TODO
 	| function_call // TODO
@@ -270,8 +272,8 @@ class_param returns[ClassParam *tree]
     AbstractLiteral *value = 0;
 }
     : (d=variable_decl {
-        $tree = new ClassParam(new AbstractExpr());
-    }) // TODO : variable_decl
+        $tree = new ClassParam($d.tree);
+    })
 	| (n=IDENTIFIER COLON t=type (EQ l=literal {
 	    value = $l.tree;
 	})? {
@@ -333,8 +335,8 @@ class_function returns[ClassFunction *tree]
     }));
 
 class_variable returns[ClassVariable *tree]
-    : v=class_atr_visibility variable_decl {
-        $tree = new ClassVariable($v.text);
+    : v=class_atr_visibility d=variable_decl {
+        $tree = new ClassVariable($v.text, $d.tree);
     };
 
 class_atr_visibility returns[std::string text]
@@ -533,7 +535,21 @@ function_call_param_list: expr (COMMA expr)*; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-variable_decl: (VAL | VAR) IDENTIFIER (((COLON type)? assignation) | (COLON type)); // TODO
+variable_decl returns[VariableDecl *tree]
+@init {
+    bool isVal = false;
+    Type *type = 0;
+}
+@after {
+    $tree = new VariableDecl(isVal, new Identifier($i.text), type);
+}
+    : (VAL {
+        isVal = true;
+    } | VAR) i=IDENTIFIER (((COLON t1=type {
+        type = $t1.tree;
+    })? assignation) | (COLON t2=type {
+        type = $t2.tree;
+    })); // TODO : assignation
 
 array_assign: LBRACE expr (COMMA expr)* RBRACE; // TODO
 

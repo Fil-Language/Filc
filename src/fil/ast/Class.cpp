@@ -110,7 +110,7 @@ IndentPrinter *ClassIdentifier::print(IndentPrinter *printer) const {
 ClassParam::ClassParam()
         : _isDecl(false), _decl(nullptr), _name(nullptr), _type(nullptr), _defaultValue(nullptr) {}
 
-ClassParam::ClassParam(AbstractExpr *decl)
+ClassParam::ClassParam(VariableDecl *decl)
         : _isDecl(true), _decl(decl), _name(nullptr), _type(nullptr), _defaultValue(nullptr) {}
 
 ClassParam::ClassParam(Identifier *name, Type *type, AbstractLiteral *defaultValue)
@@ -145,10 +145,10 @@ IndentPrinter *ClassExtend::print(IndentPrinter *printer) const {
 
 // ====================
 
-ClassVariable::ClassVariable() = default;
+ClassVariable::ClassVariable() : _decl(nullptr) {}
 
-ClassVariable::ClassVariable(const string &visibility)
-        : _visibility(visibility) {}
+ClassVariable::ClassVariable(const string &visibility, VariableDecl *decl)
+        : _visibility(visibility), _decl(decl) {}
 
 IndentPrinter *ClassVariable::print(IndentPrinter *printer) const {
     printer->writeIndent(_visibility);

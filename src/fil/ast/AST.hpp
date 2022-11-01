@@ -84,6 +84,22 @@ namespace ast {
 
     // ====================
 
+    class VariableDecl : public AbstractExpr {
+    public:
+        VariableDecl();
+
+        VariableDecl(bool isVal, Identifier *name, Type *type);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        bool _isVal;
+        Identifier *_name;
+        Type *_type;
+    };
+
+    // ====================
+
     class ExprBlock : public AbstractExpr {
     public:
         ExprBlock();
@@ -317,7 +333,7 @@ namespace ast {
     public:
         ClassParam();
 
-        explicit ClassParam(AbstractExpr *decl); // FIXME : replace AbstractExpr by VariableDecl
+        explicit ClassParam(VariableDecl *decl);
 
         ClassParam(Identifier *name, Type *type, AbstractLiteral *defaultValue);
 
@@ -325,7 +341,7 @@ namespace ast {
 
     private:
         bool _isDecl;
-        AbstractExpr *_decl;
+        VariableDecl *_decl;
         Identifier *_name;
         Type *_type;
         AbstractLiteral *_defaultValue;
@@ -351,12 +367,13 @@ namespace ast {
     public:
         ClassVariable();
 
-        explicit ClassVariable(const std::string &visibility);
+        ClassVariable(const std::string &visibility, VariableDecl *decl);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::string _visibility;
+        VariableDecl *_decl;
     };
 
     // ====================
