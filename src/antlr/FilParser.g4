@@ -60,7 +60,9 @@ expr returns[AbstractExpr *tree]
 	| (e4=class_ {
 	    $tree = $e4.tree;
 	})
-	| enum_ // TODO
+	| (e5=enum_ {
+	    $tree = $e5.tree;
+	})
 	| variable_decl // TODO
 	| condition // TODO
 	| loop // TODO
@@ -356,9 +358,25 @@ class_constructor returns[ExprBlock *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-enum_: ENUM IDENTIFIER enum_body?; // TODO
+enum_ returns[Enum *tree]
+@init {
+    std::vector<Identifier *> values;
+}
+    : ENUM i=IDENTIFIER (b=enum_body {
+        values = $b.tree;
+    })? {
+        $tree = new Enum(new Identifier($i.text), values);
+    };
 
-enum_body: LBRACE (IDENTIFIER (COMMA IDENTIFIER)*)? RBRACE; // TODO
+enum_body returns[std::vector<Identifier *> tree]
+@init {
+    $tree = std::vector<Identifier *>();
+}
+    : LBRACE (i1=IDENTIFIER {
+        $tree.push_back(new Identifier($i1.text));
+    } (COMMA ii=IDENTIFIER {
+        $tree.push_back(new Identifier($ii.text));
+    })*)? RBRACE;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

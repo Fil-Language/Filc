@@ -416,6 +416,21 @@ namespace ast {
         std::vector<ClassParam *> _params;
         std::vector<FunctionDecl *> _functions;
     };
+
+    // ====================
+
+    class Enum : public AbstractExpr {
+    public:
+        Enum();
+
+        Enum(Identifier *name, std::vector<Identifier *> &values);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        Identifier *_name;
+        std::vector<Identifier *> _values;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);
