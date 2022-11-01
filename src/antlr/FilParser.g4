@@ -47,7 +47,7 @@ import_ returns[Program *tree]
 expr returns[AbstractExpr *tree]
 @init {
     $tree = new AbstractExpr();
-}
+} // FIXME : remove init
     : (e1=function {
         $tree = $e1.tree;
     })
@@ -66,7 +66,9 @@ expr returns[AbstractExpr *tree]
 	| (e6=variable_decl {
 	    $tree = $e6.tree;
 	})
-	| condition // TODO
+	| (e7=condition {
+	    $tree = $e7.tree;
+	})
 	| loop // TODO
 	| function_call // TODO
 	| exception_ // TODO
@@ -382,17 +384,54 @@ enum_body returns[std::vector<Identifier *> tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-condition: if_ | switch_; // TODO
+condition returns[AbstractExpr *tree]
+@init {
+    $tree = new AbstractExpr();
+} // FIXME : remove init
+    : (c1=if_ {
+        $tree = $c1.tree;
+    })
+    | switch_; // TODO : switch
 
-if_: IF if_condition if_body else_if* else_?; // TODO
+if_ returns[If *tree]
+@init {
+    AbstractExpr *_else = 0;
+    std::vector<If *> elseif;
+}
+@after {
+    $tree = new If($c.tree, $b.tree, elseif, _else);
+}
+    : IF c=if_condition b=if_body (ei=else_if {
+        elseif.push_back($ei.tree);
+    })* (e=else_ {
+        _else = $e.tree;
+    })?;
 
-if_condition: expr_parenthesis; // TODO
+if_condition returns[ExprParenthesis *tree]
+    : e=expr_parenthesis {
+        $tree = $e.tree;
+    };
 
-if_body: expr_block | expr_parenthesis | expr; // TODO
+if_body returns[AbstractExpr *tree]
+    : (e1=expr_block {
+        $tree = $e1.tree;
+    })
+    | (e2=expr_parenthesis {
+        $tree = $e2.tree;
+    })
+    | (e3=expr {
+        $tree = $e3.tree;
+    });
 
-else_if: ELSE IF if_condition if_body; // TODO
+else_if returns[If *tree]
+    : ELSE IF c=if_condition b=if_body {
+        $tree = new If($c.tree, $b.tree);
+    };
 
-else_: ELSE if_body; // TODO
+else_ returns[AbstractExpr *tree]
+    : ELSE b=if_body {
+        $tree = $b.tree;
+    };
 
 switch_: SWITCH switch_condition switch_body; // TODO
 
@@ -538,17 +577,17 @@ function_call_param_list: expr (COMMA expr)*; // TODO
 variable_decl returns[VariableDecl *tree]
 @init {
     bool isVal = false;
-    Type *type = 0;
+    Type *type_ = 0;
 }
 @after {
-    $tree = new VariableDecl(isVal, new Identifier($i.text), type);
+    $tree = new VariableDecl(isVal, new Identifier($i.text), type_);
 }
     : (VAL {
         isVal = true;
     } | VAR) i=IDENTIFIER (((COLON t1=type {
-        type = $t1.tree;
+        type_ = $t1.tree;
     })? assignation) | (COLON t2=type {
-        type = $t2.tree;
+        type_ = $t2.tree;
     })); // TODO : assignation
 
 array_assign: LBRACE expr (COMMA expr)* RBRACE; // TODO

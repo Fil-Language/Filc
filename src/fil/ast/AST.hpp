@@ -448,6 +448,25 @@ namespace ast {
         Identifier *_name;
         std::vector<Identifier *> _values;
     };
+
+    // ====================
+
+    class If : public AbstractExpr {
+    public:
+        If();
+
+        If(ExprParenthesis *condition, AbstractExpr *then);
+
+        If(ExprParenthesis *condition, AbstractExpr *then, std::vector<If *> &elseIf, AbstractExpr *else_);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        ExprParenthesis *_condition;
+        AbstractExpr *_then;
+        std::vector<If *> _elseIf;
+        AbstractExpr *_else;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);
