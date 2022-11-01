@@ -201,6 +201,7 @@ class_ returns[Class *tree]
     auto extends = std::vector<ClassExtend *>();
     ExprBlock *constructor = 0;
     std::vector<ClassVariable *> variables;
+    std::vector<ClassFunction *> functions;
 }
     : (m=class_modifier {
         modifier = $m.text;
@@ -211,9 +212,10 @@ class_ returns[Class *tree]
     })? (b=class_body {
         constructor = $b.constructor;
         variables = $b.variables;
+        functions = $b.functions;
     })? {
-        $tree = new Class(modifier, $n.tree, params, extends, constructor, variables);
-    }; // TODO : class_body
+        $tree = new Class(modifier, $n.tree, params, extends, constructor, variables, functions);
+    };
 
 class_modifier returns[std::string text]
     : (m1=ABSTRACT {
@@ -294,24 +296,46 @@ class_extend returns[ClassExtend *tree]
         $tree = new ClassExtend($i.tree);
     }; // TODO : function_call_params
 
-class_body returns[ExprBlock *constructor, std::vector<ClassVariable *> variables]
+class_body returns[ExprBlock *constructor, std::vector<ClassVariable *> variables, std::vector<ClassFunction *> functions]
 @init {
     $variables = std::vector<ClassVariable *>();
+    $functions = std::vector<ClassFunction *>();
 }
     : LBRACE (c=class_constructor {
         $constructor = $c.tree;
     })? (v=class_variable {
         $variables.push_back($v.tree);
-    } | class_function)* RBRACE; // TODO
+    } | f=class_function {
+        $functions.push_back($f.tree);
+    })* RBRACE;
 
-class_function: (ABSTRACT | OVERRIDE)? class_atr_modifier? (function | function_decl); // TODO
+class_function returns[ClassFunction *tree]
+@init {
+    std::string modifier;
+    std::string visibility;
+    AST *function_;
+}
+@after {
+    $tree = new ClassFunction(modifier, visibility, function_);
+}
+    : ((a=ABSTRACT {
+        modifier = $a.text;
+    }) | (o=OVERRIDE {
+        modifier = $o.text;
+    }))? (v=class_atr_visibility {
+        visibility = $v.text;
+    })? ((f=function {
+        function_ = $f.tree;
+    }) | (d=function_decl {
+        function_ = $d.tree;
+    }));
 
 class_variable returns[ClassVariable *tree]
-    : m=class_atr_modifier variable_decl {
-        $tree = new ClassVariable($m.text);
+    : v=class_atr_visibility variable_decl {
+        $tree = new ClassVariable($v.text);
     };
 
-class_atr_modifier returns[std::string text]
+class_atr_visibility returns[std::string text]
     : (m1=PRIVATE {
         $text = $m1.text;
     })

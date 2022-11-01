@@ -16,7 +16,7 @@ using namespace std;
 using namespace antlr4;
 using namespace antlrcppfil;
 
-FilCompiler::FilCompiler(string filename) : _filename(move(filename)) {}
+FilCompiler::FilCompiler(string filename) : _filename(std::move(filename)) {}
 
 int FilCompiler::compile(int flag) {
     ifstream file(_filename);
@@ -34,13 +34,13 @@ int FilCompiler::compile(int flag) {
         tokens.fill();
 
         FilParser parser(&tokens);
-        Program* program = parser.parseTree();
+        Program *program = parser.parseTree();
 
         if (file.is_open()) {
             file.close();
         }
 
-        if (flag == FLAGS::AST) {
+        if (flag == F_AST) {
             /*ofstream ast("ast.out");
             if (ast.good()) {
                 ast << program << endl;

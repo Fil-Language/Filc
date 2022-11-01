@@ -351,12 +351,28 @@ namespace ast {
     public:
         ClassVariable();
 
-        explicit ClassVariable(const std::string &modifier);
+        explicit ClassVariable(const std::string &visibility);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::string _visibility;
+    };
+
+    // ====================
+
+    class ClassFunction : public AST {
+    public:
+        ClassFunction();
+
+        ClassFunction(const std::string &modifier, const std::string &visibility, AST *function);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::string _modifier;
+        std::string _visibility;
+        AST *_function; // Function or FunctionDecl
     };
 
     // ====================
@@ -370,7 +386,8 @@ namespace ast {
               std::vector<ClassParam *> &params,
               std::vector<ClassExtend *> &extends,
               ExprBlock *constructor,
-              std::vector<ClassVariable *> &variables);
+              std::vector<ClassVariable *> &variables,
+              std::vector<ClassFunction *> &functions);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
@@ -381,6 +398,7 @@ namespace ast {
         std::vector<ClassExtend *> _extends;
         ExprBlock *_constructor;
         std::vector<ClassVariable *> _variables;
+        std::vector<ClassFunction *> _functions;
     };
 
     // ====================

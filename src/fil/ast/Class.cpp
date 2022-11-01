@@ -9,20 +9,22 @@
 using namespace std;
 using namespace ast;
 
-Class::Class() : _name(nullptr), _constructor(nullptr) {};
+Class::Class() : _name(nullptr), _constructor(nullptr) {}
 
 Class::Class(const string &modifier,
              ClassIdentifier *name,
              vector<ClassParam *> &params,
              vector<ClassExtend *> &extends,
              ExprBlock *constructor,
-             vector<ClassVariable *> &variables)
+             vector<ClassVariable *> &variables,
+             vector<ClassFunction *> &functions)
         : _modifier(modifier),
           _name(name),
           _params(params),
           _extends(extends),
           _constructor(constructor),
-          _variables(variables) {}
+          _variables(variables),
+          _functions(functions) {}
 
 IndentPrinter *Class::print(IndentPrinter *printer) const {
     printer->writeIndent("Class => [")
@@ -145,11 +147,30 @@ IndentPrinter *ClassExtend::print(IndentPrinter *printer) const {
 
 ClassVariable::ClassVariable() = default;
 
-ClassVariable::ClassVariable(const string &modifier)
-        : _modifier(modifier) {}
+ClassVariable::ClassVariable(const string &visibility)
+        : _visibility(visibility) {}
 
 IndentPrinter *ClassVariable::print(IndentPrinter *printer) const {
-    printer->writeIndent(_modifier);
+    printer->writeIndent(_visibility);
 
     return printer->write("\n");
+}
+
+// ====================
+
+ClassFunction::ClassFunction() : _function(nullptr) {}
+
+ClassFunction::ClassFunction(const std::string &modifier, const std::string &visibility, ast::AST *function)
+        : _modifier(modifier), _visibility(visibility), _function(function) {}
+
+IndentPrinter *ClassFunction::print(IndentPrinter *printer) const {
+    printer->writeIndent(_modifier)
+            ->write(" ")
+            ->write(_visibility)
+            ->write(" =>\n")
+            ->indent();
+
+    _function->print(printer);
+
+    return printer->unindent();
 }
