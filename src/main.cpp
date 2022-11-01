@@ -12,7 +12,7 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-    cxxopts::Options options("filc", "Fil compiler \nVersion: " + FILC_VERSION_STRING);
+    cxxopts::Options options("filc", "Fil compiler \nVersion: " + FILC_VERSION_STRING + "\nLicense: " + FILC_LICENSE);
     options.custom_help("[options...]");
     options.positional_help("<main source filename>");
     options.add_options("General")
@@ -46,6 +46,7 @@ int main(int argc, char **argv) {
                 " /_/   /_/_/\\___/  \n"
                 "                   " << endl;
         cout << "Filc version " << FILC_VERSION_STRING << " - " << FILC_VERSION << endl;
+        cout << "License: " << FILC_LICENSE << endl;
         return 0;
     }
 
