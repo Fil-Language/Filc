@@ -385,13 +385,12 @@ enum_body returns[std::vector<Identifier *> tree]
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 condition returns[AbstractExpr *tree]
-@init {
-    $tree = new AbstractExpr();
-} // FIXME : remove init
     : (c1=if_ {
         $tree = $c1.tree;
     })
-    | switch_; // TODO : switch
+    | (c2=switch_ {
+        $tree = $c2.tree;
+    });
 
 if_ returns[If *tree]
 @init {
@@ -433,17 +432,50 @@ else_ returns[AbstractExpr *tree]
         $tree = $b.tree;
     };
 
-switch_: SWITCH switch_condition switch_body; // TODO
+switch_ returns[Switch *tree]
+    : SWITCH c=switch_condition b=switch_body {
+        $tree = new Switch($c.tree, $b.tree);
+    };
 
-switch_condition: expr_parenthesis; // TODO
+switch_condition returns[ExprParenthesis *tree]
+    : e=expr_parenthesis {
+        $tree = $e.tree;
+    };
 
-switch_body: LBRACE switch_case* RBRACE; // TODO
+switch_body returns[std::vector<SwitchCase *> tree]
+@init {
+    $tree = std::vector<SwitchCase *>();
+}
+    : LBRACE (c=switch_case {
+        $tree.push_back($c.tree);
+    })* RBRACE;
 
-switch_case: (literal | DEFAULT) ARROW ( // TODO
-		expr // TODO
-		| expr_block // TODO
-		| expr_parenthesis // TODO
-	);
+switch_case returns[SwitchCase *tree]
+@init {
+    bool isDefault = true;
+    AbstractLiteral *value = 0;
+    AbstractExpr *body = 0;
+}
+    : (l=literal {
+        value = $l.tree;
+        isDefault = false;
+    } | DEFAULT) ARROW (
+		(e1=expr {
+		    body = $e1.tree;
+		})
+		| (e2=expr_block {
+		    body = $e2.tree;
+		})
+		| (e3=expr_parenthesis {
+		    body = $e3.tree;
+		})
+	) {
+	    if (isDefault) {
+	        $tree = new SwitchCase(body);
+	    } else {
+	        $tree = new SwitchCase(value, body);
+	    }
+	};
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

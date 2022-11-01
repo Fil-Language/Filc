@@ -467,6 +467,38 @@ namespace ast {
         std::vector<If *> _elseIf;
         AbstractExpr *_else;
     };
+
+    // ====================
+
+    class SwitchCase : public AST {
+    public:
+        SwitchCase();
+
+        explicit SwitchCase(AbstractExpr *body);
+
+        SwitchCase(AbstractLiteral *value, AbstractExpr *body);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        AbstractLiteral *_value;
+        AbstractExpr *_body;
+    };
+
+    // ====================
+
+    class Switch : public AbstractExpr {
+    public:
+        Switch();
+
+        Switch(ExprParenthesis *condition, std::vector<SwitchCase *> &cases);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        ExprParenthesis *_condition;
+        std::vector<SwitchCase *> _cases;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);
