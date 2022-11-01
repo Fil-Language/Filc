@@ -9,13 +9,20 @@
 using namespace std;
 using namespace ast;
 
-Class::Class() : _name(nullptr) {};
+Class::Class() : _name(nullptr), _constructor(nullptr) {};
 
 Class::Class(const string &modifier,
              ClassIdentifier *name,
              vector<ClassParam *> &params,
-             vector<ClassExtend *> &extends)
-        : _modifier(modifier), _name(name), _params(params), _extends(extends) {}
+             vector<ClassExtend *> &extends,
+             ExprBlock *constructor,
+             vector<ClassVariable *> &variables)
+        : _modifier(modifier),
+          _name(name),
+          _params(params),
+          _extends(extends),
+          _constructor(constructor),
+          _variables(variables) {}
 
 IndentPrinter *Class::print(IndentPrinter *printer) const {
     printer->writeIndent("Class => [")
@@ -100,6 +107,19 @@ ClassExtend::ClassExtend(ClassIdentifier *identifier)
 
 IndentPrinter *ClassExtend::print(IndentPrinter *printer) const {
     _identifier->print(printer);
+
+    return printer;
+}
+
+// ====================
+
+ClassVariable::ClassVariable() = default;
+
+ClassVariable::ClassVariable(const string &modifier)
+        : _modifier(modifier) {}
+
+IndentPrinter *ClassVariable::print(IndentPrinter *printer) const {
+    printer->write(_modifier);
 
     return printer;
 }

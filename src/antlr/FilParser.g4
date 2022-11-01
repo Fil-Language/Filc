@@ -199,6 +199,8 @@ class_ returns[Class *tree]
     std::string modifier;
     auto params = std::vector<ClassParam *>();
     auto extends = std::vector<ClassExtend *>();
+    ExprBlock *constructor = 0;
+    std::vector<ClassVariable *> variables;
 }
     : (m=class_modifier {
         modifier = $m.text;
@@ -206,8 +208,11 @@ class_ returns[Class *tree]
         params = $p.tree;
     })? (e=class_extends {
         extends = $e.tree;
-    })? class_body? {
-        $tree = new Class(modifier, $n.tree, params, extends);
+    })? (b=class_body {
+        constructor = $b.constructor;
+        variables = $b.variables;
+    })? {
+        $tree = new Class(modifier, $n.tree, params, extends, constructor, variables);
     }; // TODO : class_body
 
 class_modifier returns[std::string text]
@@ -289,20 +294,36 @@ class_extend returns[ClassExtend *tree]
         $tree = new ClassExtend($i.tree);
     }; // TODO : function_call_params
 
-class_body returns[ExprBlock *constructor]
+class_body returns[ExprBlock *constructor, std::vector<ClassVariable *> variables]
+@init {
+    $variables = std::vector<ClassVariable *>();
+}
     : LBRACE (c=class_constructor {
         $constructor = $c.tree;
-    })? (class_variable | class_function)* RBRACE; // TODO
+    })? (v=class_variable {
+        $variables.push_back($v.tree);
+    } | class_function)* RBRACE; // TODO
 
 class_function: (ABSTRACT | OVERRIDE)? class_atr_modifier? (function | function_decl); // TODO
 
-class_variable: class_atr_modifier variable_decl; // TODO
+class_variable returns[ClassVariable *tree]
+    : m=class_atr_modifier variable_decl {
+        $tree = new ClassVariable($m.text);
+    };
 
-class_atr_modifier:
-    PRIVATE // TODO
-    | PUBLIC // TODO
-    | INTERNAL // TODO
-    | PROTECTED; // TODO
+class_atr_modifier returns[std::string text]
+    : (m1=PRIVATE {
+        $text = $m1.text;
+    })
+    | (m2=PUBLIC {
+        $text = $m2.text;
+    })
+    | (m3=INTERNAL {
+        $text = $m3.text;
+    })
+    | (m4=PROTECTED {
+        $text = $m4.text;
+    });
 
 class_constructor returns[ExprBlock *tree]
     : CONSTRUCTOR e=expr_block {

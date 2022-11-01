@@ -347,6 +347,20 @@ namespace ast {
 
     // ====================
 
+    class ClassVariable : public AST {
+    public:
+        ClassVariable();
+
+        explicit ClassVariable(const std::string &modifier);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::string _modifier;
+    };
+
+    // ====================
+
     class Class : public AbstractExpr {
     public:
         Class();
@@ -354,7 +368,9 @@ namespace ast {
         Class(const std::string &modifier,
               ClassIdentifier *name,
               std::vector<ClassParam *> &params,
-              std::vector<ClassExtend *> &extends);
+              std::vector<ClassExtend *> &extends,
+              ExprBlock *constructor,
+              std::vector<ClassVariable *> &variables);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
@@ -363,6 +379,8 @@ namespace ast {
         ClassIdentifier *_name;
         std::vector<ClassParam *> _params;
         std::vector<ClassExtend *> _extends;
+        ExprBlock *_constructor;
+        std::vector<ClassVariable *> _variables;
     };
 
     // ====================
