@@ -42,10 +42,40 @@ IndentPrinter *Class::print(IndentPrinter *printer) const {
                 printer->write(", ");
             }
         }
-        printer->write(")");
+        printer->write(") ");
     }
 
-    return printer->write("\n");
+    if (!_extends.empty()) {
+        printer->write(": ");
+        for (auto it = _extends.begin(); it != _extends.end(); it++) {
+            (*it)->print(printer);
+            if (it != _extends.end() - 1) {
+                printer->write(", ");
+            }
+        }
+    }
+
+    printer->write("\n")
+            ->indent();
+
+    if (_constructor) {
+        printer->writeIndent("Constructor =>\n")
+                ->indent();
+        _constructor->print(printer);
+        printer->unindent();
+    }
+
+    if (!_variables.empty()) {
+        printer->writeIndent("Variables =>\n")
+                ->indent();
+        for (auto _variable: _variables) {
+            _variable->print(printer);
+        }
+        printer->unindent();
+    }
+
+    return printer->unindent()
+            ->write("\n");
 }
 
 // ====================
@@ -119,7 +149,7 @@ ClassVariable::ClassVariable(const string &modifier)
         : _modifier(modifier) {}
 
 IndentPrinter *ClassVariable::print(IndentPrinter *printer) const {
-    printer->write(_modifier);
+    printer->writeIndent(_modifier);
 
-    return printer;
+    return printer->write("\n");
 }
