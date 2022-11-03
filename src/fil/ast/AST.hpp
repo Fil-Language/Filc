@@ -353,12 +353,13 @@ namespace ast {
     public:
         ClassExtend();
 
-        explicit ClassExtend(ClassIdentifier *identifier);
+        explicit ClassExtend(ClassIdentifier *identifier, std::vector<AbstractExpr *> &args);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         ClassIdentifier *_identifier;
+        std::vector<AbstractExpr *> _args;
     };
 
     // ====================
@@ -556,6 +557,21 @@ namespace ast {
         std::string _modifier;
         Identifier *_iterator;
         Identifier *_iterable;
+    };
+
+    // ====================
+
+    class FunctionCall : public AbstractExpr {
+    public:
+        FunctionCall();
+
+        FunctionCall(Identifier *name, std::vector<AbstractExpr *> &args);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        Identifier *_name;
+        std::vector<AbstractExpr *> _args;
     };
 }
 

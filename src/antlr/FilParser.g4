@@ -72,7 +72,9 @@ expr returns[AbstractExpr *tree]
 	| (e8=loop {
 	    $tree = $e8.tree;
 	})
-	| function_call // TODO
+	| (e9=function_call {
+	    $tree = $e9.tree;
+	})
 	| exception_ // TODO
 	| expr DOT expr // TODO
 	| expr ARROW expr // TODO
@@ -300,9 +302,9 @@ class_extend_list returns[std::vector<ClassExtend *> tree]
     })*;
 
 class_extend returns[ClassExtend *tree]
-    : i=class_identifier function_call_params? {
-        $tree = new ClassExtend($i.tree);
-    }; // TODO : function_call_params
+    : i=class_identifier p=function_call_params? {
+        $tree = new ClassExtend($i.tree, $p.tree);
+    };
 
 class_body returns[ExprBlock *constructor, std::vector<ClassVariable *> variables, std::vector<ClassFunction *> functions]
 @init {
@@ -663,11 +665,28 @@ cast: LPAREN type RPAREN expr; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-function_call: function_name function_call_params; // TODO
+function_call returns[FunctionCall *tree]
+    : n=function_name p=function_call_params {
+        $tree = new FunctionCall($n.tree, $p.tree);
+    };
 
-function_call_params: LPAREN function_call_param_list? RPAREN; // TODO
+function_call_params returns[std::vector<AbstractExpr *> *ree]
+@init {
+    $tree = std::vector<AbstractExpr *>();
+}
+    : LPAREN (p=function_call_param_list {
+        $tree = $p.tree;
+    })? RPAREN;
 
-function_call_param_list: expr (COMMA expr)*; // TODO
+function_call_param_list returns[std::vector<AbstractExpr *> tree]
+@init {
+    $tree = std::vector<AbtractExpr *>();
+}
+    : (e1=expr {
+        $tree.push_back($e1.tree);
+    }) (COMMA (ei=expr {
+        $tree.push_back($ei.tree);
+    }))*;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

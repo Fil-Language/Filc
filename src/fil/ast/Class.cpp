@@ -134,8 +134,8 @@ IndentPrinter *ClassParam::print(IndentPrinter *printer) const {
 
 ClassExtend::ClassExtend() : _identifier(nullptr) {}
 
-ClassExtend::ClassExtend(ClassIdentifier *identifier)
-        : _identifier(identifier) {}
+ClassExtend::ClassExtend(ClassIdentifier *identifier, vector<AbstractExpr *> &args)
+        : _identifier(identifier), _args(args) {}
 
 IndentPrinter *ClassExtend::print(IndentPrinter *printer) const {
     _identifier->print(printer);
