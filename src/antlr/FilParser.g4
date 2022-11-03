@@ -84,8 +84,12 @@ expr returns[AbstractExpr *tree]
 	| e13=expr ARROW e14=expr {
 	    $tree = new ArrowExpr($e13.tree, $e14.tree);
 	}
-	| unary_op_pre expr // TODO
-    | expr unary_op_post // TODO
+	| (e15=unary_op_pre e16=expr {
+	    $tree = new UnaryCalcul($e15.tree, $e16.tree);
+	})
+    | e17=expr e18=unary_op_post {
+        $tree = new UnaryCalcul($e17.tree, $e18.tree);
+    }
     | expr binary_operator expr // TODO
 	| expr assignation // TODO
 	| cast // TODO
@@ -125,8 +129,8 @@ function_name returns[Identifier *tree]
         $tree = new Identifier($i.text);
     })
     | (o=OPERATOR b=binary_operator {
-        $tree = new Identifier($o.text + $b.text);
-    });
+        $tree = new Identifier($o.text);
+    }); // TODO : use binary_operator
 
 fun_params returns[std::vector<FunctionParam *> tree]
 @init {
@@ -611,84 +615,118 @@ catch_body returns[Catch *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-binary_operator returns[std::string text]
-    : (b1=PLUS {
-        $text = $b1.text;
+binary_operator returns[Operator *tree]
+    : (PLUS {
+        $tree = new Operator(Operator::PLUS);
     })
-	| (b2=MINUS {
-	    $text = $b2.text;
+	| (MINUS {
+	    $tree = new Operator(Operator::MINUS);
 	})
-	| (b3=DIVIDE {
-	    $text = $b3.text;
+	| (DIVIDE {
+	    $tree = new Operator(Operator::DIVIDE);
 	})
-	| (b4=TIMES {
-	    $text = $b4.text;
+	| (TIMES {
+	    $tree = new Operator(Operator::TIMES);
 	})
-	| (b5=MOD {
-	    $text = $b5.text;
+	| (MOD {
+	    $tree = new Operator(Operator::MOD);
 	})
-	| (b6=FLEFT {
-	    $text = $b6.text;
+	| (FLEFT {
+	    $tree = new Operator(Operator::FLEFT);
 	})
-	| (b7=FRIGHT {
-	    $text = $b7.text;
+	| (FRIGHT {
+	    $tree = new Operator(Operator::FRIGHT);
 	})
-	| (b8=AND {
-	    $text = $b8.text;
+	| (AND {
+	    $tree = new Operator(Operator::AND);
 	})
-	| (b9=OR {
-	    $text = $b9.text;
+	| (OR {
+	    $tree = new Operator(Operator::OR);
 	})
-	| (b10=LT {
-	    $text = $b10.text;
+	| (LT {
+	    $tree = new Operator(Operator::LT);
 	})
-	| (b11=GT {
-	    $text = $b11.text;
+	| (GT {
+	    $tree = new Operator(Operator::GT);
 	})
-	| (b12=EQEQ {
-	    $text = $b12.text;
+	| (EQEQ {
+	    $tree = new Operator(Operator::EQEQ);
 	})
-	| (b13=LEQ {
-	    $text = $b13.text;
+	| (LEQ {
+	    $tree = new Operator(Operator::LEQ);
 	})
-	| (b14=GEQ {
-	    $text = $b14.text;
+	| (GEQ {
+	    $tree = new Operator(Operator::GEQ);
 	})
-	| (b15=NEQ {
-	    $text = $b15.text;
+	| (NEQ {
+	    $tree = new Operator(Operator::NEQ);
 	})
-	| (b16=BAND {
-	    $text = $b16.text;
+	| (BAND {
+	    $tree = new Operator(Operator::BAND);
 	})
-	| (b17=BOR {
-	    $text = $b17.text;
+	| (BOR {
+	    $tree = new Operator(Operator::BOR);
 	})
-	| (b18=BXOR {
-	    $text = $b18.text;
+	| (BXOR {
+	    $tree = new Operator(Operator::BXOR);
 	});
 
-unary_op_pre:
-	PLUS PLUS // TODO
-	| MINUS MINUS // TODO
-	| TIMES // TODO
-	| NOT // TODO
-	| BAND; // TODO
+unary_op_pre returns[Operator *tree]
+    : (PLUS PLUS {
+        $tree = new Operator(Operator::PLUSPLUS);
+    })
+	| (MINUS MINUS {
+	    $tree = new Operator(Operator::MINMIN);
+	})
+	| (TIMES {
+	    $tree = new Operator(Operator::TIMES);
+	})
+	| (NOT {
+	    $tree = new Operator(Operator::NOT);
+	})
+	| (BAND {
+	    $tree = new Operator(Operator::BAND);
+	});
 
-unary_op_post:
-    PLUS PLUS // TODO
-    | MINUS MINUS // TODO
-    | (LBRAK expr RBRAK); // TODO
+unary_op_post returns[Operator *tree]
+    : (PLUS PLUS {
+        $tree = new Operator(Operator::PLUSPLUS);
+    })
+    | (MINUS MINUS {
+        $tree = new Operator(Operator::MINMIN);
+    })
+    | (LBRAK e=expr RBRAK {
+        $tree = new Operator(Operator::ARRAY, $e.tree);
+    });
 
-unary_operator:
-    PLUS // TODO
-	| MINUS // TODO
-	| DIVIDE // TODO
-	| TIMES // TODO
-	| MOD // TODO
-	| NOT // TODO
-	| BAND // TODO
-	| BOR // TODO
-	| BXOR; // TODO
+unary_operator returns[Operator *tree]
+    : (PLUS {
+        $tree = new Operator(Operator::PLUS);
+    })
+	| (MINUS {
+	    $tree = new Operator(Operator::MINUS);
+	})
+	| (DIVIDE {
+	    $tree = new Operator(Operator::DIVIDE);
+	})
+	| (TIMES {
+	    $tree = new Operator(Operator::TIMES);
+	})
+	| (MOD {
+	    $tree = new Operator(Operator::MOD);
+	})
+	| (NOT {
+	    $tree = new Operator(Operator::NOT);
+	})
+	| (BAND {
+	    $tree = new Operator(Operator::BAND);
+	})
+	| (BOR {
+	    $tree = new Operator(Operator::BOR);
+	})
+	| (BXOR {
+	    $tree = new Operator(Operator::BXOR);
+	});
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

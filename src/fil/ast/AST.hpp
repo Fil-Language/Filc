@@ -633,6 +633,77 @@ namespace ast {
         AbstractExpr *_left;
         AbstractExpr *_right;
     };
+
+    // ====================
+
+    class Operator : public AST {
+    public:
+        typedef enum {
+            PLUS,
+            MINUS,
+            DIVIDE,
+            TIMES,
+            MOD,
+            FLEFT,
+            FRIGHT,
+            AND,
+            OR,
+            LT,
+            GT,
+            EQEQ,
+            LEQ,
+            GEQ,
+            NEQ,
+            BAND,
+            BOR,
+            BXOR,
+            PLUSPLUS,
+            MINMIN,
+            NOT,
+            ARRAY,
+        } OP;
+
+        Operator();
+
+        explicit Operator(Operator::OP op);
+
+        Operator(Operator::OP op, AbstractExpr *expr);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        Operator::OP _op;
+        AbstractExpr *_expr;
+    };
+
+    // ====================
+
+    class AbstractCalcul : public AbstractExpr {
+    public:
+        AbstractCalcul();
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    protected:
+        Operator *_op;
+    };
+
+    // ====================
+
+    class UnaryCalcul : public AbstractCalcul {
+    public:
+        UnaryCalcul();
+
+        UnaryCalcul(Operator *op, AbstractExpr *expr);
+
+        UnaryCalcul(AbstractExpr *expr, Operator *op);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        bool _isPrefix;
+        AbstractExpr *_expr;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);
