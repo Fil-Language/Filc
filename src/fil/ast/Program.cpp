@@ -20,7 +20,7 @@ Program::Program(string moduleName, vector<Program *> &imports, vector<AbstractE
         _moduleName(std::move(moduleName)), _imports(imports), _exprs(exprs) {}
 
 IndentPrinter *Program::print(IndentPrinter *printer) const {
-    printer->writeIndent("Program => " + _moduleName + "\n")
+    /*printer->writeIndent("Program => " + _moduleName + "\n")
             ->indent();
 
     for (const auto &import: _imports) {
@@ -31,7 +31,7 @@ IndentPrinter *Program::print(IndentPrinter *printer) const {
         expr->print(printer);
     }
 
-    printer->unindent();
+    printer->unindent();*/
 
-    return printer;
+    return printer->write("Commented");
 }
