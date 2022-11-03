@@ -603,6 +603,21 @@ namespace ast {
         AbstractExpr *_body;
         std::vector<Catch *> _catches;
     };
+
+    // ====================
+
+    class DotExpr : public AbstractExpr {
+    public:
+        DotExpr();
+
+        DotExpr(AbstractExpr *left, AbstractExpr *right);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        AbstractExpr *_left;
+        AbstractExpr *_right;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);

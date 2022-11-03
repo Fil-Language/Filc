@@ -78,7 +78,9 @@ expr returns[AbstractExpr *tree]
 	| (e10=exception_ {
 	    $tree = $e10.tree;
 	})
-	| expr DOT expr // TODO
+	| e11=expr DOT e12=expr {
+	    $tree = new DotExpr($e11.tree, $e12.tree);
+	}
 	| expr ARROW expr // TODO
 	| unary_op_pre expr // TODO
     | expr unary_op_post // TODO
