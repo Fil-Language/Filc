@@ -33,6 +33,7 @@ FALSE: 'false';
 NULL_: 'null';
 NEW: 'new';
 OPERATOR: 'operator';
+RETURN: 'return';
 
 // Identifier
 fragment LETTER: ('a' .. 'z') | ('A' .. 'Z') | '_';

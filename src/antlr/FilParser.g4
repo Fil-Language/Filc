@@ -103,7 +103,8 @@ expr returns[AbstractExpr *tree]
 	| (e32=expr_block {
 	    $tree = $e32.tree;
 	})
-	| array_assign; // TODO
+	| array_assign // TODO
+	| RETURN expr; // TODO
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
