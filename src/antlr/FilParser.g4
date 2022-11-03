@@ -84,7 +84,7 @@ expr returns[AbstractExpr *tree]
 	| expr assignation // TODO
 	| cast // TODO
 	| (e25=IDENTIFIER {
-	    //$tree = new Identifier($e25.text);
+	    $tree = new Identifier($e25.text);
 	})
 	| (e26=class_identifier {
 	    $tree = $e26.tree;
@@ -302,8 +302,13 @@ class_extend_list returns[std::vector<ClassExtend *> tree]
     })*;
 
 class_extend returns[ClassExtend *tree]
-    : i=class_identifier p=function_call_params? {
-        $tree = new ClassExtend($i.tree, $p.tree);
+@init {
+    auto args = std::vector<AbstractExpr *>();
+}
+    : i=class_identifier (p=function_call_params {
+        args = $p.tree;
+    })? {
+        $tree = new ClassExtend($i.tree, args);
     };
 
 class_body returns[ExprBlock *constructor, std::vector<ClassVariable *> variables, std::vector<ClassFunction *> functions]
@@ -670,7 +675,7 @@ function_call returns[FunctionCall *tree]
         $tree = new FunctionCall($n.tree, $p.tree);
     };
 
-function_call_params returns[std::vector<AbstractExpr *> *ree]
+function_call_params returns[std::vector<AbstractExpr *> tree]
 @init {
     $tree = std::vector<AbstractExpr *>();
 }
@@ -680,7 +685,7 @@ function_call_params returns[std::vector<AbstractExpr *> *ree]
 
 function_call_param_list returns[std::vector<AbstractExpr *> tree]
 @init {
-    $tree = std::vector<AbtractExpr *>();
+    $tree = std::vector<AbstractExpr *>();
 }
     : (e1=expr {
         $tree.push_back($e1.tree);

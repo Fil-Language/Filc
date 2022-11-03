@@ -1,7 +1,5 @@
 module main
 
-import fil.io
-
 fun main() {
-    sout << "Hello World!"
+    val a : int = 1 + 2
 }
