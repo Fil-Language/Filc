@@ -93,7 +93,9 @@ expr returns[AbstractExpr *tree]
     | e19=expr e20=binary_operator e21=expr {
         $tree = new BinaryCalcul($e19.tree, $e20.tree, $e21.tree);
     }
-	| expr assignation // TODO
+	| e22=expr e23=assignation {
+	    $tree = new Assignation($e22.tree, $e23.op, $e23.right);
+	}
 	| cast // TODO
 	| (e25=IDENTIFIER {
 	    $tree = new Identifier($e25.text);
@@ -159,7 +161,7 @@ fun_param returns[FunctionParam *tree]
 
 fun_body returns[AbstractExpr *tree]
     : (e1=assignation {
-        $tree = new AbstractExpr();
+        $tree = $e1.right;
     })
     | (e2=expr_parenthesis {
         $tree = $e2.tree;
@@ -732,9 +734,22 @@ unary_operator returns[Operator *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-assignation: assignation_operator expr; // TODO
+assignation returns[AssignationOperator *op, AbstractExpr *right]
+    : o=assignation_operator {
+        $op = $o.tree;
+    } e=expr {
+        $right = $e.tree;
+    };
 
-assignation_operator: unary_operator? EQ; // TODO
+assignation_operator returns[AssignationOperator *tree]
+@init {
+    Operator *op = 0;
+}
+    : (o=unary_operator {
+        op = $o.tree;
+    })? EQ {
+        $tree = new AssignationOperator(op);
+    };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

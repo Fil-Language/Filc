@@ -729,9 +729,34 @@ namespace ast {
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
-    private:
+    protected:
         AbstractExpr *_left;
         AbstractExpr *_right;
+    };
+
+    // ====================
+
+    class AssignationOperator : public AST {
+    public:
+        AssignationOperator();
+
+        explicit AssignationOperator(Operator *prefix);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        Operator *_prefix;
+    };
+
+    // ====================
+
+    class Assignation : public BinaryCalcul {
+    public:
+        Assignation();
+
+        Assignation(AbstractExpr *left, AssignationOperator *op, AbstractExpr *right);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
     };
 }
 
