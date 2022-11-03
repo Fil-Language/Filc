@@ -704,6 +704,21 @@ namespace ast {
         bool _isPrefix;
         AbstractExpr *_expr;
     };
+
+    // ====================
+
+    class BinaryCalcul : public AbstractCalcul {
+    public:
+        BinaryCalcul();
+
+        BinaryCalcul(AbstractExpr *left, Operator *op, AbstractExpr *right);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        AbstractExpr *_left;
+        AbstractExpr *_right;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);

@@ -36,3 +36,18 @@ IndentPrinter *UnaryCalcul::print(IndentPrinter *printer) const {
 
     return printer;
 }
+
+// ====================
+
+BinaryCalcul::BinaryCalcul() : _left(nullptr), _right(nullptr) {}
+
+BinaryCalcul::BinaryCalcul(AbstractExpr *left, Operator *op, AbstractExpr *right)
+        : _left(left), _right(right) {
+    _op = op;
+}
+
+IndentPrinter *BinaryCalcul::print(IndentPrinter *printer) const {
+    // TODO : implement
+
+    return printer;
+}

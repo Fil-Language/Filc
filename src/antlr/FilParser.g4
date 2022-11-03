@@ -90,7 +90,9 @@ expr returns[AbstractExpr *tree]
     | e17=expr e18=unary_op_post {
         $tree = new UnaryCalcul($e17.tree, $e18.tree);
     }
-    | expr binary_operator expr // TODO
+    | e19=expr e20=binary_operator e21=expr {
+        $tree = new BinaryCalcul($e19.tree, $e20.tree, $e21.tree);
+    }
 	| expr assignation // TODO
 	| cast // TODO
 	| (e25=IDENTIFIER {
