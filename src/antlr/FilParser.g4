@@ -485,16 +485,40 @@ loop returns[AbstractLoop *tree]
 @init {
     $tree = new AbstractLoop();
 } // FIXME : remove init
-    : fori    // TODO
+    : (l1=fori {
+        $tree = $l1.tree;
+    })
     | foriter // TODO
     | (l3=while_ {
         $tree = $l3.tree;
     });
 
-fori: FOR fori_condition (expr | expr_block); // TODO
+fori returns[For *tree]
+@init {
+    AbstractExpr *body = 0;
+}
+    : FOR c=fori_condition
+    ((b1=expr {
+        body = $b1.tree;
+    }) | (b2=expr_block {
+        body = $b2.tree;
+    })) {
+        $tree = new For($c.it, $c.cond, $c.inc, body);
+    };
 
-fori_condition:
-	LPAREN variable_decl? SEMICOLON expr? SEMICOLON expr? RPAREN; // TODO
+fori_condition returns[VariableDecl *it, AbstractExpr *cond, AbstractExpr *inc]
+@init {
+    $it = 0;
+    $cond = 0;
+    $inc = 0;
+}
+    : LPAREN (i=variable_decl {
+        $it = $i.tree;
+    })? SEMICOLON (c=expr {
+        $cond = $c.tree;
+    })? SEMICOLON (n=expr {
+        $inc = $n.tree;
+    })? RPAREN;
 
 foriter: FOR foriter_condition (expr | expr_block); // TODO
 

@@ -38,3 +38,35 @@ IndentPrinter *While::print(IndentPrinter *printer) const {
 
     return printer->unindent();
 }
+
+// ====================
+
+For::For() : _iterator(nullptr), _condition(nullptr), _increment(nullptr) {}
+
+For::For(VariableDecl *iterator, AbstractExpr *condition, AbstractExpr *increment, AbstractExpr *body)
+        : _iterator(iterator), _condition(condition), _increment(increment) {
+    _body = body;
+}
+
+IndentPrinter *For::print(IndentPrinter *printer) const {
+    printer->writeIndent("For =>\n")
+            ->indent();
+    printer->writeIndent("Iterator =>\n")
+            ->indent();
+    _iterator->print(printer);
+    printer->unindent();
+    printer->writeIndent("Condition =>\n")
+            ->indent();
+    _condition->print(printer);
+    printer->unindent();
+    printer->writeIndent("Increment =>\n")
+            ->indent();
+    _increment->print(printer);
+    printer->unindent();
+    printer->writeIndent("Body =>\n")
+            ->indent();
+    _body->print(printer);
+    printer->unindent();
+
+    return printer->unindent();
+}

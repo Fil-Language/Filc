@@ -525,6 +525,22 @@ namespace ast {
     private:
         ExprParenthesis *_condition;
     };
+
+    // ====================
+
+    class For : public AbstractLoop {
+    public:
+        For();
+
+        For(VariableDecl *iterator, AbstractExpr* condition, AbstractExpr* increment, AbstractExpr *body);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        VariableDecl *_iterator;
+        AbstractExpr *_condition;
+        AbstractExpr *_increment;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);
