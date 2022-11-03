@@ -532,7 +532,7 @@ namespace ast {
     public:
         For();
 
-        For(VariableDecl *iterator, AbstractExpr* condition, AbstractExpr* increment, AbstractExpr *body);
+        For(VariableDecl *iterator, AbstractExpr *condition, AbstractExpr *increment, AbstractExpr *body);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
@@ -540,6 +540,22 @@ namespace ast {
         VariableDecl *_iterator;
         AbstractExpr *_condition;
         AbstractExpr *_increment;
+    };
+
+    // ====================
+
+    class ForIter : public AbstractLoop {
+    public:
+        ForIter();
+
+        ForIter(const std::string &modifier, Identifier *iterator, Identifier *iterable, AbstractExpr *body);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        std::string _modifier;
+        Identifier *_iterator;
+        Identifier *_iterable;
     };
 }
 

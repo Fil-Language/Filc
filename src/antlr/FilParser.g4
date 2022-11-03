@@ -482,13 +482,12 @@ switch_case returns[SwitchCase *tree]
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 loop returns[AbstractLoop *tree]
-@init {
-    $tree = new AbstractLoop();
-} // FIXME : remove init
     : (l1=fori {
         $tree = $l1.tree;
     })
-    | foriter // TODO
+    | (l2=foriter {
+        $tree = $l2.tree;
+    })
     | (l3=while_ {
         $tree = $l3.tree;
     });
@@ -520,10 +519,31 @@ fori_condition returns[VariableDecl *it, AbstractExpr *cond, AbstractExpr *inc]
         $inc = $n.tree;
     })? RPAREN;
 
-foriter: FOR foriter_condition (expr | expr_block); // TODO
+foriter returns[ForIter *tree]
+@init {
+    AbstractExpr *body = 0;
+}
+    : FOR c=foriter_condition
+    ((b1=expr {
+        body = $b1.tree;
+    }) | (b2=expr_block {
+        body = $b2.tree;
+    })) {
+        $tree = new ForIter($c.mod, $c.iterator, $c.iterable, body);
+    };
 
-foriter_condition:
-	LPAREN (VAL | VAR) IDENTIFIER COLON IDENTIFIER RPAREN; // TODO
+foriter_condition returns[std::string mod, Identifier *iterator, Identifier *iterable]
+    : LPAREN ((m1=VAL {
+        $mod = $m1.text;
+    }) | (m2=VAR {
+        $mod = $m2.text;
+    }))
+    (i1=IDENTIFIER {
+        $iterator = new Identifier($i1.text);
+    }) COLON
+    (i2=IDENTIFIER {
+        $iterable = new Identifier($i2.text);
+    }) RPAREN;
 
 while_ returns[While *tree]
 @init {

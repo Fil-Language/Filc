@@ -70,3 +70,29 @@ IndentPrinter *For::print(IndentPrinter *printer) const {
 
     return printer->unindent();
 }
+
+// ====================
+
+ForIter::ForIter() : _iterator(nullptr), _iterable(nullptr) {}
+
+ForIter::ForIter(const string &modifier, Identifier *iterator, Identifier *iterable, AbstractExpr *body)
+        : _modifier(modifier), _iterator(iterator), _iterable(iterable) {}
+
+IndentPrinter *ForIter::print(IndentPrinter *printer) const {
+    printer->writeIndent("ForIter =>\n")
+            ->indent();
+    printer->writeIndent("Iteration => ")
+            ->write(_modifier)
+            ->write(" ");
+    _iterator->print(printer);
+    printer->write(" in ");
+    _iterable->print(printer);
+    printer->write("\n")
+            ->unindent()
+            ->writeIndent("Body =>\n")
+            ->indent();
+    _body->print(printer);
+    printer->unindent();
+
+    return printer->unindent();
+}
