@@ -69,7 +69,9 @@ expr returns[AbstractExpr *tree]
 	| (e7=condition {
 	    $tree = $e7.tree;
 	})
-	| loop // TODO
+	| (e8=loop {
+	    $tree = $e8.tree;
+	})
 	| function_call // TODO
 	| exception_ // TODO
 	| expr DOT expr // TODO
@@ -80,7 +82,7 @@ expr returns[AbstractExpr *tree]
 	| expr assignation // TODO
 	| cast // TODO
 	| (e25=IDENTIFIER {
-	    $tree = new Identifier($e25.text);
+	    //$tree = new Identifier($e25.text);
 	})
 	| (e26=class_identifier {
 	    $tree = $e26.tree;
@@ -479,7 +481,15 @@ switch_case returns[SwitchCase *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-loop: fori | foriter | while_; // TODO
+loop returns[AbstractLoop *tree]
+@init {
+    $tree = new AbstractLoop();
+} // FIXME : remove init
+    : fori    // TODO
+    | foriter // TODO
+    | (l3=while_ {
+        $tree = $l3.tree;
+    });
 
 fori: FOR fori_condition (expr | expr_block); // TODO
 
@@ -491,7 +501,18 @@ foriter: FOR foriter_condition (expr | expr_block); // TODO
 foriter_condition:
 	LPAREN (VAL | VAR) IDENTIFIER COLON IDENTIFIER RPAREN; // TODO
 
-while_: WHILE if_condition if_body; // TODO
+while_ returns[While *tree]
+@init {
+    AbstractExpr *body = 0;
+}
+    : WHILE c=if_condition
+    ((b1=expr {
+        body = $b1.tree;
+    }) | (b2=expr_block {
+        body = $b2.tree;
+    })) {
+        $tree = new While($c.tree, body);
+    };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

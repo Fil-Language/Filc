@@ -499,6 +499,32 @@ namespace ast {
         ExprParenthesis *_condition;
         std::vector<SwitchCase *> _cases;
     };
+
+    // ====================
+
+    class AbstractLoop : public AbstractExpr {
+    public:
+        AbstractLoop();
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    protected:
+        AbstractExpr *_body;
+    };
+
+    // ====================
+
+    class While : public AbstractLoop {
+    public:
+        While();
+
+        While(ExprParenthesis *condition, AbstractExpr *body);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        ExprParenthesis *_condition;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);
