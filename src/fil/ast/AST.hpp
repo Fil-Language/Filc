@@ -573,6 +573,36 @@ namespace ast {
         Identifier *_name;
         std::vector<AbstractExpr *> _args;
     };
+
+    // ====================
+
+    class Catch : public AbstractExpr {
+    public:
+        Catch();
+
+        Catch(FunctionParam *param, AbstractExpr *body);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        FunctionParam *_param;
+        AbstractExpr *_body;
+    };
+
+    // ====================
+
+    class Try : public AbstractExpr {
+    public:
+        Try();
+
+        Try(AbstractExpr *body, std::vector<Catch *> &catches);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        AbstractExpr *_body;
+        std::vector<Catch *> _catches;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);

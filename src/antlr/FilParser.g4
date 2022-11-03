@@ -75,7 +75,9 @@ expr returns[AbstractExpr *tree]
 	| (e9=function_call {
 	    $tree = $e9.tree;
 	})
-	| exception_ // TODO
+	| (e10=exception_ {
+	    $tree = $e10.tree;
+	})
 	| expr DOT expr // TODO
 	| expr ARROW expr // TODO
 	| unary_op_pre expr // TODO
@@ -567,14 +569,39 @@ while_ returns[While *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-exception_:
-	TRY (expr | expr_block | expr_parenthesis) catch_body+; // TODO
+exception_ returns[Try *tree]
+@init {
+    AbstractExpr *body = 0;
+    auto catches = std::vector<Catch *>();
+}
+@after {
+    $tree = new Try(body, catches);
+}
+	: TRY ((b1=expr {
+	    body = $b1.tree;
+	}) | (b2=expr_block {
+	    body = $b2.tree;
+	}) | (b3=expr_parenthesis {
+	    body = $b3.tree;
+	}))
+	(c=catch_body {
+	    catches.push_back($c.tree);
+	})+;
 
-catch_body // TODO
+catch_body returns[Catch *tree]
+@init {
+    AbstractExpr *body = 0;
+}
 	: CATCH LPAREN fun_param RPAREN (
-		expr // TODO
-		| expr_block // TODO
-		| expr_parenthesis // TODO
+		(b1=expr {
+		    body = $b1.tree;
+		})
+		| (b2=expr_block {
+		    body = $b2.tree;
+		})
+		| (b3=expr_parenthesis {
+		    body = $b3.tree;
+		})
 	);
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
