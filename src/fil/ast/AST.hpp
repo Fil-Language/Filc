@@ -678,6 +678,20 @@ namespace ast {
 
     // ====================
 
+    class OperatorIdentifier : public Identifier {
+    public:
+        OperatorIdentifier();
+
+        OperatorIdentifier(const std::string &name, Operator *op);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        Operator *_op;
+    };
+
+    // ====================
+
     class AbstractCalcul : public AbstractExpr {
     public:
         AbstractCalcul();

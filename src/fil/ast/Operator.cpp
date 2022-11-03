@@ -22,3 +22,18 @@ IndentPrinter *Operator::print(IndentPrinter *printer) const {
 
     return printer;
 }
+
+// ====================
+
+OperatorIdentifier::OperatorIdentifier() : _op(nullptr) {}
+
+OperatorIdentifier::OperatorIdentifier(const string &name, Operator *op)
+        : _op(op) {
+    _name = name;
+}
+
+IndentPrinter *OperatorIdentifier::print(IndentPrinter *printer) const {
+    // TODO : implement
+
+    return printer;
+}

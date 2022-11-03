@@ -131,8 +131,8 @@ function_name returns[Identifier *tree]
         $tree = new Identifier($i.text);
     })
     | (o=OPERATOR b=binary_operator {
-        $tree = new Identifier($o.text);
-    }); // TODO : use binary_operator
+        $tree = new OperatorIdentifier($o.text, $b.tree);
+    });
 
 fun_params returns[std::vector<FunctionParam *> tree]
 @init {
