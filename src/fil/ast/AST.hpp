@@ -618,6 +618,21 @@ namespace ast {
         AbstractExpr *_left;
         AbstractExpr *_right;
     };
+
+    // ====================
+
+    class ArrowExpr : public AbstractExpr {
+    public:
+        ArrowExpr();
+
+        ArrowExpr(AbstractExpr *left, AbstractExpr *right);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        AbstractExpr *_left;
+        AbstractExpr *_right;
+    };
 }
 
 std::ostream &operator<<(std::ostream &os, const ast::AST &ast);

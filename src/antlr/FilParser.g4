@@ -81,7 +81,9 @@ expr returns[AbstractExpr *tree]
 	| e11=expr DOT e12=expr {
 	    $tree = new DotExpr($e11.tree, $e12.tree);
 	}
-	| expr ARROW expr // TODO
+	| e13=expr ARROW e14=expr {
+	    $tree = new ArrowExpr($e13.tree, $e14.tree);
+	}
 	| unary_op_pre expr // TODO
     | expr unary_op_post // TODO
     | expr binary_operator expr // TODO
