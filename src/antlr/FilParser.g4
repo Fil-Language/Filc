@@ -115,7 +115,9 @@ expr returns[AbstractExpr *tree]
 	| (e32=expr_block {
 	    $tree = $e32.tree;
 	})
-	| array_assign // TODO
+	| (e33=array_assign {
+	    $tree = $e33.tree;
+	})
 	| RETURN e34=expr {
 	    $tree = new Return($e34.tree);
 	};
@@ -805,7 +807,18 @@ variable_decl returns[VariableDecl *tree]
         type_ = $t2.tree;
     })); // TODO : assignation
 
-array_assign: LBRACE expr (COMMA expr)* RBRACE; // TODO
+array_assign returns[Array *tree]
+@init {
+    std::vector<AbstractExpr *> values;
+}
+@after {
+    $tree = new Array(values);
+}
+    : LBRACE (e1=expr {
+        values.push_back($e1.tree);
+    }) (COMMA (ei=expr {
+        values.push_back($ei.tree);
+    }))* RBRACE;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

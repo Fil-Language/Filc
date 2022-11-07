@@ -681,6 +681,18 @@ namespace ast {
     private:
         AbstractExpr *_expr;
     };
+
+    // ====================
+
+    class Array : public AbstractExpr {
+    public:
+        Array();
+
+        explicit Array(std::vector<AbstractExpr *> &values);
+
+    private:
+        std::vector<AbstractExpr *> _values;
+    };
 }
 
 #endif //FILC_AST_HPP
