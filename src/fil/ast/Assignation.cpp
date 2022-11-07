@@ -25,10 +25,11 @@ IndentPrinter *Assignation::print(IndentPrinter *printer) const {
 
 // ====================
 
-AssignationOperator::AssignationOperator() : _prefix(nullptr) {}
+AssignationOperator::AssignationOperator() = default;
 
-AssignationOperator::AssignationOperator(ast::Operator *prefix)
-        : _prefix(prefix) {}
+AssignationOperator::AssignationOperator(Operator *prefix) {
+    _op = prefix->_op;
+}
 
 IndentPrinter *AssignationOperator::print(IndentPrinter *printer) const {
     // TODO : implement

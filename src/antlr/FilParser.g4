@@ -96,7 +96,9 @@ expr returns[AbstractExpr *tree]
 	| e22=expr e23=assignation {
 	    $tree = new Assignation($e22.tree, $e23.op, $e23.right);
 	}
-	| cast // TODO
+	| (e24=cast {
+	    $tree = $e24.tree;
+	})
 	| (e25=IDENTIFIER {
 	    $tree = new Identifier($e25.text);
 	})
@@ -753,7 +755,10 @@ assignation_operator returns[AssignationOperator *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-cast: LPAREN type RPAREN expr; // TODO
+cast returns[Cast *tree]
+    : LPAREN t=type RPAREN e=expr {
+        $tree = new Cast($t.tree, $e.tree);
+    };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

@@ -671,8 +671,9 @@ namespace ast {
 
         IndentPrinter *print(IndentPrinter *printer) const override;
 
-    private:
         Operator::OP _op;
+
+    protected:
         AbstractExpr *_expr;
     };
 
@@ -736,16 +737,13 @@ namespace ast {
 
     // ====================
 
-    class AssignationOperator : public AST {
+    class AssignationOperator : public Operator {
     public:
         AssignationOperator();
 
         explicit AssignationOperator(Operator *prefix);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
-
-    private:
-        Operator *_prefix;
     };
 
     // ====================
@@ -757,6 +755,21 @@ namespace ast {
         Assignation(AbstractExpr *left, AssignationOperator *op, AbstractExpr *right);
 
         IndentPrinter *print(IndentPrinter *printer) const override;
+    };
+
+    // ====================
+
+    class Cast : public AbstractExpr {
+    public:
+        Cast();
+
+        Cast(Type *type, AbstractExpr *expr);
+
+        IndentPrinter *print(IndentPrinter *printer) const override;
+
+    private:
+        Type *_type;
+        AbstractExpr *_expr;
     };
 }
 
