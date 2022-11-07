@@ -671,6 +671,4 @@ namespace ast {
     };
 }
 
-std::ostream &operator<<(std::ostream &os, const ast::AST &ast);
-
 #endif //FILC_AST_HPP

@@ -23,7 +23,6 @@ private:
 };
 
 typedef enum FLAGS {
-    F_AST,
 } FLAGS;
 
 

@@ -40,15 +40,6 @@ int FilCompiler::compile(int flag) {
             file.close();
         }
 
-        if (flag == F_AST) {
-            /*ofstream ast("ast.out");
-            if (ast.good()) {
-                ast << program << endl;
-                ast.close();
-            }*/
-            cout << *program << endl; // FIXME : remove this line and uncomment file writing
-        }
-
         // TODO : generate symbols tables
 
         // TODO : type inference and checking

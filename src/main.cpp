@@ -20,8 +20,7 @@ int main(int argc, char **argv) {
             ("h,help", "Display help message")
             ("v,version", "Display version of compiler")
             ("verbose", "Verbose level (0-5)", cxxopts::value<int>()->default_value("0")->implicit_value("1"));
-    options.add_options("Compile flags")
-            ("a,ast", "Print F_AST structure in file ast.out");
+    options.add_options("Compile flags");
     options.parse_positional({"filename"});
 
     cxxopts::ParseResult result;
@@ -57,9 +56,6 @@ int main(int argc, char **argv) {
 
     // Flags
     int flag = -1;
-    if (result.count("ast")) {
-        flag = F_AST;
-    }
 
     auto compiler = FilCompiler(result["filename"].as<string>());
 
