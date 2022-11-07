@@ -669,6 +669,18 @@ namespace ast {
         Type *_type;
         AbstractExpr *_expr;
     };
+
+    // ====================
+
+    class Return : public AbstractExpr {
+    public:
+        Return();
+
+        explicit Return(AbstractExpr *expr);
+
+    private:
+        AbstractExpr *_expr;
+    };
 }
 
 #endif //FILC_AST_HPP

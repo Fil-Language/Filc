@@ -116,7 +116,9 @@ expr returns[AbstractExpr *tree]
 	    $tree = $e32.tree;
 	})
 	| array_assign // TODO
-	| RETURN expr; // TODO
+	| RETURN e34=expr {
+	    $tree = new Return($e34.tree);
+	};
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
