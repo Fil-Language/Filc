@@ -28,7 +28,9 @@ IndentPrinter *Assignation::print(IndentPrinter *printer) const {
 AssignationOperator::AssignationOperator() = default;
 
 AssignationOperator::AssignationOperator(Operator *prefix) {
-    _op = prefix->_op;
+    if (prefix) {
+        _op = prefix->_op;
+    }
 }
 
 IndentPrinter *AssignationOperator::print(IndentPrinter *printer) const {
