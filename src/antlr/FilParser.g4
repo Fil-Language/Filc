@@ -794,17 +794,26 @@ variable_decl returns[VariableDecl *tree]
 @init {
     bool isVal = false;
     Type *type_ = 0;
+    AssignationOperator *op = 0;
+    AbstractExpr *value = 0;
 }
 @after {
-    $tree = new VariableDecl(isVal, new Identifier($i.text), type_);
+    if (op && value) {
+        $tree = new VariableDecl(isVal, new Identifier($i.text), type_, op, value);
+    } else {
+        $tree = new VariableDecl(isVal, new Identifier($i.text), type_);
+    }
 }
     : (VAL {
         isVal = true;
     } | VAR) i=IDENTIFIER (((COLON t1=type {
         type_ = $t1.tree;
-    })? assignation) | (COLON t2=type {
+    })? (a=assignation {
+        op = $a.op;
+        value = $a.right;
+    })) | (COLON t2=type {
         type_ = $t2.tree;
-    })); // TODO : assignation
+    }));
 
 array_assign returns[Array *tree]
 @init {

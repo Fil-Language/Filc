@@ -74,16 +74,70 @@ namespace ast {
 
     // ====================
 
+    class Operator : public AST {
+    public:
+        typedef enum {
+            PLUS,
+            MINUS,
+            DIVIDE,
+            TIMES,
+            MOD,
+            FLEFT,
+            FRIGHT,
+            AND,
+            OR,
+            LT,
+            GT,
+            EQEQ,
+            LEQ,
+            GEQ,
+            NEQ,
+            BAND,
+            BOR,
+            BXOR,
+            PLUSPLUS,
+            MINMIN,
+            NOT,
+            ARRAY,
+        } OP;
+
+        Operator();
+
+        explicit Operator(Operator::OP op);
+
+        Operator(Operator::OP op, AbstractExpr *expr);
+
+        Operator::OP _op;
+
+    protected:
+        AbstractExpr *_expr;
+    };
+
+    // ====================
+
+    class AssignationOperator : public Operator {
+    public:
+        AssignationOperator();
+
+        explicit AssignationOperator(Operator *prefix);
+    };
+
+    // ====================
+
     class VariableDecl : public AbstractExpr {
     public:
         VariableDecl();
 
         VariableDecl(bool isVal, Identifier *name, Type *type);
 
+        VariableDecl(bool isVal, Identifier *name, Type *type, AssignationOperator *op, AbstractExpr *value);
+
     private:
         bool _isVal;
         Identifier *_name;
         Type *_type;
+        AssignationOperator *_op;
+        AbstractExpr *_value;
     };
 
     // ====================
@@ -550,47 +604,6 @@ namespace ast {
 
     // ====================
 
-    class Operator : public AST {
-    public:
-        typedef enum {
-            PLUS,
-            MINUS,
-            DIVIDE,
-            TIMES,
-            MOD,
-            FLEFT,
-            FRIGHT,
-            AND,
-            OR,
-            LT,
-            GT,
-            EQEQ,
-            LEQ,
-            GEQ,
-            NEQ,
-            BAND,
-            BOR,
-            BXOR,
-            PLUSPLUS,
-            MINMIN,
-            NOT,
-            ARRAY,
-        } OP;
-
-        Operator();
-
-        explicit Operator(Operator::OP op);
-
-        Operator(Operator::OP op, AbstractExpr *expr);
-
-        Operator::OP _op;
-
-    protected:
-        AbstractExpr *_expr;
-    };
-
-    // ====================
-
     class OperatorIdentifier : public Identifier {
     public:
         OperatorIdentifier();
@@ -637,15 +650,6 @@ namespace ast {
     protected:
         AbstractExpr *_left;
         AbstractExpr *_right;
-    };
-
-    // ====================
-
-    class AssignationOperator : public Operator {
-    public:
-        AssignationOperator();
-
-        explicit AssignationOperator(Operator *prefix);
     };
 
     // ====================
