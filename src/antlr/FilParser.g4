@@ -108,18 +108,20 @@ expr returns[AbstractExpr *tree]
 	| (e27=literal {
 	    $tree = $e27.tree;
 	})
-	| NEW class_identifier function_call_params // TODO
-	| (e31=expr_parenthesis {
+	| (NEW e28=class_identifier e29=function_call_params {
+	    $tree = new New($e28.tree, $e29.tree);
+	})
+	| (e30=expr_parenthesis {
+	    $tree = $e30.tree;
+	})
+	| (e31=expr_block {
 	    $tree = $e31.tree;
 	})
-	| (e32=expr_block {
+	| (e32=array_assign {
 	    $tree = $e32.tree;
 	})
-	| (e33=array_assign {
-	    $tree = $e33.tree;
-	})
-	| RETURN e34=expr {
-	    $tree = new Return($e34.tree);
+	| RETURN e33=expr {
+	    $tree = new Return($e33.tree);
 	};
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

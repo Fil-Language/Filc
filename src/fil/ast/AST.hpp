@@ -693,6 +693,19 @@ namespace ast {
     private:
         std::vector<AbstractExpr *> _values;
     };
+
+    // ====================
+
+    class New : public AbstractExpr {
+    public:
+        New();
+
+        New(ClassIdentifier *identifier, std::vector<AbstractExpr *> &args);
+
+    private:
+        ClassIdentifier *_identifier;
+        std::vector<AbstractExpr *> _args;
+    };
 }
 
 #endif //FILC_AST_HPP
