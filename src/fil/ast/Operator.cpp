@@ -17,6 +17,11 @@ Operator::Operator(Operator::OP op)
 Operator::Operator(Operator::OP op, AbstractExpr *expr)
         : _op(op), _expr(expr) {}
 
+Operator::~Operator() {
+    if (_expr != nullptr)
+        delete _expr;
+}
+
 // ====================
 
 OperatorIdentifier::OperatorIdentifier() : _op(nullptr) {}
@@ -24,4 +29,8 @@ OperatorIdentifier::OperatorIdentifier() : _op(nullptr) {}
 OperatorIdentifier::OperatorIdentifier(const string &name, Operator *op)
         : _op(op) {
     _name = name;
+}
+
+OperatorIdentifier::~OperatorIdentifier() {
+    delete _op;
 }

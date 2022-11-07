@@ -47,6 +47,9 @@ int FilCompiler::compile(int flag) {
         // TODO : code structure checking
 
         // TODO : LLVM IR generation
+
+        // Free memory
+        delete program;
     } catch (exception &e) {
         cout << e.what() << endl;
         return 1;

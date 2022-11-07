@@ -13,3 +13,8 @@ Cast::Cast() : _type(nullptr), _expr(nullptr) {}
 
 Cast::Cast(ast::Type *type, ast::AbstractExpr *expr)
         : _type(type), _expr(expr) {}
+
+Cast::~Cast() {
+    delete _type;
+    delete _expr;
+}

@@ -16,3 +16,12 @@ If::If(ast::ExprParenthesis *condition, ast::AbstractExpr *then)
 
 If::If(ast::ExprParenthesis *condition, ast::AbstractExpr *then, std::vector<If *> &elseIf, ast::AbstractExpr *else_)
         : _condition(condition), _then(then), _elseIf(elseIf), _else(else_) {}
+
+If::~If() {
+    delete _condition;
+    delete _then;
+    for (auto &i: _elseIf) {
+        delete i;
+    }
+    delete _else;
+}

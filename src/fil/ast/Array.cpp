@@ -12,3 +12,9 @@ using namespace ast;
 Array::Array() = default;
 
 Array::Array(vector<AbstractExpr *> &values) : _values(values) {}
+
+Array::~Array() {
+    for (auto &value: _values) {
+        delete value;
+    }
+}

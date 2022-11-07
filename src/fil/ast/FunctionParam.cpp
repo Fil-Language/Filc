@@ -12,3 +12,8 @@ using namespace ast;
 FunctionParam::FunctionParam() : _name(nullptr), _type(nullptr) {}
 
 FunctionParam::FunctionParam(Identifier *name, Type *type) : _name(name), _type(type) {}
+
+FunctionParam::~FunctionParam() {
+    delete _name;
+    delete _type;
+}

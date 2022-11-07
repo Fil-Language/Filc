@@ -16,3 +16,10 @@ VariableDecl::VariableDecl(bool isVal, ast::Identifier *name, ast::Type *type)
 
 VariableDecl::VariableDecl(bool isVal, Identifier *name, Type *type, AssignationOperator *op, AbstractExpr *value)
         : _isVal(isVal), _name(name), _type(type), _op(op), _value(value) {}
+
+VariableDecl::~VariableDecl() {
+    delete _name;
+    delete _type;
+    delete _op;
+    delete _value;
+}

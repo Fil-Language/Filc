@@ -13,3 +13,10 @@ FunctionCall::FunctionCall() : _name(nullptr) {}
 
 FunctionCall::FunctionCall(Identifier *name, vector<AbstractExpr *> &args)
         : _name(name), _args(args) {}
+
+FunctionCall::~FunctionCall() {
+    delete _name;
+    for (auto &arg: _args) {
+        delete arg;
+    }
+}

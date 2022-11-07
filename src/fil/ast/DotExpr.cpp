@@ -13,3 +13,8 @@ DotExpr::DotExpr() : _left(nullptr), _right(nullptr) {}
 
 DotExpr::DotExpr(AbstractExpr *left, AbstractExpr *right)
         : _left(left), _right(right) {}
+
+DotExpr::~DotExpr() {
+    delete _left;
+    delete _right;
+}

@@ -12,3 +12,10 @@ using namespace ast;
 Lambda::Lambda() : _body(nullptr) {}
 
 Lambda::Lambda(std::vector<FunctionParam *> &params, ast::AbstractExpr *body) : _params(params), _body(body) {}
+
+Lambda::~Lambda() {
+    for (auto &param: _params) {
+        delete param;
+    }
+    delete _body;
+}

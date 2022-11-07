@@ -12,3 +12,7 @@ using namespace ast;
 Return::Return() : _expr(nullptr) {}
 
 Return::Return(AbstractExpr *expr) : _expr(expr) {}
+
+Return::~Return() {
+    delete _expr;
+}

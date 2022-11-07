@@ -13,3 +13,10 @@ New::New() : _identifier(nullptr) {}
 
 New::New(ClassIdentifier *identifier, vector<AbstractExpr *> &args)
         : _identifier(identifier), _args(args) {}
+
+New::~New() {
+    delete _identifier;
+    for (auto &arg: _args) {
+        delete arg;
+    }
+}

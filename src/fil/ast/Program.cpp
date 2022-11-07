@@ -18,3 +18,12 @@ Program::Program(string moduleName) : _moduleName(std::move(moduleName)), _impor
 
 Program::Program(string moduleName, vector<Program *> &imports, vector<AbstractExpr *> &exprs) :
         _moduleName(std::move(moduleName)), _imports(imports), _exprs(exprs) {}
+
+Program::~Program() {
+    for (auto &import: _imports) {
+        delete import;
+    }
+    for (auto &expr: _exprs) {
+        delete expr;
+    }
+}

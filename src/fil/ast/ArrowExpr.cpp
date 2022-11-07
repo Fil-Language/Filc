@@ -13,3 +13,8 @@ ArrowExpr::ArrowExpr() : _left(nullptr), _right(nullptr) {}
 
 ArrowExpr::ArrowExpr(AbstractExpr *left, AbstractExpr *right)
         : _left(left), _right(right) {}
+
+ArrowExpr::~ArrowExpr() {
+    delete _left;
+    delete _right;
+}

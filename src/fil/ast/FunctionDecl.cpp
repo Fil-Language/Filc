@@ -13,3 +13,11 @@ FunctionDecl::FunctionDecl() : _name(nullptr), _returnType(nullptr) {}
 
 FunctionDecl::FunctionDecl(Identifier *name, vector<FunctionParam *> &params, Type *returnType)
         : _name(name), _params(params), _returnType(returnType) {}
+
+FunctionDecl::~FunctionDecl() {
+    delete _name;
+    for (auto &param: _params) {
+        delete param;
+    }
+    delete _returnType;
+}

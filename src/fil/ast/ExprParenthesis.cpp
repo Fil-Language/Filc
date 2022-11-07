@@ -13,3 +13,9 @@ ExprParenthesis::ExprParenthesis() : _exprs(vector<AbstractExpr *>()) {}
 
 ExprParenthesis::ExprParenthesis(vector<AbstractExpr *> &exprs) : _exprs(exprs) {}
 
+ExprParenthesis::~ExprParenthesis() {
+    for (auto &expr: _exprs) {
+        delete expr;
+    }
+}
+

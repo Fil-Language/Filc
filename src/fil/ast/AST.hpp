@@ -73,6 +73,8 @@ namespace ast {
 
         Program(std::string moduleName, std::vector<Program *> &imports, std::vector<AbstractExpr *> &exprs);
 
+        ~Program();
+
     private:
         std::string _moduleName;
         std::vector<Program *> _imports;
@@ -114,6 +116,8 @@ namespace ast {
 
         Operator(Operator::OP op, AbstractExpr *expr);
 
+        ~Operator();
+
         Operator::OP _op;
 
     protected:
@@ -139,6 +143,8 @@ namespace ast {
 
         VariableDecl(bool isVal, Identifier *name, Type *type, AssignationOperator *op, AbstractExpr *value);
 
+        ~VariableDecl();
+
     private:
         bool _isVal;
         Identifier *_name;
@@ -155,6 +161,8 @@ namespace ast {
 
         explicit ExprBlock(std::vector<AbstractExpr *> &exprs);
 
+        ~ExprBlock();
+
     private:
         std::vector<AbstractExpr *> _exprs;
     };
@@ -166,6 +174,8 @@ namespace ast {
         ExprParenthesis();
 
         explicit ExprParenthesis(std::vector<AbstractExpr *> &exprs);
+
+        ~ExprParenthesis();
 
     private:
         std::vector<AbstractExpr *> _exprs;
@@ -281,6 +291,8 @@ namespace ast {
 
         FunctionParam(Identifier *name, Type *type);
 
+        ~FunctionParam();
+
     private:
         Identifier *_name;
         Type *_type;
@@ -293,6 +305,8 @@ namespace ast {
         Function();
 
         Function(Identifier *name, std::vector<FunctionParam *> &params, AbstractExpr *body, Type *returnType);
+
+        ~Function();
 
     private:
         Identifier *_name;
@@ -309,6 +323,8 @@ namespace ast {
 
         FunctionDecl(Identifier *name, std::vector<FunctionParam *> &params, Type *returnType);
 
+        ~FunctionDecl();
+
     private:
         Identifier *_name;
         std::vector<FunctionParam *> _params;
@@ -323,6 +339,8 @@ namespace ast {
 
         Lambda(std::vector<FunctionParam *> &params, AbstractExpr *body);
 
+        ~Lambda();
+
     private:
         std::vector<FunctionParam *> _params;
         AbstractExpr *_body;
@@ -335,6 +353,8 @@ namespace ast {
         ClassIdentifier();
 
         explicit ClassIdentifier(const std::string &name, std::vector<Type *> &generics);
+
+        ~ClassIdentifier();
 
     private:
         std::vector<Type *> _generics;
@@ -349,6 +369,8 @@ namespace ast {
         explicit ClassParam(VariableDecl *decl);
 
         ClassParam(Identifier *name, Type *type, AbstractLiteral *defaultValue);
+
+        ~ClassParam();
 
     private:
         bool _isDecl;
@@ -366,6 +388,8 @@ namespace ast {
 
         explicit ClassExtend(ClassIdentifier *identifier, std::vector<AbstractExpr *> &args);
 
+        ~ClassExtend();
+
     private:
         ClassIdentifier *_identifier;
         std::vector<AbstractExpr *> _args;
@@ -379,6 +403,8 @@ namespace ast {
 
         ClassVariable(const std::string &visibility, VariableDecl *decl);
 
+        ~ClassVariable();
+
     private:
         std::string _visibility;
         VariableDecl *_decl;
@@ -391,6 +417,8 @@ namespace ast {
         ClassFunction();
 
         ClassFunction(const std::string &modifier, const std::string &visibility, AST *function);
+
+        ~ClassFunction();
 
     private:
         std::string _modifier;
@@ -412,6 +440,8 @@ namespace ast {
               std::vector<ClassVariable *> &variables,
               std::vector<ClassFunction *> &functions);
 
+        ~Class();
+
     private:
         std::string _modifier;
         ClassIdentifier *_name;
@@ -430,6 +460,8 @@ namespace ast {
 
         Interface(Identifier *name, std::vector<ClassParam *> &params, std::vector<FunctionDecl *> &functions);
 
+        ~Interface();
+
     private:
         Identifier *_name;
         std::vector<ClassParam *> _params;
@@ -443,6 +475,8 @@ namespace ast {
         Enum();
 
         Enum(Identifier *name, std::vector<Identifier *> &values);
+
+        ~Enum();
 
     private:
         Identifier *_name;
@@ -458,6 +492,8 @@ namespace ast {
         If(ExprParenthesis *condition, AbstractExpr *then);
 
         If(ExprParenthesis *condition, AbstractExpr *then, std::vector<If *> &elseIf, AbstractExpr *else_);
+
+        ~If();
 
     private:
         ExprParenthesis *_condition;
@@ -476,6 +512,8 @@ namespace ast {
 
         SwitchCase(AbstractLiteral *value, AbstractExpr *body);
 
+        ~SwitchCase();
+
     private:
         AbstractLiteral *_value;
         AbstractExpr *_body;
@@ -489,6 +527,8 @@ namespace ast {
 
         Switch(ExprParenthesis *condition, std::vector<SwitchCase *> &cases);
 
+        ~Switch();
+
     private:
         ExprParenthesis *_condition;
         std::vector<SwitchCase *> _cases;
@@ -499,6 +539,8 @@ namespace ast {
     class AbstractLoop : public AbstractExpr {
     public:
         AbstractLoop();
+
+        ~AbstractLoop();
 
     protected:
         AbstractExpr *_body;
@@ -512,6 +554,8 @@ namespace ast {
 
         While(ExprParenthesis *condition, AbstractExpr *body);
 
+        ~While();
+
     private:
         ExprParenthesis *_condition;
     };
@@ -523,6 +567,8 @@ namespace ast {
         For();
 
         For(VariableDecl *iterator, AbstractExpr *condition, AbstractExpr *increment, AbstractExpr *body);
+
+        ~For();
 
     private:
         VariableDecl *_iterator;
@@ -538,6 +584,8 @@ namespace ast {
 
         ForIter(const std::string &modifier, Identifier *iterator, Identifier *iterable, AbstractExpr *body);
 
+        ~ForIter();
+
     private:
         std::string _modifier;
         Identifier *_iterator;
@@ -552,6 +600,8 @@ namespace ast {
 
         FunctionCall(Identifier *name, std::vector<AbstractExpr *> &args);
 
+        ~FunctionCall();
+
     private:
         Identifier *_name;
         std::vector<AbstractExpr *> _args;
@@ -564,6 +614,8 @@ namespace ast {
         Catch();
 
         Catch(FunctionParam *param, AbstractExpr *body);
+
+        ~Catch();
 
     private:
         FunctionParam *_param;
@@ -578,6 +630,8 @@ namespace ast {
 
         Try(AbstractExpr *body, std::vector<Catch *> &catches);
 
+        ~Try();
+
     private:
         AbstractExpr *_body;
         std::vector<Catch *> _catches;
@@ -590,6 +644,8 @@ namespace ast {
         DotExpr();
 
         DotExpr(AbstractExpr *left, AbstractExpr *right);
+
+        ~DotExpr();
 
     private:
         AbstractExpr *_left;
@@ -604,6 +660,8 @@ namespace ast {
 
         ArrowExpr(AbstractExpr *left, AbstractExpr *right);
 
+        ~ArrowExpr();
+
     private:
         AbstractExpr *_left;
         AbstractExpr *_right;
@@ -617,6 +675,8 @@ namespace ast {
 
         OperatorIdentifier(const std::string &name, Operator *op);
 
+        ~OperatorIdentifier();
+
     private:
         Operator *_op;
     };
@@ -626,6 +686,8 @@ namespace ast {
     class AbstractCalcul : public AbstractExpr {
     public:
         AbstractCalcul();
+
+        ~AbstractCalcul();
 
     protected:
         Operator *_op;
@@ -641,6 +703,8 @@ namespace ast {
 
         UnaryCalcul(AbstractExpr *expr, Operator *op);
 
+        ~UnaryCalcul();
+
     private:
         bool _isPrefix;
         AbstractExpr *_expr;
@@ -653,6 +717,8 @@ namespace ast {
         BinaryCalcul();
 
         BinaryCalcul(AbstractExpr *left, Operator *op, AbstractExpr *right);
+
+        ~BinaryCalcul();
 
     protected:
         AbstractExpr *_left;
@@ -676,6 +742,8 @@ namespace ast {
 
         Cast(Type *type, AbstractExpr *expr);
 
+        ~Cast();
+
     private:
         Type *_type;
         AbstractExpr *_expr;
@@ -689,6 +757,8 @@ namespace ast {
 
         explicit Return(AbstractExpr *expr);
 
+        ~Return();
+
     private:
         AbstractExpr *_expr;
     };
@@ -701,6 +771,8 @@ namespace ast {
 
         explicit Array(std::vector<AbstractExpr *> &values);
 
+        ~Array();
+
     private:
         std::vector<AbstractExpr *> _values;
     };
@@ -712,6 +784,8 @@ namespace ast {
         New();
 
         New(ClassIdentifier *identifier, std::vector<AbstractExpr *> &args);
+
+        ~New();
 
     private:
         ClassIdentifier *_identifier;
