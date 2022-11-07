@@ -45,9 +45,6 @@ import_ returns[Program *tree]
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 expr returns[AbstractExpr *tree]
-@init {
-    $tree = new AbstractExpr();
-} // FIXME : remove init
     : (e1=function {
         $tree = $e1.tree;
     })
