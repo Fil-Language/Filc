@@ -23,6 +23,9 @@ private:
 };
 
 typedef enum FLAGS {
+    NONE,
+
+    DECOMPILE,
 } FLAGS;
 
 

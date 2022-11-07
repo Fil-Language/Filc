@@ -40,6 +40,10 @@ int FilCompiler::compile(int flag) {
             file.close();
         }
 
+        if (flag == DECOMPILE) {
+            // TODO : use decompile() function on program
+        }
+
         // TODO : generate symbols tables
 
         // TODO : type inference and checking
