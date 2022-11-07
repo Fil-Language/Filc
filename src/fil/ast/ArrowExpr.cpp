@@ -13,9 +13,3 @@ ArrowExpr::ArrowExpr() : _left(nullptr), _right(nullptr) {}
 
 ArrowExpr::ArrowExpr(AbstractExpr *left, AbstractExpr *right)
         : _left(left), _right(right) {}
-
-IndentPrinter *ArrowExpr::print(IndentPrinter *printer) const {
-    // TODO : implement
-
-    return printer;
-}

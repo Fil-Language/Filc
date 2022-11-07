@@ -13,9 +13,3 @@ DotExpr::DotExpr() : _left(nullptr), _right(nullptr) {}
 
 DotExpr::DotExpr(AbstractExpr *left, AbstractExpr *right)
         : _left(left), _right(right) {}
-
-IndentPrinter *DotExpr::print(IndentPrinter *printer) const {
-    // TODO : implement
-
-    return printer;
-}

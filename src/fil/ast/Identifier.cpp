@@ -12,7 +12,3 @@ using namespace ast;
 Identifier::Identifier() = default;
 
 Identifier::Identifier(const std::string &name) : _name(name) {}
-
-IndentPrinter *Identifier::print(IndentPrinter *printer) const {
-    return printer->write(_name);
-}

@@ -13,16 +13,3 @@ ExprParenthesis::ExprParenthesis() : _exprs(vector<AbstractExpr *>()) {}
 
 ExprParenthesis::ExprParenthesis(vector<AbstractExpr *> &exprs) : _exprs(exprs) {}
 
-IndentPrinter *ExprParenthesis::print(IndentPrinter *printer) const {
-    printer->writeIndent("ExprParenthesis =>\n")
-            ->indent();
-
-    for (const auto &expr: _exprs) {
-        expr->print(printer);
-    }
-
-    printer->unindent();
-
-    return printer;
-}
-

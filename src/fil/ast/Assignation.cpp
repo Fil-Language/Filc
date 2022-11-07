@@ -17,12 +17,6 @@ Assignation::Assignation(AbstractExpr *left, AssignationOperator *op, AbstractEx
     _right = right;
 }
 
-IndentPrinter *Assignation::print(IndentPrinter *printer) const {
-    // TODO : implement
-
-    return printer;
-}
-
 // ====================
 
 AssignationOperator::AssignationOperator() = default;
@@ -31,10 +25,4 @@ AssignationOperator::AssignationOperator(Operator *prefix) {
     if (prefix) {
         _op = prefix->_op;
     }
-}
-
-IndentPrinter *AssignationOperator::print(IndentPrinter *printer) const {
-    // TODO : implement
-
-    return printer;
 }

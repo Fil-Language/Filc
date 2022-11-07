@@ -14,8 +14,3 @@ AbstractExpr::AbstractExpr() : _export(false) {}
 void AbstractExpr::setExport(bool export_) {
     _export = export_;
 }
-
-IndentPrinter *AbstractExpr::print(IndentPrinter *printer) const {
-    return printer->writeIndent("AbstractExpr => ")
-            ->write(_export ? "export\n" : "\n");
-}

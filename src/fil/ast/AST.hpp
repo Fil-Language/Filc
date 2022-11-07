@@ -18,8 +18,6 @@ namespace ast {
         AST();
 
         ~AST();
-
-        virtual IndentPrinter *print(IndentPrinter *printer) const = 0;
     };
 
     // ====================
@@ -29,8 +27,6 @@ namespace ast {
         Type();
 
         explicit Type(const std::string &name);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::string _name;
@@ -44,8 +40,6 @@ namespace ast {
 
         void setExport(bool export_);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     protected:
         bool _export;
     };
@@ -57,8 +51,6 @@ namespace ast {
         Identifier();
 
         explicit Identifier(const std::string &name);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     protected:
         std::string _name;
@@ -74,8 +66,6 @@ namespace ast {
 
         Program(std::string moduleName, std::vector<Program *> &imports, std::vector<AbstractExpr *> &exprs);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         std::string _moduleName;
         std::vector<Program *> _imports;
@@ -89,8 +79,6 @@ namespace ast {
         VariableDecl();
 
         VariableDecl(bool isVal, Identifier *name, Type *type);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         bool _isVal;
@@ -106,8 +94,6 @@ namespace ast {
 
         explicit ExprBlock(std::vector<AbstractExpr *> &exprs);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         std::vector<AbstractExpr *> _exprs;
     };
@@ -120,8 +106,6 @@ namespace ast {
 
         explicit ExprParenthesis(std::vector<AbstractExpr *> &exprs);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         std::vector<AbstractExpr *> _exprs;
     };
@@ -131,8 +115,6 @@ namespace ast {
     class AbstractLiteral : public AbstractExpr {
     public:
         AbstractLiteral();
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
     };
 
     // ====================
@@ -142,8 +124,6 @@ namespace ast {
         Integer();
 
         explicit Integer(int value);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         int _value;
@@ -157,8 +137,6 @@ namespace ast {
 
         explicit Float(float value);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         float _value;
     };
@@ -170,8 +148,6 @@ namespace ast {
         Double();
 
         explicit Double(double value);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         double _value;
@@ -185,8 +161,6 @@ namespace ast {
 
         explicit String(const std::string &value);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     protected:
         std::string _value;
     };
@@ -196,8 +170,6 @@ namespace ast {
     class FString : public String {
     public:
         explicit FString(const std::string &value);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
     };
 
     // ====================
@@ -208,8 +180,6 @@ namespace ast {
 
         explicit Char(char value);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         char _value;
     };
@@ -219,8 +189,6 @@ namespace ast {
     class AbstractBool : public AbstractLiteral {
     public:
         AbstractBool();
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
     };
 
     // ====================
@@ -228,8 +196,6 @@ namespace ast {
     class True : public AbstractBool {
     public:
         True();
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
     };
 
     // ====================
@@ -237,8 +203,6 @@ namespace ast {
     class False : public AbstractBool {
     public:
         False();
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
     };
 
     // ====================
@@ -246,8 +210,6 @@ namespace ast {
     class Null : public AbstractLiteral {
     public:
         Null();
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
     };
 
     // ====================
@@ -257,8 +219,6 @@ namespace ast {
         FunctionParam();
 
         FunctionParam(Identifier *name, Type *type);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         Identifier *_name;
@@ -272,8 +232,6 @@ namespace ast {
         Function();
 
         Function(Identifier *name, std::vector<FunctionParam *> &params, AbstractExpr *body, Type *returnType);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         Identifier *_name;
@@ -290,8 +248,6 @@ namespace ast {
 
         FunctionDecl(Identifier *name, std::vector<FunctionParam *> &params, Type *returnType);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         Identifier *_name;
         std::vector<FunctionParam *> _params;
@@ -306,8 +262,6 @@ namespace ast {
 
         Lambda(std::vector<FunctionParam *> &params, AbstractExpr *body);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         std::vector<FunctionParam *> _params;
         AbstractExpr *_body;
@@ -320,8 +274,6 @@ namespace ast {
         ClassIdentifier();
 
         explicit ClassIdentifier(const std::string &name, std::vector<Type *> &generics);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::vector<Type *> _generics;
@@ -336,8 +288,6 @@ namespace ast {
         explicit ClassParam(VariableDecl *decl);
 
         ClassParam(Identifier *name, Type *type, AbstractLiteral *defaultValue);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         bool _isDecl;
@@ -355,8 +305,6 @@ namespace ast {
 
         explicit ClassExtend(ClassIdentifier *identifier, std::vector<AbstractExpr *> &args);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         ClassIdentifier *_identifier;
         std::vector<AbstractExpr *> _args;
@@ -370,8 +318,6 @@ namespace ast {
 
         ClassVariable(const std::string &visibility, VariableDecl *decl);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         std::string _visibility;
         VariableDecl *_decl;
@@ -384,8 +330,6 @@ namespace ast {
         ClassFunction();
 
         ClassFunction(const std::string &modifier, const std::string &visibility, AST *function);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         std::string _modifier;
@@ -407,8 +351,6 @@ namespace ast {
               std::vector<ClassVariable *> &variables,
               std::vector<ClassFunction *> &functions);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         std::string _modifier;
         ClassIdentifier *_name;
@@ -427,8 +369,6 @@ namespace ast {
 
         Interface(Identifier *name, std::vector<ClassParam *> &params, std::vector<FunctionDecl *> &functions);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         Identifier *_name;
         std::vector<ClassParam *> _params;
@@ -442,8 +382,6 @@ namespace ast {
         Enum();
 
         Enum(Identifier *name, std::vector<Identifier *> &values);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         Identifier *_name;
@@ -459,8 +397,6 @@ namespace ast {
         If(ExprParenthesis *condition, AbstractExpr *then);
 
         If(ExprParenthesis *condition, AbstractExpr *then, std::vector<If *> &elseIf, AbstractExpr *else_);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         ExprParenthesis *_condition;
@@ -479,8 +415,6 @@ namespace ast {
 
         SwitchCase(AbstractLiteral *value, AbstractExpr *body);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         AbstractLiteral *_value;
         AbstractExpr *_body;
@@ -494,8 +428,6 @@ namespace ast {
 
         Switch(ExprParenthesis *condition, std::vector<SwitchCase *> &cases);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         ExprParenthesis *_condition;
         std::vector<SwitchCase *> _cases;
@@ -506,8 +438,6 @@ namespace ast {
     class AbstractLoop : public AbstractExpr {
     public:
         AbstractLoop();
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     protected:
         AbstractExpr *_body;
@@ -521,8 +451,6 @@ namespace ast {
 
         While(ExprParenthesis *condition, AbstractExpr *body);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         ExprParenthesis *_condition;
     };
@@ -534,8 +462,6 @@ namespace ast {
         For();
 
         For(VariableDecl *iterator, AbstractExpr *condition, AbstractExpr *increment, AbstractExpr *body);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         VariableDecl *_iterator;
@@ -551,8 +477,6 @@ namespace ast {
 
         ForIter(const std::string &modifier, Identifier *iterator, Identifier *iterable, AbstractExpr *body);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         std::string _modifier;
         Identifier *_iterator;
@@ -567,8 +491,6 @@ namespace ast {
 
         FunctionCall(Identifier *name, std::vector<AbstractExpr *> &args);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         Identifier *_name;
         std::vector<AbstractExpr *> _args;
@@ -581,8 +503,6 @@ namespace ast {
         Catch();
 
         Catch(FunctionParam *param, AbstractExpr *body);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         FunctionParam *_param;
@@ -597,8 +517,6 @@ namespace ast {
 
         Try(AbstractExpr *body, std::vector<Catch *> &catches);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         AbstractExpr *_body;
         std::vector<Catch *> _catches;
@@ -612,8 +530,6 @@ namespace ast {
 
         DotExpr(AbstractExpr *left, AbstractExpr *right);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         AbstractExpr *_left;
         AbstractExpr *_right;
@@ -626,8 +542,6 @@ namespace ast {
         ArrowExpr();
 
         ArrowExpr(AbstractExpr *left, AbstractExpr *right);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         AbstractExpr *_left;
@@ -669,8 +583,6 @@ namespace ast {
 
         Operator(Operator::OP op, AbstractExpr *expr);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
         Operator::OP _op;
 
     protected:
@@ -685,8 +597,6 @@ namespace ast {
 
         OperatorIdentifier(const std::string &name, Operator *op);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         Operator *_op;
     };
@@ -696,8 +606,6 @@ namespace ast {
     class AbstractCalcul : public AbstractExpr {
     public:
         AbstractCalcul();
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     protected:
         Operator *_op;
@@ -713,8 +621,6 @@ namespace ast {
 
         UnaryCalcul(AbstractExpr *expr, Operator *op);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     private:
         bool _isPrefix;
         AbstractExpr *_expr;
@@ -728,8 +634,6 @@ namespace ast {
 
         BinaryCalcul(AbstractExpr *left, Operator *op, AbstractExpr *right);
 
-        IndentPrinter *print(IndentPrinter *printer) const override;
-
     protected:
         AbstractExpr *_left;
         AbstractExpr *_right;
@@ -742,8 +646,6 @@ namespace ast {
         AssignationOperator();
 
         explicit AssignationOperator(Operator *prefix);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
     };
 
     // ====================
@@ -753,8 +655,6 @@ namespace ast {
         Assignation();
 
         Assignation(AbstractExpr *left, AssignationOperator *op, AbstractExpr *right);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
     };
 
     // ====================
@@ -764,8 +664,6 @@ namespace ast {
         Cast();
 
         Cast(Type *type, AbstractExpr *expr);
-
-        IndentPrinter *print(IndentPrinter *printer) const override;
 
     private:
         Type *_type;
