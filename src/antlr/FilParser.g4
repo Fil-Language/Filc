@@ -831,9 +831,27 @@ array_assign returns[Array *tree]
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 type returns[Type *tree]
-    : i=IDENTIFIER (TIMES | (LBRAK INT? RBRAK))? {
+@init {
+    bool isPointer = false;
+    bool isArray = false;
+    int arraySize = 0;
+}
+@after {
+    if (isPointer) {
+        $tree = new Type($i.text, true);
+    } else if (isArray) {
+        $tree = new Type($i.text, arraySize);
+    } else {
         $tree = new Type($i.text);
-    }; // TODO : get * and []
+    }
+}
+    : i=IDENTIFIER (TIMES {
+        isPointer = true;
+    } | (LBRAK (s=INT {
+        arraySize = stoi($s.text);
+    })? RBRAK {
+        isArray = true;
+    }))?;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

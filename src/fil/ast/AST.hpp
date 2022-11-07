@@ -28,8 +28,15 @@ namespace ast {
 
         explicit Type(const std::string &name);
 
+        Type(const std::string &name, bool isPointer);
+
+        Type(const std::string &name, int arraySize);
+
     private:
         std::string _name;
+        bool _isPointer;
+        bool _isArray;
+        int _arraySize;
     };
 
     // ====================
