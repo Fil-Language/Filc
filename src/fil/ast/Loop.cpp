@@ -15,6 +15,10 @@ AbstractLoop::~AbstractLoop() {
     delete _body;
 }
 
+string AbstractLoop::decompile(int indent) const {
+    throw;
+}
+
 // ====================
 
 While::While() : _condition(nullptr) {}
@@ -26,6 +30,12 @@ While::While(ast::ExprParenthesis *condition, ast::AbstractExpr *body)
 
 While::~While() {
     delete _condition;
+}
+
+string While::decompile(int indent) const {
+    string res = "while " + _condition->decompile(indent) + "\n";
+
+    return res + _body->decompile(indent + 1);
 }
 
 // ====================
@@ -43,6 +53,14 @@ For::~For() {
     delete _increment;
 }
 
+string For::decompile(int indent) const {
+    string res = "for (" + _iterator->decompile(indent) + "; "
+                 + _condition->decompile(indent) + "; "
+                 + _increment->decompile(indent) + ")\n";
+
+    return res + _body->decompile(indent + 1);
+}
+
 // ====================
 
 ForIter::ForIter() : _iterator(nullptr), _iterable(nullptr) {}
@@ -53,4 +71,11 @@ ForIter::ForIter(const string &modifier, Identifier *iterator, Identifier *itera
 ForIter::~ForIter() {
     delete _iterator;
     delete _iterable;
+}
+
+string ForIter::decompile(int indent) const {
+    string res = "for (" + _modifier + " " + _iterator->decompile(indent)
+                 + " : " + _iterable->decompile(indent) + ")\n";
+
+    return res + _body->decompile(indent + 1);
 }

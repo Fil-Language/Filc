@@ -25,3 +25,17 @@ If::~If() {
     }
     delete _else;
 }
+
+string If::decompile(int indent) const {
+    string res = "if " + _condition->decompile(indent) + "\n" + _then->decompile(indent);
+
+    for (auto &i: _elseIf) {
+        res += "else " + i->decompile(indent);
+    }
+
+    if (_else != nullptr) {
+        res += "else\n" + _else->decompile(indent);
+    }
+
+    return res;
+}

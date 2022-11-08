@@ -204,14 +204,11 @@ lambda returns[Lambda *tree]
 interface returns[Interface *tree]
 @init {
     auto body = vector<FunctionDecl *>();
-    std::vector<ClassParam *> params;
 }
-    : INTERFACE i=IDENTIFIER (p=class_params {
-        params = $p.tree;
-    })? (b=interface_body {
+    : INTERFACE i=IDENTIFIER (b=interface_body {
         body = $b.tree;
     })? {
-        $tree = new Interface(new Identifier($i.text), params, body);
+        $tree = new Interface(new Identifier($i.text), body);
     };
 
 interface_body returns[std::vector<FunctionDecl *> tree]

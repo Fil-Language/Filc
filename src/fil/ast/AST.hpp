@@ -18,6 +18,8 @@ namespace ast {
         AST();
 
         ~AST();
+
+        virtual std::string decompile(int indent) const = 0;
     };
 
     // ====================
@@ -31,6 +33,8 @@ namespace ast {
         Type(const std::string &name, bool isPointer);
 
         Type(const std::string &name, int arraySize);
+
+        std::string decompile(int indent) const override;
 
     private:
         std::string _name;
@@ -47,6 +51,8 @@ namespace ast {
 
         void setExport(bool export_);
 
+        std::string decompile(int indent) const override;
+
     protected:
         bool _export;
     };
@@ -58,6 +64,8 @@ namespace ast {
         Identifier();
 
         explicit Identifier(const std::string &name);
+
+        std::string decompile(int indent) const override;
 
     protected:
         std::string _name;
@@ -74,6 +82,8 @@ namespace ast {
         Program(std::string moduleName, std::vector<Program *> &imports, std::vector<AbstractExpr *> &exprs);
 
         ~Program();
+
+        std::string decompile(int indent) const override;
 
     private:
         std::string _moduleName;
@@ -118,6 +128,8 @@ namespace ast {
 
         ~Operator();
 
+        std::string decompile(int indent) const override;
+
         Operator::OP _op;
 
     protected:
@@ -131,6 +143,8 @@ namespace ast {
         AssignationOperator();
 
         explicit AssignationOperator(Operator *prefix);
+
+        std::string decompile(int indent) const override;
     };
 
     // ====================
@@ -144,6 +158,8 @@ namespace ast {
         VariableDecl(bool isVal, Identifier *name, Type *type, AssignationOperator *op, AbstractExpr *value);
 
         ~VariableDecl();
+
+        std::string decompile(int indent) const override;
 
     private:
         bool _isVal;
@@ -163,6 +179,8 @@ namespace ast {
 
         ~ExprBlock();
 
+        std::string decompile(int indent) const override;
+
     private:
         std::vector<AbstractExpr *> _exprs;
     };
@@ -177,6 +195,8 @@ namespace ast {
 
         ~ExprParenthesis();
 
+        std::string decompile(int indent) const override;
+
     private:
         std::vector<AbstractExpr *> _exprs;
     };
@@ -186,6 +206,8 @@ namespace ast {
     class AbstractLiteral : public AbstractExpr {
     public:
         AbstractLiteral();
+
+        std::string decompile(int indent) const override;
     };
 
     // ====================
@@ -195,6 +217,8 @@ namespace ast {
         Integer();
 
         explicit Integer(int value);
+
+        std::string decompile(int indent) const override;
 
     private:
         int _value;
@@ -208,6 +232,8 @@ namespace ast {
 
         explicit Float(float value);
 
+        std::string decompile(int indent) const override;
+
     private:
         float _value;
     };
@@ -219,6 +245,8 @@ namespace ast {
         Double();
 
         explicit Double(double value);
+
+        std::string decompile(int indent) const override;
 
     private:
         double _value;
@@ -232,6 +260,8 @@ namespace ast {
 
         explicit String(const std::string &value);
 
+        std::string decompile(int indent) const override;
+
     protected:
         std::string _value;
     };
@@ -241,6 +271,8 @@ namespace ast {
     class FString : public String {
     public:
         explicit FString(const std::string &value);
+
+        std::string decompile(int indent) const override;
     };
 
     // ====================
@@ -251,6 +283,8 @@ namespace ast {
 
         explicit Char(char value);
 
+        std::string decompile(int indent) const override;
+
     private:
         char _value;
     };
@@ -260,6 +294,8 @@ namespace ast {
     class AbstractBool : public AbstractLiteral {
     public:
         AbstractBool();
+
+        std::string decompile(int indent) const override;
     };
 
     // ====================
@@ -267,6 +303,8 @@ namespace ast {
     class True : public AbstractBool {
     public:
         True();
+
+        std::string decompile(int indent) const override;
     };
 
     // ====================
@@ -274,6 +312,8 @@ namespace ast {
     class False : public AbstractBool {
     public:
         False();
+
+        std::string decompile(int indent) const override;
     };
 
     // ====================
@@ -281,6 +321,8 @@ namespace ast {
     class Null : public AbstractLiteral {
     public:
         Null();
+
+        std::string decompile(int indent) const override;
     };
 
     // ====================
@@ -292,6 +334,8 @@ namespace ast {
         FunctionParam(Identifier *name, Type *type);
 
         ~FunctionParam();
+
+        std::string decompile(int indent) const override;
 
     private:
         Identifier *_name;
@@ -307,6 +351,8 @@ namespace ast {
         Function(Identifier *name, std::vector<FunctionParam *> &params, AbstractExpr *body, Type *returnType);
 
         ~Function();
+
+        std::string decompile(int indent) const override;
 
     private:
         Identifier *_name;
@@ -325,6 +371,8 @@ namespace ast {
 
         ~FunctionDecl();
 
+        std::string decompile(int indent) const override;
+
     private:
         Identifier *_name;
         std::vector<FunctionParam *> _params;
@@ -341,6 +389,8 @@ namespace ast {
 
         ~Lambda();
 
+        std::string decompile(int indent) const override;
+
     private:
         std::vector<FunctionParam *> _params;
         AbstractExpr *_body;
@@ -355,6 +405,8 @@ namespace ast {
         explicit ClassIdentifier(const std::string &name, std::vector<Type *> &generics);
 
         ~ClassIdentifier();
+
+        std::string decompile(int indent) const override;
 
     private:
         std::vector<Type *> _generics;
@@ -371,6 +423,8 @@ namespace ast {
         ClassParam(Identifier *name, Type *type, AbstractLiteral *defaultValue);
 
         ~ClassParam();
+
+        std::string decompile(int indent) const override;
 
     private:
         bool _isDecl;
@@ -390,6 +444,8 @@ namespace ast {
 
         ~ClassExtend();
 
+        std::string decompile(int indent) const override;
+
     private:
         ClassIdentifier *_identifier;
         std::vector<AbstractExpr *> _args;
@@ -405,6 +461,8 @@ namespace ast {
 
         ~ClassVariable();
 
+        std::string decompile(int indent) const override;
+
     private:
         std::string _visibility;
         VariableDecl *_decl;
@@ -419,6 +477,8 @@ namespace ast {
         ClassFunction(const std::string &modifier, const std::string &visibility, AST *function);
 
         ~ClassFunction();
+
+        std::string decompile(int indent) const override;
 
     private:
         std::string _modifier;
@@ -442,6 +502,8 @@ namespace ast {
 
         ~Class();
 
+        std::string decompile(int indent) const override;
+
     private:
         std::string _modifier;
         ClassIdentifier *_name;
@@ -458,13 +520,14 @@ namespace ast {
     public:
         Interface();
 
-        Interface(Identifier *name, std::vector<ClassParam *> &params, std::vector<FunctionDecl *> &functions);
+        Interface(Identifier *name, std::vector<FunctionDecl *> &functions);
 
         ~Interface();
 
+        std::string decompile(int indent) const override;
+
     private:
         Identifier *_name;
-        std::vector<ClassParam *> _params;
         std::vector<FunctionDecl *> _functions;
     };
 
@@ -477,6 +540,8 @@ namespace ast {
         Enum(Identifier *name, std::vector<Identifier *> &values);
 
         ~Enum();
+
+        std::string decompile(int indent) const override;
 
     private:
         Identifier *_name;
@@ -494,6 +559,8 @@ namespace ast {
         If(ExprParenthesis *condition, AbstractExpr *then, std::vector<If *> &elseIf, AbstractExpr *else_);
 
         ~If();
+
+        std::string decompile(int indent) const override;
 
     private:
         ExprParenthesis *_condition;
@@ -514,6 +581,8 @@ namespace ast {
 
         ~SwitchCase();
 
+        std::string decompile(int indent) const override;
+
     private:
         AbstractLiteral *_value;
         AbstractExpr *_body;
@@ -529,6 +598,8 @@ namespace ast {
 
         ~Switch();
 
+        std::string decompile(int indent) const override;
+
     private:
         ExprParenthesis *_condition;
         std::vector<SwitchCase *> _cases;
@@ -541,6 +612,8 @@ namespace ast {
         AbstractLoop();
 
         ~AbstractLoop();
+
+        std::string decompile(int indent) const override;
 
     protected:
         AbstractExpr *_body;
@@ -556,6 +629,8 @@ namespace ast {
 
         ~While();
 
+        std::string decompile(int indent) const override;
+
     private:
         ExprParenthesis *_condition;
     };
@@ -569,6 +644,8 @@ namespace ast {
         For(VariableDecl *iterator, AbstractExpr *condition, AbstractExpr *increment, AbstractExpr *body);
 
         ~For();
+
+        std::string decompile(int indent) const override;
 
     private:
         VariableDecl *_iterator;
@@ -586,6 +663,8 @@ namespace ast {
 
         ~ForIter();
 
+        std::string decompile(int indent) const override;
+
     private:
         std::string _modifier;
         Identifier *_iterator;
@@ -602,6 +681,8 @@ namespace ast {
 
         ~FunctionCall();
 
+        std::string decompile(int indent) const override;
+
     private:
         Identifier *_name;
         std::vector<AbstractExpr *> _args;
@@ -616,6 +697,8 @@ namespace ast {
         Catch(FunctionParam *param, AbstractExpr *body);
 
         ~Catch();
+
+        std::string decompile(int indent) const override;
 
     private:
         FunctionParam *_param;
@@ -632,6 +715,8 @@ namespace ast {
 
         ~Try();
 
+        std::string decompile(int indent) const override;
+
     private:
         AbstractExpr *_body;
         std::vector<Catch *> _catches;
@@ -646,6 +731,8 @@ namespace ast {
         DotExpr(AbstractExpr *left, AbstractExpr *right);
 
         ~DotExpr();
+
+        std::string decompile(int indent) const override;
 
     private:
         AbstractExpr *_left;
@@ -662,6 +749,8 @@ namespace ast {
 
         ~ArrowExpr();
 
+        std::string decompile(int indent) const override;
+
     private:
         AbstractExpr *_left;
         AbstractExpr *_right;
@@ -677,6 +766,8 @@ namespace ast {
 
         ~OperatorIdentifier();
 
+        std::string decompile(int indent) const override;
+
     private:
         Operator *_op;
     };
@@ -688,6 +779,8 @@ namespace ast {
         AbstractCalcul();
 
         ~AbstractCalcul();
+
+        std::string decompile(int indent) const override;
 
     protected:
         Operator *_op;
@@ -705,6 +798,8 @@ namespace ast {
 
         ~UnaryCalcul();
 
+        std::string decompile(int indent) const override;
+
     private:
         bool _isPrefix;
         AbstractExpr *_expr;
@@ -720,6 +815,8 @@ namespace ast {
 
         ~BinaryCalcul();
 
+        std::string decompile(int indent) const override;
+
     protected:
         AbstractExpr *_left;
         AbstractExpr *_right;
@@ -732,6 +829,8 @@ namespace ast {
         Assignation();
 
         Assignation(AbstractExpr *left, AssignationOperator *op, AbstractExpr *right);
+
+        std::string decompile(int indent) const override;
     };
 
     // ====================
@@ -743,6 +842,8 @@ namespace ast {
         Cast(Type *type, AbstractExpr *expr);
 
         ~Cast();
+
+        std::string decompile(int indent) const override;
 
     private:
         Type *_type;
@@ -759,6 +860,8 @@ namespace ast {
 
         ~Return();
 
+        std::string decompile(int indent) const override;
+
     private:
         AbstractExpr *_expr;
     };
@@ -773,6 +876,8 @@ namespace ast {
 
         ~Array();
 
+        std::string decompile(int indent) const override;
+
     private:
         std::vector<AbstractExpr *> _values;
     };
@@ -786,6 +891,8 @@ namespace ast {
         New(ClassIdentifier *identifier, std::vector<AbstractExpr *> &args);
 
         ~New();
+
+        std::string decompile(int indent) const override;
 
     private:
         ClassIdentifier *_identifier;

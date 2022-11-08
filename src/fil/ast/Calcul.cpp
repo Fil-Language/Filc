@@ -15,6 +15,10 @@ AbstractCalcul::~AbstractCalcul() {
     delete _op;
 }
 
+string AbstractCalcul::decompile(int indent) const {
+    throw;
+}
+
 // ====================
 
 UnaryCalcul::UnaryCalcul() : _isPrefix(false), _expr(nullptr) {}
@@ -33,6 +37,14 @@ UnaryCalcul::~UnaryCalcul() {
     delete _expr;
 }
 
+string UnaryCalcul::decompile(int indent) const {
+    if (_isPrefix) {
+        return _op->decompile(indent) + _expr->decompile(indent);
+    } else {
+        return _expr->decompile(indent) + _op->decompile(indent);
+    }
+}
+
 // ====================
 
 BinaryCalcul::BinaryCalcul() : _left(nullptr), _right(nullptr) {}
@@ -45,4 +57,8 @@ BinaryCalcul::BinaryCalcul(AbstractExpr *left, Operator *op, AbstractExpr *right
 BinaryCalcul::~BinaryCalcul() {
     delete _left;
     delete _right;
+}
+
+string BinaryCalcul::decompile(int indent) const {
+    return _left->decompile(indent) + _op->decompile(indent) + _right->decompile(indent);
 }

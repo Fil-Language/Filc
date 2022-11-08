@@ -17,3 +17,7 @@ FunctionParam::~FunctionParam() {
     delete _name;
     delete _type;
 }
+
+string FunctionParam::decompile(int indent) const {
+    return _name->decompile(indent) + ": " + _type->decompile(indent);
+}

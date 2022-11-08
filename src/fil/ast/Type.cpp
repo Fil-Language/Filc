@@ -19,3 +19,13 @@ Type::Type(const std::string &name, bool isPointer)
 
 Type::Type(const std::string &name, int arraySize)
         : _name(name), _isPointer(false), _isArray(true), _arraySize(arraySize) {}
+
+string Type::decompile(int indent) const {
+    if (_isPointer) {
+        return _name + "*";
+    } else if (_isArray) {
+        return _name + "[" + to_string(_arraySize) + "]";
+    } else {
+        return _name;
+    }
+}

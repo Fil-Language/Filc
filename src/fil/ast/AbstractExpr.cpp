@@ -14,3 +14,7 @@ AbstractExpr::AbstractExpr() : _export(false) {}
 void AbstractExpr::setExport(bool export_) {
     _export = export_;
 }
+
+string AbstractExpr::decompile(int indent) const {
+    throw;
+}

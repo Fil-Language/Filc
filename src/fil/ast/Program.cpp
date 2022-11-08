@@ -27,3 +27,20 @@ Program::~Program() {
         delete expr;
     }
 }
+
+string Program::decompile(int indent) const {
+    string res = "module " + _moduleName + "\n\n";
+
+    if (!_imports.empty()) {
+        for (auto &import: _imports) {
+            res += "import " + import->_moduleName + "\n";
+        }
+        res += "\n";
+    }
+
+    for (auto &expr: _exprs) {
+        res += expr->decompile(indent) + "\n";
+    }
+
+    return res;
+}

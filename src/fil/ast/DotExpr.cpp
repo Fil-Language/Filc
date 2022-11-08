@@ -18,3 +18,7 @@ DotExpr::~DotExpr() {
     delete _left;
     delete _right;
 }
+
+string DotExpr::decompile(int indent) const {
+    return _left->decompile(indent) + "." + _right->decompile(indent);
+}

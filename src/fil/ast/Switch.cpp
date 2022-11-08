@@ -21,6 +21,16 @@ Switch::~Switch() {
     }
 }
 
+string Switch::decompile(int indent) const {
+    string res = "switch " + _condition->decompile(indent) + " {\n";
+
+    for (auto &c: _cases) {
+        res += c->decompile(indent + 1) + "\n";
+    }
+
+    return res + "}";
+}
+
 // ====================
 
 SwitchCase::SwitchCase() : _value(nullptr), _body(nullptr) {}
@@ -34,4 +44,8 @@ SwitchCase::SwitchCase(ast::AbstractLiteral *value, ast::AbstractExpr *body)
 SwitchCase::~SwitchCase() {
     delete _value;
     delete _body;
+}
+
+string SwitchCase::decompile(int indent) const {
+    string res = (_value ? _value->decompile(indent) : "default") + " -> " + _body->decompile(indent);
 }

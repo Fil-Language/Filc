@@ -11,15 +11,26 @@ using namespace ast;
 
 Interface::Interface() : _name(nullptr) {}
 
-Interface::Interface(Identifier *name, std::vector<ClassParam *> &params, std::vector<FunctionDecl *> &functions)
-        : _name(name), _params(params), _functions(functions) {}
+Interface::Interface(Identifier *name, std::vector<FunctionDecl *> &functions)
+        : _name(name), _functions(functions) {}
 
 Interface::~Interface() {
     delete _name;
-    for (auto &param: _params) {
-        delete param;
-    }
     for (auto &function: _functions) {
         delete function;
     }
+}
+
+string Interface::decompile(int indent) const {
+    string res = "interface " + _name->decompile(indent);
+
+    if (!_functions.empty()) {
+        res += " {\n";
+        for (auto &function: _functions) {
+            res += function->decompile(indent + 1) + "\n";
+        }
+        res += "}";
+    }
+
+    return res;
 }

@@ -17,6 +17,10 @@ Assignation::Assignation(AbstractExpr *left, AssignationOperator *op, AbstractEx
     _right = right;
 }
 
+string Assignation::decompile(int indent) const {
+    return _left->decompile(indent) + " " + _op->decompile(indent) + " " + _right->decompile(indent);
+}
+
 // ====================
 
 AssignationOperator::AssignationOperator() = default;
@@ -25,4 +29,8 @@ AssignationOperator::AssignationOperator(Operator *prefix) {
     if (prefix) {
         _op = prefix->_op;
     }
+}
+
+string AssignationOperator::decompile(int indent) const {
+    return Operator::decompile(indent) + "=";
 }

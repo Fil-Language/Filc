@@ -18,3 +18,13 @@ ExprBlock::~ExprBlock() {
         delete expr;
     }
 }
+
+string ExprBlock::decompile(int indent) const {
+    string res = "{\n";
+
+    for (auto expr: _exprs) {
+        res += expr->decompile(indent + 1) + "\n";
+    }
+
+    return res + "}";
+}

@@ -19,3 +19,13 @@ ExprParenthesis::~ExprParenthesis() {
     }
 }
 
+string ExprParenthesis::decompile(int indent) const {
+    string res = "(\n";
+
+    for (auto &expr: _exprs) {
+        res += expr->decompile(indent + 1) + "\n";
+    }
+
+    return res + ")";
+}
+

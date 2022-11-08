@@ -21,3 +21,22 @@ FunctionDecl::~FunctionDecl() {
     }
     delete _returnType;
 }
+
+string FunctionDecl::decompile(int indent) const {
+    string res = "fun " + _name->decompile(indent) + "(";
+
+    for (auto it = _params.begin(); it != _params.end(); it++) {
+        res += (*it)->decompile(indent);
+        if (it != _params.end() - 1) {
+            res += ", ";
+        }
+    }
+
+    res += ")";
+
+    if (_returnType != nullptr) {
+        res += " -> " + _returnType->decompile(indent);
+    }
+
+    return res;
+}

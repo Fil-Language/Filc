@@ -20,3 +20,21 @@ Enum::~Enum() {
         delete value;
     }
 }
+
+string Enum::decompile(int indent) const {
+    string res = "Enum " + _name->decompile(indent);
+
+    if (!_values.empty()) {
+        res += " {\n";
+        for (auto it = _values.begin(); it != _values.end(); it++) {
+            res += (*it)->decompile(indent + 1);
+            if (it != _values.end() - 1) {
+                res += ",";
+            }
+            res += "\n";
+        }
+        res += "}";
+    }
+
+    return res;
+}

@@ -18,3 +18,7 @@ ArrowExpr::~ArrowExpr() {
     delete _left;
     delete _right;
 }
+
+string ArrowExpr::decompile(int indent) const {
+    return _left->decompile(indent) + "->" + _right->decompile(indent);
+}

@@ -43,6 +43,49 @@ Class::~Class() {
     }
 }
 
+string Class::decompile(int indent) const {
+    string res = _modifier + " class " + _name->decompile(indent);
+
+    // Params
+    res += "(";
+    if (!_params.empty()) {
+        for (auto it = _params.begin(); it != _params.end(); it++) {
+            res += (*it)->decompile(indent);
+            if (it != _params.end() - 1) {
+                res += ", ";
+            }
+        }
+    }
+    res += ")";
+
+    // Extends
+    if (!_extends.empty()) {
+        res += " : ";
+        for (auto it = _extends.begin(); it != _extends.end(); it++) {
+            res += (*it)->decompile(indent);
+            if (it != _extends.end() - 1) {
+                res += ", ";
+            }
+        }
+    }
+
+    if (_constructor || !_variables.empty() || !_functions.empty()) {
+        res += " {\n";
+        if (_constructor) {
+            res += _constructor->decompile(indent + 1);
+        }
+        for (auto &variable: _variables) {
+            res += variable->decompile(indent + 1);
+        }
+        for (auto &function: _functions) {
+            res += function->decompile(indent + 1);
+        }
+        res += "}";
+    }
+
+    return res;
+}
+
 // ====================
 
 ClassIdentifier::ClassIdentifier() = default;
@@ -56,6 +99,22 @@ ClassIdentifier::~ClassIdentifier() {
     for (auto &generic: _generics) {
         delete generic;
     }
+}
+
+string ClassIdentifier::decompile(int indent) const {
+    string res = _name;
+    if (!_generics.empty()) {
+        res += "<";
+        for (auto it = _generics.begin(); it != _generics.end(); it++) {
+            res += (*it)->decompile(indent);
+            if (it != _generics.end() - 1) {
+                res += ", ";
+            }
+        }
+        res += ">";
+    }
+
+    return res;
 }
 
 // ====================
@@ -79,6 +138,15 @@ ClassParam::~ClassParam() {
     }
 }
 
+string ClassParam::decompile(int indent) const {
+    if (_isDecl) {
+        return _decl->decompile(indent);
+    } else {
+        return _name->decompile(indent) + ": " + _type->decompile(indent) +
+               (_defaultValue ? " = " + _defaultValue->decompile(indent) : "");
+    }
+}
+
 // ====================
 
 ClassExtend::ClassExtend() : _identifier(nullptr) {}
@@ -93,6 +161,22 @@ ClassExtend::~ClassExtend() {
     }
 }
 
+string ClassExtend::decompile(int indent) const {
+    string res = _identifier->decompile(indent);
+    if (!_args.empty()) {
+        res += "(";
+        for (auto it = _args.begin(); it != _args.end(); it++) {
+            res += (*it)->decompile(indent);
+            if (it != _args.end() - 1) {
+                res += ", ";
+            }
+        }
+        res += ")";
+    }
+
+    return res;
+}
+
 // ====================
 
 ClassVariable::ClassVariable() : _decl(nullptr) {}
@@ -104,6 +188,10 @@ ClassVariable::~ClassVariable() {
     delete _decl;
 }
 
+string ClassVariable::decompile(int indent) const {
+    return _visibility + " " + _decl->decompile(indent) + ";\n";
+}
+
 // ====================
 
 ClassFunction::ClassFunction() : _function(nullptr) {}
@@ -113,4 +201,16 @@ ClassFunction::ClassFunction(const std::string &modifier, const std::string &vis
 
 ClassFunction::~ClassFunction() {
     delete _function;
+}
+
+string ClassFunction::decompile(int indent) const {
+    string res;
+    if (!_modifier.empty()) {
+        res += _modifier + " ";
+    }
+    if (!_visibility.empty()) {
+        res += _visibility + " ";
+    }
+
+    return res + _function->decompile(indent);
 }

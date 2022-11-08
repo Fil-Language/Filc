@@ -12,3 +12,7 @@ using namespace ast;
 Identifier::Identifier() = default;
 
 Identifier::Identifier(const std::string &name) : _name(name) {}
+
+string Identifier::decompile(int indent) const {
+    return _name;
+}

@@ -23,3 +23,17 @@ VariableDecl::~VariableDecl() {
     delete _op;
     delete _value;
 }
+
+string VariableDecl::decompile(int indent) const {
+    string res = (_isVal ? "val " : "var ") + _name->decompile(indent);
+
+    if (_type != nullptr) {
+        res += ": " + _type->decompile(indent);
+    }
+
+    if (_op != nullptr) {
+        res += " " + _op->decompile(indent) + " " + _value->decompile(indent);
+    }
+
+    return res;
+}

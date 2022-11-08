@@ -41,7 +41,10 @@ int FilCompiler::compile(int flag) {
         }
 
         if (flag == DECOMPILE) {
-            // TODO : use decompile() function on program
+            cout << program->decompile(0) << endl;
+
+            delete program;
+            return 0;
         }
 
         // TODO : generate symbols tables

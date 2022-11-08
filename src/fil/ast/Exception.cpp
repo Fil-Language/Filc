@@ -21,6 +21,18 @@ Try::~Try() {
     }
 }
 
+string Try::decompile(int indent) const {
+    string res = "try\n";
+
+    res += _body->decompile(indent + 1);
+
+    for (auto &c: _catches) {
+        res += c->decompile(indent + 1);
+    }
+
+    return res;
+}
+
 // ====================
 
 Catch::Catch() : _param(nullptr), _body(nullptr) {}
@@ -31,4 +43,10 @@ Catch::Catch(FunctionParam *param, AbstractExpr *body)
 Catch::~Catch() {
     delete _param;
     delete _body;
+}
+
+string Catch::decompile(int indent) const {
+    string res = "catch(" + _param->decompile(indent) + ")\n";
+
+    return res + _body->decompile(indent + 1);
 }

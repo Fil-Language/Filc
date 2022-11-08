@@ -20,3 +20,16 @@ New::~New() {
         delete arg;
     }
 }
+
+string New::decompile(int indent) const {
+    string res = "new " + _identifier->decompile(indent) + "(";
+
+    for (auto it = _args.begin(); it != _args.end(); it++) {
+        res += (*it)->decompile(indent);
+        if (it != _args.end() - 1) {
+            res += ", ";
+        }
+    }
+
+    return res + ")";
+}
