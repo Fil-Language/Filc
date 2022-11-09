@@ -16,3 +16,9 @@ Refer to documentation for used grammar : [https://github.com/Fil-Language/Docum
 
 - [Antlr](https://www.antlr.org/)
 - [Options parser : https://github.com/jarro2783/cxxopts](https://github.com/jarro2783/cxxopts)
+
+### Tests
+
+Tests are written with [Node.js](https://nodejs.org).
+
+- [Colors](https://www.npmjs.com/package/colors)
