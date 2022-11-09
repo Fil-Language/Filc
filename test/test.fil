@@ -1,5 +1,0 @@
-module main
-
-fun main() {
-    val a : int = 1 + 2
-}

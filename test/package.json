@@ -1,0 +1,12 @@
+{
+  "name": "test",
+  "description": "Test script for filc",
+  "main": "test.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": "Kevin Traini <kevin@ktraini.com>",
+  "dependencies": {
+    "colors": "^1.4.0"
+  }
+}
