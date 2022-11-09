@@ -1,0 +1,10 @@
+module main
+
+import fil.types
+import fil.io
+
+class Person(val firstname: String, val lastname: String, var age: int) {
+    fun sayMyName() {
+        sout << me.firstname << nl
+    }
+}

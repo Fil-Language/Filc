@@ -1,0 +1,20 @@
+module main
+
+import fil.io
+
+fun main() {
+    val tab: int[] = {0, 1, 2, 3, 4}
+
+    for (val n : tab) {
+        sout << n << nl
+    }
+
+    for (val i = 0; i < 5; i++) {
+        sout << tab[i] << nl
+    }
+
+    val i = 0
+    while (i < 5) {
+        sout << tab[i++] << nl
+    }
+}

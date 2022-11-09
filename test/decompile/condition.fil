@@ -1,0 +1,26 @@
+module main
+
+import fil.utils
+import fil.io
+
+fun main() {
+    val a = randInt(0, 5)
+    val b = randInt(0, 5)
+
+    if (a < b) {
+        sout << "a is smaller than b" << nl
+    } else if (a == b) {
+        sout << "a is equal to b" << nl
+    } else {
+        sout << "a is greater than b" << nl
+    }
+
+    switch (a) {
+        0 -> sout << "a equals 0" << nl
+        1 -> sout << "a equals 1" << nl
+        2 -> sout << "a equals 2" << nl
+        3 -> sout << "a equals 3" << nl
+        4 -> sout << "a equals 4" << nl
+        default -> sout << "a equals a value" << nl
+    }
+}

@@ -1,0 +1,12 @@
+module main
+
+import fil.exceptions
+import fil.io
+
+fun main() {
+    try {
+        val a = 2 / 0
+    } catch (e: DivByZeroException) {
+        sout << "Did you try to divide by zero ?" << nl
+    }
+}

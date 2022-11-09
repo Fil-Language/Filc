@@ -22,9 +22,9 @@ jobs:
           node-version: 12
 
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/test -DCMAKE_BUILD_TYPE=Release
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
       - name: Build
-        run: cmake --build ${{github.workspace}}/test
+        run: cmake --build ${{github.workspace}}/build
 
       - name: Prepare test
         run: |

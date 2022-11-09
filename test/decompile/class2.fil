@@ -1,0 +1,12 @@
+module main
+
+import fil.io
+
+fun main() {
+    var john = Person("John", "Doe", 42)
+
+    sout << john.firstname << " lastname is " << john.lastname << nl
+    sout << "And he is " << john.age << " years old" << nl
+    john.age = 43
+    sout << "Oh! Sorry he is " << john.age << " years old" << nl
+}

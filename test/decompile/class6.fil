@@ -1,0 +1,20 @@
+module main
+
+import fil.containers
+import fil.io
+
+class Zoo<T> : List<T>
+
+fun main() {
+    val zoo = Zoo<Cow*>()
+
+    zoo.add(new BrownCow())
+
+    for (val cow : zoo) {
+        cow->scream()
+    }
+
+    val aCow = zoo[0]
+    sout << aCow.type << " : " << aCow->scream()
+    val aBrownCow = (BrownCow) *aCow
+}

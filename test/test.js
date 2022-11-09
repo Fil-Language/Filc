@@ -16,7 +16,7 @@ let passed = 0; // Number of passed tests
 let n_total = 0; // Number of single tests
 let n_passed = 0; // Number of passed single tests
 let tests = [
-    //{file: 'decompile/test.js'},
+    {file: 'decompile/test.js'},
 ]; // Array of tests results [{file,name,passed, total}]
 
 const f_passed = (name) => {
@@ -29,6 +29,7 @@ const f_failed = (name) => {
     console.log('  ' + '✗'.red + ' ' + name);
 }
 const f_ignore = (name) => {
+    n_passed++;
     n_total++;
     console.log('  ' + '⚠'.yellow + ' ' + name);
 }
@@ -43,18 +44,18 @@ if (tests.length > 0) {
 
         try {
             const {test_f, name} = require('./' + test.file);
-            console.log(` ${name} `.bgBlue + '\n')
+            console.log(` ${name} `.bgBlue)
             const result = test_f(test, f_passed, f_failed, f_ignore);
 
             switch (result) {
-                case 'passed':
+                case true:
                     passed++;
                     console.log(' ✓ '.bgGreen);
                     break;
-                case 'failed':
+                case false:
                     console.log(' ✗ '.bgRed);
                     break;
-                case 'ignore':
+                case undefined:
                     passed++;
                     console.log(' ⚠ '.bgYellow);
                     break;

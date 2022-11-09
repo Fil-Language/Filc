@@ -1,0 +1,28 @@
+module main
+
+import fil.types
+import fil.io
+
+interface Animal(val name: String) {
+    fun scream()
+}
+
+open class Cow(name: String) : Animal(name) {
+    override fun scream() {
+        sout << "Moo!" << nl
+    }
+}
+
+class BrownCow : Cow("Jeanne") {
+    override fun scream() {
+        sout << "Moo! (in brown)" << nl
+    }
+}
+
+abstract class AbstractCat(name: String) : Animal(name) {
+    override fun scream() {
+        sout << "Meow!" << nl
+    }
+
+    abstract fun sleep()
+}
