@@ -79,13 +79,13 @@ console.log('Tests : ' + ((n_passed === n_total) ? ' PASS '.bgGreen : ' FAIL '.b
 console.log('\n');
 
 if (total === passed && n_total === n_passed) {
-    console.log('                  \n'.bgGreen
-        + ' ALL TESTS PASSED \n'.bgGreen
-        + '                  \n'.bgGreen);
+    console.log('                  '.bgGreen + '\n'
+        + ' ALL TESTS PASSED '.bgGreen + '\n'
+        + '                  '.bgGreen + '\n');
     process.exit(0);
 } else {
-    console.log('                   \n'.bgRed
-        + ' SOME TESTS FAILED \n'.bgRed
-        + '                   \n'.bgRed);
+    console.log('                   '.bgRed + '\n'
+        + ' SOME TESTS FAILED '.bgRed + '\n'
+        + '                   '.bgRed + '\n');
     process.exit(1);
 }
