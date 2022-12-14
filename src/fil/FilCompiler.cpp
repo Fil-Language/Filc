@@ -34,7 +34,7 @@ int FilCompiler::compile(int flag) {
         tokens.fill();
 
         FilParser parser(&tokens);
-        Program *program = parser.parseTree();
+        /*Program *program = parser.parseTree();
 
         if (file.is_open()) {
             file.close();
@@ -56,7 +56,7 @@ int FilCompiler::compile(int flag) {
         // TODO : LLVM IR generation
 
         // Free memory
-        delete program;
+        delete program;*/
     } catch (exception &e) {
         cout << e.what() << endl;
         return 1;
@@ -69,7 +69,7 @@ int FilCompiler::compile(int flag) {
     return 0;
 }
 
-Program *FilCompiler::import(const string &moduleName) {
+/*Program *FilCompiler::import(const string &moduleName) {
     return new Program(moduleName);
     // TODO: look for the file in the current directory, then in the include path $FIL_PATH
-}
+}*/
