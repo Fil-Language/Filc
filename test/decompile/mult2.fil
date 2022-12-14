@@ -1,3 +1,0 @@
-module mult2
-
-val myFunction = fun multBy2(n: int) = n * 2

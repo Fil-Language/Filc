@@ -1,3 +1,0 @@
-module mult3
-
-fun multBy3(n: int) = n * 3

@@ -1,9 +1,0 @@
-module main
-
-import fil.types
-
-class Person(val firstname: String, val lastname: String, var age: int)
-
-fun main() {
-    var john = Person("John", "Doe", 42)
-}

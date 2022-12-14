@@ -1,3 +1,0 @@
-module myModule
-
-export fun getDouble(n : int) = 2 * n
