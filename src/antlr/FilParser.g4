@@ -96,18 +96,18 @@ expr returns[AbstractExpr *tree]
 	| (e24=cast {
 	    $tree = $e24.tree;
 	})
-	| (e25=IDENTIFIER {
-	    $tree = new Identifier($e25.text);
-	})
-	| (e26=class_identifier {
-	    $tree = $e26.tree;
-	})
 	| (e27=literal {
 	    $tree = $e27.tree;
 	})
-	| (NEW e28=class_identifier e29=function_call_params {
-	    $tree = new New($e28.tree, $e29.tree);
+	| (e28=new_class {
+	    $tree = $e28.tree;
 	})
+	| (e26=class_identifier {
+    	$tree = $e26.tree;
+    })
+	| (e25=IDENTIFIER {
+    	$tree = new Identifier($e25.text);
+    })
 	| (e30=expr_parenthesis {
 	    $tree = $e30.tree;
 	})
@@ -332,6 +332,8 @@ class_body returns[ExprBlock *constructor, std::vector<ClassVariable *> variable
 @init {
     $variables = std::vector<ClassVariable *>();
     $functions = std::vector<ClassFunction *>();
+    $functions = std::vector<ClassFunction *>();
+    $constructor = nullptr;
 }
     : LBRACE (c=class_constructor {
         $constructor = $c.tree;
@@ -384,6 +386,20 @@ class_atr_visibility returns[std::string text]
 class_constructor returns[ExprBlock *tree]
     : CONSTRUCTOR e=expr_block {
         $tree = $e.tree;
+    };
+
+new_class returns[New *tree]
+@init {
+    bool isNew = false;
+}
+    : (NEW {
+        isNew = true;
+    })? i=class_identifier p=function_call_params {
+        if (isNew) {
+            $tree = new New($i.tree, $p.tree);
+        } else {
+            $tree = new New($i.tree, $p.tree, false);
+        }
     };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

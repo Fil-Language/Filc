@@ -3,7 +3,7 @@ module main
 import fil.types
 import fil.io
 
-interface Animal(val name: String) {
+interface Animal {
     fun scream()
 }
 

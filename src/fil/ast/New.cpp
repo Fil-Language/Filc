@@ -9,10 +9,13 @@
 using namespace std;
 using namespace ast;
 
-New::New() : _identifier(nullptr) {}
+New::New() : _identifier(nullptr), _isPointer(true) {}
 
 New::New(ClassIdentifier *identifier, vector<AbstractExpr *> &args)
-        : _identifier(identifier), _args(args) {}
+        : _identifier(identifier), _args(args), _isPointer(true) {}
+
+New::New(ClassIdentifier *identifier, vector<AbstractExpr *> &args, bool isPointer)
+        : _identifier(identifier), _args(args), _isPointer(isPointer) {}
 
 New::~New() {
     delete _identifier;
@@ -22,7 +25,8 @@ New::~New() {
 }
 
 string New::decompile(int indent) const {
-    string res = "new " + _identifier->decompile(indent) + "(";
+    string res = (_isPointer ? "new " : "");
+    res += _identifier->decompile(indent) + "(";
 
     for (auto it = _args.begin(); it != _args.end(); it++) {
         res += (*it)->decompile(indent);
