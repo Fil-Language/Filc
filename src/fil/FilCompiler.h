@@ -16,7 +16,7 @@ public:
 
     int compile(int flag);
 
-    static ast::Program *import(const std::string &moduleName);
+    //static ast::Program *import(const std::string &moduleName);
 
 private:
     std::string _filename;
