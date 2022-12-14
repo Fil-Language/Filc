@@ -82,7 +82,8 @@ variable_declaration : (VAL | VAR) IDENTIFIER ((COLON type) | (COLON type)? assi
 assignation : EQ expr;
 
 type: IDENTIFIER (LBRACK INTEGER RBRACK
-                 | STAR)*;
+                 | STAR)*
+    | lambda_type;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
@@ -116,6 +117,8 @@ block_body : LBRACE expr* RBRACE;
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 lambda : LPAREN function_params? RPAREN function_type? ARROW (expr | parenthesis_body | block_body);
+
+lambda_type: LPAREN (type (COMMA type)*)? RPAREN ARROW type;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
