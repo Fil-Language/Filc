@@ -89,5 +89,6 @@ SEPARATOR: (' ' | '\t' | '\r' | '\n' | EOF) -> skip;
 
 // Others
 fragment DOT: '.';
-fragment MODULE_ID: (LETTER | DIGIT)*;
+fragment MODULE_ID: (LETTER | DIGIT)+;
 MODULE_NAME: MODULE_ID (DOT MODULE_ID)*;
+IDENTIFIER: LOWERCASE (LETTER | DIGIT)*;
