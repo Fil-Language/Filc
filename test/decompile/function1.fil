@@ -1,0 +1,3 @@
+module function1
+
+fun square(x : int) = x * x
