@@ -13,8 +13,11 @@ on:
       - ".github/workflows/test.yml"
 
 jobs:
-  test-ubuntu:
-    runs-on: ubuntu-latest
+  test:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v1
@@ -34,3 +37,8 @@ jobs:
         run: |
           cd ${{github.workspace}}/test
           npm test
+      - name: Archive tests logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: tests-logs
+          path: ${{github.workspace}}/test/log.txt
