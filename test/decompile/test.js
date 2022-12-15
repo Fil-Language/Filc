@@ -5,7 +5,7 @@ const filc = __dirname + '/../../build/filc';
 
 module.exports = {
     name: 'Decompile',
-    test_f: (test, f_passed, f_failed, f_ignore) => {
+    test_f: (test, f_passed, f_failed, f_ignore, f_log) => {
         // Get all files in folder (except test.js)
         const files = fs.readdirSync(__dirname).filter(f => f !== 'test.js');
 
@@ -30,12 +30,18 @@ module.exports = {
                 // Result
                 if (first === second) {
                     f_passed(file);
+                    f_log(`- ${file} passed\n`);
                     passed++;
                 } else {
                     f_failed(file);
+                    f_log(`- ${file} failed\n`);
+                    f_log(`First:\n${first}\n`);
+                    f_log(`Second:\n${second}\n`);
                 }
             } catch (e) {
                 f_failed(file);
+                f_log(`- ${file} failed\n`);
+                f_log(`Error: ${e}\n`);
             }
             total++;
         }

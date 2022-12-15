@@ -1,4 +1,5 @@
 require('colors');
+const fs = require('fs');
 
 console.log('    _______ __    \n' +
     '   / ____(_) /____\n' +
@@ -34,10 +35,15 @@ const f_ignore = (name) => {
     console.log('  ' + '⚠'.yellow + ' ' + name);
 }
 
+const f_log = (msg) => {
+    fs.writeFileSync('log.txt', msg, {flag: 'a'});
+}
+
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 // Tests runs
 
 if (tests.length > 0) {
+    fs.rmSync('log.txt', {force: true});
     console.log(`Running ${tests.length} tests...`);
     for (const test of tests) {
         total++;
@@ -45,7 +51,10 @@ if (tests.length > 0) {
         try {
             const {test_f, name} = require('./' + test.file);
             console.log(` ${name} `.bgBlue)
-            const result = test_f(test, f_passed, f_failed, f_ignore);
+            f_log(`=== ${name} ===\n`);
+            const result = test_f(test, f_passed, f_failed, f_ignore, f_log);
+            f_log(`--> ${result} <--\n`)
+            f_log(`=== ${name} ===\n`);
 
             switch (result) {
                 case true:
@@ -62,6 +71,7 @@ if (tests.length > 0) {
             }
         } catch (e) {
             console.log(` ${test.file} ` + ' not found '.bgMagenta);
+            f_log(`${test.file} not found\n`);
         }
     }
 } else {
