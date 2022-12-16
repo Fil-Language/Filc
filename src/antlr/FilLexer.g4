@@ -19,6 +19,7 @@ SWITCH: 'switch';
 DEFAULT: 'default';
 FOR: 'for';
 WHILE: 'while';
+RETURN: 'return';
 
 // Operators
 EQ: '=';
@@ -54,8 +55,8 @@ SEMI: ';';
 
 // Literals
 fragment DIGIT: [0-9];
-INTEGER: DIGIT+;
-FLOAT: DIGIT* '.' DIGIT+;
+INTEGER: '-'? DIGIT+;
+FLOAT: '-'? DIGIT* '.' DIGIT+;
 fragment UPPERCASE: [A-Z];
 fragment LOWERCASE: [a-z];
 fragment LETTER: LOWERCASE | UPPERCASE;
@@ -86,7 +87,5 @@ COMMENT_BLOCK: '/*' .*? '*/' -> skip;
 SEPARATOR: (' ' | '\t' | '\r' | '\n' | EOF) -> skip;
 
 // Others
-fragment DOT: '.';
-fragment MODULE_ID: (LETTER | DIGIT)+;
-MODULE_NAME: MODULE_ID (DOT MODULE_ID)*;
-IDENTIFIER: LOWERCASE (LETTER | DIGIT)*;
+DOT: '.';
+IDENTIFIER: (LETTER | DIGIT)+;

@@ -40,14 +40,26 @@ prog returns[Program *tree]
     })* EOF;
 
 module returns[string text]
-    : MODULE m=MODULE_NAME {
-        $text = $m.text;
-    };
+    : MODULE i1=IDENTIFIER {
+        $text = $i1.text;
+    } (DOT ii=IDENTIFIER {
+        $text += $ii.text;
+    })*
+    ;
 
 import_ returns[Program *tree]
-    : IMPORT m=MODULE_NAME {
-        $tree = FilCompiler::import($m.text);
-    };
+@init {
+    string name;
+}
+@after {
+    $tree = FilCompiler::import(name);
+}
+    : IMPORT i1=IDENTIFIER {
+        name = $i1.text;
+    } (DOT ii=IDENTIFIER {
+        name += $ii.text;
+    })*
+    ;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
@@ -62,6 +74,7 @@ expr returns[AbstractExpr *tree]
     | IDENTIFIER
     | calcul
     | function
+    | RETURN expr
     | lambda
     | control
     | function_call
@@ -216,7 +229,7 @@ if_body : expr | block_body;
 
 switch_ : SWITCH if_condition switch_body;
 
-switch_body : LBRACE switch_case RBRACE;
+switch_body : LBRACE switch_case* RBRACE;
 
 switch_case : switch_pattern ARROW (expr | parenthesis_body | block_body);
 
