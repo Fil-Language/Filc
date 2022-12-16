@@ -112,6 +112,19 @@ namespace ast {
 
         std::string decompile(int indent) const override;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class VariableDeclaration : public AbstractExpr {
+    public:
+        VariableDeclaration(bool isVal, const std::string &name);
+
+        std::string decompile(int indent) const override;
+
+    private:
+        bool _isVal;
+        std::string _name;
+    };
 }
 
 #endif //FILC_AST_HPP

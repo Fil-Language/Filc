@@ -55,7 +55,9 @@ expr returns[AbstractExpr *tree]
     : e1=literal {
         $tree = $e1.tree;
     }
-    | variable_declaration
+    | e2=variable_declaration {
+        $tree = $e2.tree;
+    }
     | assignation
     | IDENTIFIER
     | calcul
@@ -127,7 +129,19 @@ number returns[AbstractLiteral *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-variable_declaration : (VAL | VAR) IDENTIFIER ((COLON type) | (COLON type)? assignation);
+variable_declaration returns[VariableDeclaration *tree]
+@init {
+    bool isVal = false;
+    string name;
+}
+@after {
+    $tree = new VariableDeclaration(isVal, name);
+}
+    : (VAL {
+        isVal = true;
+    } | VAR) i=IDENTIFIER {
+        name = $i.text;
+    } ((COLON type) | (COLON type)? assignation);
 
 assignation : EQ expr;
 
