@@ -17,13 +17,32 @@ using namespace ast;
 using namespace std;
 }
 
-@parser::members {}
+@parser::members {
+Program* parseTree() {
+    return prog()->tree;
+}
+}
 
-prog : module import_* (EXPORT? expr)* EOF;
+prog returns[Program *tree]
+@init {
+    auto imports = vector<Program *>();
+}
+@after {
+    $tree = new Program($m.text, imports);
+}
+    : m=module (i=import_ {
+        imports.push_back($i.tree);
+    })* (EXPORT? expr)* EOF;
 
-module : MODULE MODULE_NAME;
+module returns[std::string text]
+    : MODULE m=MODULE_NAME {
+        $text = $m.text;
+    };
 
-import_ : IMPORT MODULE_NAME;
+import_ returns[Program *tree]
+    : IMPORT m=MODULE_NAME {
+        $tree = FilCompiler::import($m.text);
+    };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
