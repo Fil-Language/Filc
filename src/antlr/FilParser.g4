@@ -79,7 +79,9 @@ expr returns[AbstractExpr *tree]
     | e5=calcul {
         $tree = $e5.tree;
     }
-    | function
+    | e6=function {
+        $tree = $e6.tree;
+    }
     | RETURN expr
     | lambda
     | control
@@ -237,7 +239,10 @@ pre_operator returns[Operator *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-function : function_declaration function_body;
+function returns[Function *tree]
+    : d=function_declaration b=function_body {
+        $tree = new Function();
+    };
 
 function_declaration : FUN IDENTIFIER LPAREN function_params? RPAREN function_type?;
 

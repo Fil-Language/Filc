@@ -232,6 +232,19 @@ namespace ast {
         Identifier *_identifier;
         bool _isPrefix;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class Function : public AbstractExpr {
+    public:
+        Function();
+
+        ~Function();
+
+        std::string decompile(int indent) const override;
+
+    private:
+    };
 }
 
 #endif //FILC_AST_HPP
