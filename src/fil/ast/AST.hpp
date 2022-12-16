@@ -135,9 +135,23 @@ namespace ast {
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
+    class Assignation : public AbstractExpr {
+    public:
+        explicit Assignation(AbstractExpr *expr);
+
+        ~Assignation();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        AbstractExpr *_expr;
+    };
+
     class VariableDeclaration : public AbstractExpr {
     public:
-        VariableDeclaration(bool isVal, const std::string &name, Type *type);
+        VariableDeclaration(bool isVal, const std::string &name, Type *type, Assignation *assignation);
+
+        ~VariableDeclaration();
 
         std::string decompile(int indent) const override;
 
@@ -145,6 +159,7 @@ namespace ast {
         bool _isVal;
         std::string _name;
         Type *_type;
+        Assignation *_assignation;
     };
 }
 

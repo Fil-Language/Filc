@@ -70,7 +70,9 @@ expr returns[AbstractExpr *tree]
     | e2=variable_declaration {
         $tree = $e2.tree;
     }
-    | assignation
+    | e3=assignation {
+        $tree = $e3.tree;
+    }
     | IDENTIFIER
     | calcul
     | function
@@ -147,9 +149,10 @@ variable_declaration returns[VariableDeclaration *tree]
     bool isVal = false;
     string name;
     Type *vt = nullptr;
+    Assignation *va = nullptr;
 }
 @after {
-    $tree = new VariableDeclaration(isVal, name, vt);
+    $tree = new VariableDeclaration(isVal, name, vt, va);
 }
     : (VAL {
         isVal = true;
@@ -159,9 +162,14 @@ variable_declaration returns[VariableDeclaration *tree]
         vt = $t.tree;
     }) | (COLON t=type {
         vt = $t.tree;
-    })? assignation);
+    })? a=assignation {
+        va = $a.tree;
+    });
 
-assignation : EQ expr;
+assignation returns[Assignation *tree]
+    : EQ e=expr {
+        $tree = new Assignation($e.tree);
+    };
 
 type returns[Type *tree]
 @init {

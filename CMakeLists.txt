@@ -63,7 +63,7 @@ add_executable(filc
         src/fil/ast/AST.hpp src/fil/ast/AST.cpp src/fil/ast/Program.cpp src/fil/ast/AbstractExpr.cpp
         src/fil/ast/BooleanLiteral.cpp src/fil/ast/IntegerLiteral.cpp src/fil/ast/FloatLiteral.cpp
         src/fil/ast/CharLiteral.cpp src/fil/ast/StringLiteral.cpp src/fil/ast/FStringLiteral.cpp
-        src/fil/ast/VariableDeclaration.cpp src/fil/ast/Type.cpp)
+        src/fil/ast/VariableDeclaration.cpp src/fil/ast/Type.cpp src/fil/ast/Assignation.cpp)
 target_link_libraries(filc antlr4_static)
 
 target_compile_options(filc PUBLIC)
