@@ -247,15 +247,29 @@ function returns[Function *tree]
 function_declaration returns[FunctionDeclaration *tree]
 @init {
     Type *ft = nullptr;
+    vector<FunctionParam *> params;
 }
 @after {
-    $tree = new FunctionDeclaration(new Identifier($i.text), ft);
+    $tree = new FunctionDeclaration(new Identifier($i.text), params, ft);
 }
-    : FUN i=IDENTIFIER LPAREN function_params? RPAREN (t=function_type {
+    : FUN i=IDENTIFIER LPAREN (p=function_params {
+        params = $p.tree;
+    })? RPAREN (t=function_type {
         ft = $t.tree;
     })?;
 
-function_params : IDENTIFIER COLON type (COMMA function_params)*;
+function_params returns[vector<FunctionParam *> tree]
+@init {
+    vector<FunctionParam *> res;
+}
+@after {
+    $tree = res;
+}
+    : i1=IDENTIFIER COLON t1=type {
+        res.push_back(new FunctionParam(new Identifier($i1.text), $t1.tree));
+    } (COMMA ii=IDENTIFIER COLON ti=type {
+        res.push_back(new FunctionParam(new Identifier($ii.text), $ti.tree));
+    })?;
 
 function_type returns[Type *tree]
     : COLON t=type {

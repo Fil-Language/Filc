@@ -9,18 +9,15 @@
 using namespace std;
 using namespace ast;
 
-FunctionDeclaration::FunctionDeclaration(Identifier *name, const vector<FunctionParam *> &params, Type *type)
-        : _name(name), _params(params), _type(type) {}
+FunctionParam::FunctionParam(Identifier *name, Type *type)
+        : _name(name), _type(type) {}
 
-FunctionDeclaration::~FunctionDeclaration() {
+FunctionParam::~FunctionParam() {
     delete _name;
-    for (auto param: _params) {
-        delete param;
-    }
     delete _type;
 }
 
-string FunctionDeclaration::decompile(int indent) const {
+string FunctionParam::decompile(int indent) const {
     string result = _name->decompile(indent);
 
     if (_type) {

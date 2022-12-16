@@ -235,9 +235,22 @@ namespace ast {
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
+    class FunctionParam : public AST {
+    public:
+        FunctionParam(Identifier *name, Type *type);
+
+        ~FunctionParam();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        Identifier *_name;
+        Type *_type;
+    };
+
     class FunctionDeclaration : public AbstractExpr {
     public:
-        FunctionDeclaration(Identifier *name, Type *type);
+        FunctionDeclaration(Identifier *name, const std::vector<FunctionParam *> &params, Type *type);
 
         ~FunctionDeclaration();
 
@@ -245,6 +258,7 @@ namespace ast {
 
     private:
         Identifier *_name;
+        std::vector<FunctionParam *> _params;
         Type *_type;
     };
 
