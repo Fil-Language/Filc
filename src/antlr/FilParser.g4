@@ -52,7 +52,9 @@ import_ returns[Program *tree]
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 expr returns[AbstractExpr *tree]
-    : literal
+    : e1=literal {
+        $tree = $e1.tree;
+    }
     | variable_declaration
     | assignation
     | IDENTIFIER
@@ -89,12 +91,13 @@ expr returns[AbstractExpr *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-literal : boolean
-        | number
-        | CHARACTER
-        | STRING
-        | FSTRING
-        ;
+literal returns[AbstractLiteral *tree]
+    : boolean
+    | number
+    | CHARACTER
+    | STRING
+    | FSTRING
+    ;
 
 boolean : TRUE | FALSE;
 

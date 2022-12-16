@@ -50,6 +50,11 @@ namespace ast {
         std::vector<Program *> _imports;
         std::vector<AbstractExpr *> _exprs;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class AbstractLiteral : public AbstractExpr {
+    };
 }
 
 #endif //FILC_AST_HPP
