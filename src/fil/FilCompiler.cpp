@@ -70,6 +70,6 @@ int FilCompiler::compile(int flag) {
 }
 
 Program *FilCompiler::import(const string &moduleName) {
-    return new Program(moduleName, {});
+    return new Program(moduleName, {}, {});
     // TODO: look for the file in the current directory, then in the include path $FIL_PATH
 }

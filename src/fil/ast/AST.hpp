@@ -22,9 +22,24 @@ namespace ast {
         virtual std::string decompile(int indent) const = 0;
     };
 
+    class AbstractExpr : public AST {
+    public:
+        std::string decompile(int indent) const override;
+
+        void isExported(bool exported);
+
+    protected:
+        AbstractExpr();
+
+    protected:
+        bool _isExported;
+    };
+
     class Program : public AST {
     public:
-        Program(const std::string &module, const std::vector<Program *> &imports);
+        Program(const std::string &module,
+                const std::vector<Program *> &imports,
+                const std::vector<AbstractExpr *> &exprs);
 
         ~Program();
 
@@ -33,6 +48,7 @@ namespace ast {
     private:
         std::string _module;
         std::vector<Program *> _imports;
+        std::vector<AbstractExpr *> _exprs;
     };
 }
 

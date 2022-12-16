@@ -26,15 +26,20 @@ Program* parseTree() {
 prog returns[Program *tree]
 @init {
     auto imports = vector<Program *>();
+    auto exprs = vector<AbstractExpr *>();
 }
 @after {
-    $tree = new Program($m.text, imports);
+    $tree = new Program($m.text, imports, exprs);
 }
     : m=module (i=import_ {
         imports.push_back($i.tree);
-    })* (EXPORT? expr)* EOF;
+    })* (exported=EXPORT? e=expr {
+        auto e = $e.tree;
+        e->isExported($exported ? true : false);
+        exprs.push_back(e);
+    })* EOF;
 
-module returns[std::string text]
+module returns[string text]
     : MODULE m=MODULE_NAME {
         $text = $m.text;
     };
@@ -46,40 +51,41 @@ import_ returns[Program *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-expr : literal
-     | variable_declaration
-     | assignation
-     | IDENTIFIER
-     | calcul
-     | function
-     | lambda
-     | control
-     | function_call
-     | cast
-     | parenthesis_body
-     // Rule for binary calcul, need to be here to avoid left-recursion errors
-     // Long but needed, the higher the most priority, the lower the less priority
-     // The groups are for operators with same priority
-     // TODO : find a way to move this part in another rule without the left-recursion error
-     | expr STAR expr
-     | expr DIV expr
-     | expr MOD expr
+expr returns[AbstractExpr *tree]
+    : literal
+    | variable_declaration
+    | assignation
+    | IDENTIFIER
+    | calcul
+    | function
+    | lambda
+    | control
+    | function_call
+    | cast
+    | parenthesis_body
+    // Rule for binary calcul, need to be here to avoid left-recursion errors
+    // Long but needed, the higher the most priority, the lower the less priority
+    // The groups are for operators with same priority
+    // TODO : find a way to move this part in another rule without the left-recursion error
+    | expr STAR expr
+    | expr DIV expr
+    | expr MOD expr
 
-     | expr PLUS expr
-     | expr MINUS expr
+    | expr PLUS expr
+    | expr MINUS expr
 
-     | expr FLEFT expr
-     | expr FRIGHT expr
+    | expr FLEFT expr
+    | expr FRIGHT expr
 
-     | expr AND expr
-     | expr OR expr
-     | expr LESS expr
-     | expr GREATER expr
-     | expr EQEQ expr
-     | expr LEQ expr
-     | expr GEQ expr
-     | expr NEQ expr
-     ;
+    | expr AND expr
+    | expr OR expr
+    | expr LESS expr
+    | expr GREATER expr
+    | expr EQEQ expr
+    | expr LEQ expr
+    | expr GEQ expr
+    | expr NEQ expr
+    ;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
