@@ -19,7 +19,7 @@ namespace ast {
 
         ~AST();
 
-        virtual std::string decompile(int indent) const = 0; // FIXME: change return type to std::string &
+        virtual std::string &decompile(int indent) const = 0;
     };
 }
 
