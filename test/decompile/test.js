@@ -26,8 +26,12 @@ module.exports = {
                 // Decompile file second
                 const second = execSync(filc + ' ' + __dirname + '/temp.fil -d 2> err.txt').toString();
 
-
-                // Result
+                const errs = fs.readFileSync('err.txt').toString();
+                if (errs !== '') {
+                    f_log(`- ${file} failed\n`);
+                    f_log(`Error: ${errs}\n`);
+                } else
+                    // Result
                 if (first === second) {
                     f_passed(file);
                     f_log(`- ${file} passed\n`);
