@@ -76,7 +76,9 @@ expr returns[AbstractExpr *tree]
     | e4=IDENTIFIER {
         $tree = new Identifier($e4.text);
     }
-    | calcul
+    | e5=calcul {
+        $tree = $e5.tree;
+    }
     | function
     | RETURN expr
     | lambda
@@ -192,14 +194,46 @@ type returns[Type *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-calcul : unary_calcul;
+calcul returns[UnaryCalcul *tree]
+    : c=unary_calcul {
+        $tree = $c.tree;
+    };
 
-unary_calcul : IDENTIFIER post_operator
-             | pre_operator IDENTIFIER;
+unary_calcul returns[UnaryCalcul *tree]
+    : i1=IDENTIFIER o1=post_operator {
+        $tree = new UnaryCalcul(new Identifier($i1.text), $o1.tree);
+    }
+    | o2=pre_operator i2=IDENTIFIER {
+        $tree = new UnaryCalcul($o2.tree, new Identifier($i2.text));
+    };
 
-post_operator : PLUSPLUS | MINUSMINUS | (LBRACK expr RBRACK);
+post_operator returns[Operator *tree]
+    : PLUSPLUS {
+        $tree = new Operator(Operator::PLUSPLUS);
+    }
+    | MINUSMINUS {
+        $tree = new Operator(Operator::MINUSMINUS);
+    }
+    | (LBRACK e=expr RBRACK) {
+        $tree = new Operator($e.tree);
+    };
 
-pre_operator : PLUSPLUS | MINUSMINUS | REF | STAR | NOT;
+pre_operator returns[Operator *tree]
+    : PLUSPLUS {
+        $tree = new Operator(Operator::PLUSPLUS);
+    }
+    | MINUSMINUS {
+        $tree = new Operator(Operator::PLUSPLUS);
+    }
+    | REF {
+        $tree = new Operator(Operator::REF);
+    }
+    | STAR {
+        $tree = new Operator(Operator::STAR);
+    }
+    | NOT {
+        $tree = new Operator(Operator::NOT);
+    };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

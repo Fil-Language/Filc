@@ -175,6 +175,63 @@ namespace ast {
         Type *_type;
         Assignation *_assignation;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class Operator : public AbstractExpr {
+    public:
+        typedef enum {
+            STAR,
+            PLUSPLUS,
+            MINUSMINUS,
+            REF,
+            NOT,
+            AND,
+            OR,
+            LESS,
+            GREATER,
+            EQEQ,
+            LEQ,
+            GEQ,
+            NEQ,
+            FLEFT,
+            FRIGHT,
+            PLUS,
+            MINUS,
+            DIV,
+            MOD,
+            ARRAY,
+        } Op;
+
+    public:
+        explicit Operator(Op op);
+
+        explicit Operator(AbstractExpr *index);
+
+        ~Operator();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        Op _op;
+        AbstractExpr *_index;
+    };
+
+    class UnaryCalcul : public AbstractExpr {
+    public:
+        UnaryCalcul(Operator *op, Identifier *identifier);
+
+        UnaryCalcul(Identifier *identifier, Operator *op);
+
+        ~UnaryCalcul();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        Operator *_op;
+        Identifier *_identifier;
+        bool _isPrefix;
+    };
 }
 
 #endif //FILC_AST_HPP
