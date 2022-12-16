@@ -54,12 +54,15 @@ include_directories(
 # add generated grammar to binary target
 add_executable(filc
         src/main.cpp
+        # === Utils ===
         src/utils/cxxopts.hpp src/utils/utils.h src/utils/utils.cpp
+        # === ANTLR ===
         ${ANTLR_Lexer_CXX_OUTPUTS}
         ${ANTLR_Parser_CXX_OUTPUTS}
+        # === Fil ===
         src/VERSION.h
         src/fil/FilCompiler.cpp src/fil/FilCompiler.h
-        src/fil/Logger.hpp
+        # === AST ===
         src/fil/ast/AST.hpp src/fil/ast/AST.cpp src/fil/ast/Program.cpp src/fil/ast/AbstractExpr.cpp
         src/fil/ast/BooleanLiteral.cpp src/fil/ast/IntegerLiteral.cpp src/fil/ast/FloatLiteral.cpp
         src/fil/ast/CharLiteral.cpp src/fil/ast/StringLiteral.cpp src/fil/ast/FStringLiteral.cpp
