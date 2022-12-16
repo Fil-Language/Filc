@@ -13,6 +13,6 @@ AST::~AST() = default;
 
 AST::AST() = default;
 
-string &AST::decompile(int indent) const {
+string AST::decompile(int indent) const {
     throw;
 }
