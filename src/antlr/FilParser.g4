@@ -283,14 +283,25 @@ function_body returns[AbstractExpr *tree]
     | b2=parenthesis_body {
         $tree = $b2.tree;
     }
-    | block_body;
+    | b3=block_body {
+        $tree = $b3.tree;
+    };
 
 parenthesis_body returns[AbstractExpr *tree]
     : LPAREN e=expr {
         $tree = $e.tree;
     } RPAREN;
 
-block_body : LBRACE expr* RBRACE;
+block_body returns[BlockBody *tree]
+@init {
+    vector<AbstractExpr *> res;
+}
+@after {
+    $tree = new BlockBody(res);
+}
+    : LBRACE (ei=expr {
+        res.push_back($ei.tree);
+    })* RBRACE;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

@@ -87,6 +87,20 @@ namespace ast {
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
+    class BlockBody : public AbstractExpr {
+    public:
+        explicit BlockBody(const std::vector<AbstractExpr *> &exprs);
+
+        ~BlockBody();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        std::vector<AbstractExpr *> _exprs;
+    };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
     class AbstractLiteral : public AbstractExpr {
     };
 
