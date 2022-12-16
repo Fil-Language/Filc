@@ -98,7 +98,9 @@ literal returns[AbstractLiteral *tree]
     | l2=number {
         $tree = $l2.tree;
     }
-    | CHARACTER
+    | l3=CHARACTER {
+        $tree = new CharLiteral($l3.text);
+    }
     | STRING
     | FSTRING
     ;

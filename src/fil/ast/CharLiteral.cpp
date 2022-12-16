@@ -9,9 +9,10 @@
 using namespace std;
 using namespace ast;
 
-FloatLiteral::FloatLiteral(float value)
-        : _value(value) {}
+CharLiteral::CharLiteral(const string &value) {
+    _value = value[1];
+}
 
-string FloatLiteral::decompile(int indent) const {
-    return to_string(_value);
+string CharLiteral::decompile(int indent) const {
+    return "'" + string(1, _value) + "'";
 }

@@ -39,8 +39,8 @@ module.exports = {
                 } else {
                     f_failed(file);
                     f_log(`- ${file} failed\n`);
-                    f_log(`First:\n${first}\n`);
-                    f_log(`Second:\n${second}\n`);
+                    f_log(`First:\n=>${first}<=\n`);
+                    f_log(`Second:\n=>${second}<=\n`);
                 }
             } catch (e) {
                 f_failed(file);

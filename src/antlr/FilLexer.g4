@@ -76,9 +76,7 @@ FSTRING:
             setText(text);
         }
 };
-CHARACTER: '\'' ~('\'' | '\\' | '\n') '\'' {
-    setText(std::to_string(getText()[1]));
-};
+CHARACTER: '\'' ~('\'' | '\\' | '\n') '\'';
 
 // Comments
 COMMENT: '//' (~('\n' | '\r'))* -> skip;

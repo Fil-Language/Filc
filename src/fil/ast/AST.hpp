@@ -85,6 +85,16 @@ namespace ast {
     private:
         float _value;
     };
+
+    class CharLiteral : public AbstractLiteral {
+    public:
+        explicit CharLiteral(const std::string &value);
+
+        std::string decompile(int indent) const override;
+
+    private:
+        char _value;
+    };
 }
 
 #endif //FILC_AST_HPP
