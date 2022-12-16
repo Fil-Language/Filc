@@ -9,16 +9,17 @@
 using namespace std;
 using namespace ast;
 
-VariableDeclaration::VariableDeclaration(bool isVal, const std::string &name, Type *type, Assignation *assignation)
+VariableDeclaration::VariableDeclaration(bool isVal, Identifier *name, Type *type, Assignation *assignation)
         : _isVal(isVal), _name(name), _type(type), _assignation(assignation) {}
 
 VariableDeclaration::~VariableDeclaration() {
+    delete _name;
     delete _type;
     delete _assignation;
 }
 
 string VariableDeclaration::decompile(int indent) const {
-    string result = (_isVal ? "val " : "var ") + _name;
+    string result = (_isVal ? "val " : "var ") + _name->decompile(indent);
 
     if (_type) {
         result += " : " + _type->decompile(indent);

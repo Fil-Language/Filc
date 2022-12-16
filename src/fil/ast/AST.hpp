@@ -35,26 +35,6 @@ namespace ast {
         bool _isExported;
     };
 
-    class Type : public AST {
-    public:
-        explicit Type(const std::string &name); // IDENTIFIER
-
-        Type(int arraySize, Type *subType); // IDENTIFIER '[' INTEGER ']'
-
-        explicit Type(Type *subType); // IDENTIFIER '*'
-
-        std::string decompile(int indent) const override;
-
-    private:
-        std::string _name;
-
-        bool _isArray;
-        int _arraySize;
-
-        bool _isPointer;
-        Type *_subType;
-    };
-
     class Program : public AST {
     public:
         Program(const std::string &module,
@@ -69,6 +49,40 @@ namespace ast {
         std::string _module;
         std::vector<Program *> _imports;
         std::vector<AbstractExpr *> _exprs;
+    };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class Identifier : public AbstractExpr {
+    public:
+        explicit Identifier(const std::string &name);
+
+        std::string decompile(int indent) const override;
+
+    private:
+        std::string _name;
+    };
+
+    class Type : public AST {
+    public:
+        explicit Type(Identifier *name); // IDENTIFIER
+
+        Type(int arraySize, Type *subType); // IDENTIFIER '[' INTEGER ']'
+
+        explicit Type(Type *subType); // IDENTIFIER '*'
+
+        ~Type();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        Identifier *_name;
+
+        bool _isArray;
+        int _arraySize;
+
+        bool _isPointer;
+        Type *_subType;
     };
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -149,7 +163,7 @@ namespace ast {
 
     class VariableDeclaration : public AbstractExpr {
     public:
-        VariableDeclaration(bool isVal, const std::string &name, Type *type, Assignation *assignation);
+        VariableDeclaration(bool isVal, Identifier *name, Type *type, Assignation *assignation);
 
         ~VariableDeclaration();
 
@@ -157,7 +171,7 @@ namespace ast {
 
     private:
         bool _isVal;
-        std::string _name;
+        Identifier *_name;
         Type *_type;
         Assignation *_assignation;
     };

@@ -73,7 +73,9 @@ expr returns[AbstractExpr *tree]
     | e3=assignation {
         $tree = $e3.tree;
     }
-    | IDENTIFIER
+    | e4=IDENTIFIER {
+        $tree = new Identifier($e4.text);
+    }
     | calcul
     | function
     | RETURN expr
@@ -147,7 +149,7 @@ number returns[AbstractLiteral *tree]
 variable_declaration returns[VariableDeclaration *tree]
 @init {
     bool isVal = false;
-    string name;
+    Identifier *name = nullptr;
     Type *vt = nullptr;
     Assignation *va = nullptr;
 }
@@ -157,7 +159,7 @@ variable_declaration returns[VariableDeclaration *tree]
     : (VAL {
         isVal = true;
     } | VAR) i=IDENTIFIER {
-        name = $i.text;
+        name = new Identifier($i.text);
     } ((COLON t=type {
         vt = $t.tree;
     }) | (COLON t=type {
@@ -179,7 +181,7 @@ type returns[Type *tree]
     $tree = prev;
 }
     : i=IDENTIFIER {
-        prev = new Type($i.text);
+        prev = new Type(new Identifier($i.text));
     } (LBRACK s=INTEGER RBRACK {
             prev = new Type(stoi($s.text), prev);
         }

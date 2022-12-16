@@ -9,14 +9,19 @@
 using namespace std;
 using namespace ast;
 
-Type::Type(const std::string &name)
+Type::Type(Identifier *name)
         : _name(name), _isArray(false), _isPointer(false), _arraySize(0), _subType(nullptr) {}
 
 Type::Type(int arraySize, Type *subType)
-        : _isArray(true), _isPointer(false), _arraySize(arraySize), _subType(subType) {}
+        : _name(nullptr), _isArray(true), _isPointer(false), _arraySize(arraySize), _subType(subType) {}
 
 Type::Type(Type *subType)
-        : _isArray(false), _isPointer(true), _arraySize(0), _subType(subType) {}
+        : _name(nullptr), _isArray(false), _isPointer(true), _arraySize(0), _subType(subType) {}
+
+Type::~Type() {
+    delete _name;
+    delete _subType;
+}
 
 string Type::decompile(int indent) const {
     if (_isPointer) {
@@ -24,6 +29,6 @@ string Type::decompile(int indent) const {
     } else if (_isArray) {
         return _subType->decompile(indent) + "[" + to_string(_arraySize) + "]";
     } else {
-        return _name;
+        return _name->decompile(indent);
     }
 }
