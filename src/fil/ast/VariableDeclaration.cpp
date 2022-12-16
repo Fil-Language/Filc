@@ -9,9 +9,15 @@
 using namespace std;
 using namespace ast;
 
-VariableDeclaration::VariableDeclaration(bool isVal, const std::string &name)
-        : _isVal(isVal), _name(name) {}
+VariableDeclaration::VariableDeclaration(bool isVal, const std::string &name, Type *type)
+        : _isVal(isVal), _name(name), _type(type) {}
 
 string VariableDeclaration::decompile(int indent) const {
-    return (_isVal ? "val " : "var ") + _name;
+    string result = (_isVal ? "val " : "var ") + _name;
+
+    if (_type) {
+        result += " : " + _type->decompile(indent);
+    }
+
+    return result;
 }

@@ -133,20 +133,38 @@ variable_declaration returns[VariableDeclaration *tree]
 @init {
     bool isVal = false;
     string name;
+    Type *vt = nullptr;
 }
 @after {
-    $tree = new VariableDeclaration(isVal, name);
+    $tree = new VariableDeclaration(isVal, name, vt);
 }
     : (VAL {
         isVal = true;
     } | VAR) i=IDENTIFIER {
         name = $i.text;
-    } ((COLON type) | (COLON type)? assignation);
+    } ((COLON t=type {
+        vt = $t.tree;
+    }) | (COLON t=type {
+        vt = $t.tree;
+    })? assignation);
 
 assignation : EQ expr;
 
-type: IDENTIFIER (LBRACK INTEGER RBRACK
-                 | STAR)*
+type returns[Type *tree]
+@init {
+    Type *prev = nullptr;
+}
+@after {
+    $tree = prev;
+}
+    : i=IDENTIFIER {
+        prev = new Type($i.text);
+    } (LBRACK s=INTEGER RBRACK {
+            prev = new Type(stoi($s.text), prev);
+        }
+        | STAR {
+            prev = new Type(prev);
+        })*
     | lambda_type;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

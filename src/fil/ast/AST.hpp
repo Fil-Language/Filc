@@ -35,6 +35,26 @@ namespace ast {
         bool _isExported;
     };
 
+    class Type : public AST {
+    public:
+        explicit Type(const std::string &name); // IDENTIFIER
+
+        Type(int arraySize, Type *subType); // IDENTIFIER '[' INTEGER ']'
+
+        explicit Type(Type *subType); // IDENTIFIER '*'
+
+        std::string decompile(int indent) const override;
+
+    private:
+        std::string _name;
+
+        bool _isArray;
+        int _arraySize;
+
+        bool _isPointer;
+        Type *_subType;
+    };
+
     class Program : public AST {
     public:
         Program(const std::string &module,
@@ -117,13 +137,14 @@ namespace ast {
 
     class VariableDeclaration : public AbstractExpr {
     public:
-        VariableDeclaration(bool isVal, const std::string &name);
+        VariableDeclaration(bool isVal, const std::string &name, Type *type);
 
         std::string decompile(int indent) const override;
 
     private:
         bool _isVal;
         std::string _name;
+        Type *_type;
     };
 }
 
