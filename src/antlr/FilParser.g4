@@ -241,14 +241,26 @@ pre_operator returns[Operator *tree]
 
 function returns[Function *tree]
     : d=function_declaration b=function_body {
-        $tree = new Function();
+        $tree = new Function($d.tree);
     };
 
-function_declaration : FUN IDENTIFIER LPAREN function_params? RPAREN function_type?;
+function_declaration returns[FunctionDeclaration *tree]
+@init {
+    Type *ft = nullptr;
+}
+@after {
+    $tree = new FunctionDeclaration(new Identifier($i.text), ft);
+}
+    : FUN i=IDENTIFIER LPAREN function_params? RPAREN (t=function_type {
+        ft = $t.tree;
+    })?;
 
 function_params : IDENTIFIER COLON type (COMMA function_params)*;
 
-function_type : COLON type;
+function_type returns[Type *tree]
+    : COLON t=type {
+        $tree = $t.tree;
+    };
 
 function_body : assignation
               | parenthesis_body

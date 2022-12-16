@@ -9,9 +9,12 @@
 using namespace std;
 using namespace ast;
 
-Function::Function() {}
+Function::Function(FunctionDeclaration *declaration)
+        : _declaration(declaration) {}
 
-Function::~Function() {}
+Function::~Function() {
+    delete _declaration;
+}
 
 string Function::decompile(int indent) const {
     return "fun ";

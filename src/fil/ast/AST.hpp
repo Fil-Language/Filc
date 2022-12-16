@@ -235,15 +235,29 @@ namespace ast {
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
+    class FunctionDeclaration : public AbstractExpr {
+    public:
+        FunctionDeclaration(Identifier *name, Type *type);
+
+        ~FunctionDeclaration();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        Identifier *_name;
+        Type *_type;
+    };
+
     class Function : public AbstractExpr {
     public:
-        Function();
+        Function(FunctionDeclaration *declaration);
 
         ~Function();
 
         std::string decompile(int indent) const override;
 
     private:
+        FunctionDeclaration *_declaration;
     };
 }
 
