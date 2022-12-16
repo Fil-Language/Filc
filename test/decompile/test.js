@@ -28,6 +28,7 @@ module.exports = {
 
                 const errs = fs.readFileSync('err.txt').toString();
                 if (errs !== '') {
+                    f_failed(file);
                     f_log(`- ${file} failed\n`);
                     f_log(`Error: ${errs}\n`);
                 } else

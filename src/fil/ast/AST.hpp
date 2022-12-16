@@ -102,8 +102,15 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-    private:
+    protected:
         std::string _value;
+    };
+
+    class FStringLiteral : public StringLiteral {
+    public:
+        explicit FStringLiteral(const std::string &value);
+
+        std::string decompile(int indent) const override;
     };
 }
 

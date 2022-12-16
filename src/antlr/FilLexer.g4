@@ -72,7 +72,7 @@ FSTRING:
     'f"' (STRING_CHAR | '\\"' | '\\\\')* '"' {
         {
             auto text = getText();
-            text = text.substr(1, text.size() - 2);
+            text = text.substr(2, text.size() - 3);
             setText(text);
         }
 };

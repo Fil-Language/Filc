@@ -104,7 +104,9 @@ literal returns[AbstractLiteral *tree]
     | l4=STRING {
         $tree = new StringLiteral($l4.text);
     }
-    | FSTRING
+    | l5=FSTRING {
+        $tree = new FStringLiteral($l5.text);
+    }
     ;
 
 boolean returns[BooleanLiteral *tree]
