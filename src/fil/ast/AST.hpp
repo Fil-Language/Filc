@@ -55,6 +55,16 @@ namespace ast {
 
     class AbstractLiteral : public AbstractExpr {
     };
+
+    class BooleanLiteral : public AbstractLiteral {
+    public:
+        explicit BooleanLiteral(bool value);
+
+        std::string decompile(int indent) const override;
+
+    private:
+        bool _value;
+    };
 }
 
 #endif //FILC_AST_HPP

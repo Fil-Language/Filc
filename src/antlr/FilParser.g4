@@ -92,14 +92,22 @@ expr returns[AbstractExpr *tree]
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 literal returns[AbstractLiteral *tree]
-    : boolean
+    : l1=boolean {
+        $tree = $l1.tree;
+    }
     | number
     | CHARACTER
     | STRING
     | FSTRING
     ;
 
-boolean : TRUE | FALSE;
+boolean returns[BooleanLiteral *tree]
+    : TRUE {
+        $tree = new BooleanLiteral(true);
+    }
+    | FALSE {
+        $tree = new BooleanLiteral(false);
+    };
 
 number : INTEGER | FLOAT;
 
