@@ -280,10 +280,15 @@ function_body returns[AbstractExpr *tree]
     : b1=assignation {
         $tree = $b1.tree;
     }
-    | parenthesis_body
+    | b2=parenthesis_body {
+        $tree = $b2.tree;
+    }
     | block_body;
 
-parenthesis_body : LPAREN expr RPAREN;
+parenthesis_body returns[AbstractExpr *tree]
+    : LPAREN e=expr {
+        $tree = $e.tree;
+    } RPAREN;
 
 block_body : LBRACE expr* RBRACE;
 
