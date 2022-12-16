@@ -20,11 +20,11 @@ module.exports = {
                 const path = __dirname + '/' + file;
 
                 // Decompile file first
-                const first = execSync(filc + ' ' + path + ' -d').toString();
+                const first = execSync(filc + ' ' + path + ' -d 2> err.txt').toString();
                 // Push first to temp file
                 fs.writeFileSync(__dirname + '/temp.fil', first);
                 // Decompile file second
-                const second = execSync(filc + ' ' + __dirname + '/temp.fil -d').toString();
+                const second = execSync(filc + ' ' + __dirname + '/temp.fil -d 2> err.txt').toString();
 
 
                 // Result
@@ -48,6 +48,7 @@ module.exports = {
 
         // Remove temp file
         fs.rmSync(__dirname + '/temp.fil');
+        fs.rmSync('err.txt');
 
         return passed === total;
     }
