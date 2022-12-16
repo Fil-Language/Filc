@@ -115,7 +115,9 @@ number returns[AbstractLiteral *tree]
     : i=INTEGER {
         $tree = new IntegerLiteral(stoi($i.text));
     }
-    | FLOAT;
+    | f=FLOAT {
+        $tree = new FloatLiteral(stof($f.text));
+    };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
