@@ -42,7 +42,10 @@ const f_log = (msg) => {
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 // Tests runs
 
+let test_time = 0;
 if (tests.length > 0) {
+    const start = Date.now();
+
     fs.rmSync('log.txt', {force: true});
     console.log(`Running ${tests.length} tests...`);
     for (const test of tests) {
@@ -74,6 +77,8 @@ if (tests.length > 0) {
             f_log(`${test.file} not found\n`);
         }
     }
+
+    test_time = Date.now() - start;
 } else {
     console.log('No tests found'.red);
 }
@@ -85,6 +90,7 @@ console.log('\n=== Conclusion ===\n'.magenta);
 
 console.log('Runs  : ' + ((passed === total) ? ' PASS '.bgGreen : ' FAIL '.bgRed) + `\t${passed}/${total}`);
 console.log('Tests : ' + ((n_passed === n_total) ? ' PASS '.bgGreen : ' FAIL '.bgRed) + `\t${n_passed}/${n_total}`);
+console.log('Time  : ' + `${test_time}ms`.bgBlue);
 
 console.log('\n');
 
