@@ -241,7 +241,7 @@ pre_operator returns[Operator *tree]
 
 function returns[Function *tree]
     : d=function_declaration b=function_body {
-        $tree = new Function($d.tree);
+        $tree = new Function($d.tree, $b.tree);
     };
 
 function_declaration returns[FunctionDeclaration *tree]
@@ -276,9 +276,12 @@ function_type returns[Type *tree]
         $tree = $t.tree;
     };
 
-function_body : assignation
-              | parenthesis_body
-              | block_body;
+function_body returns[AbstractExpr *tree]
+    : b1=assignation {
+        $tree = $b1.tree;
+    }
+    | parenthesis_body
+    | block_body;
 
 parenthesis_body : LPAREN expr RPAREN;
 

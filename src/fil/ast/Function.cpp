@@ -9,13 +9,14 @@
 using namespace std;
 using namespace ast;
 
-Function::Function(FunctionDeclaration *declaration)
-        : _declaration(declaration) {}
+Function::Function(FunctionDeclaration *declaration, AbstractExpr *body)
+        : _declaration(declaration), _body(body) {}
 
 Function::~Function() {
     delete _declaration;
+    delete _body;
 }
 
 string Function::decompile(int indent) const {
-    return "fun ";
+    return "fun " + _declaration->decompile(indent) + " " + _body->decompile(indent);
 }

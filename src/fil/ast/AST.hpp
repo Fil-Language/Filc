@@ -264,7 +264,7 @@ namespace ast {
 
     class Function : public AbstractExpr {
     public:
-        Function(FunctionDeclaration *declaration);
+        Function(FunctionDeclaration *declaration, AbstractExpr *body);
 
         ~Function();
 
@@ -272,6 +272,7 @@ namespace ast {
 
     private:
         FunctionDeclaration *_declaration;
+        AbstractExpr *_body;
     };
 }
 
