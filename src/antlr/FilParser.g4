@@ -95,7 +95,9 @@ literal returns[AbstractLiteral *tree]
     : l1=boolean {
         $tree = $l1.tree;
     }
-    | number
+    | l2=number {
+        $tree = $l2.tree;
+    }
     | CHARACTER
     | STRING
     | FSTRING
@@ -109,7 +111,11 @@ boolean returns[BooleanLiteral *tree]
         $tree = new BooleanLiteral(false);
     };
 
-number : INTEGER | FLOAT;
+number returns[AbstractLiteral *tree]
+    : i=INTEGER {
+        $tree = new IntegerLiteral(stoi($i.text));
+    }
+    | FLOAT;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

@@ -65,6 +65,16 @@ namespace ast {
     private:
         bool _value;
     };
+
+    class IntegerLiteral : public AbstractLiteral {
+    public:
+        explicit IntegerLiteral(int value);
+
+        std::string decompile(int indent) const override;
+
+    private:
+        int _value;
+    };
 }
 
 #endif //FILC_AST_HPP
