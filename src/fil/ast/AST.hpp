@@ -95,6 +95,16 @@ namespace ast {
     private:
         char _value;
     };
+
+    class StringLiteral : public AbstractLiteral {
+    public:
+        explicit StringLiteral(const std::string &value);
+
+        std::string decompile(int indent) const override;
+
+    private:
+        std::string _value;
+    };
 }
 
 #endif //FILC_AST_HPP
