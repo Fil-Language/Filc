@@ -359,7 +359,9 @@ condition returns[AbstractExpr *tree]
     : i=if_ {
         $tree = $i.tree;
     }
-    | switch_;
+    | s=switch_ {
+        $tree = $s.tree;
+    };
 
 if_ returns[If *tree]
 @init {
@@ -386,7 +388,10 @@ if_body returns[AbstractExpr *tree]
         $tree = $b2.tree;
     };
 
-switch_ : SWITCH if_condition switch_body;
+switch_ returns[Switch *tree]
+    : SWITCH c=if_condition switch_body {
+        $tree = new Switch($c.tree);
+    };
 
 switch_body : LBRACE switch_case* RBRACE;
 

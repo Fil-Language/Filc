@@ -355,6 +355,20 @@ namespace ast {
         AbstractExpr *_then;
         AbstractExpr *_else;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class Switch : public AbstractExpr {
+    public:
+        Switch(AbstractExpr *condition);
+
+        ~Switch();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        AbstractExpr *_condition;
+    };
 }
 
 #endif //FILC_AST_HPP
