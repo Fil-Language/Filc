@@ -64,15 +64,20 @@ namespace ast {
     };
 
     class AbstractType : public AST {
+    protected:
+        AbstractType() = default;
+
+    public:
+        virtual ~AbstractType() = default;
     };
 
     class Type : public AbstractType {
     public:
         explicit Type(Identifier *name); // IDENTIFIER
 
-        Type(int arraySize, Type *subType); // IDENTIFIER '[' INTEGER ']'
+        Type(int arraySize, AbstractType *subType); // IDENTIFIER '[' INTEGER ']'
 
-        explicit Type(Type *subType); // IDENTIFIER '*'
+        explicit Type(AbstractType *subType); // IDENTIFIER '*'
 
         ~Type();
 
@@ -85,7 +90,7 @@ namespace ast {
         int _arraySize;
 
         bool _isPointer;
-        Type *_subType;
+        AbstractType *_subType;
     };
 
     class LambdaType : public AbstractType {
@@ -193,7 +198,7 @@ namespace ast {
 
     class VariableDeclaration : public AbstractExpr {
     public:
-        VariableDeclaration(bool isVal, Identifier *name, Type *type, Assignation *assignation);
+        VariableDeclaration(bool isVal, Identifier *name, AbstractType *type, Assignation *assignation);
 
         ~VariableDeclaration();
 
@@ -202,7 +207,7 @@ namespace ast {
     private:
         bool _isVal;
         Identifier *_name;
-        Type *_type;
+        AbstractType *_type;
         Assignation *_assignation;
     };
 
@@ -267,7 +272,7 @@ namespace ast {
 
     class FunctionParam : public AST {
     public:
-        FunctionParam(Identifier *name, Type *type);
+        FunctionParam(Identifier *name, AbstractType *type);
 
         ~FunctionParam();
 
@@ -275,12 +280,12 @@ namespace ast {
 
     private:
         Identifier *_name;
-        Type *_type;
+        AbstractType *_type;
     };
 
     class FunctionDeclaration : public AbstractExpr {
     public:
-        FunctionDeclaration(Identifier *name, const std::vector<FunctionParam *> &params, Type *type);
+        FunctionDeclaration(Identifier *name, const std::vector<FunctionParam *> &params, AbstractType *type);
 
         ~FunctionDeclaration();
 
@@ -289,7 +294,7 @@ namespace ast {
     private:
         Identifier *_name;
         std::vector<FunctionParam *> _params;
-        Type *_type;
+        AbstractType *_type;
     };
 
     class Function : public AbstractExpr {
@@ -323,7 +328,7 @@ namespace ast {
 
     class Lambda : public AbstractExpr {
     public:
-        Lambda(const std::vector<FunctionParam *> &params, Type *type, AbstractExpr *body);
+        Lambda(const std::vector<FunctionParam *> &params, AbstractType *type, AbstractExpr *body);
 
         ~Lambda();
 
@@ -331,7 +336,7 @@ namespace ast {
 
     private:
         std::vector<FunctionParam *> _params;
-        Type *_type;
+        AbstractType *_type;
         AbstractExpr *_body;
     };
 }

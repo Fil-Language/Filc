@@ -9,7 +9,7 @@
 using namespace std;
 using namespace ast;
 
-FunctionParam::FunctionParam(Identifier *name, Type *type)
+FunctionParam::FunctionParam(Identifier *name, AbstractType *type)
         : _name(name), _type(type) {}
 
 FunctionParam::~FunctionParam() {

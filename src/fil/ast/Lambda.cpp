@@ -9,7 +9,7 @@
 using namespace std;
 using namespace ast;
 
-Lambda::Lambda(const vector<FunctionParam *> &params, Type *type, AbstractExpr *body)
+Lambda::Lambda(const vector<FunctionParam *> &params, AbstractType *type, AbstractExpr *body)
         : _params(params), _type(type), _body(body) {}
 
 Lambda::~Lambda() {

@@ -12,10 +12,10 @@ using namespace ast;
 Type::Type(Identifier *name)
         : _name(name), _isArray(false), _isPointer(false), _arraySize(0), _subType(nullptr) {}
 
-Type::Type(int arraySize, Type *subType)
+Type::Type(int arraySize, AbstractType *subType)
         : _name(nullptr), _isArray(true), _isPointer(false), _arraySize(arraySize), _subType(subType) {}
 
-Type::Type(Type *subType)
+Type::Type(AbstractType *subType)
         : _name(nullptr), _isArray(false), _isPointer(true), _arraySize(0), _subType(subType) {}
 
 Type::~Type() {

@@ -9,7 +9,7 @@
 using namespace std;
 using namespace ast;
 
-VariableDeclaration::VariableDeclaration(bool isVal, Identifier *name, Type *type, Assignation *assignation)
+VariableDeclaration::VariableDeclaration(bool isVal, Identifier *name, AbstractType *type, Assignation *assignation)
         : _isVal(isVal), _name(name), _type(type), _assignation(assignation) {}
 
 VariableDeclaration::~VariableDeclaration() {

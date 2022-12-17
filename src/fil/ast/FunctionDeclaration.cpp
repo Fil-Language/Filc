@@ -9,7 +9,7 @@
 using namespace std;
 using namespace ast;
 
-FunctionDeclaration::FunctionDeclaration(Identifier *name, const vector<FunctionParam *> &params, Type *type)
+FunctionDeclaration::FunctionDeclaration(Identifier *name, const vector<FunctionParam *> &params, AbstractType *type)
         : _name(name), _params(params), _type(type) {}
 
 FunctionDeclaration::~FunctionDeclaration() {
