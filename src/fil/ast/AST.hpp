@@ -430,15 +430,30 @@ namespace ast {
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
+    class ForIterCondition : public AST {
+    public:
+        ForIterCondition(bool isVal, Identifier *iterator, Identifier *iterable);
+
+        ~ForIterCondition();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        bool _isVal;
+        Identifier *_iterator;
+        Identifier *_iterable;
+    };
+
     class ForIter : public AbstractExpr {
     public:
-        ForIter(AbstractExpr *body);
+        ForIter(ForIterCondition *condition, AbstractExpr *body);
 
         ~ForIter();
 
         std::string decompile(int indent) const override;
 
     private:
+        ForIterCondition *_condition;
         AbstractExpr *_body;
     };
 }

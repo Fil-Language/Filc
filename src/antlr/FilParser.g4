@@ -457,11 +457,19 @@ for_i_condition returns[ForICondition *tree]
     })? RPAREN;
 
 for_iter returns[ForIter *tree]
-    : FOR for_iter_condition b=if_body {
-        $tree = new ForIter($b.tree);
+    : FOR c=for_iter_condition b=if_body {
+        $tree = new ForIter($c.tree, $b.tree);
     };
 
-for_iter_condition : LPAREN (VAL | VAR) IDENTIFIER COLON IDENTIFIER RPAREN;
+for_iter_condition returns[ForIterCondition *tree]
+@init {
+    bool isVal = false;
+}
+    : LPAREN (VAL {
+        isVal = true;
+    } | VAR) i1=IDENTIFIER COLON i2=IDENTIFIER RPAREN {
+        $tree = new ForIterCondition(isVal, new Identifier($i1.text), new Identifier($i2.text));
+    };
 
 while_ : WHILE if_condition if_body;
 
