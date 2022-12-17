@@ -401,15 +401,30 @@ namespace ast {
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
+    class ForICondition : public AST {
+    public:
+        ForICondition(VariableDeclaration *declaration, AbstractExpr *condition, AbstractExpr *increment);
+
+        ~ForICondition();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        VariableDeclaration *_declaration;
+        AbstractExpr *_condition;
+        AbstractExpr *_increment;
+    };
+
     class ForI : public AbstractExpr {
     public:
-        ForI(AbstractExpr *body);
+        ForI(ForICondition *condition, AbstractExpr *body);
 
         ~ForI();
 
         std::string decompile(int indent) const override;
 
     private:
+        ForICondition *_condition;
         AbstractExpr *_body;
     };
 }

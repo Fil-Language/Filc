@@ -433,11 +433,26 @@ loop returns[AbstractExpr *tree]
     | while_;
 
 for_i returns[ForI *tree]
-    : FOR for_i_condition b=if_body {
-        $tree = new ForI($b.tree);
+    : FOR c=for_i_condition b=if_body {
+        $tree = new ForI($c.tree, $b.tree);
     };
 
-for_i_condition : LPAREN variable_declaration? SEMI expr? SEMI expr? RPAREN;
+for_i_condition returns[ForICondition *tree]
+@init {
+    VariableDeclaration *decl = nullptr;
+    AbstractExpr *cond = nullptr;
+    AbstractExpr *iter = nullptr;
+}
+@after {
+    $tree = new ForICondition(decl, cond, iter);
+}
+    : LPAREN (d=variable_declaration {
+        decl = $d.tree;
+    })? SEMI (c=expr {
+        cond = $c.tree;
+    })? SEMI (i=expr {
+        iter = $i.tree;
+    })? RPAREN;
 
 for_iter : FOR for_iter_condition if_body;
 

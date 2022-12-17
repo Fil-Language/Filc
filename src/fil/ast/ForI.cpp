@@ -9,13 +9,14 @@
 using namespace std;
 using namespace ast;
 
-ForI::ForI(AbstractExpr *body)
-        : _body(body) {}
+ForI::ForI(ForICondition *condition, AbstractExpr *body)
+        : _condition(condition), _body(body) {}
 
 ForI::~ForI() {
+    delete _condition;
     delete _body;
 }
 
 string ForI::decompile(int indent) const {
-    return _body->decompile(indent);
+    return "for (" + _condition->decompile(indent) + ") " + _body->decompile(indent);
 }
