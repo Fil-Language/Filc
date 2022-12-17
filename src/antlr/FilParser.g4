@@ -94,7 +94,9 @@ expr returns[AbstractExpr *tree]
     | e10=function_call {
         $tree = $e10.tree;
     }
-    | cast
+    | e11=cast {
+        $tree = $e11.tree;
+    }
     | parenthesis_body
     // Rule for binary calcul, need to be here to avoid left-recursion errors
     // Long but needed, the higher the most priority, the lower the less priority
@@ -508,4 +510,7 @@ function_call_params returns[vector<AbstractExpr *> tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-cast : LPAREN type RPAREN expr;
+cast returns[Cast *tree]
+    : LPAREN t=type RPAREN e=expr {
+        $tree = new Cast($t.tree, $e.tree);
+    };

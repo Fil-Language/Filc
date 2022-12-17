@@ -486,6 +486,21 @@ namespace ast {
         Identifier *_name;
         std::vector<AbstractExpr *> _args;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class Cast : public AbstractExpr {
+    public:
+        Cast(AbstractType *type, AbstractExpr *expr);
+
+        ~Cast();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        AbstractType *_type;
+        AbstractExpr *_expr;
+    };
 }
 
 #endif //FILC_AST_HPP
