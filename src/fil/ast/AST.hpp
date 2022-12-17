@@ -288,6 +288,20 @@ namespace ast {
         FunctionDeclaration *_declaration;
         AbstractExpr *_body;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class Return : public AbstractExpr {
+    public:
+        explicit Return(AbstractExpr *expr);
+
+        ~Return();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        AbstractExpr *_expr;
+    };
 }
 
 #endif //FILC_AST_HPP

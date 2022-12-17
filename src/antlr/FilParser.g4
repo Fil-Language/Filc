@@ -82,7 +82,9 @@ expr returns[AbstractExpr *tree]
     | e6=function {
         $tree = $e6.tree;
     }
-    | RETURN expr
+    | RETURN e7=expr {
+        $tree = new Return($e7.tree);
+    }
     | lambda
     | control
     | function_call
