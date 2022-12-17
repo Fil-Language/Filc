@@ -158,7 +158,7 @@ variable_declaration returns[VariableDeclaration *tree]
 @init {
     bool isVal = false;
     Identifier *name = nullptr;
-    Type *vt = nullptr;
+    AbstractType *vt = nullptr;
     Assignation *va = nullptr;
 }
 @after {
@@ -181,9 +181,9 @@ assignation returns[Assignation *tree]
         $tree = new Assignation($e.tree);
     };
 
-type returns[Type *tree]
+type returns[AbstractType *tree]
 @init {
-    Type *prev = nullptr;
+    AbstractType *prev = nullptr;
 }
 @after {
     $tree = prev;
@@ -196,7 +196,9 @@ type returns[Type *tree]
         | STAR {
             prev = new Type(prev);
         })*
-    | lambda_type;
+    | t=lambda_type {
+        prev = $t.tree;
+    };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
@@ -250,7 +252,7 @@ function returns[Function *tree]
 
 function_declaration returns[FunctionDeclaration *tree]
 @init {
-    Type *ft = nullptr;
+    AbstractType *ft = nullptr;
     vector<FunctionParam *> params;
 }
 @after {
@@ -275,7 +277,7 @@ function_params returns[vector<FunctionParam *> tree]
         res.push_back(new FunctionParam(new Identifier($ii.text), $ti.tree));
     })?;
 
-function_type returns[Type *tree]
+function_type returns[AbstractType *tree]
     : COLON t=type {
         $tree = $t.tree;
     };
@@ -312,7 +314,7 @@ block_body returns[BlockBody *tree]
 lambda returns[Lambda *tree]
 @init {
     vector<FunctionParam *> lp;
-    Type *lt = nullptr;
+    AbstractType *lt = nullptr;
     AbstractExpr *lb = nullptr;
 }
 @after {
