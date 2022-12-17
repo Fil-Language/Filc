@@ -79,7 +79,7 @@ namespace ast {
 
         explicit Type(AbstractType *subType); // IDENTIFIER '*'
 
-        ~Type();
+        ~Type() override;
 
         std::string decompile(int indent) const override;
 
@@ -97,7 +97,7 @@ namespace ast {
     public:
         LambdaType(const std::vector<AbstractType *> &args, AbstractType *ret);
 
-        ~LambdaType();
+        ~LambdaType() override;
 
         std::string decompile(int indent) const override;
 
@@ -358,15 +358,31 @@ namespace ast {
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
+    class SwitchPattern : public AST {
+    public:
+        SwitchPattern();
+
+        explicit SwitchPattern(AbstractLiteral *literal);
+
+        ~SwitchPattern();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        bool _isDefault;
+        AbstractLiteral *_literal;
+    };
+
     class SwitchCase : public AbstractExpr {
     public:
-        explicit SwitchCase(AbstractExpr *body);
+        explicit SwitchCase(SwitchPattern *pattern, AbstractExpr *body);
 
         ~SwitchCase();
 
         std::string decompile(int indent) const override;
 
     private:
+        SwitchPattern *_pattern;
         AbstractExpr *_body;
     };
 

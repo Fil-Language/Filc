@@ -406,9 +406,9 @@ switch_case returns[SwitchCase *tree]
     AbstractExpr *body = nullptr;
 }
 @after {
-    $tree = new SwitchCase(body);
+    $tree = new SwitchCase($p.tree, body);
 }
-    : switch_pattern ARROW (b1=expr {
+    : p=switch_pattern ARROW (b1=expr {
         body = $b1.tree;
     } | b2=parenthesis_body {
         body = $b2.tree;
@@ -416,7 +416,12 @@ switch_case returns[SwitchCase *tree]
         body = $b3.tree;
     });
 
-switch_pattern : DEFAULT | literal;
+switch_pattern returns[SwitchPattern *tree]
+    : DEFAULT {
+        $tree = new SwitchPattern();
+    } | l=literal {
+        $tree = new SwitchPattern($l.tree);
+    };
 
 loop : for_i | for_iter | while_;
 

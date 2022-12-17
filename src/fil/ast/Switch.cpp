@@ -20,7 +20,7 @@ Switch::~Switch() {
 }
 
 string Switch::decompile(int indent) const {
-    string res = "switch (" + _condition->decompile(indent) + " {\n";
+    string res = "switch (" + _condition->decompile(indent) + ") {\n";
 
     for (auto &c: _cases) {
         res += c->decompile(indent);
