@@ -432,7 +432,9 @@ loop returns[AbstractExpr *tree]
     | l2=for_iter {
         $tree = $l2.tree;
     }
-    | while_;
+    | l3=while_ {
+        $tree = $l3.tree;
+    };
 
 for_i returns[ForI *tree]
     : FOR c=for_i_condition b=if_body {
@@ -471,7 +473,10 @@ for_iter_condition returns[ForIterCondition *tree]
         $tree = new ForIterCondition(isVal, new Identifier($i1.text), new Identifier($i2.text));
     };
 
-while_ : WHILE if_condition if_body;
+while_ returns[While *tree]
+    : WHILE c=if_condition b=if_body {
+        $tree = new While($c.tree, $b.tree);
+    };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

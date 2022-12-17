@@ -456,6 +456,21 @@ namespace ast {
         ForIterCondition *_condition;
         AbstractExpr *_body;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class While : public AbstractExpr {
+    public:
+        While(AbstractExpr *condition, AbstractExpr *body);
+
+        ~While();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        AbstractExpr *_condition;
+        AbstractExpr *_body;
+    };
 }
 
 #endif //FILC_AST_HPP
