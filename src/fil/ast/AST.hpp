@@ -63,7 +63,10 @@ namespace ast {
         std::string _name;
     };
 
-    class Type : public AST {
+    class AbstractType : public AST {
+    };
+
+    class Type : public AbstractType {
     public:
         explicit Type(Identifier *name); // IDENTIFIER
 
@@ -83,6 +86,19 @@ namespace ast {
 
         bool _isPointer;
         Type *_subType;
+    };
+
+    class LambdaType : public AbstractType {
+    public:
+        LambdaType(const std::vector<AbstractType *> &args, AbstractType *ret);
+
+        ~LambdaType();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        std::vector<AbstractType *> _args;
+        AbstractType *_ret;
     };
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

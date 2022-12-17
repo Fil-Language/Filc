@@ -330,7 +330,18 @@ lambda returns[Lambda *tree]
         lb = $b3.tree;
     });
 
-lambda_type: LPAREN (type (COMMA type)*)? RPAREN ARROW type;
+lambda_type returns[LambdaType *tree]
+@init {
+    vector<AbstractType *> args;
+}
+@after {
+    $tree = new LambdaType(args, $r.tree);
+}
+    : LPAREN (a1=type {
+        args.push_back($a1.tree);
+    } (COMMA ai=type {
+        args.push_back($ai.tree);
+    })*)? RPAREN ARROW r=type;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
