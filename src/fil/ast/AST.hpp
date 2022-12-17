@@ -471,6 +471,21 @@ namespace ast {
         AbstractExpr *_condition;
         AbstractExpr *_body;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class FunctionCall : public AbstractExpr {
+    public:
+        FunctionCall(Identifier *name, const std::vector<AbstractExpr *> &args);
+
+        ~FunctionCall();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        Identifier *_name;
+        std::vector<AbstractExpr *> _args;
+    };
 }
 
 #endif //FILC_AST_HPP

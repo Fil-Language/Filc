@@ -91,7 +91,9 @@ expr returns[AbstractExpr *tree]
     | e9=control {
         $tree = $e9.tree;
     }
-    | function_call
+    | e10=function_call {
+        $tree = $e10.tree;
+    }
     | cast
     | parenthesis_body
     // Rule for binary calcul, need to be here to avoid left-recursion errors
@@ -480,8 +482,29 @@ while_ returns[While *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-function_call : IDENTIFIER LPAREN function_call_params? RPAREN;
-function_call_params : expr (COMMA expr)*;
+function_call returns[FunctionCall *tree]
+@init {
+    vector<AbstractExpr *> args;
+}
+@after {
+    $tree = new FunctionCall(new Identifier($n.text), args);
+}
+    : n=IDENTIFIER LPAREN (p=function_call_params {
+        args = $p.tree;
+    })? RPAREN;
+
+function_call_params returns[vector<AbstractExpr *> tree]
+@init {
+    vector<AbstractExpr *> res;
+}
+@afer {
+    $tree = res;
+}
+    : e1=expr {
+        res.push_back($e1.tree);
+    } (COMMA ei=expr {
+        res.push_back($ei.tree);
+    })*;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
