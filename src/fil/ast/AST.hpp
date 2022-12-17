@@ -358,9 +358,21 @@ namespace ast {
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
+    class SwitchCase : public AbstractExpr {
+    public:
+        explicit SwitchCase(AbstractExpr *body);
+
+        ~SwitchCase();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        AbstractExpr *_body;
+    };
+
     class Switch : public AbstractExpr {
     public:
-        Switch(AbstractExpr *condition);
+        Switch(AbstractExpr *condition, const std::vector<SwitchCase *> &cases);
 
         ~Switch();
 
@@ -368,6 +380,7 @@ namespace ast {
 
     private:
         AbstractExpr *_condition;
+        std::vector<SwitchCase *> _cases;
     };
 }
 

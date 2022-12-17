@@ -389,13 +389,32 @@ if_body returns[AbstractExpr *tree]
     };
 
 switch_ returns[Switch *tree]
-    : SWITCH c=if_condition switch_body {
-        $tree = new Switch($c.tree);
+    : SWITCH c=if_condition b=switch_body {
+        $tree = new Switch($c.tree, $b.tree);
     };
 
-switch_body : LBRACE switch_case* RBRACE;
+switch_body returns[vector<SwitchCase *> tree]
+@init {
+    vector<SwitchCase *> res;
+}
+    : LBRACE (c=switch_case {
+        res.push_back($c.tree);
+    })* RBRACE;
 
-switch_case : switch_pattern ARROW (expr | parenthesis_body | block_body);
+switch_case returns[SwitchCase *tree]
+@init {
+    AbstractExpr *body = nullptr;
+}
+@after {
+    $tree = new SwitchCase(body);
+}
+    : switch_pattern ARROW (b1=expr {
+        body = $b1.tree;
+    } | b2=parenthesis_body {
+        body = $b2.tree;
+    } | b3=block_body {
+        body = $b3.tree;
+    });
 
 switch_pattern : DEFAULT | literal;
 

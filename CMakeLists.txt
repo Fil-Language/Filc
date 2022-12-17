@@ -70,7 +70,7 @@ add_executable(filc
         src/fil/ast/Operator.cpp src/fil/ast/UnaryCalcul.cpp src/fil/ast/Function.cpp
         src/fil/ast/FunctionDeclaration.cpp src/fil/ast/FunctionParam.cpp src/fil/ast/BlockBody.cpp
         src/fil/ast/Return.cpp src/fil/ast/Lambda.cpp src/fil/ast/LambdaType.cpp src/fil/ast/If.cpp
-        src/fil/ast/Switch.cpp)
+        src/fil/ast/Switch.cpp src/fil/ast/SwitchCase.cpp)
 target_link_libraries(filc antlr4_static)
 
 target_compile_options(filc PUBLIC)
