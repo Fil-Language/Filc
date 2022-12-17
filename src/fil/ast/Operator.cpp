@@ -19,6 +19,52 @@ Operator::~Operator() {
     delete _index;
 }
 
+string to_string(Operator::Op op) {
+    switch (op) {
+        case Operator::STAR:
+            return "*";
+        case Operator::PLUSPLUS:
+            return "++";
+        case Operator::MINUSMINUS:
+            return "--";
+        case Operator::REF:
+            return "&";
+        case Operator::NOT:
+            return "!";
+        case Operator::AND:
+            return "&&";
+        case Operator::OR:
+            return "||";
+        case Operator::LESS:
+            return "<";
+        case Operator::GREATER:
+            return ">";
+        case Operator::EQEQ:
+            return "==";
+        case Operator::LEQ:
+            return "<=";
+        case Operator::GEQ:
+            return ">=";
+        case Operator::NEQ:
+            return "!=";
+        case Operator::FLEFT:
+            return "<<";
+        case Operator::FRIGHT:
+            return ">>";
+        case Operator::PLUS:
+            return "+";
+        case Operator::MINUS:
+            return "-";
+        case Operator::DIV:
+            return "/";
+        case Operator::MOD:
+            return "%";
+        case Operator::ARRAY:
+        default:
+            return "";
+    }
+}
+
 string Operator::decompile(int indent) const {
     if (_op == ARRAY) {
         return "[" + _index->decompile(indent) + "]";
