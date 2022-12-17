@@ -331,9 +331,9 @@ function_body returns[AbstractExpr *tree]
         $tree = $b3.tree;
     };
 
-parenthesis_body returns[AbstractExpr *tree]
+parenthesis_body returns[ParenthesisBody *tree]
     : LPAREN e=expr {
-        $tree = $e.tree;
+        $tree = new ParenthesisBody($e.tree);
     } RPAREN;
 
 block_body returns[BlockBody *tree]

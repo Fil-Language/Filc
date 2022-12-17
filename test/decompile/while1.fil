@@ -1,4 +1,4 @@
-module while
+module while1
 
 var i = 1
 var res = 0

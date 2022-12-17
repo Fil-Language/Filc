@@ -72,7 +72,7 @@ add_executable(filc
         src/fil/ast/Return.cpp src/fil/ast/Lambda.cpp src/fil/ast/LambdaType.cpp src/fil/ast/If.cpp
         src/fil/ast/Switch.cpp src/fil/ast/SwitchCase.cpp src/fil/ast/SwitchPattern.cpp src/fil/ast/ForI.cpp
         src/fil/ast/ForICondition.cpp src/fil/ast/ForIter.cpp src/fil/ast/ForIterCondition.cpp src/fil/ast/While.cpp
-        src/fil/ast/FunctionCall.cpp src/fil/ast/Cast.cpp src/fil/ast/BinaryCalcul.cpp)
+        src/fil/ast/FunctionCall.cpp src/fil/ast/Cast.cpp src/fil/ast/BinaryCalcul.cpp src/fil/ast/ParenthesisBody.cpp)
 target_link_libraries(filc antlr4_static)
 
 target_compile_options(filc PUBLIC)

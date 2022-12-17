@@ -120,6 +120,18 @@ namespace ast {
         std::vector<AbstractExpr *> _exprs;
     };
 
+    class ParenthesisBody : public AbstractExpr {
+    public:
+        explicit ParenthesisBody(AbstractExpr *expr);
+
+        ~ParenthesisBody();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        AbstractExpr *_expr;
+    };
+
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     class AbstractLiteral : public AbstractExpr {
