@@ -88,7 +88,9 @@ expr returns[AbstractExpr *tree]
     | e8=lambda {
         $tree = $e8.tree;
     }
-    | control
+    | e9=control {
+        $tree = $e9.tree;
+    }
     | function_call
     | cast
     | parenthesis_body
@@ -347,15 +349,42 @@ lambda_type returns[LambdaType *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-control : condition | loop;
+control returns[AbstractExpr *tree]
+    : c=condition {
+        $tree = $c.tree;
+    }
+    | loop;
 
-condition : if_ | switch_;
+condition returns[AbstractExpr *tree]
+    : i=if_ {
+        $tree = $i.tree;
+    }
+    | switch_;
 
-if_ : IF if_condition if_body (ELSE (if_ | if_body))?;
+if_ returns[If *tree]
+@init {
+    AbstractExpr *else_ = nullptr;
+}
+@after {
+    $tree = new If($c.tree, $b.tree, else_);
+}
+    : IF c=if_condition b=if_body (ELSE (e1=if_ {
+        else_ = $e1.tree;
+    } | e2=if_body {
+        else_ = $e2.tree;
+    }))?;
 
-if_condition : LPAREN expr RPAREN;
+if_condition returns[AbstractExpr *tree]
+    : LPAREN e=expr {
+        $tree = $e.tree;
+    } RPAREN;
 
-if_body : expr | block_body;
+if_body returns[AbstractExpr *tree]
+    : b1=expr {
+        $tree = $b1.tree;
+    } | b2=block_body {
+        $tree = $b2.tree;
+    };
 
 switch_ : SWITCH if_condition switch_body;
 

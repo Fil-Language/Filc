@@ -339,6 +339,22 @@ namespace ast {
         AbstractType *_type;
         AbstractExpr *_body;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class If : public AbstractExpr {
+    public:
+        If(AbstractExpr *condition, AbstractExpr *then, AbstractExpr *else_);
+
+        ~If();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        AbstractExpr *_condition;
+        AbstractExpr *_then;
+        AbstractExpr *_else;
+    };
 }
 
 #endif //FILC_AST_HPP
