@@ -97,7 +97,9 @@ expr returns[AbstractExpr *tree]
     | e11=cast {
         $tree = $e11.tree;
     }
-    | parenthesis_body
+    | e12=parenthesis_body {
+        $tree = $e12.tree;
+    }
     // Rule for binary calcul, need to be here to avoid left-recursion errors
     // Long but needed, the higher the most priority, the lower the less priority
     // The groups are for operators with same priority
