@@ -398,6 +398,20 @@ namespace ast {
         AbstractExpr *_condition;
         std::vector<SwitchCase *> _cases;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class ForI : public AbstractExpr {
+    public:
+        ForI(AbstractExpr *body);
+
+        ~ForI();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        AbstractExpr *_body;
+    };
 }
 
 #endif //FILC_AST_HPP

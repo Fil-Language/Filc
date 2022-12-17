@@ -353,7 +353,9 @@ control returns[AbstractExpr *tree]
     : c=condition {
         $tree = $c.tree;
     }
-    | loop;
+    | l=loop {
+        $tree = $l.tree;
+    };
 
 condition returns[AbstractExpr *tree]
     : i=if_ {
@@ -423,9 +425,17 @@ switch_pattern returns[SwitchPattern *tree]
         $tree = new SwitchPattern($l.tree);
     };
 
-loop : for_i | for_iter | while_;
+loop returns[AbstractExpr *tree]
+    : l1=for_i {
+        $tree = $l1.tree;
+    }
+    | for_iter
+    | while_;
 
-for_i : FOR for_i_condition if_body;
+for_i returns[ForI *tree]
+    : FOR for_i_condition b=if_body {
+        $tree = new ForI($b.tree);
+    };
 
 for_i_condition : LPAREN variable_declaration? SEMI expr? SEMI expr? RPAREN;
 
