@@ -104,24 +104,54 @@ expr returns[AbstractExpr *tree]
     // Long but needed, the higher the most priority, the lower the less priority
     // The groups are for operators with same priority
     // TODO : find a way to move this part in another rule without the left-recursion error
-    | expr STAR expr
-    | expr DIV expr
-    | expr MOD expr
+    | b1=expr STAR b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::STAR), $b2.tree);
+    }
+    | b1=expr DIV b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::DIV), $b2.tree);
+    }
+    | b1=expr MOD b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::MOD), $b2.tree);
+    }
 
-    | expr PLUS expr
-    | expr MINUS expr
+    | b1=expr PLUS b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::PLUS), $b2.tree);
+    }
+    | b1=expr MINUS b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::MINUS), $b2.tree);
+    }
 
-    | expr FLEFT expr
-    | expr FRIGHT expr
+    | b1=expr FLEFT b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::FLEFT), $b2.tree);
+    }
+    | b1=expr FRIGHT b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::FRIGHT), $b2.tree);
+    }
 
-    | expr AND expr
-    | expr OR expr
-    | expr LESS expr
-    | expr GREATER expr
-    | expr EQEQ expr
-    | expr LEQ expr
-    | expr GEQ expr
-    | expr NEQ expr
+    | b1=expr AND b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::AND), $b2.tree);
+    }
+    | b1=expr OR b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::OR), $b2.tree);
+    }
+    | b1=expr LESS b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::LESS), $b2.tree);
+    }
+    | b1=expr GREATER b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::GREATER), $b2.tree);
+    }
+    | b1=expr EQEQ b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::EQEQ), $b2.tree);
+    }
+    | b1=expr LEQ b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::LEQ), $b2.tree);
+    }
+    | b1=expr GEQ b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::GEQ), $b2.tree);
+    }
+    | b1=expr NEQ b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::NEQ), $b2.tree);
+    }
     ;
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

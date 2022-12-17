@@ -268,6 +268,20 @@ namespace ast {
         bool _isPrefix;
     };
 
+    class BinaryCalcul : public AbstractExpr {
+    public:
+        BinaryCalcul(AbstractExpr *left, Operator *op, AbstractExpr *right);
+
+        ~BinaryCalcul();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        AbstractExpr *_left;
+        Operator *_op;
+        AbstractExpr *_right;
+    };
+
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     class FunctionParam : public AST {
