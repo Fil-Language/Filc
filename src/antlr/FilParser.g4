@@ -85,7 +85,9 @@ expr returns[AbstractExpr *tree]
     | RETURN e7=expr {
         $tree = new Return($e7.tree);
     }
-    | lambda
+    | e8=lambda {
+        $tree = $e8.tree;
+    }
     | control
     | function_call
     | cast
@@ -307,7 +309,26 @@ block_body returns[BlockBody *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-lambda : LPAREN function_params? RPAREN function_type? ARROW (expr | parenthesis_body | block_body);
+lambda returns[Lambda *tree]
+@init {
+    vector<FunctionParam *> lp;
+    Type *lt = nullptr;
+    AbstractExpr *lb = nullptr;
+}
+@after {
+    $tree = new Lambda(lp, lt, lb);
+}
+    : LPAREN (p=function_params {
+        lp = $p.tree;
+    })? RPAREN (t=function_type {
+        lt = $t.tree;
+    })? ARROW (b1=expr {
+        lb = $b1.tree;
+    } | b2=parenthesis_body {
+        lb = $b2.tree;
+    } | b3=block_body {
+        lb = $b3.tree;
+    });
 
 lambda_type: LPAREN (type (COMMA type)*)? RPAREN ARROW type;
 

@@ -22,7 +22,7 @@ string BlockBody::decompile(int indent) const {
     string result = "{\n";
 
     for (auto expr: _exprs) {
-        result += expr->decompile(indent + 1) + ";\n";
+        result += expr->decompile(indent + 1) + "\n";
     }
 
     result += string(indent, '\t') + "}";

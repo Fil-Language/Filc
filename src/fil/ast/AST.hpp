@@ -302,6 +302,22 @@ namespace ast {
     private:
         AbstractExpr *_expr;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class Lambda : public AbstractExpr {
+    public:
+        Lambda(const std::vector<FunctionParam *> &params, Type *type, AbstractExpr *body);
+
+        ~Lambda();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        std::vector<FunctionParam *> _params;
+        Type *_type;
+        AbstractExpr *_body;
+    };
 }
 
 #endif //FILC_AST_HPP

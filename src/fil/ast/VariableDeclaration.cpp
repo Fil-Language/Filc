@@ -26,7 +26,7 @@ string VariableDeclaration::decompile(int indent) const {
     }
 
     if (_assignation) {
-        result += " = " + _assignation->decompile(indent);
+        result += " " + _assignation->decompile(indent);
     }
 
     return result;
