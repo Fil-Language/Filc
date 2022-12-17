@@ -427,6 +427,20 @@ namespace ast {
         ForICondition *_condition;
         AbstractExpr *_body;
     };
+
+    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+    class ForIter : public AbstractExpr {
+    public:
+        ForIter(AbstractExpr *body);
+
+        ~ForIter();
+
+        std::string decompile(int indent) const override;
+
+    private:
+        AbstractExpr *_body;
+    };
 }
 
 #endif //FILC_AST_HPP

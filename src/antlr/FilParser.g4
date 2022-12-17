@@ -429,7 +429,9 @@ loop returns[AbstractExpr *tree]
     : l1=for_i {
         $tree = $l1.tree;
     }
-    | for_iter
+    | l2=for_iter {
+        $tree = $l2.tree;
+    }
     | while_;
 
 for_i returns[ForI *tree]
@@ -454,7 +456,10 @@ for_i_condition returns[ForICondition *tree]
         iter = $i.tree;
     })? RPAREN;
 
-for_iter : FOR for_iter_condition if_body;
+for_iter returns[ForIter *tree]
+    : FOR for_iter_condition b=if_body {
+        $tree = new ForIter($b.tree);
+    };
 
 for_iter_condition : LPAREN (VAL | VAR) IDENTIFIER COLON IDENTIFIER RPAREN;
 
