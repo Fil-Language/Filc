@@ -1,6 +1,6 @@
 # Filc
 
-[![Tests](https://github.com/Fil-Language/Filc/actions/workflows/test.yml/badge.svg)](https://github.com/Fil-Language/Filc/actions/workflows/test.yml)
+[![Tests](https://github.com/Fil-Language/Filc/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/Fil-Language/Filc/actions/workflows/test.yml)
 
 [![wakatime](https://wakatime.com/badge/user/c1e2386d-065c-4366-b163-d98f957273dc/project/4027e072-9adb-4c9e-a1a1-52cd4d188c7d.svg)](https://wakatime.com/badge/user/c1e2386d-065c-4366-b163-d98f957273dc/project/4027e072-9adb-4c9e-a1a1-52cd4d188c7d)
 
