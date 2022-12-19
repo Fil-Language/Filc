@@ -3,13 +3,13 @@ name: Tests
 on:
   push:
     paths:
-      - "src"
-      - "test"
+      - "src/**"
+      - "test/**"
       - ".github/workflows/test.yml"
   pull_request:
     paths:
-      - "src"
-      - "test"
+      - "src/**"
+      - "test/**"
       - ".github/workflows/test.yml"
 
 jobs:
