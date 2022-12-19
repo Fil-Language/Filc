@@ -41,15 +41,15 @@ bool Environment::addType(const std::string &name, Position *position) {
 }
 
 bool Environment::hasFunction(const std::string &name) const {
-    return _functions->hasSymbol(name);
+    return _functions->hasSymbol(name) || (_parent && _parent->hasFunction(name));
 }
 
 bool Environment::hasVariable(const std::string &name) const {
-    return _variables->hasSymbol(name);
+    return _variables->hasSymbol(name) || (_parent && _parent->hasVariable(name));
 }
 
 bool Environment::hasType(const std::string &name) const {
-    return _types->hasSymbol(name);
+    return _types->hasSymbol(name) || (_parent && _parent->hasType(name));
 }
 
 void Environment::merge(Environment *environment) {
