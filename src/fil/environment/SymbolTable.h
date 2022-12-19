@@ -36,6 +36,8 @@ public:
 
     bool hasSymbol(const std::string &name) const;
 
+    void merge(SymbolTable *symbolTable);
+
 private:
     std::map<std::string, Symbol *> _symbols;
 };

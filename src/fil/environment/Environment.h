@@ -25,6 +25,8 @@ public:
 
     bool hasVariable(const std::string &name) const;
 
+    void merge(Environment *environment);
+
 private:
     Environment *_parent;
 

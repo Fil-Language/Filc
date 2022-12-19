@@ -39,3 +39,8 @@ bool Environment::hasFunction(const std::string &name) const {
 bool Environment::hasVariable(const std::string &name) const {
     return _variables->hasSymbol(name);
 }
+
+void Environment::merge(Environment *environment) {
+    _functions->merge(environment->_functions);
+    _variables->merge(environment->_variables);
+}

@@ -30,6 +30,16 @@ bool SymbolTable::hasSymbol(const std::string &name) const {
     return _symbols.find(name) != _symbols.end();
 }
 
+void SymbolTable::merge(SymbolTable *symbolTable) {
+    for (auto &symbol: symbolTable->_symbols) {
+        if (hasSymbol(symbol.first)) {
+            continue; // TODO : throw an error
+        }
+
+        _symbols[symbol.first] = symbol.second;
+    }
+}
+
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 Symbol::Symbol(const std::string &name, Position *position)
