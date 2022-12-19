@@ -48,6 +48,7 @@ include_directories(
         src
         src/fil
         src/fil/ast
+        src/fil/environment
         src/utils
 )
 
