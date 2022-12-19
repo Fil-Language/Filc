@@ -25,6 +25,8 @@ namespace ast {
 
         void setPosition(antlr4::Token *token);
 
+        Position *getPosition() const;
+
     protected:
         Position *_pos;
     };
@@ -38,6 +40,10 @@ namespace ast {
         bool isExported() const;
 
         void resolveEnvironment(Environment *parent);
+
+        virtual bool isVar() const;
+
+        virtual bool isFunc() const;
 
     protected:
         AbstractExpr();
@@ -235,11 +241,16 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        bool isVar() const override;
+
+        Symbol *getSymbol() const;
+
     private:
         bool _isVal;
         Identifier *_name;
         AbstractType *_type;
         Assignation *_assignation;
+        Symbol *_symbol;
     };
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -350,9 +361,14 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        bool isFunc() const override;
+
+        Symbol *getSymbol() const;
+
     private:
         FunctionDeclaration *_declaration;
         AbstractExpr *_body;
+        Symbol *_symbol;
     };
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

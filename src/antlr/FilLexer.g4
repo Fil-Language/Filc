@@ -88,4 +88,4 @@ SEPARATOR: (' ' | '\t' | '\r' | '\n' | EOF) -> skip;
 
 // Others
 DOT: '.';
-IDENTIFIER: (LETTER | DIGIT)+;
+IDENTIFIER: (LETTER | DIGIT | '_')+;

@@ -39,3 +39,14 @@ std::string Position::getLineContent() const {
 
     return line;
 }
+
+std::string replace(const std::string &str, char from, char to) {
+    auto cpy = str;
+    for (char &c: cpy) {
+        if (c == from) {
+            c = to;
+        }
+    }
+
+    return cpy;
+}

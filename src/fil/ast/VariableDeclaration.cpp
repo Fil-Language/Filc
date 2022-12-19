@@ -10,7 +10,7 @@ using namespace std;
 using namespace ast;
 
 VariableDeclaration::VariableDeclaration(bool isVal, Identifier *name, AbstractType *type, Assignation *assignation)
-        : _isVal(isVal), _name(name), _type(type), _assignation(assignation) {}
+        : _isVal(isVal), _name(name), _type(type), _assignation(assignation), _symbol(nullptr) {}
 
 VariableDeclaration::~VariableDeclaration() {
     delete _name;
@@ -30,4 +30,12 @@ string VariableDeclaration::decompile(int indent) const {
     }
 
     return result;
+}
+
+bool VariableDeclaration::isVar() const {
+    return true;
+}
+
+Symbol *VariableDeclaration::getSymbol() const {
+    return _symbol;
 }

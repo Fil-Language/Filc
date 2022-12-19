@@ -62,7 +62,16 @@ Environment *Program::getPublicEnvironment() const {
 
     for (auto &expr: _exprs) {
         if (expr->isExported()) {
-            // TODO : add expr to env
+            if (expr->isVar()) {
+                auto *symbol = ((VariableDeclaration *) expr)->getSymbol();
+                env->addVariable(symbol->getName(), symbol->getPosition());
+            } else if (expr->isFunc()) {
+                auto *symbol = ((Function *) expr)->getSymbol();
+                env->addFunction(symbol->getName(), symbol->getPosition());
+            } else {
+                auto pos = expr->getPosition();
+                env->addVariable(replace(_module, '.', '_') + "_" + to_string(pos->getLine()), pos);
+            }
         }
     }
 

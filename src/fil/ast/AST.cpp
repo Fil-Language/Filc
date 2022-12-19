@@ -24,3 +24,7 @@ void AST::setPosition(antlr4::Token *token) {
                         (int) token->getCharPositionInLine(),
                         token->getTokenSource()->getSourceName());
 }
+
+Position *AST::getPosition() const {
+    return _pos;
+}

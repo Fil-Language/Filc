@@ -48,4 +48,6 @@ private:
     std::string _filename;
 };
 
+std::string replace(const std::string &str, char from, char to);
+
 #endif //FILC_UTILS_H

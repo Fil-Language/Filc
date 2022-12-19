@@ -26,3 +26,11 @@ bool AbstractExpr::isExported() const {
 void AbstractExpr::resolveEnvironment(Environment *parent) {
     throw;
 }
+
+bool AbstractExpr::isVar() const {
+    return false;
+}
+
+bool AbstractExpr::isFunc() const {
+    return false;
+}
