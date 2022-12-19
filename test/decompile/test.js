@@ -1,11 +1,9 @@
 const fs = require('fs');
 const {execSync} = require('child_process');
 
-const filc = __dirname + '/../../build/filc';
-
 module.exports = {
     name: 'Decompile',
-    test_f: (f_passed, f_failed, f_ignore, f_log) => {
+    test_f: (filc, f_passed, f_failed, f_ignore, f_log) => {
         // Get all files in folder (except test.js)
         const files = fs.readdirSync(__dirname).filter(f => f !== 'test.js');
 

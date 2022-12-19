@@ -43,6 +43,15 @@ const f_log = (msg) => {
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 // Tests runs
 
+const filc = process.platform === 'win32' ? __dirname + '\\..\\build\\Debug\\filc.exe' : __dirname + '/../build/filc';
+
+try {
+    fs.accessSync(filc, fs.constants.X_OK);
+} catch (e) {
+    console.log('Fil compiler not found. Please build it first.'.bold.red);
+    process.exit(1);
+}
+
 let test_time = 0;
 if (tests.length > 0) {
     const start = Date.now();
@@ -57,7 +66,7 @@ if (tests.length > 0) {
             const {test_f, name} = require('./' + test);
             console.log(` ${name} `.bgBlue)
             f_log(`=== ${name} ===\n`);
-            const result = test_f(f_passed, f_failed, f_ignore, f_log);
+            const result = test_f(filc, f_passed, f_failed, f_ignore, f_log);
             f_log(`--> ${result} <--\n`)
             f_log(`=== ${name} ===\n`);
 
