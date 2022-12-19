@@ -20,6 +20,11 @@ namespace ast {
         ~AST();
 
         virtual std::string decompile(int indent) const = 0;
+
+        void setPosition(Position *position);
+
+    protected:
+        Position *_pos;
     };
 
     class AbstractExpr : public AST {
