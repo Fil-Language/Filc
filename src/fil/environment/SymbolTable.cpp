@@ -17,7 +17,7 @@ SymbolTable::~SymbolTable() {
 }
 
 bool SymbolTable::addSymbol(const std::string &name, Position *position) {
-    if (_symbols.find(name) != _symbols.end()) {
+    if (hasSymbol(name)) {
         return false;
     }
 
@@ -33,7 +33,7 @@ bool SymbolTable::hasSymbol(const std::string &name) const {
 void SymbolTable::merge(SymbolTable *symbolTable) {
     for (auto &symbol: symbolTable->_symbols) {
         if (hasSymbol(symbol.first)) {
-            continue; // TODO : throw an error
+            continue;
         }
 
         _symbols[symbol.first] = symbol.second;

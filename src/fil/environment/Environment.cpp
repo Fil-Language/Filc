@@ -23,7 +23,11 @@ Environment::~Environment() {
 Environment *Environment::getGlobalEnvironment() {
     static auto *globalEnvironment = new Environment();
 
-    // TODO : add builtins types
+    // Add builtins types
+    globalEnvironment->addType("int", new Position(0, 0, "builtin"));
+    globalEnvironment->addType("float", new Position(0, 0, "builtin"));
+    globalEnvironment->addType("char", new Position(0, 0, "builtin"));
+    globalEnvironment->addType("bool", new Position(0, 0, "builtin"));
 
     return globalEnvironment;
 }
@@ -38,6 +42,10 @@ bool Environment::addVariable(const std::string &name, Position *position) {
 
 bool Environment::addType(const std::string &name, Position *position) {
     return _types->addSymbol(name, position);
+}
+
+bool Environment::hasSymbol(const std::string &name) const {
+    return _functions->hasSymbol(name) || _variables->hasSymbol(name) || _types->hasSymbol(name);
 }
 
 bool Environment::hasFunction(const std::string &name) const {

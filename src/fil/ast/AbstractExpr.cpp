@@ -18,3 +18,11 @@ string AbstractExpr::decompile(int indent) const {
 void AbstractExpr::isExported(bool exported) {
     _isExported = exported;
 }
+
+bool AbstractExpr::isExported() const {
+    return _isExported;
+}
+
+void AbstractExpr::resolveEnvironment(Environment *parent) {
+    throw;
+}

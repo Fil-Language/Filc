@@ -12,7 +12,7 @@ using namespace ast;
 Program::Program(const string &module,
                  const vector<Program *> &imports,
                  const vector<AbstractExpr *> &exprs)
-        : _module(module), _imports(imports), _exprs(exprs) {}
+        : _module(module), _imports(imports), _exprs(exprs), _environment(nullptr) {}
 
 Program::~Program() {
     for (auto &import: _imports) {
@@ -37,4 +37,34 @@ string Program::decompile(int indent) const {
     }
 
     return result;
+}
+
+void Program::resolveGlobalEnvironment() {
+    _environment = Environment::getGlobalEnvironment();
+    resolveEnvironment();
+}
+
+void Program::resolveEnvironment() {
+    // Resolve imports
+    for (auto &imp: _imports) {
+        imp->resolveEnvironment();
+        _environment->merge(imp->getPublicEnvironment());
+    }
+
+    // Resolve exprs
+    for (auto &expr: _exprs) {
+        expr->resolveEnvironment(_environment);
+    }
+}
+
+Environment *Program::getPublicEnvironment() const {
+    auto *env = new Environment();
+
+    for (auto &expr: _exprs) {
+        if (expr->isExported()) {
+            // TODO : add expr to env
+        }
+    }
+
+    return env;
 }

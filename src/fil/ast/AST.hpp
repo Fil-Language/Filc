@@ -12,6 +12,7 @@
 #include "antlr4-runtime.h"
 
 #include "utils.h"
+#include "Environment.h"
 
 namespace ast {
     class AST {
@@ -34,6 +35,10 @@ namespace ast {
 
         void isExported(bool exported);
 
+        bool isExported() const;
+
+        void resolveEnvironment(Environment *parent);
+
     protected:
         AbstractExpr();
 
@@ -51,10 +56,18 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        void resolveGlobalEnvironment();
+
+    private:
+        Environment *getPublicEnvironment() const;
+
+        void resolveEnvironment();
+
     private:
         std::string _module;
         std::vector<Program *> _imports;
         std::vector<AbstractExpr *> _exprs;
+        Environment *_environment;
     };
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

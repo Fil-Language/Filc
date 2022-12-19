@@ -47,7 +47,10 @@ int FilCompiler::compile(int flag) {
             return 0;
         }
 
-        // TODO : generate symbols tables
+        // Generate symbols tables (environment)
+        program->resolveGlobalEnvironment();
+
+        // TODO : check environment
 
         // TODO : type inference and checking
 

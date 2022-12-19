@@ -23,6 +23,8 @@ public:
 
     bool addType(const std::string &name, Position *position);
 
+    bool hasSymbol(const std::string &name) const;
+
     bool hasFunction(const std::string &name) const;
 
     bool hasVariable(const std::string &name) const;
