@@ -51,6 +51,14 @@ int FilCompiler::compile(int flag) {
 
         // TODO : type inference and checking
 
+        if (flag == FLAGS::AST) {
+            cout << "" << endl;
+            // TODO : cout << program->dump(0) << endl;
+
+            delete program;
+            return 0;
+        }
+
         // TODO : code structure checking
 
         // TODO : LLVM IR generation

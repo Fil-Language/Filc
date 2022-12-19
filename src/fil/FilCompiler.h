@@ -26,6 +26,7 @@ typedef enum FLAGS {
     NONE,
 
     DECOMPILE,
+    AST,
 } FLAGS;
 
 
