@@ -2,7 +2,7 @@
 
 Choses à faire pour la prochaine version :
 
-- [ ] Créer classes `Environment` et `SymbolTable`
+- [x] Créer classes `Environment` et `SymbolTable`
 - [ ] Génération des environements et des symboles
 - [ ] Vérification des symboles
 - [ ] Ajouter les tests pour ces classes
