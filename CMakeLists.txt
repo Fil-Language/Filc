@@ -74,7 +74,8 @@ add_executable(filc
         src/fil/ast/ForICondition.cpp src/fil/ast/ForIter.cpp src/fil/ast/ForIterCondition.cpp src/fil/ast/While.cpp
         src/fil/ast/FunctionCall.cpp src/fil/ast/Cast.cpp src/fil/ast/BinaryCalcul.cpp src/fil/ast/ParenthesisBody.cpp
         # === Environment ===
-        src/fil/environment/Environment.cpp src/fil/environment/Environment.h)
+        src/fil/environment/Environment.cpp src/fil/environment/Environment.h src/fil/environment/SymbolTable.cpp
+        src/fil/environment/SymbolTable.h)
 target_link_libraries(filc antlr4_static)
 
 target_compile_options(filc PUBLIC)
