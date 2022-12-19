@@ -42,6 +42,8 @@ public:
      */
     std::string getLineContent() const;
 
+    std::string dump() const;
+
 private:
     int _line;
     int _column;

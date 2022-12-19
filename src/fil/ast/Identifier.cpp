@@ -15,3 +15,11 @@ Identifier::Identifier(const string &name)
 string Identifier::decompile(int indent) const {
     return _name;
 }
+
+Symbol *Identifier::resolveVar(Environment *parent) {
+    return parent->addVariable(_name, _pos);
+}
+
+const string &Identifier::getName() const {
+    return _name;
+}

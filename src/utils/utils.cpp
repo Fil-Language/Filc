@@ -40,6 +40,10 @@ std::string Position::getLineContent() const {
     return line;
 }
 
+std::string Position::dump() const {
+    return _filename + ":" + std::to_string(_line) + ":" + std::to_string(_column);
+}
+
 std::string replace(const std::string &str, char from, char to) {
     auto cpy = str;
     for (char &c: cpy) {

@@ -13,6 +13,7 @@
 
 #include "utils.h"
 #include "Environment.h"
+#include "ErrorsRegister.h"
 
 namespace ast {
     class AST {
@@ -83,6 +84,10 @@ namespace ast {
         explicit Identifier(const std::string &name);
 
         std::string decompile(int indent) const override;
+
+        Symbol *resolveVar(Environment *parent);
+
+        const std::string &getName() const;
 
     private:
         std::string _name;
@@ -160,6 +165,8 @@ namespace ast {
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     class AbstractLiteral : public AbstractExpr {
+    public:
+        void resolveEnvironment(Environment *parent) override;
     };
 
     class BooleanLiteral : public AbstractLiteral {
@@ -244,6 +251,8 @@ namespace ast {
         bool isVar() const override;
 
         Symbol *getSymbol() const;
+
+        void resolveEnvironment(Environment *parent) override;
 
     private:
         bool _isVal;

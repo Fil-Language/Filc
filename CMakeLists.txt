@@ -49,6 +49,7 @@ include_directories(
         src/fil
         src/fil/ast
         src/fil/environment
+        src/fil/errors
         src/utils
 )
 
@@ -74,9 +75,13 @@ add_executable(filc
         src/fil/ast/Switch.cpp src/fil/ast/SwitchCase.cpp src/fil/ast/SwitchPattern.cpp src/fil/ast/ForI.cpp
         src/fil/ast/ForICondition.cpp src/fil/ast/ForIter.cpp src/fil/ast/ForIterCondition.cpp src/fil/ast/While.cpp
         src/fil/ast/FunctionCall.cpp src/fil/ast/Cast.cpp src/fil/ast/BinaryCalcul.cpp src/fil/ast/ParenthesisBody.cpp
+        src/fil/ast/AbstractLiteral.cpp
         # === Environment ===
         src/fil/environment/Environment.cpp src/fil/environment/Environment.h src/fil/environment/SymbolTable.cpp
-        src/fil/environment/SymbolTable.h)
+        src/fil/environment/SymbolTable.h
+        # === Errors ===
+        src/fil/errors/ErrorsRegister.cpp src/fil/errors/ErrorsRegister.h src/fil/errors/Message.h
+        src/fil/errors/Message.cpp)
 target_link_libraries(filc antlr4_static)
 
 target_compile_options(filc PUBLIC)

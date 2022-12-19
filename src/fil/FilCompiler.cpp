@@ -8,6 +8,7 @@
 #include "antlr4-runtime.h"
 #include "FilLexer.h"
 #include "FilParser.h"
+#include "ErrorsRegister.h"
 
 #include <utility>
 #include <iostream>
@@ -27,6 +28,8 @@ int FilCompiler::compile(int flag) {
     }
 
     try {
+        ErrorsRegister::init();
+
         ANTLRInputStream input(file);
         FilLexer lexer(&input);
         CommonTokenStream tokens(&lexer);
@@ -35,6 +38,16 @@ int FilCompiler::compile(int flag) {
 
         FilParser parser(&tokens);
         Program *program = parser.parseTree();
+
+        ErrorsRegister::dump(cout);
+        if (ErrorsRegister::containsError()) {
+            file.close();
+            delete program;
+
+            return 1;
+        }
+        ErrorsRegister::clean();
+
 
         if (file.is_open()) {
             file.close();
@@ -53,6 +66,15 @@ int FilCompiler::compile(int flag) {
         // TODO : check environment
 
         // TODO : type inference and checking
+
+        ErrorsRegister::dump(cout);
+        if (ErrorsRegister::containsError()) {
+            file.close();
+            delete program;
+
+            return 1;
+        }
+        ErrorsRegister::clean();
 
         if (flag == FLAGS::AST) {
             cout << "" << endl;

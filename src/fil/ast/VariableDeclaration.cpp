@@ -39,3 +39,19 @@ bool VariableDeclaration::isVar() const {
 Symbol *VariableDeclaration::getSymbol() const {
     return _symbol;
 }
+
+void VariableDeclaration::resolveEnvironment(Environment *parent) {
+    _symbol = _name->resolveVar(parent);
+    if (_symbol == nullptr) {
+        std::string n = _name->getName();
+        ErrorsRegister::addError(
+                n + " already exists, previous declaration here: " +
+                parent->getSymbol(n)->getPosition()->dump(),
+                _name->getPosition()
+        );
+    }
+
+    if (_assignation) {
+        _assignation->resolveEnvironment(parent);
+    }
+}
