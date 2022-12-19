@@ -32,15 +32,27 @@ Environment *Environment::getGlobalEnvironment() {
     return globalEnvironment;
 }
 
-bool Environment::addFunction(const std::string &name, Position *position) {
+Symbol *Environment::addFunction(const std::string &name, Position *position) {
+    if (hasSymbol(name)) {
+        return nullptr;
+    }
+
     return _functions->addSymbol(name, position);
 }
 
-bool Environment::addVariable(const std::string &name, Position *position) {
+Symbol *Environment::addVariable(const std::string &name, Position *position) {
+    if (hasSymbol(name)) {
+        return nullptr;
+    }
+
     return _variables->addSymbol(name, position);
 }
 
-bool Environment::addType(const std::string &name, Position *position) {
+Symbol *Environment::addType(const std::string &name, Position *position) {
+    if (hasSymbol(name)) {
+        return nullptr;
+    }
+
     return _types->addSymbol(name, position);
 }
 
@@ -58,6 +70,20 @@ bool Environment::hasVariable(const std::string &name) const {
 
 bool Environment::hasType(const std::string &name) const {
     return _types->hasSymbol(name) || (_parent && _parent->hasType(name));
+}
+
+Symbol *Environment::getSymbol(const std::string &name) const {
+    if (_functions->hasSymbol(name)) {
+        return _functions->getSymbol(name);
+    } else if (_variables->hasSymbol(name)) {
+        return _variables->getSymbol(name);
+    } else if (_types->hasSymbol(name)) {
+        return _types->getSymbol(name);
+    } else if (_parent) {
+        return _parent->getSymbol(name);
+    }
+
+    return nullptr;
 }
 
 void Environment::merge(Environment *environment) {

@@ -39,7 +39,7 @@ namespace ast {
 
         bool isExported() const;
 
-        void resolveEnvironment(Environment *parent);
+        virtual void resolveEnvironment(Environment *parent);
 
         virtual bool isVar() const;
 

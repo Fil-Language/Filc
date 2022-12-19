@@ -17,17 +17,19 @@ public:
 
     static Environment *getGlobalEnvironment();
 
-    bool addFunction(const std::string &name, Position *position);
+    Symbol *addFunction(const std::string &name, Position *position);
 
-    bool addVariable(const std::string &name, Position *position);
+    Symbol *addVariable(const std::string &name, Position *position);
 
-    bool addType(const std::string &name, Position *position);
+    Symbol *addType(const std::string &name, Position *position);
 
     bool hasSymbol(const std::string &name) const;
 
     bool hasFunction(const std::string &name) const;
 
     bool hasVariable(const std::string &name) const;
+
+    Symbol *getSymbol(const std::string &name) const;
 
     bool hasType(const std::string &name) const;
 

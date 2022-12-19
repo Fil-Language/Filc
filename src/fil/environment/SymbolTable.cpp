@@ -16,18 +16,23 @@ SymbolTable::~SymbolTable() {
     }
 }
 
-bool SymbolTable::addSymbol(const std::string &name, Position *position) {
+Symbol *SymbolTable::addSymbol(const std::string &name, Position *position) {
     if (hasSymbol(name)) {
-        return false;
+        return nullptr;
     }
 
-    _symbols[name] = new Symbol(name, position);
+    auto symbol = new Symbol(name, position);
+    _symbols[name] = symbol;
 
-    return true;
+    return symbol;
 }
 
 bool SymbolTable::hasSymbol(const std::string &name) const {
     return _symbols.find(name) != _symbols.end();
+}
+
+Symbol *SymbolTable::getSymbol(const std::string &name) const {
+    return _symbols.at(name);
 }
 
 void SymbolTable::merge(SymbolTable *symbolTable) {

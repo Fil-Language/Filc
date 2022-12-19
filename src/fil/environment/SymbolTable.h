@@ -32,9 +32,11 @@ public:
 
     ~SymbolTable();
 
-    bool addSymbol(const std::string &name, Position *position);
+    Symbol *addSymbol(const std::string &name, Position *position);
 
     bool hasSymbol(const std::string &name) const;
+
+    Symbol *getSymbol(const std::string &name) const;
 
     void merge(SymbolTable *symbolTable);
 
