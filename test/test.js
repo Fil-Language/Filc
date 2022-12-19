@@ -42,6 +42,13 @@ const f_log = (msg) => {
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 // Tests runs
 
+try {
+    fs.accessSync(__dirname + '/../build/filc', fs.constants.X_OK);
+} catch (e) {
+    console.log('Fil compiler not found. Please build it first.'.bold.red);
+    process.exit(1);
+}
+
 let test_time = 0;
 if (tests.length > 0) {
     const start = Date.now();
