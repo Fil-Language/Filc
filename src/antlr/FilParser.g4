@@ -75,6 +75,7 @@ expr returns[AbstractExpr *tree]
     }
     | e4=IDENTIFIER {
         $tree = new Identifier($e4.text);
+        $tree->setPosition($e4);
     }
     | e5=calcul {
         $tree = $e5.tree;
@@ -82,8 +83,9 @@ expr returns[AbstractExpr *tree]
     | e6=function {
         $tree = $e6.tree;
     }
-    | RETURN e7=expr {
+    | r=RETURN e7=expr {
         $tree = new Return($e7.tree);
+        $tree->setPosition($r);
     }
     | e8=lambda {
         $tree = $e8.tree;
@@ -106,51 +108,66 @@ expr returns[AbstractExpr *tree]
     // TODO : find a way to move this part in another rule without the left-recursion error
     | b1=expr STAR b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::STAR), $b2.tree);
+        $tree->setPosition($b1.start);
     }
     | b1=expr DIV b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::DIV), $b2.tree);
+        $tree->setPosition($b1.start);
     }
     | b1=expr MOD b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::MOD), $b2.tree);
+        $tree->setPosition($b1.start);
     }
 
     | b1=expr PLUS b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::PLUS), $b2.tree);
+        $tree->setPosition($b1.start);
     }
     | b1=expr MINUS b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::MINUS), $b2.tree);
+        $tree->setPosition($b1.start);
     }
 
     | b1=expr FLEFT b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::FLEFT), $b2.tree);
+        $tree->setPosition($b1.start);
     }
     | b1=expr FRIGHT b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::FRIGHT), $b2.tree);
+        $tree->setPosition($b1.start);
     }
 
     | b1=expr AND b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::AND), $b2.tree);
+        $tree->setPosition($b1.start);
     }
     | b1=expr OR b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::OR), $b2.tree);
+        $tree->setPosition($b1.start);
     }
     | b1=expr LESS b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::LESS), $b2.tree);
+        $tree->setPosition($b1.start);
     }
     | b1=expr GREATER b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::GREATER), $b2.tree);
+        $tree->setPosition($b1.start);
     }
     | b1=expr EQEQ b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::EQEQ), $b2.tree);
+        $tree->setPosition($b1.start);
     }
     | b1=expr LEQ b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::LEQ), $b2.tree);
+        $tree->setPosition($b1.start);
     }
     | b1=expr GEQ b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::GEQ), $b2.tree);
+        $tree->setPosition($b1.start);
     }
     | b1=expr NEQ b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::NEQ), $b2.tree);
+        $tree->setPosition($b1.start);
     }
     ;
 
@@ -165,29 +182,36 @@ literal returns[AbstractLiteral *tree]
     }
     | l3=CHARACTER {
         $tree = new CharLiteral($l3.text);
+        $tree->setPosition($l3);
     }
     | l4=STRING {
         $tree = new StringLiteral($l4.text);
+        $tree->setPosition($l4);
     }
     | l5=FSTRING {
         $tree = new FStringLiteral($l5.text);
+        $tree->setPosition($l5);
     }
     ;
 
 boolean returns[BooleanLiteral *tree]
-    : TRUE {
+    : b1=TRUE {
         $tree = new BooleanLiteral(true);
+        $tree->setPosition($b1);
     }
-    | FALSE {
+    | b2=FALSE {
         $tree = new BooleanLiteral(false);
+        $tree->setPosition($b2);
     };
 
 number returns[AbstractLiteral *tree]
     : i=INTEGER {
         $tree = new IntegerLiteral(stoi($i.text));
+        $tree->setPosition($i);
     }
     | f=FLOAT {
         $tree = new FloatLiteral(stof($f.text));
+        $tree->setPosition($f);
     };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -201,11 +225,13 @@ variable_declaration returns[VariableDeclaration *tree]
 }
 @after {
     $tree = new VariableDeclaration(isVal, name, vt, va);
+    $tree->setPosition($v);
 }
-    : (VAL {
+    : (v=VAL {
         isVal = true;
-    } | VAR) i=IDENTIFIER {
+    } | v=VAR) i=IDENTIFIER {
         name = new Identifier($i.text);
+        name->setPosition($i);
     } ((COLON t=type {
         vt = $t.tree;
     }) | (COLON t=type {
@@ -215,8 +241,9 @@ variable_declaration returns[VariableDeclaration *tree]
     });
 
 assignation returns[Assignation *tree]
-    : EQ e=expr {
+    : s=EQ e=expr {
         $tree = new Assignation($e.tree);
+        $tree->setPosition($s);
     };
 
 type returns[AbstractType *tree]
@@ -227,12 +254,17 @@ type returns[AbstractType *tree]
     $tree = prev;
 }
     : i=IDENTIFIER {
-        prev = new Type(new Identifier($i.text));
-    } (LBRACK s=INTEGER RBRACK {
+        auto id = new Identifier($i.text);
+        id->setPosition($i);
+        prev = new Type(id);
+        prev->setPosition($i);
+    } (st=LBRACK s=INTEGER RBRACK {
             prev = new Type(stoi($s.text), prev);
+            prev->setPosition($st);
         }
-        | STAR {
+        | st=STAR {
             prev = new Type(prev);
+            prev->setPosition($st);
         })*
     | t=lambda_type {
         prev = $t.tree;
@@ -247,38 +279,52 @@ calcul returns[UnaryCalcul *tree]
 
 unary_calcul returns[UnaryCalcul *tree]
     : i1=IDENTIFIER o1=post_operator {
-        $tree = new UnaryCalcul(new Identifier($i1.text), $o1.tree);
+        auto id = new Identifier($i1.text);
+        id->setPosition($i1);
+        $tree = new UnaryCalcul(id, $o1.tree);
+        $tree->setPosition($i1);
     }
     | o2=pre_operator i2=IDENTIFIER {
-        $tree = new UnaryCalcul($o2.tree, new Identifier($i2.text));
+        auto id = new Identifier($i2.text);
+        id->setPosition($i2);
+        $tree = new UnaryCalcul($o2.tree, id);
+        $tree->setPosition($o2.start);
     };
 
 post_operator returns[Operator *tree]
-    : PLUSPLUS {
+    : o1=PLUSPLUS {
         $tree = new Operator(Operator::PLUSPLUS);
+        $tree->setPosition($o1);
     }
-    | MINUSMINUS {
+    | o2=MINUSMINUS {
         $tree = new Operator(Operator::MINUSMINUS);
+        $tree->setPosition($o2);
     }
-    | (LBRACK e=expr RBRACK) {
+    | (o3=LBRACK e=expr RBRACK) {
         $tree = new Operator($e.tree);
+        $tree->setPosition($o3);
     };
 
 pre_operator returns[Operator *tree]
-    : PLUSPLUS {
+    : o1=PLUSPLUS {
         $tree = new Operator(Operator::PLUSPLUS);
+        $tree->setPosition($o1);
     }
-    | MINUSMINUS {
+    | o2=MINUSMINUS {
         $tree = new Operator(Operator::PLUSPLUS);
+        $tree->setPosition($o2);
     }
-    | REF {
+    | o3=REF {
         $tree = new Operator(Operator::REF);
+        $tree->setPosition($o3);
     }
-    | STAR {
+    | o4=STAR {
         $tree = new Operator(Operator::STAR);
+        $tree->setPosition($o4);
     }
-    | NOT {
+    | o5=NOT {
         $tree = new Operator(Operator::NOT);
+        $tree->setPosition($o5);
     };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -286,6 +332,7 @@ pre_operator returns[Operator *tree]
 function returns[Function *tree]
     : d=function_declaration b=function_body {
         $tree = new Function($d.tree, $b.tree);
+        $tree->setPosition($d.start);
     };
 
 function_declaration returns[FunctionDeclaration *tree]
@@ -294,9 +341,12 @@ function_declaration returns[FunctionDeclaration *tree]
     vector<FunctionParam *> params;
 }
 @after {
-    $tree = new FunctionDeclaration(new Identifier($i.text), params, ft);
+    auto id = new Identifier($i.text);
+    id->setPosition($i);
+    $tree = new FunctionDeclaration(id, params, ft);
+    $tree->setPosition($f);
 }
-    : FUN i=IDENTIFIER LPAREN (p=function_params {
+    : f=FUN i=IDENTIFIER LPAREN (p=function_params {
         params = $p.tree;
     })? RPAREN (t=function_type {
         ft = $t.tree;
@@ -310,14 +360,23 @@ function_params returns[vector<FunctionParam *> tree]
     $tree = res;
 }
     : i1=IDENTIFIER COLON t1=type {
-        res.push_back(new FunctionParam(new Identifier($i1.text), $t1.tree));
+        auto id = new Identifier($i1.text);
+        id->setPosition($i1);
+        auto param1 = new FunctionParam(id, $t1.tree);
+        param1->setPosition($i1);
+        res.push_back(param1);
     } (COMMA ii=IDENTIFIER COLON ti=type {
-        res.push_back(new FunctionParam(new Identifier($ii.text), $ti.tree));
+        auto id = new Identifier($ii.text);
+        id->setPosition($ii);
+        auto paramI = new FunctionParam(id, $ti.tree);
+        paramI->setPosition($ii);
+        res.push_back(paramI);
     })?;
 
 function_type returns[AbstractType *tree]
     : COLON t=type {
         $tree = $t.tree;
+        $tree->setPosition($t.start);
     };
 
 function_body returns[AbstractExpr *tree]
@@ -334,6 +393,7 @@ function_body returns[AbstractExpr *tree]
 parenthesis_body returns[ParenthesisBody *tree]
     : LPAREN e=expr {
         $tree = new ParenthesisBody($e.tree);
+        $tree->setPosition($e.start);
     } RPAREN;
 
 block_body returns[BlockBody *tree]
@@ -342,8 +402,9 @@ block_body returns[BlockBody *tree]
 }
 @after {
     $tree = new BlockBody(res);
+    $tree->setPosition($s);
 }
-    : LBRACE (ei=expr {
+    : s=LBRACE (ei=expr {
         res.push_back($ei.tree);
     })* RBRACE;
 
@@ -357,8 +418,9 @@ lambda returns[Lambda *tree]
 }
 @after {
     $tree = new Lambda(lp, lt, lb);
+    $tree->setPosition($s);
 }
-    : LPAREN (p=function_params {
+    : s=LPAREN (p=function_params {
         lp = $p.tree;
     })? RPAREN (t=function_type {
         lt = $t.tree;
@@ -376,8 +438,9 @@ lambda_type returns[LambdaType *tree]
 }
 @after {
     $tree = new LambdaType(args, $r.tree);
+    $tree->setPosition($s);
 }
-    : LPAREN (a1=type {
+    : s=LPAREN (a1=type {
         args.push_back($a1.tree);
     } (COMMA ai=type {
         args.push_back($ai.tree);
@@ -407,8 +470,9 @@ if_ returns[If *tree]
 }
 @after {
     $tree = new If($c.tree, $b.tree, else_);
+    $tree->setPosition($s);
 }
-    : IF c=if_condition b=if_body (ELSE (e1=if_ {
+    : s=IF c=if_condition b=if_body (ELSE (e1=if_ {
         else_ = $e1.tree;
     } | e2=if_body {
         else_ = $e2.tree;
@@ -427,8 +491,9 @@ if_body returns[AbstractExpr *tree]
     };
 
 switch_ returns[Switch *tree]
-    : SWITCH c=if_condition b=switch_body {
+    : s=SWITCH c=if_condition b=switch_body {
         $tree = new Switch($c.tree, $b.tree);
+        $tree->setPosition($s);
     };
 
 switch_body returns[vector<SwitchCase *> tree]
@@ -445,6 +510,7 @@ switch_case returns[SwitchCase *tree]
 }
 @after {
     $tree = new SwitchCase($p.tree, body);
+    $tree->setPosition($p.start);
 }
     : p=switch_pattern ARROW (b1=expr {
         body = $b1.tree;
@@ -455,10 +521,12 @@ switch_case returns[SwitchCase *tree]
     });
 
 switch_pattern returns[SwitchPattern *tree]
-    : DEFAULT {
+    : s=DEFAULT {
         $tree = new SwitchPattern();
+        $tree->setPosition($s);
     } | l=literal {
         $tree = new SwitchPattern($l.tree);
+        $tree->setPosition($l.start);
     };
 
 loop returns[AbstractExpr *tree]
@@ -473,8 +541,9 @@ loop returns[AbstractExpr *tree]
     };
 
 for_i returns[ForI *tree]
-    : FOR c=for_i_condition b=if_body {
+    : s=FOR c=for_i_condition b=if_body {
         $tree = new ForI($c.tree, $b.tree);
+        $tree->setPosition($s);
     };
 
 for_i_condition returns[ForICondition *tree]
@@ -485,8 +554,9 @@ for_i_condition returns[ForICondition *tree]
 }
 @after {
     $tree = new ForICondition(decl, cond, iter);
+    $tree->setPosition($s);
 }
-    : LPAREN (d=variable_declaration {
+    : s=LPAREN (d=variable_declaration {
         decl = $d.tree;
     })? SEMI (c=expr {
         cond = $c.tree;
@@ -495,23 +565,30 @@ for_i_condition returns[ForICondition *tree]
     })? RPAREN;
 
 for_iter returns[ForIter *tree]
-    : FOR c=for_iter_condition b=if_body {
+    : s=FOR c=for_iter_condition b=if_body {
         $tree = new ForIter($c.tree, $b.tree);
+        $tree->setPosition($s);
     };
 
 for_iter_condition returns[ForIterCondition *tree]
 @init {
     bool isVal = false;
 }
-    : LPAREN (VAL {
+    : s=LPAREN (VAL {
         isVal = true;
     } | VAR) i1=IDENTIFIER COLON i2=IDENTIFIER RPAREN {
-        $tree = new ForIterCondition(isVal, new Identifier($i1.text), new Identifier($i2.text));
+        auto id1 = new Identifier($i1.text);
+        id1->setPosition($i1);
+        auto id2 = new Identifier($i2.text);
+        id2->setPosition($i2);
+        $tree = new ForIterCondition(isVal, id1, id2);
+        $tree->setPosition($s);
     };
 
 while_ returns[While *tree]
-    : WHILE c=if_condition b=if_body {
+    : s=WHILE c=if_condition b=if_body {
         $tree = new While($c.tree, $b.tree);
+        $tree->setPosition($s);
     };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -521,7 +598,10 @@ function_call returns[FunctionCall *tree]
     vector<AbstractExpr *> args;
 }
 @after {
-    $tree = new FunctionCall(new Identifier($n.text), args);
+    auto id = new Identifier($n.text);
+    id->setPosition($n);
+    $tree = new FunctionCall(id, args);
+    $tree->setPosition($n);
 }
     : n=IDENTIFIER LPAREN (p=function_call_params {
         args = $p.tree;
@@ -543,6 +623,7 @@ function_call_params returns[vector<AbstractExpr *> tree]
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 cast returns[Cast *tree]
-    : LPAREN t=type RPAREN e=expr {
+    : s=LPAREN t=type RPAREN e=expr {
         $tree = new Cast($t.tree, $e.tree);
+        $tree->setPosition($s);
     };
