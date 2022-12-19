@@ -21,9 +21,13 @@ public:
 
     bool addVariable(const std::string &name, Position *position);
 
+    bool addType(const std::string &name, Position *position);
+
     bool hasFunction(const std::string &name) const;
 
     bool hasVariable(const std::string &name) const;
+
+    bool hasType(const std::string &name) const;
 
     void merge(Environment *environment);
 
@@ -32,6 +36,7 @@ private:
 
     SymbolTable *_functions;
     SymbolTable *_variables;
+    SymbolTable *_types;
 };
 
 
