@@ -42,12 +42,13 @@ const f_log = (msg) => {
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 // Tests runs
 
-const filc = __dirname + '/../build/' + (process.platform === 'win32' ? 'filc.exe' : 'filc');
+const filc = process.platform === 'win32' ? __dirname + '\\..\\build\\filc.exe' : __dirname + '/../build/filc';
 
 try {
     fs.accessSync(filc, fs.constants.X_OK);
 } catch (e) {
     console.log('Fil compiler not found. Please build it first.'.bold.red);
+    console.log(filc);
     process.exit(1);
 }
 
