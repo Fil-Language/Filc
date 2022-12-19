@@ -48,7 +48,7 @@ try {
     fs.accessSync(filc, fs.constants.X_OK);
 } catch (e) {
     console.log('Fil compiler not found. Please build it first.'.bold.red);
-    console.log(fs.readdirSync(__dirname + '\\..\\'));
+    console.log(fs.readdirSync(__dirname + '\\..\\build\\Debug\\filc.exe'));
     process.exit(1);
 }
 
