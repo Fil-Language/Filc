@@ -9,14 +9,18 @@
 using namespace std;
 using namespace ast;
 
-AST::~AST() = default;
+AST::AST() : _pos(nullptr) {}
 
-AST::AST() = default;
+AST::~AST() {
+    delete _pos;
+}
 
 string AST::decompile(int indent) const {
     throw;
 }
 
-void AST::setPosition(Position *position) {
-    _pos = position;
+void AST::setPosition(antlr4::Token *token) {
+    _pos = new Position((int) token->getLine(),
+                        (int) token->getCharPositionInLine(),
+                        token->getTokenSource()->getSourceName());
 }

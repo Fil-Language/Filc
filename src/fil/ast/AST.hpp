@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include "antlr4-runtime.h"
 
 #include "utils.h"
 
@@ -21,7 +22,7 @@ namespace ast {
 
         virtual std::string decompile(int indent) const = 0;
 
-        void setPosition(Position *position);
+        void setPosition(antlr4::Token *token);
 
     protected:
         Position *_pos;
