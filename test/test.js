@@ -17,8 +17,9 @@ let passed = 0; // Number of passed tests
 let n_total = 0; // Number of single tests
 let n_passed = 0; // Number of passed single tests
 let tests = [
-    {file: 'decompile/test.js'},
-]; // Array of tests results [{file,name,passed, total}]
+    'decompile/test.js',
+    'ast/test.js',
+]; // Array of tests
 
 const f_passed = (name) => {
     n_passed++;
@@ -49,13 +50,14 @@ if (tests.length > 0) {
     fs.rmSync('log.txt', {force: true});
     console.log(`Running ${tests.length} tests...`);
     for (const test of tests) {
+        console.log('');
         total++;
 
         try {
-            const {test_f, name} = require('./' + test.file);
+            const {test_f, name} = require('./' + test);
             console.log(` ${name} `.bgBlue)
             f_log(`=== ${name} ===\n`);
-            const result = test_f(test, f_passed, f_failed, f_ignore, f_log);
+            const result = test_f(f_passed, f_failed, f_ignore, f_log);
             f_log(`--> ${result} <--\n`)
             f_log(`=== ${name} ===\n`);
 
@@ -73,8 +75,8 @@ if (tests.length > 0) {
                     break;
             }
         } catch (e) {
-            console.log(` ${test.file} ` + ' not found '.bgMagenta);
-            f_log(`${test.file} not found\n`);
+            console.log(` ${test} ` + ' Not found '.bgMagenta);
+            f_log(`${test} not found\n`);
         }
     }
 

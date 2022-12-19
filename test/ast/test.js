@@ -3,9 +3,16 @@ const {execSync} = require('child_process');
 
 const filc = __dirname + '/../../build/filc';
 
+const getExpected = (file) => {
+    // Remove the .fil extension and add .ast
+    const path = file.replace(/\.fil$/, '.ast');
+
+    return fs.readFileSync(path, 'utf8');
+}
+
 module.exports = {
-    name: 'Decompile',
-    test_f: (f_passed, f_failed, f_ignore, f_log) => {
+    name: 'AST',
+    test_f: (test, f_passed, f_failed, f_ignore, f_log) => {
         // Get all files in folder (except test.js)
         const files = fs.readdirSync(__dirname).filter(f => f !== 'test.js');
 
@@ -19,12 +26,9 @@ module.exports = {
             try {
                 const path = __dirname + '/' + file;
 
-                // Decompile file first
-                const first = execSync(filc + ' ' + path + ' -d 2> err.txt').toString();
-                // Push first to temp file
-                fs.writeFileSync(__dirname + '/temp.fil', first);
-                // Decompile file second
-                const second = execSync(filc + ' ' + __dirname + '/temp.fil -d 2> err.txt').toString();
+                // Compile file with -a flag
+                const ast = execSync(filc + ' ' + path + ' -a 2> err.txt').toString();
+                const expected = getExpected(path);
 
                 const errs = fs.readFileSync('err.txt').toString();
                 if (errs !== '') {
@@ -33,15 +37,15 @@ module.exports = {
                     f_log(`Error: ${errs}\n`);
                 } else
                     // Result
-                if (first === second) {
+                if (ast === expected) {
                     f_passed(file);
                     f_log(`- ${file} passed\n`);
                     passed++;
                 } else {
                     f_failed(file);
                     f_log(`- ${file} failed\n`);
-                    f_log(`First:\n=>${first}<=\n`);
-                    f_log(`Second:\n=>${second}<=\n`);
+                    f_log(`Expected:\n=>${expected}<=\n`);
+                    f_log(`Actual:\n=>${ast}<=\n`);
                 }
             } catch (e) {
                 f_failed(file);
@@ -52,7 +56,6 @@ module.exports = {
         }
 
         // Remove temp file
-        fs.rmSync(__dirname + '/temp.fil');
         fs.rmSync('err.txt');
 
         return passed === total;
