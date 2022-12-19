@@ -1,8 +1,6 @@
 const fs = require('fs');
 const {execSync} = require('child_process');
 
-const filc = __dirname + '/../../build/filc';
-
 const getExpected = (file) => {
     // Remove the .fil extension and add .ast
     const path = file.replace(/\.fil$/, '.ast');
@@ -12,7 +10,7 @@ const getExpected = (file) => {
 
 module.exports = {
     name: 'AST',
-    test_f: (test, f_passed, f_failed, f_ignore, f_log) => {
+    test_f: (filc, f_passed, f_failed, f_ignore, f_log) => {
         // Get all files in folder (except test.js)
         const files = fs.readdirSync(__dirname).filter(f => f !== 'test.js');
 
