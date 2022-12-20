@@ -15,3 +15,9 @@ BooleanLiteral::BooleanLiteral(bool value)
 string BooleanLiteral::decompile(int indent) const {
     return _value ? "true" : "false";
 }
+
+AbstractType *BooleanLiteral::inferType(Environment *env) {
+    _exprType = env->getSymbol("bool")->getType();
+
+    return _exprType;
+}

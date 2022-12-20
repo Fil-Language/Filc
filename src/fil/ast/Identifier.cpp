@@ -33,3 +33,15 @@ void Identifier::resolveEnvironment(Environment *parent) {
         ErrorsRegister::addError("Unknown symbol " + _name, _pos);
     }
 }
+
+AbstractType *Identifier::inferType(Environment *env) {
+    // Infer
+    _exprType = env->getSymbol(_name)->getType();
+
+    // Check
+    if (_exprType == nullptr) {
+        ErrorsRegister::addError(_name + " has no type", _pos);
+    }
+
+    return _exprType;
+}

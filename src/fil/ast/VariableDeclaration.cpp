@@ -62,3 +62,22 @@ void VariableDeclaration::resolveEnvironment(Environment *parent) {
         _assignation->resolveEnvironment(parent);
     }
 }
+
+AbstractType *VariableDeclaration::inferType(Environment *env) {
+    auto valueType = _assignation->inferType(env);
+
+    if (_type == nullptr) {
+        _type = valueType;
+    } else {
+        if (_type != valueType) {
+            ErrorsRegister::addError(
+                    "Type mismatch, expected " + _type->getName() + " but got " + valueType->getName(),
+                    _assignation->getPosition()
+            );
+        }
+    }
+
+    _exprType = _type;
+
+    return _exprType;
+}

@@ -43,3 +43,11 @@ string LambdaType::getName() const {
 
     return res + ") -> " + _ret->getName();
 }
+
+AbstractType *LambdaType::getReturnType() const {
+    return _ret;
+}
+
+const vector<AbstractType *> &LambdaType::getArgsTypes() const {
+    return _args;
+}

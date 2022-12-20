@@ -36,3 +36,20 @@ void Function::resolveEnvironment(Environment *parent) {
 
     _body->resolveEnvironment(_environment);
 }
+
+AbstractType *Function::inferType(Environment *env) {
+    _exprType = _declaration->inferType(env);
+    env->getSymbol(_symbol->getName())->setType(_exprType);
+
+    auto returnType = ((LambdaType *) _exprType)->getReturnType();
+    auto bodyType = _body->inferType(_environment);
+    if (returnType != bodyType) {
+        ErrorsRegister::addError(
+                "Type mismatch: function " + _symbol->getName() + " must returns " + returnType->getName()
+                + ", but its body returns " + bodyType->getName(),
+                _pos
+        );
+    }
+
+    return _exprType;
+}

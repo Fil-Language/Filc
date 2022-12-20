@@ -15,3 +15,9 @@ IntegerLiteral::IntegerLiteral(int value)
 string IntegerLiteral::decompile(int indent) const {
     return to_string(_value);
 }
+
+AbstractType *IntegerLiteral::inferType(Environment *env) {
+    _exprType = env->getSymbol("int")->getType();
+
+    return _exprType;
+}

@@ -75,7 +75,7 @@ add_executable(filc
         src/fil/ast/Switch.cpp src/fil/ast/SwitchCase.cpp src/fil/ast/SwitchPattern.cpp src/fil/ast/ForI.cpp
         src/fil/ast/ForICondition.cpp src/fil/ast/ForIter.cpp src/fil/ast/ForIterCondition.cpp src/fil/ast/While.cpp
         src/fil/ast/FunctionCall.cpp src/fil/ast/Cast.cpp src/fil/ast/BinaryCalcul.cpp src/fil/ast/ParenthesisBody.cpp
-        src/fil/ast/AbstractLiteral.cpp src/fil/ast/AST_decl.h
+        src/fil/ast/AbstractLiteral.cpp src/fil/ast/AST_decl.h src/fil/ast/AbstractType.cpp
         # === Environment ===
         src/fil/environment/Environment.cpp src/fil/environment/Environment.h src/fil/environment/SymbolTable.cpp
         src/fil/environment/SymbolTable.h

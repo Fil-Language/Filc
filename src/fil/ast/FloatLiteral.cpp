@@ -15,3 +15,9 @@ FloatLiteral::FloatLiteral(float value)
 string FloatLiteral::decompile(int indent) const {
     return to_string(_value);
 }
+
+AbstractType *FloatLiteral::inferType(Environment *env) {
+    _exprType = env->getSymbol("float")->getType();
+
+    return _exprType;
+}

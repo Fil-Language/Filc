@@ -16,3 +16,9 @@ CharLiteral::CharLiteral(const string &value) {
 string CharLiteral::decompile(int indent) const {
     return "'" + string(1, _value) + "'";
 }
+
+AbstractType *CharLiteral::inferType(Environment *env) {
+    _exprType = env->getSymbol("char")->getType();
+
+    return _exprType;
+}

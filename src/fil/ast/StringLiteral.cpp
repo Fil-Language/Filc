@@ -16,3 +16,9 @@ StringLiteral::StringLiteral(const std::string &value) {
 string StringLiteral::decompile(int indent) const {
     return "\"" + _value + "\"";
 }
+
+AbstractType *StringLiteral::inferType(Environment *env) {
+    _exprType = env->getSymbol("string")->getType();
+
+    return _exprType;
+}

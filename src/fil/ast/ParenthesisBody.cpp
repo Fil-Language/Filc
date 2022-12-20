@@ -23,3 +23,9 @@ string ParenthesisBody::decompile(int indent) const {
 void ParenthesisBody::resolveEnvironment(Environment *parent) {
     _expr->resolveEnvironment(parent);
 }
+
+AbstractType *ParenthesisBody::inferType(Environment *env) {
+    _exprType = _expr->inferType(env);
+
+    return _exprType;
+}

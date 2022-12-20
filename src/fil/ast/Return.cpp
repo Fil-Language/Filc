@@ -29,3 +29,9 @@ string Return::decompile(int indent) const {
 void Return::resolveEnvironment(Environment *parent) {
     _expr->resolveEnvironment(parent);
 }
+
+AbstractType *Return::inferType(Environment *env) {
+    _exprType = _expr->inferType(env);
+
+    return _exprType;
+}

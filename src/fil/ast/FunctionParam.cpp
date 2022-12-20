@@ -44,3 +44,7 @@ void FunctionParam::resolveParam(Environment *function) {
         );
     }
 }
+
+AbstractType *FunctionParam::getType() const {
+    return _type;
+}

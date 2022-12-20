@@ -23,3 +23,9 @@ string Assignation::decompile(int indent) const {
 void Assignation::resolveEnvironment(Environment *parent) {
     _expr->resolveEnvironment(parent);
 }
+
+AbstractType *Assignation::inferType(Environment *env) {
+    _exprType = _expr->inferType(env);
+
+    return _exprType;
+}

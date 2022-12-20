@@ -64,3 +64,15 @@ Symbol *FunctionDeclaration::resolveDeclaration(Environment *parent, Environment
 
     return symbol;
 }
+
+AbstractType *FunctionDeclaration::inferType(Environment *env) {
+    vector<AbstractType *> params;
+    for (auto param: _params) {
+        params.push_back(param->getType());
+    }
+
+    _exprType = new LambdaType(params, _type);
+    env->getSymbol(_name->getName())->setType(_exprType);
+
+    return _exprType;
+}

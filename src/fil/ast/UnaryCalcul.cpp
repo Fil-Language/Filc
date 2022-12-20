@@ -31,3 +31,9 @@ std::string UnaryCalcul::decompile(int indent) const {
 void UnaryCalcul::resolveEnvironment(Environment *parent) {
     // Nothing to do
 }
+
+AbstractType *UnaryCalcul::inferType(Environment *env) {
+    _exprType = _identifier->inferType(env);
+
+    return _exprType;
+}

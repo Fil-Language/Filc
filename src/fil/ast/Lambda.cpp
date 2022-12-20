@@ -55,3 +55,30 @@ void Lambda::resolveEnvironment(Environment *parent) {
 
     _body->resolveEnvironment(_environment);
 }
+
+AbstractType *Lambda::inferType(Environment *env) {
+    vector<AbstractType *> params;
+    for (auto param: _params) {
+        params.push_back(param->getType());
+    }
+
+    auto bodyType = _body->inferType(_environment);
+
+    if (_type == nullptr) {
+        _type = bodyType;
+        _exprType = new LambdaType(params, bodyType);
+    } else {
+        if (bodyType != _type) {
+            ErrorsRegister::addError(
+                    "Lambda body type " + bodyType->getName() +
+                    " does not match lambda return type " + _type->getName(),
+                    _type->getPosition()
+            );
+        }
+
+        _exprType = new LambdaType(params, _type);
+    }
+
+
+    return _exprType;
+}

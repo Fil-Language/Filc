@@ -31,3 +31,11 @@ void Cast::resolveEnvironment(Environment *parent) {
 
     _expr->resolveEnvironment(parent);
 }
+
+AbstractType *Cast::inferType(Environment *env) {
+    _exprType = _type;
+
+    _expr->inferType(env);
+
+    return _exprType;
+}

@@ -44,3 +44,31 @@ void FunctionCall::resolveEnvironment(Environment *parent) {
         arg->resolveEnvironment(parent);
     }
 }
+
+AbstractType *FunctionCall::inferType(Environment *env) {
+    auto functionType = env->getSymbol(_name->getName())->getType();
+    _exprType = functionType;
+
+    // Check args types
+    auto argsTypes = ((LambdaType *) functionType)->getArgsTypes();
+    if (argsTypes.size() != _args.size()) {
+        ErrorsRegister::addError(
+                _name->getName() + " expects " + to_string(argsTypes.size()) + " arguments, " +
+                to_string(_args.size()) + " provided",
+                _name->getPosition()
+        );
+    } else {
+        for (int i = 0; i < _args.size(); i++) {
+            auto argType = _args[i]->inferType(env);
+            if (argType != argsTypes[i]) {
+                ErrorsRegister::addError(
+                        "Argument " + to_string(i) + " of " + _name->getName() + " expects type " +
+                        argsTypes[i]->getName() + ", " + argType->getName() + " provided",
+                        _args[i]->getPosition()
+                );
+            }
+        }
+    }
+
+    return _exprType;
+}
