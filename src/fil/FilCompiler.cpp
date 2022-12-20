@@ -39,7 +39,7 @@ int FilCompiler::compile(int flag) {
         FilParser parser(&tokens);
         Program *program = parser.parseTree();
 
-        ErrorsRegister::dump(cout);
+        ErrorsRegister::dump(cerr);
         if (ErrorsRegister::containsError()) {
             file.close();
             delete program;
@@ -66,7 +66,7 @@ int FilCompiler::compile(int flag) {
         // Type inference and checking
         program->inferTypes();
 
-        ErrorsRegister::dump(cout);
+        ErrorsRegister::dump(cerr);
         if (ErrorsRegister::containsError()) {
             file.close();
             delete program;
