@@ -14,6 +14,8 @@ Refer to documentation for used grammar : [https://github.com/Fil-Language/Docum
 
 ## External dependencies
 
+### Compiler
+
 - [Antlr](https://www.antlr.org/)
 - [Options parser : https://github.com/jarro2783/cxxopts](https://github.com/jarro2783/cxxopts)
 
