@@ -5,6 +5,7 @@
  * -----------------------
  */
 #include "Environment.h"
+#include "AST.hpp"
 
 Environment::Environment(Environment *parent)
         : _parent(parent) {
@@ -25,10 +26,15 @@ Environment *Environment::getGlobalEnvironment() {
 
     // Add builtins types
     globalEnvironment->addType("int", new Position(0, 0, "builtin"));
+    globalEnvironment->getSymbol("int")->setType(new ast::Type(new ast::Identifier("int")));
     globalEnvironment->addType("float", new Position(0, 0, "builtin"));
+    globalEnvironment->getSymbol("float")->setType(new ast::Type(new ast::Identifier("float")));
     globalEnvironment->addType("char", new Position(0, 0, "builtin"));
+    globalEnvironment->getSymbol("char")->setType(new ast::Type(new ast::Identifier("char")));
     globalEnvironment->addType("bool", new Position(0, 0, "builtin"));
+    globalEnvironment->getSymbol("bool")->setType(new ast::Type(new ast::Identifier("bool")));
     globalEnvironment->addType("string", new Position(0, 0, "builtin")); // FIXME : temporary, to be removed later as string is part of stl
+    globalEnvironment->getSymbol("string")->setType(new ast::Type(new ast::Identifier("string")));
 
     return globalEnvironment;
 }
