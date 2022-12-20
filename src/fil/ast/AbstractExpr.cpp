@@ -9,7 +9,7 @@
 using namespace std;
 using namespace ast;
 
-AbstractExpr::AbstractExpr() : _isExported(false) {}
+AbstractExpr::AbstractExpr() : _isExported(false), _exprType(nullptr) {}
 
 string AbstractExpr::decompile(int indent) const {
     throw;
@@ -33,4 +33,8 @@ bool AbstractExpr::isVar() const {
 
 bool AbstractExpr::isFunc() const {
     return false;
+}
+
+AbstractType *AbstractExpr::inferType() {
+    throw;
 }
