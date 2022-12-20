@@ -28,6 +28,7 @@ Environment *Environment::getGlobalEnvironment() {
     globalEnvironment->addType("float", new Position(0, 0, "builtin"));
     globalEnvironment->addType("char", new Position(0, 0, "builtin"));
     globalEnvironment->addType("bool", new Position(0, 0, "builtin"));
+    globalEnvironment->addType("string", new Position(0, 0, "builtin")); // FIXME : temporary, to be removed later as string is part of stl
 
     return globalEnvironment;
 }
