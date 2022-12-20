@@ -38,3 +38,29 @@ string FunctionDeclaration::decompile(int indent) const {
 
     return result;
 }
+
+Symbol *FunctionDeclaration::resolveDeclaration(Environment *parent, Environment *function) {
+    auto symbol = _name->resolveFunc(parent);
+    if (symbol == nullptr) {
+        std::string n = _name->getName();
+        symbol = parent->getSymbol(n);
+        ErrorsRegister::addError(
+                n + " already exists, previous declaration here: " +
+                symbol->getPosition()->dump(),
+                _name->getPosition()
+        );
+    }
+
+    for (auto param: _params) {
+        param->resolveParam(function);
+    }
+
+    if (_type && !parent->hasType(_type->getName())) {
+        ErrorsRegister::addError(
+                "Unknown type " + _type->getName(),
+                _type->getPosition()
+        );
+    }
+
+    return symbol;
+}

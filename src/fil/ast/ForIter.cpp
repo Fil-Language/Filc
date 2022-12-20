@@ -10,7 +10,7 @@ using namespace std;
 using namespace ast;
 
 ForIter::ForIter(ForIterCondition *condition, AbstractExpr *body)
-        : _condition(condition), _body(body) {}
+        : _condition(condition), _body(body), _environment(nullptr) {}
 
 ForIter::~ForIter() {
     delete _condition;
@@ -19,4 +19,11 @@ ForIter::~ForIter() {
 
 string ForIter::decompile(int indent) const {
     return "for (" + _condition->decompile(indent) + ") " + _body->decompile(indent);
+}
+
+void ForIter::resolveEnvironment(Environment *parent) {
+    _environment = new Environment(parent);
+
+    _condition->resolveCondition(_environment);
+    _body->resolveEnvironment(_environment);
 }

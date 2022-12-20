@@ -31,3 +31,15 @@ string LambdaType::decompile(int indent) const {
 
     return res;
 }
+
+string LambdaType::getName() const {
+    string res = "(";
+    for (auto it = _args.begin(); it != _args.end(); ++it) {
+        res += (*it)->getName();
+        if (it + 1 != _args.end()) {
+            res += ", ";
+        }
+    }
+
+    return res + ") -> " + _ret->getName();
+}

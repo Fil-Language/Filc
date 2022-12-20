@@ -23,3 +23,9 @@ string ForICondition::decompile(int indent) const {
            + _condition->decompile(indent) + "; "
            + _increment->decompile(indent);
 }
+
+void ForICondition::resolveCondition(Environment *loop) {
+    _declaration->resolveEnvironment(loop);
+    _condition->resolveEnvironment(loop);
+    _increment->resolveEnvironment(loop);
+}

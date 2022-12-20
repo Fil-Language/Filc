@@ -51,6 +51,13 @@ void VariableDeclaration::resolveEnvironment(Environment *parent) {
         );
     }
 
+    if (_type && !parent->hasType(_type->getName())) {
+        ErrorsRegister::addError(
+                "Unknown type " + _type->getName(),
+                _type->getPosition()
+        );
+    }
+
     if (_assignation) {
         _assignation->resolveEnvironment(parent);
     }

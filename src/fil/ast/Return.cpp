@@ -25,3 +25,7 @@ string Return::decompile(int indent) const {
 
     return ret;
 }
+
+void Return::resolveEnvironment(Environment *parent) {
+    _expr->resolveEnvironment(parent);
+}

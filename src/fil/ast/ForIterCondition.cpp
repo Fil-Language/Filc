@@ -23,3 +23,14 @@ string ForIterCondition::decompile(int indent) const {
            + ": "
            + _iterable->decompile(indent);
 }
+
+void ForIterCondition::resolveCondition(Environment *loop) {
+    _iterator->resolveVar(loop);
+
+    if (!loop->hasVariable(_iterable->getName())) {
+        ErrorsRegister::addError(
+                "Unknown variable " + _iterable->getName(),
+                _iterable->getPosition()
+        );
+    }
+}

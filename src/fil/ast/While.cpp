@@ -10,7 +10,7 @@ using namespace std;
 using namespace ast;
 
 While::While(AbstractExpr *condition, AbstractExpr *body)
-        : _condition(condition), _body(body) {}
+        : _condition(condition), _body(body), _environment(nullptr) {}
 
 While::~While() {
     delete _condition;
@@ -20,4 +20,11 @@ While::~While() {
 string While::decompile(int indent) const {
     return "while (" + _condition->decompile(indent) + ") "
            + _body->decompile(indent + 1);
+}
+
+void While::resolveEnvironment(Environment *parent) {
+    _environment = new Environment(parent);
+
+    _condition->resolveEnvironment(parent);
+    _body->resolveEnvironment(_environment);
 }

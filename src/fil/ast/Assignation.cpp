@@ -19,3 +19,7 @@ Assignation::~Assignation() {
 string Assignation::decompile(int indent) const {
     return "= " + _expr->decompile(indent);
 }
+
+void Assignation::resolveEnvironment(Environment *parent) {
+    _expr->resolveEnvironment(parent);
+}

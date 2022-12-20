@@ -30,3 +30,10 @@ string Switch::decompile(int indent) const {
 
     return res;
 }
+
+void Switch::resolveEnvironment(Environment *parent) {
+    _condition->resolveEnvironment(parent);
+    for (auto &c: _cases) {
+        c->resolveEnvironment(parent);
+    }
+}

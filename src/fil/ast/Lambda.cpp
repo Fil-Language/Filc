@@ -10,7 +10,7 @@ using namespace std;
 using namespace ast;
 
 Lambda::Lambda(const vector<FunctionParam *> &params, AbstractType *type, AbstractExpr *body)
-        : _params(params), _type(type), _body(body) {}
+        : _params(params), _type(type), _body(body), _environment(nullptr) {}
 
 Lambda::~Lambda() {
     for (auto param: _params) {
@@ -37,4 +37,21 @@ string Lambda::decompile(int indent) const {
     res += " -> " + _body->decompile(indent);
 
     return res;
+}
+
+void Lambda::resolveEnvironment(Environment *parent) {
+    _environment = new Environment(parent);
+
+    for (auto param: _params) {
+        param->resolveParam(_environment);
+    }
+
+    if (_type && !parent->hasType(_type->getName())) {
+        ErrorsRegister::addError(
+                "Unknown type " + _type->getName(),
+                _type->getPosition()
+        );
+    }
+
+    _body->resolveEnvironment(_environment);
 }

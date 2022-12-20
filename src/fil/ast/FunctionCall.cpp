@@ -31,3 +31,16 @@ string FunctionCall::decompile(int level) const {
 
     return res;
 }
+
+void FunctionCall::resolveEnvironment(Environment *parent) {
+    if (!parent->hasFunction(_name->getName())) {
+        ErrorsRegister::addError(
+                "Unknown function " + _name->getName(),
+                _name->getPosition()
+        );
+    }
+
+    for (auto &arg: _args) {
+        arg->resolveEnvironment(parent);
+    }
+}

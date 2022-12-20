@@ -10,7 +10,7 @@ using namespace std;
 using namespace ast;
 
 BlockBody::BlockBody(const vector<AbstractExpr *> &exprs)
-        : _exprs(exprs) {}
+        : _exprs(exprs), _environment(nullptr) {}
 
 BlockBody::~BlockBody() {
     for (auto expr: _exprs) {
@@ -28,4 +28,12 @@ string BlockBody::decompile(int indent) const {
     result += string(indent, '\t') + "}";
 
     return result;
+}
+
+void BlockBody::resolveEnvironment(Environment *parent) {
+    _environment = new Environment(parent);
+
+    for (auto expr: _exprs) {
+        expr->resolveEnvironment(_environment);
+    }
 }

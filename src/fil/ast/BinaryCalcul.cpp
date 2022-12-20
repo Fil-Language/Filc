@@ -21,3 +21,8 @@ BinaryCalcul::~BinaryCalcul() {
 string BinaryCalcul::decompile(int indent) const {
     return _left->decompile(indent) + " " + _op->decompile(indent) + " " + _right->decompile(indent);
 }
+
+void BinaryCalcul::resolveEnvironment(Environment *parent) {
+    _left->resolveEnvironment(parent);
+    _right->resolveEnvironment(parent);
+}

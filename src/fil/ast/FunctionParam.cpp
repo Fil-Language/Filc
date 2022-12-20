@@ -26,3 +26,21 @@ string FunctionParam::decompile(int indent) const {
 
     return result;
 }
+
+void FunctionParam::resolveParam(Environment *function) {
+    if (_name->resolveVar(function) == nullptr) {
+        std::string n = _name->getName();
+        ErrorsRegister::addWarning(
+                n + " already exists, previous declaration here: " +
+                function->getSymbol(n)->getPosition()->dump(),
+                _name->getPosition()
+        );
+    }
+
+    if (_type && !function->hasType(_type->getName())) {
+        ErrorsRegister::addError(
+                "Unknown type " + _type->getName(),
+                _type->getPosition()
+        );
+    }
+}

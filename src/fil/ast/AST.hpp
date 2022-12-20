@@ -87,6 +87,10 @@ namespace ast {
 
         Symbol *resolveVar(Environment *parent);
 
+        Symbol *resolveFunc(Environment *parent);
+
+        void resolveEnvironment(Environment *parent) override;
+
         const std::string &getName() const;
 
     private:
@@ -99,6 +103,8 @@ namespace ast {
 
     public:
         virtual ~AbstractType() = default;
+
+        virtual std::string getName() const = 0;
     };
 
     class Type : public AbstractType {
@@ -112,6 +118,8 @@ namespace ast {
         ~Type() override;
 
         std::string decompile(int indent) const override;
+
+        std::string getName() const override;
 
     private:
         Identifier *_name;
@@ -131,6 +139,8 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        std::string getName() const override;
+
     private:
         std::vector<AbstractType *> _args;
         AbstractType *_ret;
@@ -146,8 +156,11 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        void resolveEnvironment(Environment *parent) override;
+
     private:
         std::vector<AbstractExpr *> _exprs;
+        Environment *_environment;
     };
 
     class ParenthesisBody : public AbstractExpr {
@@ -157,6 +170,8 @@ namespace ast {
         ~ParenthesisBody();
 
         std::string decompile(int indent) const override;
+
+        void resolveEnvironment(Environment *parent) override;
 
     private:
         AbstractExpr *_expr;
@@ -236,6 +251,8 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        void resolveEnvironment(Environment *parent) override;
+
     private:
         AbstractExpr *_expr;
     };
@@ -313,6 +330,8 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        void resolveEnvironment(Environment *parent) override;
+
     private:
         Operator *_op;
         Identifier *_identifier;
@@ -326,6 +345,8 @@ namespace ast {
         ~BinaryCalcul();
 
         std::string decompile(int indent) const override;
+
+        void resolveEnvironment(Environment *parent) override;
 
     private:
         AbstractExpr *_left;
@@ -343,6 +364,8 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        void resolveParam(Environment *function);
+
     private:
         Identifier *_name;
         AbstractType *_type;
@@ -355,6 +378,8 @@ namespace ast {
         ~FunctionDeclaration();
 
         std::string decompile(int indent) const override;
+
+        Symbol *resolveDeclaration(Environment *parent, Environment *function);
 
     private:
         Identifier *_name;
@@ -374,10 +399,13 @@ namespace ast {
 
         Symbol *getSymbol() const;
 
+        void resolveEnvironment(Environment *parent) override;
+
     private:
         FunctionDeclaration *_declaration;
         AbstractExpr *_body;
         Symbol *_symbol;
+        Environment *_environment;
     };
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -389,6 +417,8 @@ namespace ast {
         ~Return();
 
         std::string decompile(int indent) const override;
+
+        void resolveEnvironment(Environment *parent) override;
 
     private:
         AbstractExpr *_expr;
@@ -404,10 +434,13 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        void resolveEnvironment(Environment *parent) override;
+
     private:
         std::vector<FunctionParam *> _params;
         AbstractType *_type;
         AbstractExpr *_body;
+        Environment *_environment;
     };
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -419,6 +452,8 @@ namespace ast {
         ~If();
 
         std::string decompile(int indent) const override;
+
+        void resolveEnvironment(Environment *parent) override;
 
     private:
         AbstractExpr *_condition;
@@ -451,6 +486,8 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        void resolveEnvironment(Environment *parent) override;
+
     private:
         SwitchPattern *_pattern;
         AbstractExpr *_body;
@@ -463,6 +500,8 @@ namespace ast {
         ~Switch();
 
         std::string decompile(int indent) const override;
+
+        void resolveEnvironment(Environment *parent) override;
 
     private:
         AbstractExpr *_condition;
@@ -479,6 +518,8 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        void resolveCondition(Environment *loop);
+
     private:
         VariableDeclaration *_declaration;
         AbstractExpr *_condition;
@@ -493,9 +534,12 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        void resolveEnvironment(Environment *parent) override;
+
     private:
         ForICondition *_condition;
         AbstractExpr *_body;
+        Environment *_environment;
     };
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -507,6 +551,8 @@ namespace ast {
         ~ForIterCondition();
 
         std::string decompile(int indent) const override;
+
+        void resolveCondition(Environment *loop);
 
     private:
         bool _isVal;
@@ -522,9 +568,12 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        void resolveEnvironment(Environment *parent) override;
+
     private:
         ForIterCondition *_condition;
         AbstractExpr *_body;
+        Environment *_environment;
     };
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -537,9 +586,12 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        void resolveEnvironment(Environment *parent) override;
+
     private:
         AbstractExpr *_condition;
         AbstractExpr *_body;
+        Environment *_environment;
     };
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -551,6 +603,8 @@ namespace ast {
         ~FunctionCall();
 
         std::string decompile(int indent) const override;
+
+        void resolveEnvironment(Environment *parent) override;
 
     private:
         Identifier *_name;
@@ -566,6 +620,8 @@ namespace ast {
         ~Cast();
 
         std::string decompile(int indent) const override;
+
+        void resolveEnvironment(Environment *parent) override;
 
     private:
         AbstractType *_type;

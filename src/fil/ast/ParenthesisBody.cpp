@@ -19,3 +19,7 @@ ParenthesisBody::~ParenthesisBody() {
 string ParenthesisBody::decompile(int indent) const {
     return "(" + _expr->decompile(indent) + ")";
 }
+
+void ParenthesisBody::resolveEnvironment(Environment *parent) {
+    _expr->resolveEnvironment(parent);
+}

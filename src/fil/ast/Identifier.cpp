@@ -20,6 +20,14 @@ Symbol *Identifier::resolveVar(Environment *parent) {
     return parent->addVariable(_name, _pos);
 }
 
+Symbol *Identifier::resolveFunc(Environment *parent) {
+    return parent->addFunction(_name, _pos);
+}
+
 const string &Identifier::getName() const {
     return _name;
+}
+
+void Identifier::resolveEnvironment(Environment *parent) {
+    // Nothing to do
 }

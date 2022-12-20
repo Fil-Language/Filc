@@ -27,3 +27,7 @@ std::string UnaryCalcul::decompile(int indent) const {
         return _identifier->decompile(indent) + _op->decompile(indent);
     }
 }
+
+void UnaryCalcul::resolveEnvironment(Environment *parent) {
+    // Nothing to do
+}

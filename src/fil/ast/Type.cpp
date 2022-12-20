@@ -32,3 +32,13 @@ string Type::decompile(int indent) const {
         return _name->decompile(indent);
     }
 }
+
+string Type::getName() const {
+    if (_isPointer) {
+        return _subType->getName() + "*";
+    } else if (_isArray) {
+        return _subType->getName() + "[" + to_string(_arraySize) + "]";
+    } else {
+        return _name->getName();
+    }
+}

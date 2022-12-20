@@ -10,7 +10,7 @@ using namespace std;
 using namespace ast;
 
 Function::Function(FunctionDeclaration *declaration, AbstractExpr *body)
-        : _declaration(declaration), _body(body), _symbol(nullptr) {}
+        : _declaration(declaration), _body(body), _symbol(nullptr), _environment(nullptr) {}
 
 Function::~Function() {
     delete _declaration;
@@ -27,4 +27,12 @@ bool Function::isFunc() const {
 
 Symbol *Function::getSymbol() const {
     return _symbol;
+}
+
+void Function::resolveEnvironment(Environment *parent) {
+    _environment = new Environment(parent);
+
+    _symbol = _declaration->resolveDeclaration(parent, _environment);
+
+    _body->resolveEnvironment(_environment);
 }

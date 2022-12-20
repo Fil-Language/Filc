@@ -20,3 +20,7 @@ SwitchCase::~SwitchCase() {
 string SwitchCase::decompile(int indent) const {
     return _pattern->decompile(indent) + " -> " + _body->decompile(indent) + "\n";
 }
+
+void SwitchCase::resolveEnvironment(Environment *parent) {
+    _body->resolveEnvironment(parent);
+}

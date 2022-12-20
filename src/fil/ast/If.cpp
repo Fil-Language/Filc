@@ -27,3 +27,11 @@ string If::decompile(int indent) const {
 
     return res;
 }
+
+void If::resolveEnvironment(Environment *parent) {
+    _condition->resolveEnvironment(parent);
+    _then->resolveEnvironment(parent);
+    if (_else) {
+        _else->resolveEnvironment(parent);
+    }
+}
