@@ -29,5 +29,7 @@ const string &Identifier::getName() const {
 }
 
 void Identifier::resolveEnvironment(Environment *parent) {
-    // Nothing to do
+    if (!parent->hasSymbol(_name)) {
+        ErrorsRegister::addError("Unknown symbol " + _name, _pos);
+    }
 }
