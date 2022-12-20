@@ -47,7 +47,7 @@ namespace ast {
 
         virtual bool isFunc() const;
 
-        virtual AbstractType *inferType();
+        virtual AbstractType *inferType(Environment *env);
 
     protected:
         AbstractExpr();
@@ -68,6 +68,8 @@ namespace ast {
         std::string decompile(int indent) const override;
 
         void resolveGlobalEnvironment();
+
+        void inferTypes();
 
     private:
         Environment *getPublicEnvironment() const;

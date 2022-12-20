@@ -77,3 +77,13 @@ Environment *Program::getPublicEnvironment() const {
 
     return env;
 }
+
+void Program::inferTypes() {
+    for (auto &imp: _imports) {
+        imp->inferTypes();
+    }
+
+    for (auto &expr: _exprs) {
+        expr->inferType(_environment);
+    }
+}

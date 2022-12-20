@@ -63,7 +63,8 @@ int FilCompiler::compile(int flag) {
         // Generate symbols tables (environment)
         program->resolveGlobalEnvironment();
 
-        // TODO : type inference and checking
+        // Type inference and checking
+        program->inferTypes();
 
         ErrorsRegister::dump(cout);
         if (ErrorsRegister::containsError()) {
