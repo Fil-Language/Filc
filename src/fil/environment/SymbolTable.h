@@ -10,6 +10,7 @@
 #include <string>
 #include <map>
 #include "utils.h"
+#include "AST_decl.h"
 
 class Symbol {
 public:
@@ -21,9 +22,14 @@ public:
 
     Position *getPosition() const;
 
+    ast::AbstractType *getType() const;
+
+    void setType(ast::AbstractType *type);
+
 private:
     std::string _name;
     Position *_position;
+    ast::AbstractType *_type;
 };
 
 class SymbolTable {

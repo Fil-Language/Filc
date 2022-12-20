@@ -61,3 +61,11 @@ std::string Symbol::getName() const {
 Position *Symbol::getPosition() const {
     return _position;
 }
+
+ast::AbstractType *Symbol::getType() const {
+    return _type;
+}
+
+void Symbol::setType(ast::AbstractType *type) {
+    _type = type;
+}
