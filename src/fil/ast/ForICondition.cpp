@@ -38,3 +38,24 @@ void ForICondition::inferCondition(Environment *env) {
     if (_increment)
         _increment->inferType(env);
 }
+
+string ForICondition::dump(int indent) const {
+    string res = string(indent, '\t') + "[ForICondition]\n";
+
+    if (_declaration)
+        res += _declaration->dump(indent + 1);
+    else
+        res += string(indent + 1, '\t') + "_\n";
+
+    if (_condition)
+        res += _condition->dump(indent + 1);
+    else
+        res += string(indent + 1, '\t') + "_\n";
+
+    if (_increment)
+        res += _increment->dump(indent + 1);
+    else
+        res += string(indent + 1, '\t') + "_\n";
+
+    return res;
+}

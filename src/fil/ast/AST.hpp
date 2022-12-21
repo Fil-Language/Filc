@@ -642,6 +642,8 @@ namespace ast {
 
         void inferCondition(Environment *env);
 
+        std::string dump(int indent) const override;
+
     private:
         VariableDeclaration *_declaration;
         AbstractExpr *_condition;
@@ -659,6 +661,8 @@ namespace ast {
         void resolveEnvironment(Environment *parent) override;
 
         AbstractType *inferType(Environment *env) override;
+
+        std::string dump(int indent) const override;
 
     private:
         ForICondition *_condition;
