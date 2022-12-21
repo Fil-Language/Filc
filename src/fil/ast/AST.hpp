@@ -706,6 +706,8 @@ namespace ast {
 
         AbstractType *inferType(Environment *env) override;
 
+        std::string dump(int indent) const override;
+
     private:
         Identifier *_name;
         std::vector<AbstractExpr *> _args;

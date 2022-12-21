@@ -72,3 +72,14 @@ AbstractType *FunctionCall::inferType(Environment *env) {
 
     return _exprType;
 }
+
+string FunctionCall::dump(int indent) const {
+    string res = string(indent, '\t') + "[FunctionCall] <name:" + _name->getName()
+                 + "> <type:" + _exprType->getName() + ">\n";
+
+    for (auto &arg: _args) {
+        res += arg->dump(indent + 1);
+    }
+
+    return res;
+}
