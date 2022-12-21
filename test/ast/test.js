@@ -12,7 +12,7 @@ module.exports = {
     name: 'AST',
     test_f: (filc, f_passed, f_failed, f_ignore, f_log) => {
         // Get all files in folder (except test.js)
-        const files = fs.readdirSync(__dirname).filter(f => f !== 'test.js');
+        const files = fs.readdirSync(__dirname).filter(f => f !== 'test.js' && f.endsWith('.fil'));
 
         if (files.length === 0) {
             return undefined;

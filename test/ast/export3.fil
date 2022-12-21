@@ -1,0 +1,5 @@
+module export3
+
+export val a = 2
+
+export val b = 3
