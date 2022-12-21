@@ -1,6 +1,7 @@
 [Program] <module:calcul3>
-    [VariableDeclaration] <var> <name:i> <type:int>
-        [Assignation] <type:int>
-            [IntegerLiteral] <value:0>
-    [UnaryCalcul] <postfix> <operator:++>
-        [Identifier] <name:i> <type:int>
+	[VariableDeclaration] <var> <name:i> <type:int>
+		[Assignation] <type:int>
+			[IntegerLiteral] <value:0>
+	[UnaryCalcul] <postfix> <operator:++>
+		[Identifier] <name:i> <type:int>
+

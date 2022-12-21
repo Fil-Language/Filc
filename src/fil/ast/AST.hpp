@@ -398,6 +398,8 @@ namespace ast {
 
         AbstractType *inferType(Environment *env) override;
 
+        std::string dump(int indent) const override;
+
     private:
         Operator *_op;
         Identifier *_identifier;
