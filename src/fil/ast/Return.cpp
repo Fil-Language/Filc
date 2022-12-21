@@ -39,3 +39,11 @@ AbstractType *Return::inferType(Environment *env) {
 bool Return::isReturn() const {
     return true;
 }
+
+string Return::dump(int indent) const {
+    string res = string(indent, '\t') + "[Return] <type:" + _exprType->getName() + ">\n";
+
+    res += _expr->dump(indent + 1);
+
+    return res;
+}

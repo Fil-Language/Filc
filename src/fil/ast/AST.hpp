@@ -506,6 +506,8 @@ namespace ast {
 
         bool isReturn() const override;
 
+        std::string dump(int indent) const override;
+
     private:
         AbstractExpr *_expr;
     };
