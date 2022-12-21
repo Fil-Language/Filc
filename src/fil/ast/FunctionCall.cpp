@@ -19,10 +19,10 @@ FunctionCall::~FunctionCall() {
     }
 }
 
-string FunctionCall::decompile(int level) const {
-    string res = _name->decompile(level) + "(";
+string FunctionCall::decompile(int indent) const {
+    string res = _name->decompile(indent) + "(";
     for (auto it = _args.begin(); it != _args.end(); ++it) {
-        res += (*it)->decompile(level);
+        res += (*it)->decompile(indent);
         if (it + 1 != _args.end()) {
             res += ", ";
         }

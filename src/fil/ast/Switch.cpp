@@ -23,7 +23,7 @@ string Switch::decompile(int indent) const {
     string res = "switch (" + _condition->decompile(indent) + ") {\n";
 
     for (auto &c: _cases) {
-        res += c->decompile(indent);
+        res += string(indent + 1, '\t') + c->decompile(indent);
     }
 
     res += "}";

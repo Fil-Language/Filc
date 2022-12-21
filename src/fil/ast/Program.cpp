@@ -33,7 +33,7 @@ string Program::decompile(int indent) const {
     result += "\n";
 
     for (auto &expr: _exprs) {
-        result += expr->decompile(indent) + "\n\n";
+        result += (expr->isExported() ? "export " : "") + expr->decompile(indent) + "\n\n";
     }
 
     return result;

@@ -19,7 +19,7 @@ While::~While() {
 
 string While::decompile(int indent) const {
     return "while (" + _condition->decompile(indent) + ") "
-           + _body->decompile(indent + 1);
+           + _body->decompile(indent);
 }
 
 void While::resolveEnvironment(Environment *parent) {

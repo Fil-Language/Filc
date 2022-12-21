@@ -73,6 +73,9 @@ expr returns[AbstractExpr *tree]
     | e3=assignation {
         $tree = $e3.tree;
     }
+    | e10=function_call {
+        $tree = $e10.tree;
+    }
     | e4=IDENTIFIER {
         $tree = new Identifier($e4.text);
         $tree->setPosition($e4);
@@ -92,9 +95,6 @@ expr returns[AbstractExpr *tree]
     }
     | e9=control {
         $tree = $e9.tree;
-    }
-    | e10=function_call {
-        $tree = $e10.tree;
     }
     | e11=cast {
         $tree = $e11.tree;
