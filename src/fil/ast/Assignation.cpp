@@ -29,3 +29,11 @@ AbstractType *Assignation::inferType(Environment *env) {
 
     return _exprType;
 }
+
+string Assignation::dump(int indent) const {
+    string res = string(indent, '\t') + "[Assignation] <type:" + _exprType->getName() + ">\n";
+
+    res += _expr->dump(indent + 1);
+
+    return res;
+}

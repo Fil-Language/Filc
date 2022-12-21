@@ -309,6 +309,8 @@ namespace ast {
 
         AbstractType *inferType(Environment *env) override;
 
+        std::string dump(int indent) const override;
+
     private:
         AbstractExpr *_expr;
     };
@@ -328,6 +330,8 @@ namespace ast {
         void resolveEnvironment(Environment *parent) override;
 
         AbstractType *inferType(Environment *env) override;
+
+        std::string dump(int indent) const override;
 
     private:
         bool _isVal;

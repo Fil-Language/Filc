@@ -64,12 +64,12 @@ void VariableDeclaration::resolveEnvironment(Environment *parent) {
 }
 
 AbstractType *VariableDeclaration::inferType(Environment *env) {
-    auto valueType = _assignation->inferType(env);
+    if (_assignation) {
+        auto valueType = _assignation->inferType(env);
 
-    if (_type == nullptr) {
-        _type = valueType;
-    } else {
-        if (_type != valueType) {
+        if (_type == nullptr) {
+            _type = valueType;
+        } else if (_type != valueType) {
             ErrorsRegister::addError(
                     "Type mismatch, expected " + _type->getName() + " but got " + valueType->getName(),
                     _assignation->getPosition()
@@ -82,4 +82,17 @@ AbstractType *VariableDeclaration::inferType(Environment *env) {
     _exprType = _type;
 
     return _exprType;
+}
+
+string VariableDeclaration::dump(int indent) const {
+    string res = string(indent, '\t') + "[VariableDeclaration] "
+                 + (_isVal ? "<val> " : "<var> ")
+                 + "<name:" + _name->getName() + "> "
+                 + "<type:" + _exprType->getName() + ">\n";
+
+    if (_assignation) {
+        res += _assignation->dump(indent + 1);
+    }
+
+    return res;
 }
