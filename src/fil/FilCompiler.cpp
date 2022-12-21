@@ -83,8 +83,6 @@ int FilCompiler::compile(int flag) {
             return 0;
         }
 
-        // TODO : code structure checking
-
         // TODO : LLVM IR generation
 
         // Free memory
