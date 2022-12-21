@@ -1,0 +1,10 @@
+[Program] <module:calcul1>
+    [BinaryCalcul] <operator:-> <type:int>
+        [BinaryCalcul] <operator:+> <type:int>
+            [BinaryCalcul] <operator:*> <type:int>
+                [IntegerLiteral] <value:21>
+                [IntegerLiteral] <value:2>
+            [BinaryCalcul] <operator:*> <type:int>
+                [IntegerLiteral] <value:3>
+                [IntegerLiteral] <value:4>
+        [IntegerLiteral] <value:12>

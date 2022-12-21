@@ -1,0 +1,19 @@
+[Program] <module:for1>
+    [VariableDeclaration] <var> <name:res> <type:int>
+        [Assignation] <type:int>
+            [IntegerLiteral] <value:0>
+    [ForI] <type:int>
+        [ForICondition]
+            [VariableDeclaration] <var> <name:i> <type:int>
+                [Assignation] <type:int>
+                    [IntegerLiteral] <value:1>
+            [BinaryCalcul] <operator:<=> <type:bool>
+                [Identifier] <name:i> <type:int>
+                [IntegerLiteral] <value:10>
+            [UnaryCalcul] <postfix> <operator:++> <type:int>
+                [Identifier] <name:i> <type:int>
+        [BlockBody] <type:int>
+            [BinaryCalcul] <operator:+> <type:int>
+                [Identifier] <name:res> <type:int>
+                [Assignation] <type:int>
+                    [Identifier] <name:i> <type:int>

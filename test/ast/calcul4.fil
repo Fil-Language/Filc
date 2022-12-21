@@ -1,3 +1,5 @@
 module calcul4
 
+var i = 0
+
 ++i

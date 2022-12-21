@@ -1,0 +1,5 @@
+[Program] <module:cast1>
+    [VariableDeclaration] <val> <name:x> <type:int>
+        [Assignation] <type:int>
+            [Cast] <type:int>
+                [FloatLiteral] <value:1.0>
