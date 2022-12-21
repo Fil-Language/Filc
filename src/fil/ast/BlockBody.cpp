@@ -50,3 +50,13 @@ AbstractType *BlockBody::inferType(Environment *env) {
 
     return _exprType;
 }
+
+string BlockBody::dump(int indent) const {
+    string res = string(indent, '\t') + "[BlockBody] <type:" + _exprType->getName() + ">\n";
+
+    for (auto expr: _exprs) {
+        res += expr->dump(indent + 1);
+    }
+
+    return res;
+}

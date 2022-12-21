@@ -29,3 +29,11 @@ AbstractType *ParenthesisBody::inferType(Environment *env) {
 
     return _exprType;
 }
+
+string ParenthesisBody::dump(int indent) const {
+    string res = string(indent, '\t') + "[ParenthesisBody] <type:" + _exprType->getName() + ">\n";
+
+    res += _expr->dump(indent + 1);
+
+    return res;
+}
