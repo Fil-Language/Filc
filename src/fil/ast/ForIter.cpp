@@ -15,6 +15,7 @@ ForIter::ForIter(ForIterCondition *condition, AbstractExpr *body)
 ForIter::~ForIter() {
     delete _condition;
     delete _body;
+    delete _environment;
 }
 
 string ForIter::decompile(int indent) const {

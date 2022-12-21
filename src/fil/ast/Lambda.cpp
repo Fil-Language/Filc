@@ -18,6 +18,7 @@ Lambda::~Lambda() {
     }
     delete _type;
     delete _body;
+    delete _environment;
 }
 
 string Lambda::decompile(int indent) const {
@@ -59,7 +60,7 @@ void Lambda::resolveEnvironment(Environment *parent) {
 AbstractType *Lambda::inferType(Environment *env) {
     vector<AbstractType *> params;
     for (auto param: _params) {
-        params.push_back(param->getType());
+        params.push_back(param->inferType(_environment));
     }
 
     auto bodyType = _body->inferType(_environment);

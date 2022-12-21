@@ -66,9 +66,9 @@ Symbol *FunctionDeclaration::resolveDeclaration(Environment *parent, Environment
 }
 
 AbstractType *FunctionDeclaration::inferType(Environment *env) {
-    vector<AbstractType *> params;
+    vector < AbstractType * > params;
     for (auto param: _params) {
-        params.push_back(param->getType());
+        params.push_back(param->inferType(env));
     }
 
     _exprType = new LambdaType(params, _type);

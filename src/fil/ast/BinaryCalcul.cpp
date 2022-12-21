@@ -31,7 +31,7 @@ AbstractType *BinaryCalcul::inferType(Environment *env) {
     auto leftType = _left->inferType(env);
     auto rightType = _right->inferType(env);
 
-    if (leftType != rightType) {
+    if (leftType && rightType && *leftType != *rightType) {
         ErrorsRegister::addError(
                 "Type mismatch: " + leftType->getName() + " and " + rightType->getName(),
                 _pos
@@ -69,4 +69,14 @@ AbstractType *BinaryCalcul::inferType(Environment *env) {
     }
 
     return _exprType;
+}
+
+string BinaryCalcul::dump(int indent) const {
+    string res = string(indent, '\t') + "[BinaryCalcul] <operator:" + _op->decompile(0) + "> "
+                 + "<type:" + _exprType->getName() + ">\n";
+
+    res += _left->dump(indent + 1);
+    res += _right->dump(indent + 1);
+
+    return res;
 }

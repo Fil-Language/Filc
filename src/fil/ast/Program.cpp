@@ -21,6 +21,7 @@ Program::~Program() {
     for (auto &expr: _exprs) {
         delete expr;
     }
+    delete _environment;
 }
 
 string Program::decompile(int indent) const {

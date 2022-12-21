@@ -15,6 +15,7 @@ ForI::ForI(ForICondition *condition, AbstractExpr *body)
 ForI::~ForI() {
     delete _condition;
     delete _body;
+    delete _environment;
 }
 
 string ForI::decompile(int indent) const {
@@ -29,7 +30,7 @@ void ForI::resolveEnvironment(Environment *parent) {
 }
 
 AbstractType *ForI::inferType(Environment *env) {
-    _condition->inferCondition(env);
+    _condition->inferCondition(env, _environment);
 
     _exprType = _body->inferType(_environment);
 

@@ -45,10 +45,12 @@ void FunctionParam::resolveParam(Environment *function) {
     }
 }
 
-AbstractType *FunctionParam::getType() const {
+AbstractType *FunctionParam::inferType(Environment *env) const {
+    env->getSymbol(_name->getName())->setType(_type);
+
     return _type;
 }
 
 string FunctionParam::dump(int indent) const {
-    return string(indent, '\t') + "[FunctionParam] <name:" + _name->getName() + "> <type:" + _type->getName() + ">";
+    return string(indent, '\t') + "[FunctionParam] <name:" + _name->getName() + "> <type:" + _type->getName() + ">\n";
 }

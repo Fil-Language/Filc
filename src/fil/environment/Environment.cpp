@@ -33,7 +33,8 @@ Environment *Environment::getGlobalEnvironment() {
     globalEnvironment->getSymbol("char")->setType(new ast::Type(new ast::Identifier("char")));
     globalEnvironment->addType("bool", new Position(0, 0, "builtin"));
     globalEnvironment->getSymbol("bool")->setType(new ast::Type(new ast::Identifier("bool")));
-    globalEnvironment->addType("string", new Position(0, 0, "builtin")); // FIXME : temporary, to be removed later as string is part of stl
+    globalEnvironment->addType("string", new Position(0, 0,
+                                                      "builtin")); // FIXME : temporary, to be removed later as string is part of stl
     globalEnvironment->getSymbol("string")->setType(new ast::Type(new ast::Identifier("string")));
 
     return globalEnvironment;
@@ -64,7 +65,10 @@ Symbol *Environment::addType(const std::string &name, Position *position) {
 }
 
 bool Environment::hasSymbol(const std::string &name) const {
-    return _functions->hasSymbol(name) || _variables->hasSymbol(name) || _types->hasSymbol(name);
+    return _functions->hasSymbol(name)
+           || _variables->hasSymbol(name)
+           || _types->hasSymbol(name)
+           || (_parent && _parent->hasSymbol(name));
 }
 
 bool Environment::hasFunction(const std::string &name) const {
@@ -81,11 +85,14 @@ bool Environment::hasType(const std::string &name) const {
 
 Symbol *Environment::getSymbol(const std::string &name) const {
     if (_functions->hasSymbol(name)) {
-        return _functions->getSymbol(name);
+        auto s = _functions->getSymbol(name);
+        return s != nullptr ? s : _parent->getSymbol(name);
     } else if (_variables->hasSymbol(name)) {
-        return _variables->getSymbol(name);
+        auto s = _variables->getSymbol(name);
+        return s != nullptr ? s : _parent->getSymbol(name);
     } else if (_types->hasSymbol(name)) {
-        return _types->getSymbol(name);
+        auto s = _types->getSymbol(name);
+        return s != nullptr ? s : _parent->getSymbol(name);
     } else if (_parent) {
         return _parent->getSymbol(name);
     }

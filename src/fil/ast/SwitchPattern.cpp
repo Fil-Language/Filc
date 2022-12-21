@@ -29,7 +29,7 @@ AbstractLiteral *SwitchPattern::getLiteral() const {
 
 string SwitchPattern::dump(int indent) const {
     if (_isDefault) {
-        return string(indent, '\t') + "[SwitchPattern] <default>";
+        return string(indent, '\t') + "[SwitchPattern] <default>\n";
     } else {
         string res = string(indent, '\t') + "[SwitchPattern]\n";
 

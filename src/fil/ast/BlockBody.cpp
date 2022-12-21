@@ -16,6 +16,7 @@ BlockBody::~BlockBody() {
     for (auto expr: _exprs) {
         delete expr;
     }
+    delete _environment;
 }
 
 string BlockBody::decompile(int indent) const {

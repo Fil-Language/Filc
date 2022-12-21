@@ -426,6 +426,8 @@ namespace ast {
 
         AbstractType *inferType(Environment *env) override;
 
+        std::string dump(int indent) const override;
+
     private:
         AbstractExpr *_left;
         Operator *_op;
@@ -444,7 +446,7 @@ namespace ast {
 
         void resolveParam(Environment *function);
 
-        AbstractType *getType() const;
+        AbstractType *inferType(Environment *env) const;
 
         std::string dump(int indent) const override;
 
@@ -640,7 +642,7 @@ namespace ast {
 
         void resolveCondition(Environment *loop);
 
-        void inferCondition(Environment *env);
+        void inferCondition(Environment *env, Environment *loop);
 
         std::string dump(int indent) const override;
 

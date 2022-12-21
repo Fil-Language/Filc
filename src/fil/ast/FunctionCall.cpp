@@ -47,7 +47,8 @@ void FunctionCall::resolveEnvironment(Environment *parent) {
 
 AbstractType *FunctionCall::inferType(Environment *env) {
     auto functionType = env->getSymbol(_name->getName())->getType();
-    _exprType = functionType;
+    // If it's a recursive call, the return type is nullptr here
+    _exprType = ((LambdaType *) functionType)->getReturnType();
 
     // Check args types
     auto argsTypes = ((LambdaType *) functionType)->getArgsTypes();
@@ -60,7 +61,7 @@ AbstractType *FunctionCall::inferType(Environment *env) {
     } else {
         for (int i = 0; i < _args.size(); i++) {
             auto argType = _args[i]->inferType(env);
-            if (argType != argsTypes[i]) {
+            if (*argType != *argsTypes[i]) {
                 ErrorsRegister::addError(
                         "Argument " + to_string(i) + " of " + _name->getName() + " expects type " +
                         argsTypes[i]->getName() + ", " + argType->getName() + " provided",
@@ -74,8 +75,11 @@ AbstractType *FunctionCall::inferType(Environment *env) {
 }
 
 string FunctionCall::dump(int indent) const {
-    string res = string(indent, '\t') + "[FunctionCall] <name:" + _name->getName()
-                 + "> <type:" + _exprType->getName() + ">\n";
+    string res = string(indent, '\t') + "[FunctionCall] <name:" + _name->getName() + ">";
+    if (_exprType) { // Problem from recursive call, see inferType
+        res += " <type:" + _exprType->getName() + ">";
+    }
+    res += "\n";
 
     for (auto &arg: _args) {
         res += arg->dump(indent + 1);

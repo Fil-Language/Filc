@@ -17,7 +17,7 @@ bool AbstractType::isIterable() const {
     return false;
 }
 
-AbstractType * AbstractType::getIterableType() {
+AbstractType *AbstractType::getIterableType() {
     return this;
 }
 

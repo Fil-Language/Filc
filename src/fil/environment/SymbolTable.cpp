@@ -48,7 +48,7 @@ void SymbolTable::merge(SymbolTable *symbolTable) {
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
 Symbol::Symbol(const std::string &name, Position *position)
-        : _name(name), _position(position) {}
+        : _name(name), _position(position), _type(nullptr) {}
 
 Symbol::~Symbol() {
     delete _position;

@@ -15,6 +15,7 @@ While::While(AbstractExpr *condition, AbstractExpr *body)
 While::~While() {
     delete _condition;
     delete _body;
+    delete _environment;
 }
 
 string While::decompile(int indent) const {

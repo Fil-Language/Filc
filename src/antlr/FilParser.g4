@@ -86,10 +86,6 @@ expr returns[AbstractExpr *tree]
     | e6=function {
         $tree = $e6.tree;
     }
-    | r=RETURN e7=expr {
-        $tree = new Return($e7.tree);
-        $tree->setPosition($r);
-    }
     | e8=lambda {
         $tree = $e8.tree;
     }
@@ -137,14 +133,6 @@ expr returns[AbstractExpr *tree]
         $tree->setPosition($b1.start);
     }
 
-    | b1=expr AND b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::AND), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-    | b1=expr OR b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::OR), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
     | b1=expr LESS b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::LESS), $b2.tree);
         $tree->setPosition($b1.start);
@@ -168,6 +156,20 @@ expr returns[AbstractExpr *tree]
     | b1=expr NEQ b2=expr {
         $tree = new BinaryCalcul($b1.tree, new Operator(Operator::NEQ), $b2.tree);
         $tree->setPosition($b1.start);
+    }
+
+    | b1=expr AND b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::AND), $b2.tree);
+        $tree->setPosition($b1.start);
+    }
+    | b1=expr OR b2=expr {
+        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::OR), $b2.tree);
+        $tree->setPosition($b1.start);
+    }
+
+    | r=RETURN e7=expr {
+        $tree = new Return($e7.tree);
+        $tree->setPosition($r);
     }
     ;
 
@@ -614,7 +616,7 @@ function_call_params returns[vector<AbstractExpr *> tree]
 @init {
     vector<AbstractExpr *> res;
 }
-@afer {
+@after {
     $tree = res;
 }
     : e1=expr {

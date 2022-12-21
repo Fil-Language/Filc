@@ -15,6 +15,7 @@ Function::Function(FunctionDeclaration *declaration, AbstractExpr *body)
 Function::~Function() {
     delete _declaration;
     delete _body;
+    delete _environment;
 }
 
 string Function::decompile(int indent) const {
@@ -38,13 +39,13 @@ void Function::resolveEnvironment(Environment *parent) {
 }
 
 AbstractType *Function::inferType(Environment *env) {
-    _exprType = _declaration->inferType(env);
+    _exprType = _declaration->inferType(_environment);
     env->getSymbol(_symbol->getName())->setType(_exprType);
 
     auto returnType = ((LambdaType *) _exprType)->getReturnType();
     auto bodyType = _body->inferType(_environment);
     if (returnType) {
-        if (returnType != bodyType) {
+        if (*returnType != *bodyType) {
             ErrorsRegister::addError(
                     "Type mismatch: function " + _symbol->getName() + " must returns " + returnType->getName()
                     + ", but its body returns " + bodyType->getName(),

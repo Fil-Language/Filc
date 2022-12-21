@@ -2,6 +2,6 @@
 	[VariableDeclaration] <var> <name:i> <type:int>
 		[Assignation] <type:int>
 			[IntegerLiteral] <value:0>
-	[UnaryCalcul] <prefix> <operator:++>
+	[UnaryCalcul] <prefix> <operator:++> <type:int>
 		[Identifier] <name:i> <type:int>
 

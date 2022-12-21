@@ -30,13 +30,13 @@ void ForICondition::resolveCondition(Environment *loop) {
     _increment->resolveEnvironment(loop);
 }
 
-void ForICondition::inferCondition(Environment *env) {
+void ForICondition::inferCondition(Environment *env, Environment *loop) {
     if (_declaration)
-        _declaration->inferType(env);
+        _declaration->inferType(loop);
     if (_condition)
-        _condition->inferType(env);
+        _condition->inferType(loop);
     if (_increment)
-        _increment->inferType(env);
+        _increment->inferType(loop);
 }
 
 string ForICondition::dump(int indent) const {

@@ -1,0 +1,19 @@
+[Program] <module:switch1>
+	[VariableDeclaration] <val> <name:a> <type:int>
+		[Assignation] <type:int>
+			[Switch] <type:int>
+				[BinaryCalcul] <operator:==> <type:bool>
+					[IntegerLiteral] <value:1>
+					[IntegerLiteral] <value:1>
+				[SwitchCase] <type:int>
+					[SwitchPattern]
+						[BooleanLiteral] <value:true>
+					[IntegerLiteral] <value:42>
+				[SwitchCase] <type:int>
+					[SwitchPattern]
+						[BooleanLiteral] <value:false>
+					[IntegerLiteral] <value:21>
+				[SwitchCase] <type:int>
+					[SwitchPattern] <default>
+					[IntegerLiteral] <value:-1>
+

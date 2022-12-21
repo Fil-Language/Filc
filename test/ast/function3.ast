@@ -1,0 +1,8 @@
+[Program] <module:function3>
+	[Function] <name:test>  <type:() -> string>
+		[FunctionDeclaration] <name:test> <type:() -> string>
+		[ParenthesisBody] <type:string>
+			[BinaryCalcul] <operator:+> <type:string>
+				[StringLiteral] <value:Are you sure? >
+				[StringLiteral] <value:Maybe...>
+

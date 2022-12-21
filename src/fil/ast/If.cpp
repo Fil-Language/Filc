@@ -42,7 +42,7 @@ AbstractType *If::inferType(Environment *env) {
     auto thenType = _then->inferType(env);
     if (_else) {
         auto elseType = _else->inferType(env);
-        if (thenType != elseType) {
+        if (*thenType != *elseType) {
             ErrorsRegister::addError(
                     "Then and Else branch must have the same type\nThen: " + thenType->getName() + "\nElse: " +
                     elseType->getName(),
