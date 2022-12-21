@@ -55,3 +55,15 @@ AbstractType *If::inferType(Environment *env) {
 
     return _exprType;
 }
+
+string If::dump(int indent) const {
+    string res = string(indent, '\t') + "[If] <type:" + _exprType->getName() + ">\n";
+
+    res += _condition->dump(indent + 1);
+    res += _then->dump(indent + 1);
+    if (_else) {
+        res += _else->dump(indent + 1);
+    }
+
+    return res;
+}

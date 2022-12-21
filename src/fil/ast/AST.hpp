@@ -169,6 +169,8 @@ namespace ast {
 
         AbstractType *getReturnType() const;
 
+        void setReturnType(AbstractType *ret);
+
         const std::vector<AbstractType *> &getArgsTypes() const;
 
     private:
@@ -552,6 +554,8 @@ namespace ast {
         void resolveEnvironment(Environment *parent) override;
 
         AbstractType *inferType(Environment *env) override;
+
+        std::string dump(int indent) const override;
 
     private:
         AbstractExpr *_condition;

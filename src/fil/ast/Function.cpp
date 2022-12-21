@@ -43,12 +43,16 @@ AbstractType *Function::inferType(Environment *env) {
 
     auto returnType = ((LambdaType *) _exprType)->getReturnType();
     auto bodyType = _body->inferType(_environment);
-    if (returnType != bodyType) {
-        ErrorsRegister::addError(
-                "Type mismatch: function " + _symbol->getName() + " must returns " + returnType->getName()
-                + ", but its body returns " + bodyType->getName(),
-                _pos
-        );
+    if (returnType) {
+        if (returnType != bodyType) {
+            ErrorsRegister::addError(
+                    "Type mismatch: function " + _symbol->getName() + " must returns " + returnType->getName()
+                    + ", but its body returns " + bodyType->getName(),
+                    _pos
+            );
+        }
+    } else {
+        ((LambdaType *) _exprType)->setReturnType(bodyType);
     }
 
     return _exprType;

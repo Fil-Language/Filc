@@ -39,12 +39,16 @@ void BlockBody::resolveEnvironment(Environment *parent) {
 }
 
 AbstractType *BlockBody::inferType(Environment *env) {
-    for (auto expr: _exprs) {
-        if (expr->isReturn()) {
-            _exprType = expr->inferType(_environment);
+    for (auto it = _exprs.begin(); it != _exprs.end(); it++) {
+        if ((*it)->isReturn()) {
+            _exprType = (*it)->inferType(_environment);
             break;
         } else {
-            expr->inferType(_environment);
+            auto type = (*it)->inferType(_environment);
+
+            if (it + 1 == _exprs.end()) {
+                _exprType = type;
+            }
         }
     }
 

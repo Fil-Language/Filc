@@ -51,3 +51,7 @@ AbstractType *LambdaType::getReturnType() const {
 const vector<AbstractType *> &LambdaType::getArgsTypes() const {
     return _args;
 }
+
+void LambdaType::setReturnType(AbstractType *ret) {
+    _ret = ret;
+}

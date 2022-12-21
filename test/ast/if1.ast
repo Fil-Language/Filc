@@ -1,0 +1,8 @@
+[Program] <module:if1>
+	[VariableDeclaration] <val> <name:res> <type:int>
+		[Assignation] <type:int>
+			[If] <type:int>
+				[BooleanLiteral] <value:true>
+				[BlockBody] <type:int>
+					[IntegerLiteral] <value:1>
+
