@@ -21,6 +21,30 @@ Refer to documentation for used grammar : [https://github.com/Fil-Language/Docum
 
 ### Tests
 
-Tests are written with [Node.js](https://nodejs.org).
+Tests are written with [Node.js](https://nodejs.org), you need at least version 16.
 
 - [Colors](https://www.npmjs.com/package/colors)
+
+## Building and Testing
+
+If you want to build and test the compiler, please follow the steps below.
+
+### Building
+
+```shell
+# Configure CMake in build directory
+cmake -B ./build -DCMAKE_BUILD_TYPE=Release
+# Build
+cmake --build ./build
+```
+
+### Testing
+
+```shell
+# Go to test directory
+cd test
+# Install dependencies
+npm install
+# Run tests
+npm test
+```
