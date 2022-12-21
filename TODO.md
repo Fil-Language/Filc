@@ -9,4 +9,5 @@ Choses à faire pour la prochaine version :
 - [x] Inférence de types
 - [x] Vérification des types
 - [ ] Implémenter dump()
-- [ ] Ajouter l'indentation dans decompile()
+- [ ] Ajouter des tests sur les imports pour dump()
+- [x] Ajouter l'indentation dans decompile()
