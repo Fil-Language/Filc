@@ -438,6 +438,8 @@ namespace ast {
 
         AbstractType *getType() const;
 
+        std::string dump(int indent) const override;
+
     private:
         Identifier *_name;
         AbstractType *_type;
@@ -454,6 +456,8 @@ namespace ast {
         Symbol *resolveDeclaration(Environment *parent, Environment *function);
 
         AbstractType *inferType(Environment *env) override;
+
+        std::string dump(int indent) const override;
 
     private:
         Identifier *_name;
@@ -476,6 +480,8 @@ namespace ast {
         void resolveEnvironment(Environment *parent) override;
 
         AbstractType *inferType(Environment *env) override;
+
+        std::string dump(int indent) const override;
 
     private:
         FunctionDeclaration *_declaration;

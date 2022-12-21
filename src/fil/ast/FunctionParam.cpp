@@ -48,3 +48,7 @@ void FunctionParam::resolveParam(Environment *function) {
 AbstractType *FunctionParam::getType() const {
     return _type;
 }
+
+string FunctionParam::dump(int indent) const {
+    return string(indent, '\t') + "[FunctionParam] <name:" + _name->getName() + "> <type:" + _type->getName() + ">";
+}

@@ -53,3 +53,13 @@ AbstractType *Function::inferType(Environment *env) {
 
     return _exprType;
 }
+
+string Function::dump(int indent) const {
+    string res = string(indent, '\t') + "[Function] <name:" + _symbol->getName() + "> "
+                 + " <type:" + _exprType->getName() + ">\n";
+
+    res += _declaration->dump(indent + 1);
+    res += _body->dump(indent + 1);
+
+    return res;
+}

@@ -76,3 +76,14 @@ AbstractType *FunctionDeclaration::inferType(Environment *env) {
 
     return _exprType;
 }
+
+string FunctionDeclaration::dump(int indent) const {
+    string res = string(indent, '\t') + "[FunctionDeclaration] <name:" + _name->getName() + "> "
+                 + "<type:" + _exprType->getName() + ">\n";
+
+    for (auto param: _params) {
+        res += param->dump(indent + 1);
+    }
+
+    return res;
+}
