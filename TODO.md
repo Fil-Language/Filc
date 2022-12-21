@@ -8,3 +8,5 @@ Choses à faire pour la prochaine version :
 - [ ] Ajouter les tests pour ces classes
 - [x] Inférence de types
 - [x] Vérification des types
+- [ ] Implémenter dump()
+- [ ] Ajouter l'indentation dans decompile()
