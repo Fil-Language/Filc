@@ -35,3 +35,23 @@ void If::resolveEnvironment(Environment *parent) {
         _else->resolveEnvironment(parent);
     }
 }
+
+AbstractType *If::inferType(Environment *env) {
+    _condition->inferType(env);
+
+    auto thenType = _then->inferType(env);
+    if (_else) {
+        auto elseType = _else->inferType(env);
+        if (thenType != elseType) {
+            ErrorsRegister::addError(
+                    "Then and Else branch must have the same type\nThen: " + thenType->getName() + "\nElse: " +
+                    elseType->getName(),
+                    _pos
+            );
+        }
+    }
+
+    _exprType = thenType;
+
+    return _exprType;
+}

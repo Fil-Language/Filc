@@ -77,6 +77,8 @@ AbstractType *VariableDeclaration::inferType(Environment *env) {
         }
     }
 
+    env->getSymbol(_name->getName())->setType(_type);
+
     _exprType = _type;
 
     return _exprType;

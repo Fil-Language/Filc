@@ -34,3 +34,15 @@ void ForIterCondition::resolveCondition(Environment *loop) {
         );
     }
 }
+
+void ForIterCondition::inferCondition(Environment *env, Environment *loop) {
+    auto type = _iterable->inferType(env);
+    if (!type->isIterable()) {
+        ErrorsRegister::addError(
+                "Cannot iterate over " + type->getName(),
+                _iterable->getPosition()
+        );
+    }
+
+    loop->getSymbol(_iterable->getName())->setType(type->getIterableType());
+}

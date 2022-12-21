@@ -37,3 +37,16 @@ void BlockBody::resolveEnvironment(Environment *parent) {
         expr->resolveEnvironment(_environment);
     }
 }
+
+AbstractType *BlockBody::inferType(Environment *env) {
+    for (auto expr: _exprs) {
+        if (expr->isReturn()) {
+            _exprType = expr->inferType(_environment);
+            break;
+        } else {
+            expr->inferType(_environment);
+        }
+    }
+
+    return _exprType;
+}

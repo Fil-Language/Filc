@@ -27,3 +27,11 @@ void ForI::resolveEnvironment(Environment *parent) {
     _condition->resolveCondition(_environment);
     _body->resolveEnvironment(_environment);
 }
+
+AbstractType *ForI::inferType(Environment *env) {
+    _condition->inferCondition(env);
+
+    _exprType = _body->inferType(_environment);
+
+    return _exprType;
+}

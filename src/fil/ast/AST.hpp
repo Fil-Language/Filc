@@ -117,6 +117,10 @@ namespace ast {
         virtual std::string getName() const = 0;
 
         bool equals(const AbstractType &other) const;
+
+        virtual bool isIterable() const;
+
+        virtual AbstractType *getIterableType();
     };
 
     class Type : public AbstractType {
@@ -132,6 +136,10 @@ namespace ast {
         std::string decompile(int indent) const override;
 
         std::string getName() const override;
+
+        bool isIterable() const override;
+
+        AbstractType *getIterableType() override;
 
     private:
         Identifier *_name;
@@ -173,6 +181,8 @@ namespace ast {
         std::string decompile(int indent) const override;
 
         void resolveEnvironment(Environment *parent) override;
+
+        AbstractType *inferType(Environment *env) override;
 
     private:
         std::vector<AbstractExpr *> _exprs;
@@ -503,6 +513,8 @@ namespace ast {
 
         void resolveEnvironment(Environment *parent) override;
 
+        AbstractType *inferType(Environment *env) override;
+
     private:
         AbstractExpr *_condition;
         AbstractExpr *_then;
@@ -521,6 +533,8 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        AbstractLiteral *getLiteral() const;
+
     private:
         bool _isDefault;
         AbstractLiteral *_literal;
@@ -536,6 +550,10 @@ namespace ast {
 
         void resolveEnvironment(Environment *parent) override;
 
+        AbstractType *inferType(Environment *env) override;
+
+        AbstractType *inferPatternType(Environment *env);
+
     private:
         SwitchPattern *_pattern;
         AbstractExpr *_body;
@@ -550,6 +568,8 @@ namespace ast {
         std::string decompile(int indent) const override;
 
         void resolveEnvironment(Environment *parent) override;
+
+        AbstractType *inferType(Environment *env) override;
 
     private:
         AbstractExpr *_condition;
@@ -568,6 +588,8 @@ namespace ast {
 
         void resolveCondition(Environment *loop);
 
+        void inferCondition(Environment *env);
+
     private:
         VariableDeclaration *_declaration;
         AbstractExpr *_condition;
@@ -583,6 +605,8 @@ namespace ast {
         std::string decompile(int indent) const override;
 
         void resolveEnvironment(Environment *parent) override;
+
+        AbstractType *inferType(Environment *env) override;
 
     private:
         ForICondition *_condition;
@@ -602,6 +626,8 @@ namespace ast {
 
         void resolveCondition(Environment *loop);
 
+        void inferCondition(Environment *env, Environment *loop);
+
     private:
         bool _isVal;
         Identifier *_iterator;
@@ -617,6 +643,8 @@ namespace ast {
         std::string decompile(int indent) const override;
 
         void resolveEnvironment(Environment *parent) override;
+
+        AbstractType *inferType(Environment *env) override;
 
     private:
         ForIterCondition *_condition;
@@ -635,6 +663,8 @@ namespace ast {
         std::string decompile(int indent) const override;
 
         void resolveEnvironment(Environment *parent) override;
+
+        AbstractType *inferType(Environment *env) override;
 
     private:
         AbstractExpr *_condition;

@@ -22,3 +22,7 @@ SwitchPattern::~SwitchPattern() {
 string SwitchPattern::decompile(int indent) const {
     return _isDefault ? "default" : _literal->decompile(indent);
 }
+
+AbstractLiteral *SwitchPattern::getLiteral() const {
+    return _literal;
+}

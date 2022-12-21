@@ -24,3 +24,17 @@ string SwitchCase::decompile(int indent) const {
 void SwitchCase::resolveEnvironment(Environment *parent) {
     _body->resolveEnvironment(parent);
 }
+
+AbstractType *SwitchCase::inferType(Environment *env) {
+    _exprType = _body->inferType(env);
+
+    return _exprType;
+}
+
+AbstractType *SwitchCase::inferPatternType(Environment *env) {
+    if (_pattern->getLiteral()) {
+        return _pattern->getLiteral()->inferType(env);
+    }
+
+    return nullptr;
+}

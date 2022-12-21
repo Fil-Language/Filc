@@ -28,3 +28,11 @@ void While::resolveEnvironment(Environment *parent) {
     _condition->resolveEnvironment(parent);
     _body->resolveEnvironment(_environment);
 }
+
+AbstractType *While::inferType(Environment *env) {
+    _condition->inferType(env);
+
+    _exprType = _body->inferType(_environment);
+
+    return _exprType;
+}

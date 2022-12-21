@@ -29,3 +29,12 @@ void ForICondition::resolveCondition(Environment *loop) {
     _condition->resolveEnvironment(loop);
     _increment->resolveEnvironment(loop);
 }
+
+void ForICondition::inferCondition(Environment *env) {
+    if (_declaration)
+        _declaration->inferType(env);
+    if (_condition)
+        _condition->inferType(env);
+    if (_increment)
+        _increment->inferType(env);
+}

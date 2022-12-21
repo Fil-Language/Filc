@@ -42,3 +42,15 @@ string Type::getName() const {
         return _name->getName();
     }
 }
+
+bool Type::isIterable() const {
+    return _isArray;
+}
+
+AbstractType * Type::getIterableType() {
+    if (isIterable()) {
+        return _subType;
+    } else {
+        return AbstractType::getIterableType();
+    }
+}
