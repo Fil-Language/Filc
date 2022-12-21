@@ -726,6 +726,8 @@ namespace ast {
 
         AbstractType *inferType(Environment *env) override;
 
+        std::string dump(int indent) const override;
+
     private:
         AbstractExpr *_condition;
         AbstractExpr *_body;

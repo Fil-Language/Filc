@@ -36,3 +36,12 @@ AbstractType *While::inferType(Environment *env) {
 
     return _exprType;
 }
+
+string While::dump(int indent) const {
+    string res = string(indent, '\t') + "[While] <type:" + _exprType->getName() + ">\n";
+
+    res += _condition->dump(indent + 1);
+    res += _body->dump(indent + 1);
+
+    return res;
+}
