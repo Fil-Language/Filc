@@ -85,7 +85,8 @@ AbstractType *VariableDeclaration::inferType(Environment *env) {
 }
 
 string VariableDeclaration::dump(int indent) const {
-    string res = string(indent, '\t') + "[VariableDeclaration] "
+    string res = string(indent, '\t') + "[VariableDeclaration]"
+                 + (_isExported ? " <exported> " : " ")
                  + (_isVal ? "<val> " : "<var> ")
                  + "<name:" + _name->getName() + "> "
                  + "<type:" + _exprType->getName() + ">\n";

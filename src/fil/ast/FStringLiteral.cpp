@@ -17,5 +17,6 @@ string FStringLiteral::decompile(int indent) const {
 }
 
 string FStringLiteral::dump(int indent) const {
-    return string(indent, '\t') + "[FStringLiteral] <value:" + _value + ">\n";
+    return string(indent, '\t') + "[FStringLiteral]" + (_isExported ? " <exported>" : "") +
+           " <value:" + _value + ">\n";
 }

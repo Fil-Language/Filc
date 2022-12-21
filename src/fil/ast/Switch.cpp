@@ -95,7 +95,8 @@ AbstractType *Switch::inferType(Environment *env) {
 }
 
 string Switch::dump(int indent) const {
-    string res = string(indent, '\t') + "[Switch] <type:" + _exprType->getName() + ">\n";
+    string res = string(indent, '\t') + "[Switch]" + (_isExported ? " <exported> " : " ") +
+                 "<type:" + _exprType->getName() + ">\n";
 
     res += _condition->dump(indent + 1);
 

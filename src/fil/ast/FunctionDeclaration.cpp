@@ -66,7 +66,7 @@ Symbol *FunctionDeclaration::resolveDeclaration(Environment *parent, Environment
 }
 
 AbstractType *FunctionDeclaration::inferType(Environment *env) {
-    vector < AbstractType * > params;
+    vector<AbstractType *> params;
     for (auto param: _params) {
         params.push_back(param->inferType(env));
     }
@@ -78,7 +78,8 @@ AbstractType *FunctionDeclaration::inferType(Environment *env) {
 }
 
 string FunctionDeclaration::dump(int indent) const {
-    string res = string(indent, '\t') + "[FunctionDeclaration] <name:" + _name->getName() + "> "
+    string res = string(indent, '\t') + "[FunctionDeclaration]" + (_isExported ? " <exported> " : " ")
+                 + "<name:" + _name->getName() + "> "
                  + "<type:" + _exprType->getName() + ">\n";
 
     for (auto param: _params) {

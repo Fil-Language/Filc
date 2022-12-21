@@ -39,7 +39,8 @@ AbstractType *UnaryCalcul::inferType(Environment *env) {
 }
 
 string UnaryCalcul::dump(int indent) const {
-    string res = string(indent, '\t') + "[UnaryCalcul] "
+    string res = string(indent, '\t') + "[UnaryCalcul]"
+                 + (_isExported ? " <exported> " : " ")
                  + (_isPrefix ? "<prefix>" : "<postfix>")
                  + " <operator:" + _op->decompile(indent) + ">"
                  + " <type:" + _exprType->getName() + ">\n";

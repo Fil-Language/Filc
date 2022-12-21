@@ -40,7 +40,8 @@ AbstractType *SwitchCase::inferPatternType(Environment *env) {
 }
 
 string SwitchCase::dump(int indent) const {
-    string res = string(indent, '\t') + "[SwitchCase] <type:" + _exprType->getName() + ">\n";
+    string res = string(indent, '\t') + "[SwitchCase]" + (_isExported ? " <exported> " : " ") +
+                 "<type:" + _exprType->getName() + ">\n";
 
     res += _pattern->dump(indent + 1);
     res += _body->dump(indent + 1);

@@ -23,5 +23,6 @@ AbstractType *FloatLiteral::inferType(Environment *env) {
 }
 
 string FloatLiteral::dump(int indent) const {
-    return string(indent, '\t') + "[FloatLiteral] <value:" + to_string(_value) + ">\n";
+    return string(indent, '\t') + "[FloatLiteral]" + (_isExported ? " <exported>" : "") +
+           " <value:" + to_string(_value) + ">\n";
 }

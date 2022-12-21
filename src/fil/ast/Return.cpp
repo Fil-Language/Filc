@@ -41,7 +41,8 @@ bool Return::isReturn() const {
 }
 
 string Return::dump(int indent) const {
-    string res = string(indent, '\t') + "[Return] <type:" + _exprType->getName() + ">\n";
+    string res = string(indent, '\t') + "[Return]" + (_isExported ? " <exported> " : " ") +
+                 "<type:" + _exprType->getName() + ">\n";
 
     res += _expr->dump(indent + 1);
 

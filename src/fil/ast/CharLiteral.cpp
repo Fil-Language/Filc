@@ -24,5 +24,6 @@ AbstractType *CharLiteral::inferType(Environment *env) {
 }
 
 string CharLiteral::dump(int indent) const {
-    return string(indent, '\t') + "[CharLiteral] <value:" + string(1, _value) + ">\n";
+    return string(indent, '\t') + "[CharLiteral]" + (_isExported ? " <exported>" : "") +
+           " <value:" + string(1, _value) + ">\n";
 }

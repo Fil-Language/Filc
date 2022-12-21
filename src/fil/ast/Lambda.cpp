@@ -85,7 +85,8 @@ AbstractType *Lambda::inferType(Environment *env) {
 }
 
 string Lambda::dump(int indent) const {
-    string res = string(indent, '\t') + "[Lambda] <type:" + _exprType->getName() + ">\n";
+    string res = string(indent, '\t') + "[Lambda]" + (_isExported ? " <exported> " : " ") +
+                 "<type:" + _exprType->getName() + ">\n";
 
     for (auto param: _params) {
         res += param->dump(indent + 1);

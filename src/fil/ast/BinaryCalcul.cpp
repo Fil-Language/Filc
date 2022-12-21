@@ -72,7 +72,8 @@ AbstractType *BinaryCalcul::inferType(Environment *env) {
 }
 
 string BinaryCalcul::dump(int indent) const {
-    string res = string(indent, '\t') + "[BinaryCalcul] <operator:" + _op->decompile(0) + "> "
+    string res = string(indent, '\t') + "[BinaryCalcul]" + (_isExported ? " <exported>" : "")
+                 + " <operator:" + _op->decompile(0) + "> "
                  + "<type:" + _exprType->getName() + ">\n";
 
     res += _left->dump(indent + 1);

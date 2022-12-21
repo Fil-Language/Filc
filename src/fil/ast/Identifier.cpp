@@ -47,5 +47,6 @@ AbstractType *Identifier::inferType(Environment *env) {
 }
 
 string Identifier::dump(int indent) const {
-    return string(indent, '\t') + "[Identifier] <name:" + _name + "> <type:" + _exprType->getName() + ">\n";
+    return string(indent, '\t') + "[Identifier]" + (_isExported ? " <exported>" : "") +
+           " <name:" + _name + "> <type:" + _exprType->getName() + ">\n";
 }

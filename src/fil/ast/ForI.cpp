@@ -38,7 +38,8 @@ AbstractType *ForI::inferType(Environment *env) {
 }
 
 string ForI::dump(int indent) const {
-    string res = string(indent, '\t') + "[ForI] <type:" + _exprType->getName() + ">\n";
+    string res = string(indent, '\t') + "[ForI]" + (_isExported ? " <exported> " : " ") +
+                 "<type:" + _exprType->getName() + ">\n";
 
     res += _condition->dump(indent + 1);
     res += _body->dump(indent + 1);

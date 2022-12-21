@@ -75,7 +75,8 @@ AbstractType *FunctionCall::inferType(Environment *env) {
 }
 
 string FunctionCall::dump(int indent) const {
-    string res = string(indent, '\t') + "[FunctionCall] <name:" + _name->getName() + ">";
+    string res = string(indent, '\t') + "[FunctionCall]" + (_isExported ? " <exported> " : " ") +
+                 "<name:" + _name->getName() + ">";
     if (_exprType) { // Problem from recursive call, see inferType
         res += " <type:" + _exprType->getName() + ">";
     }
