@@ -41,6 +41,15 @@ void Switch::resolveEnvironment(Environment *parent) {
 AbstractType *Switch::inferType(Environment *env) {
     auto conditionType = _condition->inferType(env);
 
+    if (_cases.empty()) {
+        ErrorsRegister::addError(
+                "Switch expression must have at least one case",
+                _pos
+        );
+
+        return nullptr;
+    }
+
     bool hasDefault = false;
     for (auto &_case: _cases) {
         auto currentType = _case->inferType(env);
@@ -56,7 +65,7 @@ AbstractType *Switch::inferType(Environment *env) {
         }
 
         auto patternType = _case->inferPatternType(env);
-        if (patternType) {
+        if (patternType != nullptr) {
             if (patternType != conditionType) {
                 ErrorsRegister::addError(
                         "Type mismatch in switch case pattern, expected " + conditionType->getName() +
@@ -83,4 +92,16 @@ AbstractType *Switch::inferType(Environment *env) {
     }
 
     return _exprType;
+}
+
+string Switch::dump(int indent) const {
+    string res = string(indent, '\t') + "[Switch] <type:" + _exprType->getName() + ">\n";
+
+    res += _condition->dump(indent + 1);
+
+    for (auto &c: _cases) {
+        res += c->dump(indent + 1);
+    }
+
+    return res;
 }

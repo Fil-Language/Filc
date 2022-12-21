@@ -26,3 +26,19 @@ string SwitchPattern::decompile(int indent) const {
 AbstractLiteral *SwitchPattern::getLiteral() const {
     return _literal;
 }
+
+string SwitchPattern::dump(int indent) const {
+    if (_isDefault) {
+        return string(indent, '\t') + "[SwitchPattern] <default>";
+    } else {
+        string res = string(indent, '\t') + "[SwitchPattern]\n";
+
+        res += _literal->dump(indent + 1);
+
+        return res;
+    }
+}
+
+bool SwitchPattern::isDefault() const {
+    return _isDefault;
+}

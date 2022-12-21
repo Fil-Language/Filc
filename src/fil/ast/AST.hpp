@@ -385,6 +385,8 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
+        Op getOp() const;
+
     private:
         Op _op;
         AbstractExpr *_index;
@@ -577,6 +579,10 @@ namespace ast {
 
         AbstractLiteral *getLiteral() const;
 
+        std::string dump(int indent) const override;
+
+        bool isDefault() const;
+
     private:
         bool _isDefault;
         AbstractLiteral *_literal;
@@ -596,6 +602,8 @@ namespace ast {
 
         AbstractType *inferPatternType(Environment *env);
 
+        std::string dump(int indent) const override;
+
     private:
         SwitchPattern *_pattern;
         AbstractExpr *_body;
@@ -612,6 +620,8 @@ namespace ast {
         void resolveEnvironment(Environment *parent) override;
 
         AbstractType *inferType(Environment *env) override;
+
+        std::string dump(int indent) const override;
 
     private:
         AbstractExpr *_condition;

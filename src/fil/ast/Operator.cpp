@@ -72,3 +72,7 @@ string Operator::decompile(int indent) const {
         return to_string(_op);
     }
 }
+
+Operator::Op Operator::getOp() const {
+    return _op;
+}

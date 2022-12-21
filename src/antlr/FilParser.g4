@@ -500,6 +500,9 @@ switch_body returns[vector<SwitchCase *> tree]
 @init {
     vector<SwitchCase *> res;
 }
+@after {
+    $tree = res;
+}
     : LBRACE (c=switch_case {
         res.push_back($c.tree);
     })* RBRACE;

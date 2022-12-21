@@ -32,9 +32,18 @@ AbstractType *SwitchCase::inferType(Environment *env) {
 }
 
 AbstractType *SwitchCase::inferPatternType(Environment *env) {
-    if (_pattern->getLiteral()) {
+    if (!_pattern->isDefault()) {
         return _pattern->getLiteral()->inferType(env);
     }
 
     return nullptr;
+}
+
+string SwitchCase::dump(int indent) const {
+    string res = string(indent, '\t') + "[SwitchCase] <type:" + _exprType->getName() + ">\n";
+
+    res += _pattern->dump(indent + 1);
+    res += _body->dump(indent + 1);
+
+    return res;
 }
