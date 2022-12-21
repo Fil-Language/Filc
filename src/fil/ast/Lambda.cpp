@@ -82,3 +82,15 @@ AbstractType *Lambda::inferType(Environment *env) {
 
     return _exprType;
 }
+
+string Lambda::dump(int indent) const {
+    string res = string(indent, '\t') + "[Lambda] <type:" + _exprType->getName() + ">\n";
+
+    for (auto param: _params) {
+        res += param->dump(indent + 1);
+    }
+
+    res += _body->dump(indent + 1);
+
+    return res;
+}

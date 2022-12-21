@@ -526,6 +526,8 @@ namespace ast {
 
         AbstractType *inferType(Environment *env) override;
 
+        std::string dump(int indent) const override;
+
     private:
         std::vector<FunctionParam *> _params;
         AbstractType *_type;
