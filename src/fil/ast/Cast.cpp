@@ -39,3 +39,11 @@ AbstractType *Cast::inferType(Environment *env) {
 
     return _exprType;
 }
+
+string Cast::dump(int indent) const {
+    string res = string(indent, '\t') + "[Cast] <type:" + _exprType->getName() + ">\n";
+
+    res += _expr->dump(indent + 1);
+
+    return res;
+}
