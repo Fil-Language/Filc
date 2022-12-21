@@ -43,7 +43,7 @@ module returns[string text]
     : MODULE i1=IDENTIFIER {
         $text = $i1.text;
     } (DOT ii=IDENTIFIER {
-        $text += $ii.text;
+        $text += "." + $ii.text;
     })*
     ;
 
