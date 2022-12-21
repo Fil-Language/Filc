@@ -47,6 +47,8 @@ namespace ast {
 
         virtual bool isFunc() const;
 
+        virtual bool isReturn() const;
+
         virtual AbstractType *inferType(Environment *env);
 
     protected:
@@ -461,6 +463,8 @@ namespace ast {
         void resolveEnvironment(Environment *parent) override;
 
         AbstractType *inferType(Environment *env) override;
+
+        bool isReturn() const override;
 
     private:
         AbstractExpr *_expr;

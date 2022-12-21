@@ -35,6 +35,10 @@ bool AbstractExpr::isFunc() const {
     return false;
 }
 
+bool AbstractExpr::isReturn() const {
+    return false;
+}
+
 AbstractType *AbstractExpr::inferType(Environment *env) {
     throw;
 }

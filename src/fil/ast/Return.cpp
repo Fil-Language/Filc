@@ -35,3 +35,7 @@ AbstractType *Return::inferType(Environment *env) {
 
     return _exprType;
 }
+
+bool Return::isReturn() const {
+    return true;
+}
