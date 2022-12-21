@@ -52,12 +52,12 @@ import_ returns[Program *tree]
     string name;
 }
 @after {
-    $tree = FilCompiler::import(name);
+    $tree = FilCompiler::import(name, $s);
 }
-    : IMPORT i1=IDENTIFIER {
+    : s=IMPORT i1=IDENTIFIER {
         name = $i1.text;
     } (DOT ii=IDENTIFIER {
-        name += $ii.text;
+        name += "." + $ii.text;
     })*
     ;
 

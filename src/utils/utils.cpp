@@ -7,6 +7,7 @@
 #include "utils.h"
 
 #include <fstream>
+#include <sstream>
 
 std::string &ltrim(std::string &input) {
     return input.erase(0, input.find_first_not_of(' '));
@@ -53,4 +54,23 @@ std::string replace(const std::string &str, char from, char to) {
     }
 
     return cpy;
+}
+
+std::string to_string(char *str) {
+    std::stringstream ss;
+    ss << str;
+
+    return ss.str();
+}
+
+std::vector<std::string> split(const std::string &str, char delim) {
+    std::vector<std::string> result;
+
+    std::stringstream ss(str);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        result.push_back(item);
+    }
+
+    return result;
 }

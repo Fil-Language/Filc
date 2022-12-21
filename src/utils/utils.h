@@ -8,6 +8,7 @@
 #define FILC_UTILS_H
 
 #include <string>
+#include <vector>
 
 /**
  * Trim left
@@ -51,5 +52,9 @@ private:
 };
 
 std::string replace(const std::string &str, char from, char to);
+
+std::string to_string(char *str);
+
+std::vector<std::string> split(const std::string &str, char delim);
 
 #endif //FILC_UTILS_H

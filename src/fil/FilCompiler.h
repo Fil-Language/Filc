@@ -9,6 +9,7 @@
 
 #include "AST.hpp"
 #include <string>
+#include "antlr4-runtime.h"
 
 class FilCompiler {
 public:
@@ -16,10 +17,11 @@ public:
 
     int compile(int flag);
 
-    static ast::Program *import(const std::string &moduleName);
+    static ast::Program *import(const std::string &moduleName, antlr4::Token *tkn);
 
 private:
     std::string _filename;
+    static std::string _currentDir;
 };
 
 typedef enum FLAGS {

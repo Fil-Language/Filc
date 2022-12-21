@@ -22,8 +22,9 @@ std::string printMessage(const std::string &message,
     std::string n = " " + std::to_string(position->getLine()) + " ";
 
     res += n + "|" + position->getLineContent() + "\n";
-    res += std::string(n.length(), ' ') + "|" +
-           std::string(position->getColumn() - 1, ' ') + color + "^" + reset + "\n";
+    res += std::string(n.length(), ' ') + "|";
+    std::string spaces = position->getColumn() > 0 ? std::string(position->getColumn() - 1, ' ') : "";
+    res += spaces + color + "^" + reset + "\n";
 
     return res + "\n";
 }

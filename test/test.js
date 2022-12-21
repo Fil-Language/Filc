@@ -52,6 +52,11 @@ try {
     process.exit(1);
 }
 
+// Set FIL_PATH
+if (process.env.FIL_PATH === undefined) {
+    process.env.FIL_PATH = __dirname + '/includes';
+}
+
 let test_time = 0;
 if (tests.length > 0) {
     const start = Date.now();

@@ -17,7 +17,11 @@ using namespace std;
 using namespace antlr4;
 using namespace antlrcppfil;
 
-FilCompiler::FilCompiler(string filename) : _filename(std::move(filename)) {}
+string FilCompiler::_currentDir;
+
+FilCompiler::FilCompiler(string filename) : _filename(std::move(filename)) {
+    _currentDir = _filename.substr(0, _filename.find_last_of("/\\"));
+}
 
 int FilCompiler::compile(int flag) {
     ifstream file(_filename);
@@ -48,7 +52,6 @@ int FilCompiler::compile(int flag) {
         }
         ErrorsRegister::clean();
 
-
         if (file.is_open()) {
             file.close();
         }
@@ -68,7 +71,6 @@ int FilCompiler::compile(int flag) {
 
         ErrorsRegister::dump(cerr);
         if (ErrorsRegister::containsError()) {
-            file.close();
             delete program;
 
             return 1;
@@ -98,7 +100,54 @@ int FilCompiler::compile(int flag) {
     return 0;
 }
 
-Program *FilCompiler::import(const string &moduleName) {
-    return new Program(moduleName, {}, {});
-    // TODO: look for the file in the current directory, then in the include path $FIL_PATH
+Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
+    // Look for the module in the current directory
+    auto filename = _currentDir + "/" + replace(moduleName, '.', '/') + ".fil";
+    ifstream file(filename);
+    if (file.is_open()) {
+        ANTLRInputStream input(file);
+        FilLexer lexer(&input);
+        CommonTokenStream tokens(&lexer);
+
+        tokens.fill();
+
+        FilParser parser(&tokens);
+        Program *program = parser.parseTree();
+
+        file.close();
+
+        return program;
+    }
+
+    // Look for the module in the include path $FIL_PATH
+    auto filPath = to_string(getenv("FIL_PATH"));
+    auto paths = split(filPath, ':');
+    for (auto &path: paths) {
+        filename = path + "/" + replace(moduleName, '.', '/') + ".fil";
+        file = ifstream(filename);
+        if (file.is_open()) {
+            ANTLRInputStream input(file);
+            FilLexer lexer(&input);
+            CommonTokenStream tokens(&lexer);
+
+            tokens.fill();
+
+            FilParser parser(&tokens);
+            Program *program = parser.parseTree();
+
+            file.close();
+
+            return program;
+        }
+    }
+
+    // Module not found
+    ErrorsRegister::addError(
+            "Module " + moduleName + " not found",
+            new Position((int) tkn->getLine(),
+                         (int) tkn->getCharPositionInLine(),
+                         tkn->getTokenSource()->getSourceName())
+    );
+
+    return nullptr;
 }
