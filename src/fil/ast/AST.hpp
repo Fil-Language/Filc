@@ -23,7 +23,9 @@ namespace ast {
 
         ~AST();
 
-        virtual std::string decompile(int indent) const = 0;
+        virtual std::string decompile(int indent) const;
+
+        virtual std::string dump(int indent) const;
 
         void setPosition(antlr4::Token *token);
 
@@ -68,6 +70,8 @@ namespace ast {
         ~Program();
 
         std::string decompile(int indent) const override;
+
+        std::string dump(int indent) const override;
 
         void resolveGlobalEnvironment();
 

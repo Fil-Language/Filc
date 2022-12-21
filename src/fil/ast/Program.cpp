@@ -87,3 +87,7 @@ void Program::inferTypes() {
         expr->inferType(_environment);
     }
 }
+
+string Program::dump(int indent) const {
+    return "Program";
+}

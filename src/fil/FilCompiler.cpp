@@ -76,8 +76,7 @@ int FilCompiler::compile(int flag) {
         ErrorsRegister::clean();
 
         if (flag == FLAGS::AST) {
-            cout << "" << endl;
-            // TODO : cout << program->dump(0) << endl;
+            cout << program->dump(0) << endl;
 
             delete program;
             return 0;

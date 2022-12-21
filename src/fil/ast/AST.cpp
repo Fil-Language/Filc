@@ -19,6 +19,10 @@ string AST::decompile(int indent) const {
     throw;
 }
 
+std::string AST::dump(int indent) const {
+    throw;
+}
+
 void AST::setPosition(antlr4::Token *token) {
     _pos = new Position((int) token->getLine(),
                         (int) token->getCharPositionInLine(),
