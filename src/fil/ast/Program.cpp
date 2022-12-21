@@ -89,5 +89,15 @@ void Program::inferTypes() {
 }
 
 string Program::dump(int indent) const {
-    return "Program";
+    string res = string(indent, '\t') + "[Program] <module:" + _module + ">\n";
+
+    for (auto &imp: _imports) {
+        res += imp->dump(indent + 1);
+    }
+
+    for (auto &expr: _exprs) {
+        res += expr->dump(indent + 1);
+    }
+
+    return res;
 }
