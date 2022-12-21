@@ -22,3 +22,7 @@ AbstractType *StringLiteral::inferType(Environment *env) {
 
     return _exprType;
 }
+
+string StringLiteral::dump(int indent) const {
+    return string(indent, '\t') + "[StringLiteral] <value:" + _value + ">\n";
+}

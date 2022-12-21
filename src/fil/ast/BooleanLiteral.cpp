@@ -21,3 +21,10 @@ AbstractType *BooleanLiteral::inferType(Environment *env) {
 
     return _exprType;
 }
+
+string BooleanLiteral::dump(int indent) const {
+    string res = string(indent, '\t') + "[BooleanLiteral] <value:";
+    res += _value ? "true" : "false";
+
+    return res + ">\n";
+}

@@ -224,6 +224,8 @@ namespace ast {
 
         AbstractType *inferType(Environment *env) override;
 
+        std::string dump(int indent) const override;
+
     private:
         bool _value;
     };
@@ -235,6 +237,8 @@ namespace ast {
         std::string decompile(int indent) const override;
 
         AbstractType *inferType(Environment *env) override;
+
+        std::string dump(int indent) const override;
 
     private:
         int _value;
@@ -248,6 +252,8 @@ namespace ast {
 
         AbstractType *inferType(Environment *env) override;
 
+        std::string dump(int indent) const override;
+
     private:
         float _value;
     };
@@ -259,6 +265,8 @@ namespace ast {
         std::string decompile(int indent) const override;
 
         AbstractType *inferType(Environment *env) override;
+
+        std::string dump(int indent) const override;
 
     private:
         char _value;
@@ -272,6 +280,8 @@ namespace ast {
 
         AbstractType *inferType(Environment *env) override;
 
+        std::string dump(int indent) const override;
+
     protected:
         std::string _value;
     };
@@ -281,6 +291,8 @@ namespace ast {
         explicit FStringLiteral(const std::string &value);
 
         std::string decompile(int indent) const override;
+
+        std::string dump(int indent) const override;
     };
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

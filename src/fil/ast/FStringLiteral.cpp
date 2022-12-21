@@ -15,3 +15,7 @@ FStringLiteral::FStringLiteral(const string &value)
 string FStringLiteral::decompile(int indent) const {
     return "f\"" + _value + "\"";
 }
+
+string FStringLiteral::dump(int indent) const {
+    return string(indent, '\t') + "[FStringLiteral] <value:" + _value + ">\n";
+}
