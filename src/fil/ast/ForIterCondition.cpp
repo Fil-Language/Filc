@@ -46,3 +46,12 @@ void ForIterCondition::inferCondition(Environment *env, Environment *loop) {
 
     loop->getSymbol(_iterable->getName())->setType(type->getIterableType());
 }
+
+string ForIterCondition::dump(int indent) const {
+    string res = string(indent, '\t') + "[ForIterCondition] " + (_isVal ? "<val>" : "<var>") + "\n";
+
+    res += _iterator->dump(indent + 1);
+    res += _iterable->dump(indent + 1);
+
+    return res;
+}

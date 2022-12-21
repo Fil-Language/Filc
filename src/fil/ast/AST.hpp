@@ -684,6 +684,8 @@ namespace ast {
 
         void inferCondition(Environment *env, Environment *loop);
 
+        std::string dump(int indent) const override;
+
     private:
         bool _isVal;
         Identifier *_iterator;
@@ -701,6 +703,8 @@ namespace ast {
         void resolveEnvironment(Environment *parent) override;
 
         AbstractType *inferType(Environment *env) override;
+
+        std::string dump(int indent) const override;
 
     private:
         ForIterCondition *_condition;
