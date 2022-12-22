@@ -101,8 +101,15 @@ int FilCompiler::compile(int flag) {
 }
 
 Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
+#ifdef _WIN32
+    char sep = '\\';
+    string ssep = "\\";
+#else
+    char sep = '/';
+    string ssep = "/";
+#endif
     // Look for the module in the current directory
-    auto filename = _currentDir + "/" + replace(moduleName, '.', '/') + ".fil";
+    auto filename = _currentDir + ssep + replace(moduleName, '.', sep) + ".fil";
     ifstream file(filename);
     if (file.is_open()) {
         ANTLRInputStream input(file);
