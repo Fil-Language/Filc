@@ -48,7 +48,6 @@ void Program::resolveGlobalEnvironment() {
 void Program::resolveEnvironment() {
     // Resolve imports
     for (auto &imp: _imports) {
-        imp->resolveEnvironment();
         _environment->merge(imp->getPublicEnvironment());
     }
 
@@ -80,10 +79,6 @@ Environment *Program::getPublicEnvironment() const {
 }
 
 void Program::inferTypes() {
-    for (auto &imp: _imports) {
-        imp->inferTypes();
-    }
-
     for (auto &expr: _exprs) {
         expr->inferType(_environment);
     }

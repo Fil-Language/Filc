@@ -116,6 +116,12 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
 
         file.close();
 
+        // Generate symbols tables (environment)
+        program->resolveGlobalEnvironment();
+
+        // Type inference and checking
+        program->inferTypes();
+
         return program;
     }
 
@@ -136,6 +142,12 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
             Program *program = parser.parseTree();
 
             file.close();
+
+            // Generate symbols tables (environment)
+            program->resolveGlobalEnvironment();
+
+            // Type inference and checking
+            program->inferTypes();
 
             return program;
         }

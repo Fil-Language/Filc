@@ -15,14 +15,13 @@ Environment::Environment(Environment *parent)
 }
 
 Environment::~Environment() {
-    delete _parent;
     delete _functions;
     delete _variables;
     delete _types;
 }
 
 Environment *Environment::getGlobalEnvironment() {
-    static auto *globalEnvironment = new Environment();
+    auto *globalEnvironment = new Environment();
 
     // Add builtins types
     globalEnvironment->addType("int", new Position(0, 0, "builtin"));

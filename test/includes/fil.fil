@@ -1,1 +1,5 @@
 module fil
+
+export fun test() {
+    return 2
+}
