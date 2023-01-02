@@ -108,10 +108,8 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
     char sep = '/';
     string ssep = "/";
 #endif
-    // Look for the module in the current directory
-    auto filename = _currentDir + ssep + replace(moduleName, '.', sep) + ".fil";
-    ifstream file(filename);
-    if (file.is_open()) {
+    // Lambda to parse the file and return the AST
+    auto getProgram = [](ifstream &file) {
         ANTLRInputStream input(file);
         FilLexer lexer(&input);
         CommonTokenStream tokens(&lexer);
@@ -130,6 +128,13 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         program->inferTypes();
 
         return program;
+    };
+
+    // Look for the module in the current directory
+    auto filename = _currentDir + ssep + replace(moduleName, '.', sep) + ".fil";
+    ifstream file(filename);
+    if (file.is_open()) {
+        return getProgram(file);
     }
 
     // Look for the module in the include path $FIL_PATH
@@ -139,24 +144,7 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         filename = path + "/" + replace(moduleName, '.', '/') + ".fil";
         file = ifstream(filename);
         if (file.is_open()) {
-            ANTLRInputStream input(file);
-            FilLexer lexer(&input);
-            CommonTokenStream tokens(&lexer);
-
-            tokens.fill();
-
-            FilParser parser(&tokens);
-            Program *program = parser.parseTree();
-
-            file.close();
-
-            // Generate symbols tables (environment)
-            program->resolveGlobalEnvironment();
-
-            // Type inference and checking
-            program->inferTypes();
-
-            return program;
+            return getProgram(file);
         }
     }
 
