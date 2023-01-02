@@ -49,7 +49,7 @@ module.exports = {
             } catch (e) {
                 f_failed(file);
                 f_log(`- ${file} failed\n`);
-                f_log(`Error: ${fs.readFileSync('err.txt').toString()}\n ${e}\n ${ast}\n`);
+                f_log(`Error: ${e}\n`);
             }
             total++;
         }
