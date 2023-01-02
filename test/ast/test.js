@@ -21,11 +21,12 @@ module.exports = {
         let total = 0;
         let passed = 0;
         for (const file of files) {
+            let ast;
             try {
                 const path = __dirname + '/' + file;
 
                 // Compile file with -a flag
-                const ast = execSync(filc + ' ' + path + ' -a 2> err.txt').toString();
+                ast = execSync(filc + ' ' + path + ' -a 2> err.txt').toString();
                 const expected = getExpected(path);
 
                 const errs = fs.readFileSync('err.txt').toString();
@@ -48,7 +49,7 @@ module.exports = {
             } catch (e) {
                 f_failed(file);
                 f_log(`- ${file} failed\n`);
-                f_log(`Error: ${fs.readFileSync('err.txt').toString()}\n ${e}`);
+                f_log(`Error: ${fs.readFileSync('err.txt').toString()}\n ${e}\n ${ast}\n`);
             }
             total++;
         }
