@@ -130,18 +130,32 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         return program;
     };
 
-    // Look for the module in the current directory
+    // Looking for the module in the current directory
     auto filename = _currentDir + ssep + replace(moduleName, '.', sep) + ".fil";
     ifstream file(filename);
     if (file.is_open()) {
         return getProgram(file);
     }
+    // ----
+    filename = _currentDir + ssep + replace(moduleName, '.', sep) + ssep +
+               *(split(moduleName, '.').end() - 1) + ".fil";
+    file = ifstream(filename);
+    if (file.is_open()) {
+        return getProgram(file);
+    }
 
-    // Look for the module in the include path $FIL_PATH
+    // Looking for the module in the include path $FIL_PATH
     auto filPath = to_string(getenv("FIL_PATH"));
     auto paths = split(filPath, ':');
     for (auto &path: paths) {
-        filename = path + "/" + replace(moduleName, '.', '/') + ".fil";
+        filename = path + ssep + replace(moduleName, '.', sep) + ".fil";
+        file = ifstream(filename);
+        if (file.is_open()) {
+            return getProgram(file);
+        }
+        // ----
+        filename = path + ssep + replace(moduleName, '.', sep) + ssep +
+                   *(split(moduleName, '.').end() - 1) + ".fil";
         file = ifstream(filename);
         if (file.is_open()) {
             return getProgram(file);
