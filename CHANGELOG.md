@@ -6,6 +6,7 @@
 - Create Environment and SymbolTable
 - Create ErrorsRegister
 - Implement `dump` function for option `-a`
+- Change license to MIT
 
 ## v0.1.0
 
