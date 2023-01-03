@@ -12,15 +12,6 @@ using namespace ast;
 Lambda::Lambda(const vector<FunctionParam *> &params, AbstractType *type, AbstractExpr *body)
         : _params(params), _type(type), _body(body), _environment(nullptr) {}
 
-Lambda::~Lambda() {
-    for (auto param: _params) {
-        delete param;
-    }
-    delete _type;
-    delete _body;
-    delete _environment;
-}
-
 string Lambda::decompile(int indent) const {
     string res = "(";
     for (auto it = _params.begin(); it != _params.end(); ++it) {

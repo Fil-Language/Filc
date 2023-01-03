@@ -12,10 +12,6 @@ using namespace ast;
 Return::Return(AbstractExpr *expr)
         : _expr(expr) {}
 
-Return::~Return() {
-    delete _expr;
-}
-
 string Return::decompile(int indent) const {
     string ret = "return ";
 

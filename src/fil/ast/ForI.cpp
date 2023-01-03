@@ -12,12 +12,6 @@ using namespace ast;
 ForI::ForI(ForICondition *condition, AbstractExpr *body)
         : _condition(condition), _body(body), _environment(nullptr) {}
 
-ForI::~ForI() {
-    delete _condition;
-    delete _body;
-    delete _environment;
-}
-
 string ForI::decompile(int indent) const {
     return "for (" + _condition->decompile(indent) + ") " + _body->decompile(indent);
 }

@@ -12,12 +12,6 @@ using namespace ast;
 ForIter::ForIter(ForIterCondition *condition, AbstractExpr *body)
         : _condition(condition), _body(body), _environment(nullptr) {}
 
-ForIter::~ForIter() {
-    delete _condition;
-    delete _body;
-    delete _environment;
-}
-
 string ForIter::decompile(int indent) const {
     return "for (" + _condition->decompile(indent) + ") " + _body->decompile(indent);
 }

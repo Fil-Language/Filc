@@ -14,16 +14,6 @@ Program::Program(const string &module,
                  const vector<AbstractExpr *> &exprs)
         : _module(module), _imports(imports), _exprs(exprs), _environment(nullptr) {}
 
-Program::~Program() {
-    for (auto &import: _imports) {
-        delete import;
-    }
-    for (auto &expr: _exprs) {
-        delete expr;
-    }
-    delete _environment;
-}
-
 string Program::decompile(int indent) const {
     string result = "module " + _module + "\n\n";
 

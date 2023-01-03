@@ -12,10 +12,6 @@ using namespace ast;
 ParenthesisBody::ParenthesisBody(AbstractExpr *expr)
         : _expr(expr) {}
 
-ParenthesisBody::~ParenthesisBody() {
-    delete _expr;
-}
-
 string ParenthesisBody::decompile(int indent) const {
     return "(" + _expr->decompile(indent) + ")";
 }

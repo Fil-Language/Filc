@@ -15,10 +15,6 @@ Operator::Operator(Op op)
 Operator::Operator(AbstractExpr *index)
         : _op(ARRAY), _index(index) {}
 
-Operator::~Operator() {
-    delete _index;
-}
-
 string to_string(Operator::Op op) {
     switch (op) {
         case Operator::STAR:

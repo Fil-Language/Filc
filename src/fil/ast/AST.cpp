@@ -11,10 +11,6 @@ using namespace ast;
 
 AST::AST() : _pos(nullptr) {}
 
-AST::~AST() {
-    delete _pos;
-}
-
 string AST::decompile(int indent) const {
     throw;
 }

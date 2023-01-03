@@ -21,8 +21,6 @@ namespace ast {
     public:
         AST();
 
-        ~AST();
-
         virtual std::string decompile(int indent) const;
 
         virtual std::string dump(int indent) const;
@@ -66,8 +64,6 @@ namespace ast {
         Program(const std::string &module,
                 const std::vector<Program *> &imports,
                 const std::vector<AbstractExpr *> &exprs);
-
-        ~Program();
 
         std::string decompile(int indent) const override;
 
@@ -118,8 +114,6 @@ namespace ast {
         AbstractType() = default;
 
     public:
-        virtual ~AbstractType() = default;
-
         virtual std::string getName() const = 0;
 
         bool equals(const AbstractType &other) const;
@@ -136,8 +130,6 @@ namespace ast {
         Type(int arraySize, AbstractType *subType); // IDENTIFIER '[' INTEGER ']'
 
         explicit Type(AbstractType *subType); // IDENTIFIER '*'
-
-        ~Type() override;
 
         std::string decompile(int indent) const override;
 
@@ -161,8 +153,6 @@ namespace ast {
     public:
         LambdaType(const std::vector<AbstractType *> &args, AbstractType *ret);
 
-        ~LambdaType() override;
-
         std::string decompile(int indent) const override;
 
         std::string getName() const override;
@@ -184,8 +174,6 @@ namespace ast {
     public:
         explicit BlockBody(const std::vector<AbstractExpr *> &exprs);
 
-        ~BlockBody();
-
         std::string decompile(int indent) const override;
 
         void resolveEnvironment(Environment *parent) override;
@@ -202,8 +190,6 @@ namespace ast {
     class ParenthesisBody : public AbstractExpr {
     public:
         explicit ParenthesisBody(AbstractExpr *expr);
-
-        ~ParenthesisBody();
 
         std::string decompile(int indent) const override;
 
@@ -309,8 +295,6 @@ namespace ast {
     public:
         explicit Assignation(AbstractExpr *expr);
 
-        ~Assignation();
-
         std::string decompile(int indent) const override;
 
         void resolveEnvironment(Environment *parent) override;
@@ -326,8 +310,6 @@ namespace ast {
     class VariableDeclaration : public AbstractExpr {
     public:
         VariableDeclaration(bool isVal, Identifier *name, AbstractType *type, Assignation *assignation);
-
-        ~VariableDeclaration();
 
         std::string decompile(int indent) const override;
 
@@ -381,8 +363,6 @@ namespace ast {
 
         explicit Operator(AbstractExpr *index);
 
-        ~Operator();
-
         std::string decompile(int indent) const override;
 
         Op getOp() const;
@@ -397,8 +377,6 @@ namespace ast {
         UnaryCalcul(Operator *op, Identifier *identifier);
 
         UnaryCalcul(Identifier *identifier, Operator *op);
-
-        ~UnaryCalcul();
 
         std::string decompile(int indent) const override;
 
@@ -417,8 +395,6 @@ namespace ast {
     class BinaryCalcul : public AbstractExpr {
     public:
         BinaryCalcul(AbstractExpr *left, Operator *op, AbstractExpr *right);
-
-        ~BinaryCalcul();
 
         std::string decompile(int indent) const override;
 
@@ -440,8 +416,6 @@ namespace ast {
     public:
         FunctionParam(Identifier *name, AbstractType *type);
 
-        ~FunctionParam();
-
         std::string decompile(int indent) const override;
 
         void resolveParam(Environment *function);
@@ -458,8 +432,6 @@ namespace ast {
     class FunctionDeclaration : public AbstractExpr {
     public:
         FunctionDeclaration(Identifier *name, const std::vector<FunctionParam *> &params, AbstractType *type);
-
-        ~FunctionDeclaration();
 
         std::string decompile(int indent) const override;
 
@@ -478,8 +450,6 @@ namespace ast {
     class Function : public AbstractExpr {
     public:
         Function(FunctionDeclaration *declaration, AbstractExpr *body);
-
-        ~Function();
 
         std::string decompile(int indent) const override;
 
@@ -506,8 +476,6 @@ namespace ast {
     public:
         explicit Return(AbstractExpr *expr);
 
-        ~Return();
-
         std::string decompile(int indent) const override;
 
         void resolveEnvironment(Environment *parent) override;
@@ -527,8 +495,6 @@ namespace ast {
     class Lambda : public AbstractExpr {
     public:
         Lambda(const std::vector<FunctionParam *> &params, AbstractType *type, AbstractExpr *body);
-
-        ~Lambda();
 
         std::string decompile(int indent) const override;
 
@@ -550,8 +516,6 @@ namespace ast {
     class If : public AbstractExpr {
     public:
         If(AbstractExpr *condition, AbstractExpr *then, AbstractExpr *else_);
-
-        ~If();
 
         std::string decompile(int indent) const override;
 
@@ -575,8 +539,6 @@ namespace ast {
 
         explicit SwitchPattern(AbstractLiteral *literal);
 
-        ~SwitchPattern();
-
         std::string decompile(int indent) const override;
 
         AbstractLiteral *getLiteral() const;
@@ -593,8 +555,6 @@ namespace ast {
     class SwitchCase : public AbstractExpr {
     public:
         explicit SwitchCase(SwitchPattern *pattern, AbstractExpr *body);
-
-        ~SwitchCase();
 
         std::string decompile(int indent) const override;
 
@@ -615,8 +575,6 @@ namespace ast {
     public:
         Switch(AbstractExpr *condition, const std::vector<SwitchCase *> &cases);
 
-        ~Switch();
-
         std::string decompile(int indent) const override;
 
         void resolveEnvironment(Environment *parent) override;
@@ -636,8 +594,6 @@ namespace ast {
     public:
         ForICondition(VariableDeclaration *declaration, AbstractExpr *condition, AbstractExpr *increment);
 
-        ~ForICondition();
-
         std::string decompile(int indent) const override;
 
         void resolveCondition(Environment *loop);
@@ -655,8 +611,6 @@ namespace ast {
     class ForI : public AbstractExpr {
     public:
         ForI(ForICondition *condition, AbstractExpr *body);
-
-        ~ForI();
 
         std::string decompile(int indent) const override;
 
@@ -678,8 +632,6 @@ namespace ast {
     public:
         ForIterCondition(bool isVal, Identifier *iterator, Identifier *iterable);
 
-        ~ForIterCondition();
-
         std::string decompile(int indent) const override;
 
         void resolveCondition(Environment *loop);
@@ -697,8 +649,6 @@ namespace ast {
     class ForIter : public AbstractExpr {
     public:
         ForIter(ForIterCondition *condition, AbstractExpr *body);
-
-        ~ForIter();
 
         std::string decompile(int indent) const override;
 
@@ -720,8 +670,6 @@ namespace ast {
     public:
         While(AbstractExpr *condition, AbstractExpr *body);
 
-        ~While();
-
         std::string decompile(int indent) const override;
 
         void resolveEnvironment(Environment *parent) override;
@@ -742,8 +690,6 @@ namespace ast {
     public:
         FunctionCall(Identifier *name, const std::vector<AbstractExpr *> &args);
 
-        ~FunctionCall();
-
         std::string decompile(int indent) const override;
 
         void resolveEnvironment(Environment *parent) override;
@@ -762,8 +708,6 @@ namespace ast {
     class Cast : public AbstractExpr {
     public:
         Cast(AbstractType *type, AbstractExpr *expr);
-
-        ~Cast();
 
         std::string decompile(int indent) const override;
 

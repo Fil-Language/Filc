@@ -15,11 +15,6 @@ UnaryCalcul::UnaryCalcul(Identifier *identifier, Operator *op)
 UnaryCalcul::UnaryCalcul(Operator *op, Identifier *identifier)
         : _op(op), _identifier(identifier), _isPrefix(true) {}
 
-UnaryCalcul::~UnaryCalcul() {
-    delete _op;
-    delete _identifier;
-}
-
 std::string UnaryCalcul::decompile(int indent) const {
     if (_isPrefix) {
         return _op->decompile(indent) + _identifier->decompile(indent);

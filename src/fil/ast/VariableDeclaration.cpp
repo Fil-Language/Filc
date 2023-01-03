@@ -12,12 +12,6 @@ using namespace ast;
 VariableDeclaration::VariableDeclaration(bool isVal, Identifier *name, AbstractType *type, Assignation *assignation)
         : _isVal(isVal), _name(name), _type(type), _assignation(assignation), _symbol(nullptr) {}
 
-VariableDeclaration::~VariableDeclaration() {
-    delete _name;
-    delete _type;
-    delete _assignation;
-}
-
 string VariableDeclaration::decompile(int indent) const {
     string result = (_isVal ? "val " : "var ") + _name->decompile(indent);
 

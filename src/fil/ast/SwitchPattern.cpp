@@ -15,10 +15,6 @@ SwitchPattern::SwitchPattern()
 SwitchPattern::SwitchPattern(AbstractLiteral *literal)
         : _isDefault(false), _literal(literal) {}
 
-SwitchPattern::~SwitchPattern() {
-    delete _literal;
-}
-
 string SwitchPattern::decompile(int indent) const {
     return _isDefault ? "default" : _literal->decompile(indent);
 }

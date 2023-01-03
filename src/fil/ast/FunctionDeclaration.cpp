@@ -12,14 +12,6 @@ using namespace ast;
 FunctionDeclaration::FunctionDeclaration(Identifier *name, const vector<FunctionParam *> &params, AbstractType *type)
         : _name(name), _params(params), _type(type) {}
 
-FunctionDeclaration::~FunctionDeclaration() {
-    delete _name;
-    for (auto param: _params) {
-        delete param;
-    }
-    delete _type;
-}
-
 string FunctionDeclaration::decompile(int indent) const {
     string result = _name->decompile(indent);
 

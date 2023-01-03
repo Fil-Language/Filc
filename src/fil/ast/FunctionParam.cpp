@@ -12,11 +12,6 @@ using namespace ast;
 FunctionParam::FunctionParam(Identifier *name, AbstractType *type)
         : _name(name), _type(type) {}
 
-FunctionParam::~FunctionParam() {
-    delete _name;
-    delete _type;
-}
-
 string FunctionParam::decompile(int indent) const {
     string result = _name->decompile(indent);
 

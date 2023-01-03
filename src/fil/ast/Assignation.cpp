@@ -12,10 +12,6 @@ using namespace ast;
 Assignation::Assignation(AbstractExpr *expr)
         : _expr(expr) {}
 
-Assignation::~Assignation() {
-    delete _expr;
-}
-
 string Assignation::decompile(int indent) const {
     return "= " + _expr->decompile(indent);
 }

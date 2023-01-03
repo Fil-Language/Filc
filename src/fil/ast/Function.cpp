@@ -12,12 +12,6 @@ using namespace ast;
 Function::Function(FunctionDeclaration *declaration, AbstractExpr *body)
         : _declaration(declaration), _body(body), _symbol(nullptr), _environment(nullptr) {}
 
-Function::~Function() {
-    delete _declaration;
-    delete _body;
-    delete _environment;
-}
-
 string Function::decompile(int indent) const {
     return "fun " + _declaration->decompile(indent) + " " + _body->decompile(indent);
 }

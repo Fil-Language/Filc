@@ -85,9 +85,6 @@ int FilCompiler::compile(int flag) {
         }
 
         // TODO : LLVM IR generation
-
-        // Free memory
-        delete program;
     } catch (exception &e) {
         cout << e.what() << endl;
         return 1;
