@@ -21,7 +21,8 @@ int main(int argc, char **argv) {
             ("v,version", "Display version of compiler")
             ("verbose", "Verbose level (0-5)", cxxopts::value<int>()->default_value("0")->implicit_value("1"));
     options.add_options("Compile flags")
-            ("d,decompile", "Decompile AST");
+            ("d,decompile", "Decompile AST")
+            ("a,ast", "Print AST structure");
     options.parse_positional({"filename"});
 
     cxxopts::ParseResult result;
@@ -59,6 +60,8 @@ int main(int argc, char **argv) {
     FLAGS flag = NONE;
     if (result.count("decompile")) {
         flag = DECOMPILE;
+    } else if (result.count("ast")) {
+        flag = AST;
     }
 
     auto compiler = FilCompiler(result["filename"].as<string>());

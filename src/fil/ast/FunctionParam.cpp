@@ -12,11 +12,6 @@ using namespace ast;
 FunctionParam::FunctionParam(Identifier *name, AbstractType *type)
         : _name(name), _type(type) {}
 
-FunctionParam::~FunctionParam() {
-    delete _name;
-    delete _type;
-}
-
 string FunctionParam::decompile(int indent) const {
     string result = _name->decompile(indent);
 
@@ -25,4 +20,32 @@ string FunctionParam::decompile(int indent) const {
     }
 
     return result;
+}
+
+void FunctionParam::resolveParam(Environment *function) {
+    if (_name->resolveVar(function) == nullptr) {
+        std::string n = _name->getName();
+        ErrorsRegister::addWarning(
+                n + " already exists, previous declaration here: " +
+                function->getSymbol(n)->getPosition()->dump(),
+                _name->getPosition()
+        );
+    }
+
+    if (_type && !function->hasType(_type->getName())) {
+        ErrorsRegister::addError(
+                "Unknown type " + _type->getName(),
+                _type->getPosition()
+        );
+    }
+}
+
+AbstractType *FunctionParam::inferType(Environment *env) const {
+    env->getSymbol(_name->getName())->setType(_type);
+
+    return _type;
+}
+
+string FunctionParam::dump(int indent) const {
+    return string(indent, '\t') + "[FunctionParam] <name:" + _name->getName() + "> <type:" + _type->getName() + ">\n";
 }

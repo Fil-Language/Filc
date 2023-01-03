@@ -15,3 +15,14 @@ IntegerLiteral::IntegerLiteral(int value)
 string IntegerLiteral::decompile(int indent) const {
     return to_string(_value);
 }
+
+AbstractType *IntegerLiteral::inferType(Environment *env) {
+    _exprType = env->getSymbol("int")->getType();
+
+    return _exprType;
+}
+
+string IntegerLiteral::dump(int indent) const {
+    return string(indent, '\t') + "[IntegerLiteral]" + (_isExported ? " <exported>" : "") +
+           " <value:" + to_string(_value) + ">\n";
+}

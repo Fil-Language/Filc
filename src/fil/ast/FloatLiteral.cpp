@@ -15,3 +15,14 @@ FloatLiteral::FloatLiteral(float value)
 string FloatLiteral::decompile(int indent) const {
     return to_string(_value);
 }
+
+AbstractType *FloatLiteral::inferType(Environment *env) {
+    _exprType = env->getSymbol("float")->getType();
+
+    return _exprType;
+}
+
+string FloatLiteral::dump(int indent) const {
+    return string(indent, '\t') + "[FloatLiteral]" + (_isExported ? " <exported>" : "") +
+           " <value:" + to_string(_value) + ">\n";
+}

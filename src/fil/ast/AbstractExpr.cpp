@@ -9,7 +9,7 @@
 using namespace std;
 using namespace ast;
 
-AbstractExpr::AbstractExpr() : _isExported(false) {}
+AbstractExpr::AbstractExpr() : _isExported(false), _exprType(nullptr) {}
 
 string AbstractExpr::decompile(int indent) const {
     throw;
@@ -17,4 +17,32 @@ string AbstractExpr::decompile(int indent) const {
 
 void AbstractExpr::isExported(bool exported) {
     _isExported = exported;
+}
+
+bool AbstractExpr::isExported() const {
+    return _isExported;
+}
+
+void AbstractExpr::resolveEnvironment(Environment *parent) {
+    throw;
+}
+
+bool AbstractExpr::isVar() const {
+    return false;
+}
+
+bool AbstractExpr::isFunc() const {
+    return false;
+}
+
+bool AbstractExpr::isReturn() const {
+    return false;
+}
+
+AbstractType *AbstractExpr::inferType(Environment *env) {
+    throw;
+}
+
+AbstractType *AbstractExpr::getExprType() const {
+    return _exprType;
 }

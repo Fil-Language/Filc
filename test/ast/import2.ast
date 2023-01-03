@@ -1,0 +1,6 @@
+[Program] <module:import2>
+	[Program] <module:fil.io>
+		[VariableDeclaration] <exported> <var> <name:a> <type:int>
+			[Assignation] <type:int>
+				[IntegerLiteral] <value:2>
+

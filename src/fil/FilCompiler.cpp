@@ -8,6 +8,7 @@
 #include "antlr4-runtime.h"
 #include "FilLexer.h"
 #include "FilParser.h"
+#include "ErrorsRegister.h"
 
 #include <utility>
 #include <iostream>
@@ -16,7 +17,11 @@ using namespace std;
 using namespace antlr4;
 using namespace antlrcppfil;
 
-FilCompiler::FilCompiler(string filename) : _filename(std::move(filename)) {}
+string FilCompiler::_currentDir;
+
+FilCompiler::FilCompiler(string filename) : _filename(std::move(filename)) {
+    _currentDir = _filename.substr(0, _filename.find_last_of("/\\"));
+}
 
 int FilCompiler::compile(int flag) {
     ifstream file(_filename);
@@ -27,6 +32,8 @@ int FilCompiler::compile(int flag) {
     }
 
     try {
+        ErrorsRegister::init();
+
         ANTLRInputStream input(file);
         FilLexer lexer(&input);
         CommonTokenStream tokens(&lexer);
@@ -35,6 +42,15 @@ int FilCompiler::compile(int flag) {
 
         FilParser parser(&tokens);
         Program *program = parser.parseTree();
+
+        ErrorsRegister::dump(cerr);
+        if (ErrorsRegister::containsError()) {
+            file.close();
+            delete program;
+
+            return 1;
+        }
+        ErrorsRegister::clean();
 
         if (file.is_open()) {
             file.close();
@@ -47,16 +63,28 @@ int FilCompiler::compile(int flag) {
             return 0;
         }
 
-        // TODO : generate symbols tables
+        // Generate symbols tables (environment)
+        program->resolveGlobalEnvironment();
 
-        // TODO : type inference and checking
+        // Type inference and checking
+        program->inferTypes();
 
-        // TODO : code structure checking
+        ErrorsRegister::dump(cerr);
+        if (ErrorsRegister::containsError()) {
+            delete program;
+
+            return 1;
+        }
+        ErrorsRegister::clean();
+
+        if (flag == FLAGS::AST) {
+            cout << program->dump(0) << endl;
+
+            delete program;
+            return 0;
+        }
 
         // TODO : LLVM IR generation
-
-        // Free memory
-        delete program;
     } catch (exception &e) {
         cout << e.what() << endl;
         return 1;
@@ -69,7 +97,75 @@ int FilCompiler::compile(int flag) {
     return 0;
 }
 
-Program *FilCompiler::import(const string &moduleName) {
-    return new Program(moduleName, {}, {});
-    // TODO: look for the file in the current directory, then in the include path $FIL_PATH
+Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
+#ifdef _WIN32
+    char sep = '\\';
+    string ssep = "\\";
+#else
+    char sep = '/';
+    string ssep = "/";
+#endif
+    // Lambda to parse the file and return the AST
+    auto getProgram = [](ifstream &file) {
+        ANTLRInputStream input(file);
+        FilLexer lexer(&input);
+        CommonTokenStream tokens(&lexer);
+
+        tokens.fill();
+
+        FilParser parser(&tokens);
+        Program *program = parser.parseTree();
+
+        file.close();
+
+        // Generate symbols tables (environment)
+        program->resolveGlobalEnvironment();
+
+        // Type inference and checking
+        program->inferTypes();
+
+        return program;
+    };
+
+    // Looking for the module in the current directory
+    auto filename = _currentDir + ssep + replace(moduleName, '.', sep) + ".fil";
+    ifstream file(filename);
+    if (file.is_open()) {
+        return getProgram(file);
+    }
+    // ----
+    filename = _currentDir + ssep + replace(moduleName, '.', sep) + ssep +
+               *(split(moduleName, '.').end() - 1) + ".fil";
+    file = ifstream(filename);
+    if (file.is_open()) {
+        return getProgram(file);
+    }
+
+    // Looking for the module in the include path $FIL_PATH
+    auto filPath = to_string(getenv("FIL_PATH"));
+    auto paths = split(filPath, ':');
+    for (auto &path: paths) {
+        filename = path + ssep + replace(moduleName, '.', sep) + ".fil";
+        file = ifstream(filename);
+        if (file.is_open()) {
+            return getProgram(file);
+        }
+        // ----
+        filename = path + ssep + replace(moduleName, '.', sep) + ssep +
+                   *(split(moduleName, '.').end() - 1) + ".fil";
+        file = ifstream(filename);
+        if (file.is_open()) {
+            return getProgram(file);
+        }
+    }
+
+    // Module not found
+    ErrorsRegister::addError(
+            "Module " + moduleName + " not found",
+            new Position((int) tkn->getLine(),
+                         (int) tkn->getCharPositionInLine(),
+                         tkn->getTokenSource()->getSourceName())
+    );
+
+    return nullptr;
 }

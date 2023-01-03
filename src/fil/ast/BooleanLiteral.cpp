@@ -15,3 +15,16 @@ BooleanLiteral::BooleanLiteral(bool value)
 string BooleanLiteral::decompile(int indent) const {
     return _value ? "true" : "false";
 }
+
+AbstractType *BooleanLiteral::inferType(Environment *env) {
+    _exprType = env->getSymbol("bool")->getType();
+
+    return _exprType;
+}
+
+string BooleanLiteral::dump(int indent) const {
+    string res = string(indent, '\t') + "[BooleanLiteral]" + (_isExported ? " <exported>" : "") + " <value:";
+    res += _value ? "true" : "false";
+
+    return res + ">\n";
+}

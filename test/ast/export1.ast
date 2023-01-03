@@ -1,0 +1,5 @@
+[Program] <module:export1>
+	[BinaryCalcul] <exported> <operator:+> <type:int>
+		[IntegerLiteral] <value:1>
+		[IntegerLiteral] <value:1>
+

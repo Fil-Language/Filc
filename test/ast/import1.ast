@@ -1,0 +1,8 @@
+[Program] <module:import1>
+	[Program] <module:fil>
+		[Function] <exported> <name:test>  <type:() -> int>
+			[FunctionDeclaration] <name:test> <type:() -> int>
+			[BlockBody] <type:int>
+				[Return] <type:int>
+					[IntegerLiteral] <value:2>
+

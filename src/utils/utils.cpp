@@ -6,52 +6,71 @@
  */
 #include "utils.h"
 
+#include <fstream>
+#include <sstream>
+
 std::string &ltrim(std::string &input) {
     return input.erase(0, input.find_first_not_of(' '));
 }
 
-IndentPrinter::IndentPrinter() : IndentPrinter("\t") {}
+Position::Position(int line, int column, const std::string &filename)
+        : _line(line), _column(column), _filename(filename) {}
 
-IndentPrinter::IndentPrinter(const std::string &indent) : _indent(indent), _nb(0) {}
-
-IndentPrinter *IndentPrinter::write(const std::string &str) {
-    _buffer += str;
-
-    return this;
+int Position::getLine() const {
+    return _line;
 }
 
-IndentPrinter *IndentPrinter::writeIndent(const std::string &str) {
-    for (int i = 0; i < _nb; ++i) {
-        _buffer += _indent;
+int Position::getColumn() const {
+    return _column;
+}
+
+std::string Position::getFilename() const {
+    return _filename;
+}
+
+std::string Position::getLineContent() const {
+    std::ifstream file(_filename);
+    std::string line;
+
+    for (int i = 0; i < _line; i++) {
+        std::getline(file, line);
     }
 
-    _buffer += str;
+    file.close();
 
-    return this;
+    return line;
 }
 
-IndentPrinter *IndentPrinter::indent() {
-    _nb++;
-
-    return this;
+std::string Position::dump() const {
+    return _filename + ":" + std::to_string(_line) + ":" + std::to_string(_column);
 }
 
-IndentPrinter *IndentPrinter::unindent() {
-    if (_nb > 0) {
-        _nb--;
+std::string replace(const std::string &str, char from, char to) {
+    auto cpy = str;
+    for (char &c: cpy) {
+        if (c == from) {
+            c = to;
+        }
     }
 
-    return this;
+    return cpy;
 }
 
-const std::string &IndentPrinter::getBuffer() const {
-    return _buffer;
+std::string to_string(char *str) {
+    std::stringstream ss;
+    ss << str;
+
+    return ss.str();
 }
 
-std::ostream &operator<<(std::ostream &os, const IndentPrinter &printer) {
-    return os << printer.getBuffer();
-}
+std::vector<std::string> split(const std::string &str, char delim) {
+    std::vector<std::string> result;
 
-std::ostream &operator<<(std::ostream &os, const IndentPrinter *printer) {
-    return os << printer->getBuffer();
+    std::stringstream ss(str);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        result.push_back(item);
+    }
+
+    return result;
 }

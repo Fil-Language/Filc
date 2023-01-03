@@ -1,0 +1,8 @@
+[Program] <module:export3>
+	[VariableDeclaration] <exported> <val> <name:a> <type:int>
+		[Assignation] <type:int>
+			[IntegerLiteral] <value:2>
+	[VariableDeclaration] <exported> <val> <name:b> <type:int>
+		[Assignation] <type:int>
+			[IntegerLiteral] <value:3>
+

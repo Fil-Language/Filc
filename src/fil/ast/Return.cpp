@@ -12,10 +12,6 @@ using namespace ast;
 Return::Return(AbstractExpr *expr)
         : _expr(expr) {}
 
-Return::~Return() {
-    delete _expr;
-}
-
 string Return::decompile(int indent) const {
     string ret = "return ";
 
@@ -24,4 +20,27 @@ string Return::decompile(int indent) const {
     }
 
     return ret;
+}
+
+void Return::resolveEnvironment(Environment *parent) {
+    _expr->resolveEnvironment(parent);
+}
+
+AbstractType *Return::inferType(Environment *env) {
+    _exprType = _expr->inferType(env);
+
+    return _exprType;
+}
+
+bool Return::isReturn() const {
+    return true;
+}
+
+string Return::dump(int indent) const {
+    string res = string(indent, '\t') + "[Return]" + (_isExported ? " <exported> " : " ") +
+                 "<type:" + _exprType->getName() + ">\n";
+
+    res += _expr->dump(indent + 1);
+
+    return res;
 }

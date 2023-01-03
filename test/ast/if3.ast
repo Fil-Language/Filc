@@ -1,0 +1,11 @@
+[Program] <module:if3>
+	[VariableDeclaration] <val> <name:res> <type:int>
+		[Assignation] <type:int>
+			[If] <type:int>
+				[BooleanLiteral] <value:true>
+				[IntegerLiteral] <value:1>
+				[If] <type:int>
+					[BooleanLiteral] <value:false>
+					[IntegerLiteral] <value:2>
+					[IntegerLiteral] <value:3>
+

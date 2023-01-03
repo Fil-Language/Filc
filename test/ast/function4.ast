@@ -1,0 +1,19 @@
+[Program] <module:function4>
+	[Function] <name:fact>  <type:(int) -> int>
+		[FunctionDeclaration] <name:fact> <type:(int) -> int>
+			[FunctionParam] <name:n> <type:int>
+		[BlockBody] <type:int>
+			[If] <type:int>
+				[BinaryCalcul] <operator:==> <type:bool>
+					[Identifier] <name:n> <type:int>
+					[IntegerLiteral] <value:0>
+				[Return] <type:int>
+					[IntegerLiteral] <value:1>
+				[Return] <type:int>
+					[BinaryCalcul] <operator:*> <type:int>
+						[Identifier] <name:n> <type:int>
+						[FunctionCall] <name:fact>
+							[BinaryCalcul] <operator:-> <type:int>
+								[Identifier] <name:n> <type:int>
+								[IntegerLiteral] <value:1>
+

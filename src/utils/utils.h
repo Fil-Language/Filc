@@ -8,33 +8,53 @@
 #define FILC_UTILS_H
 
 #include <string>
+#include <vector>
 
+/**
+ * Trim left
+ *
+ * @param input
+ * @return
+ */
 std::string &ltrim(std::string &input);
 
-class IndentPrinter {
+/**
+ * Describe a position in a file
+ */
+class Position {
 public:
-    IndentPrinter();
+    /**
+     * Main constructor
+     *
+     * @param line
+     * @param column
+     * @param filename
+     */
+    Position(int line, int column, const std::string &filename);
 
-    explicit IndentPrinter(const std::string &indent);
+    int getLine() const;
 
-    IndentPrinter *write(const std::string &str);
+    int getColumn() const;
 
-    IndentPrinter *writeIndent(const std::string &str);
+    std::string getFilename() const;
 
-    IndentPrinter *indent();
+    /**
+     * @return The line in the file where the position is
+     */
+    std::string getLineContent() const;
 
-    IndentPrinter *unindent();
-
-    const std::string &getBuffer() const;
+    std::string dump() const;
 
 private:
-    std::string _indent;
-    std::string _buffer;
-    int _nb;
+    int _line;
+    int _column;
+    std::string _filename;
 };
 
-std::ostream &operator<<(std::ostream &os, const IndentPrinter &printer);
+std::string replace(const std::string &str, char from, char to);
 
-std::ostream &operator<<(std::ostream &os, const IndentPrinter *printer);
+std::string to_string(char *str);
+
+std::vector<std::string> split(const std::string &str, char delim);
 
 #endif //FILC_UTILS_H

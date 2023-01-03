@@ -1,0 +1,11 @@
+[Program] <module:function2>
+	[Function] <name:cube>  <type:(float) -> float>
+		[FunctionDeclaration] <name:cube> <type:(float) -> float>
+			[FunctionParam] <name:x> <type:float>
+		[Assignation] <type:float>
+			[BinaryCalcul] <operator:*> <type:float>
+				[BinaryCalcul] <operator:*> <type:float>
+					[Identifier] <name:x> <type:float>
+					[Identifier] <name:x> <type:float>
+				[Identifier] <name:x> <type:float>
+

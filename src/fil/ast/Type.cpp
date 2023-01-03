@@ -18,11 +18,6 @@ Type::Type(int arraySize, AbstractType *subType)
 Type::Type(AbstractType *subType)
         : _name(nullptr), _isArray(false), _isPointer(true), _arraySize(0), _subType(subType) {}
 
-Type::~Type() {
-    delete _name;
-    delete _subType;
-}
-
 string Type::decompile(int indent) const {
     if (_isPointer) {
         return _subType->decompile(indent) + "*";
@@ -30,5 +25,27 @@ string Type::decompile(int indent) const {
         return _subType->decompile(indent) + "[" + to_string(_arraySize) + "]";
     } else {
         return _name->decompile(indent);
+    }
+}
+
+string Type::getName() const {
+    if (_isPointer) {
+        return _subType->getName() + "*";
+    } else if (_isArray) {
+        return _subType->getName() + "[" + to_string(_arraySize) + "]";
+    } else {
+        return _name->getName();
+    }
+}
+
+bool Type::isIterable() const {
+    return _isArray;
+}
+
+AbstractType * Type::getIterableType() {
+    if (isIterable()) {
+        return _subType;
+    } else {
+        return AbstractType::getIterableType();
     }
 }

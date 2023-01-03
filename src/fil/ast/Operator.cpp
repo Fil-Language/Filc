@@ -15,10 +15,6 @@ Operator::Operator(Op op)
 Operator::Operator(AbstractExpr *index)
         : _op(ARRAY), _index(index) {}
 
-Operator::~Operator() {
-    delete _index;
-}
-
 string to_string(Operator::Op op) {
     switch (op) {
         case Operator::STAR:
@@ -71,4 +67,8 @@ string Operator::decompile(int indent) const {
     } else {
         return to_string(_op);
     }
+}
+
+Operator::Op Operator::getOp() const {
+    return _op;
 }

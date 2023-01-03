@@ -1,0 +1,9 @@
+[Program] <module:function1>
+	[Function] <name:square>  <type:(int) -> int>
+		[FunctionDeclaration] <name:square> <type:(int) -> int>
+			[FunctionParam] <name:x> <type:int>
+		[Assignation] <type:int>
+			[BinaryCalcul] <operator:*> <type:int>
+				[Identifier] <name:x> <type:int>
+				[Identifier] <name:x> <type:int>
+
