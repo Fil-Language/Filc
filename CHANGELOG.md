@@ -2,6 +2,8 @@
 
 ## v0.2.0
 
+*2023-01-03*
+
 - Implement part B
 - Create Environment and SymbolTable
 - Create ErrorsRegister
