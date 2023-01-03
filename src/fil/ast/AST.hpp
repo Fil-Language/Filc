@@ -51,6 +51,8 @@ namespace ast {
 
         virtual AbstractType *inferType(Environment *env);
 
+        AbstractType *getExprType() const;
+
     protected:
         AbstractExpr();
 

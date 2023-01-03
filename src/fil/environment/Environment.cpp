@@ -47,12 +47,28 @@ Symbol *Environment::addFunction(const std::string &name, Position *position) {
     return _functions->addSymbol(name, position);
 }
 
+Symbol *Environment::addFunction(Symbol *symbol) {
+    if (hasSymbol(symbol->getName())) {
+        return nullptr;
+    }
+
+    return _functions->addSymbol(symbol);
+}
+
 Symbol *Environment::addVariable(const std::string &name, Position *position) {
     if (hasSymbol(name)) {
         return nullptr;
     }
 
     return _variables->addSymbol(name, position);
+}
+
+Symbol *Environment::addVariable(Symbol *symbol) {
+    if (hasSymbol(symbol->getName())) {
+        return nullptr;
+    }
+
+    return _variables->addSymbol(symbol);
 }
 
 Symbol *Environment::addType(const std::string &name, Position *position) {

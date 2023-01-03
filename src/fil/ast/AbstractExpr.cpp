@@ -42,3 +42,7 @@ bool AbstractExpr::isReturn() const {
 AbstractType *AbstractExpr::inferType(Environment *env) {
     throw;
 }
+
+AbstractType *AbstractExpr::getExprType() const {
+    return _exprType;
+}

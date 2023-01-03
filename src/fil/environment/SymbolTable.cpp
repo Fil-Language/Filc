@@ -27,6 +27,16 @@ Symbol *SymbolTable::addSymbol(const std::string &name, Position *position) {
     return symbol;
 }
 
+Symbol *SymbolTable::addSymbol(Symbol *symbol) {
+    if (hasSymbol(symbol->getName())) {
+        return nullptr;
+    }
+
+    _symbols[symbol->getName()] = symbol;
+
+    return symbol;
+}
+
 bool SymbolTable::hasSymbol(const std::string &name) const {
     return _symbols.find(name) != _symbols.end();
 }
@@ -37,10 +47,6 @@ Symbol *SymbolTable::getSymbol(const std::string &name) const {
 
 void SymbolTable::merge(SymbolTable *symbolTable) {
     for (auto &symbol: symbolTable->_symbols) {
-        if (hasSymbol(symbol.first)) {
-            continue;
-        }
-
         _symbols[symbol.first] = symbol.second;
     }
 }

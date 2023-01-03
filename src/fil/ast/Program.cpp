@@ -36,7 +36,7 @@ void Program::resolveGlobalEnvironment() {
 }
 
 void Program::resolveEnvironment() {
-    // Resolve imports
+    // Merge imports
     for (auto &imp: _imports) {
         _environment->merge(imp->getPublicEnvironment());
     }
@@ -54,13 +54,15 @@ Environment *Program::getPublicEnvironment() const {
         if (expr->isExported()) {
             if (expr->isVar()) {
                 auto *symbol = ((VariableDeclaration *) expr)->getSymbol();
-                env->addVariable(symbol->getName(), symbol->getPosition());
+                env->addVariable(symbol);
             } else if (expr->isFunc()) {
                 auto *symbol = ((Function *) expr)->getSymbol();
-                env->addFunction(symbol->getName(), symbol->getPosition());
+                env->addFunction(symbol);
             } else {
                 auto pos = expr->getPosition();
-                env->addVariable(replace(_module, '.', '_') + "_" + to_string(pos->getLine()), pos);
+                auto symbol = new Symbol(replace(_module, '.', '_') + "_" + to_string(pos->getLine()), pos);
+                symbol->setType(expr->getExprType());
+                env->addVariable(symbol);
             }
         }
     }
@@ -69,6 +71,12 @@ Environment *Program::getPublicEnvironment() const {
 }
 
 void Program::inferTypes() {
+    // Merge imports
+    for (auto &imp: _imports) {
+        _environment->merge(imp->getPublicEnvironment());
+    }
+
+    // Infer exprs
     for (auto &expr: _exprs) {
         expr->inferType(_environment);
     }

@@ -19,7 +19,11 @@ public:
 
     Symbol *addFunction(const std::string &name, Position *position);
 
+    Symbol *addFunction(Symbol *symbol);
+
     Symbol *addVariable(const std::string &name, Position *position);
+
+    Symbol *addVariable(Symbol *symbol);
 
     Symbol *addType(const std::string &name, Position *position);
 

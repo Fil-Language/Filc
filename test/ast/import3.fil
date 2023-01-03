@@ -1,0 +1,5 @@
+module import3
+
+import fil.io
+
+var b = a + 1
