@@ -84,6 +84,6 @@ add_executable(filc
         src/fil/errors/Message.cpp)
 target_link_libraries(filc antlr4_static)
 
-target_compile_options(filc PUBLIC)
+target_compile_options(filc PUBLIC -Wall)
 
 install(TARGETS filc DESTINATION bin)
