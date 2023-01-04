@@ -8,6 +8,9 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # compiler must be 17
 set(CMAKE_CXX_STANDARD 17)
 
+# _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+# ANTLR section
+
 # required if linking to static library
 add_definitions(-DANTLR4CPP_STATIC)
 
@@ -43,6 +46,17 @@ antlr_target(Parser ${PROJECT_SOURCE_DIR}/src/antlr/FilParser.g4 PARSER
 # include generated files in project environment
 include_directories(${ANTLR_Lexer_OUTPUT_DIR})
 include_directories(${ANTLR_Parser_OUTPUT_DIR})
+
+# _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+# LLVM section
+
+find_package(LLVM REQUIRED)
+
+include_directories(${LLVM_INCLUDE_DIRS})
+add_definitions(${LLVM_DEFINITIONS})
+
+# _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+# Filc section
 
 include_directories(
         src
@@ -82,7 +96,7 @@ add_executable(filc
         # === Errors ===
         src/fil/errors/ErrorsRegister.cpp src/fil/errors/ErrorsRegister.h src/fil/errors/Message.h
         src/fil/errors/Message.cpp)
-target_link_libraries(filc antlr4_static)
+target_link_libraries(filc antlr4_static ${llvm_libs})
 
 target_compile_options(filc PUBLIC -Wall)
 
