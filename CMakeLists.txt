@@ -64,6 +64,7 @@ include_directories(
         src/fil/ast
         src/fil/environment
         src/fil/errors
+        src/fil/llvm
         src/utils
 )
 
@@ -95,7 +96,9 @@ add_executable(filc
         src/fil/environment/SymbolTable.h
         # === Errors ===
         src/fil/errors/ErrorsRegister.cpp src/fil/errors/ErrorsRegister.h src/fil/errors/Message.h
-        src/fil/errors/Message.cpp)
+        src/fil/errors/Message.cpp
+        # === LLVM ===
+        )
 target_link_libraries(filc antlr4_static ${llvm_libs})
 
 target_compile_options(filc PUBLIC -Wall)
