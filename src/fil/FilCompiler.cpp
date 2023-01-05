@@ -23,7 +23,7 @@ FilCompiler::FilCompiler(string filename) : _filename(std::move(filename)) {
     _currentDir = _filename.substr(0, _filename.find_last_of("/\\"));
 }
 
-int FilCompiler::compile(int flag) {
+int FilCompiler::compile(int flag, bool debug, const string &output) {
     ifstream file(_filename);
     if (!file.is_open()) {
         cout << "File " << _filename << " not found" << endl;

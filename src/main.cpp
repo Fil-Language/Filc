@@ -74,5 +74,5 @@ int main(int argc, char **argv) {
 
     auto compiler = FilCompiler(result["filename"].as<string>());
 
-    return compiler.compile(flag);
+    return compiler.compile(flag, debug, out);
 }

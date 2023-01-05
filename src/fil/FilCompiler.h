@@ -15,7 +15,7 @@ class FilCompiler {
 public:
     explicit FilCompiler(std::string filename);
 
-    int compile(int flag);
+    int compile(int flag, bool debug, const std::string& output);
 
     static ast::Program *import(const std::string &moduleName, antlr4::Token *tkn);
 
