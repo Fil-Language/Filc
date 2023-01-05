@@ -2,6 +2,9 @@
 
 ## v0.3.0
 
+- Add `--debug` option to compile with debug information
+- Add `-o,--out` option to specify executable name
+
 ## v0.2.0
 
 *2023-01-03*

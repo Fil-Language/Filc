@@ -22,7 +22,9 @@ int main(int argc, char **argv) {
             ("verbose", "Verbose level (0-5)", cxxopts::value<int>()->default_value("0")->implicit_value("1"));
     options.add_options("Compile flags")
             ("d,decompile", "Decompile AST")
-            ("a,ast", "Print AST structure");
+            ("a,ast", "Print AST structure")
+            ("debug", "Compile with debug information")
+            ("o,out", "Executable output filename", cxxopts::value<string>()->default_value("a.out"));
     options.parse_positional({"filename"});
 
     cxxopts::ParseResult result;
@@ -63,6 +65,12 @@ int main(int argc, char **argv) {
     } else if (result.count("ast")) {
         flag = AST;
     }
+
+    bool debug = false;
+    if (result.count("debug")) {
+        debug = true;
+    }
+    string out = result["out"].as<string>();
 
     auto compiler = FilCompiler(result["filename"].as<string>());
 
