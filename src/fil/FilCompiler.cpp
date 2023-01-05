@@ -46,7 +46,6 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         ErrorsRegister::dump(cerr);
         if (ErrorsRegister::containsError()) {
             file.close();
-            delete program;
 
             return 1;
         }
@@ -59,7 +58,6 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         if (flag == DECOMPILE) {
             cout << program->decompile(0) << endl;
 
-            delete program;
             return 0;
         }
 
@@ -71,8 +69,6 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
 
         ErrorsRegister::dump(cerr);
         if (ErrorsRegister::containsError()) {
-            delete program;
-
             return 1;
         }
         ErrorsRegister::clean();
@@ -80,7 +76,6 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         if (flag == FLAGS::AST) {
             cout << program->dump(0) << endl;
 
-            delete program;
             return 0;
         }
 
