@@ -26,6 +26,12 @@ Tests are written with [Node.js](https://nodejs.org), you need at least version 
 
 - [Colors](https://www.npmjs.com/package/colors)
 
+### GitHub actions
+
+- [Checkout](https://github.com/marketplace/actions/checkout)
+- [Setup Node.js](https://github.com/marketplace/actions/setup-node-js-environment)
+- [Install LLVM and Clang](https://github.com/marketplace/actions/install-llvm-and-clang)
+
 ## Building and Testing
 
 If you want to build and test the compiler, please follow the steps below.
