@@ -16,7 +16,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ ubuntu-latest ]
+        os: [ ubuntu-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -24,9 +24,6 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install LLVM
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install llvm-dev
       - name: Install LLVM
         if: matrix.os == 'macos-latest'
         run: brew install llvm@10
