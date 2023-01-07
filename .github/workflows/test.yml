@@ -26,7 +26,10 @@ jobs:
 
       - name: Install LLVM
         if: matrix.os == 'macos-latest'
-        run: brew install llvm
+        run: |
+          brew install llvm
+          export LDFLAGS="-L/usr/local/opt/llvm/lib"
+          export CPPFLAGS="-I/usr/local/opt/llvm/include"
       - name: Install LLVM
         if: matrix.os == 'windows-latest'
         run: choco install llvm --version 10.0.0
