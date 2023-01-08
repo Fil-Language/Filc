@@ -25,15 +25,9 @@ jobs:
           node-version: 16
 
       - name: Install LLVM
-        if: matrix.os == 'macos-latest'
-        run: |
-          brew install llvm
-          export LDFLAGS="-L/usr/local/opt/llvm/lib"
-          export CPPFLAGS="-I/usr/local/opt/llvm/include"
-          export LLVM_DIR=/usr/local/opt/llvm/lib/cmake/llvm
-      - name: Install LLVM
-        if: matrix.os == 'windows-latest'
-        run: choco install llvm --version 10.0.0
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "10.0"
 
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
