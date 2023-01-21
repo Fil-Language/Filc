@@ -25,17 +25,18 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install LLVM
-        uses: KyleMayes/install-llvm-action@v1
+      - name: Setup LLVM
+        uses: aminya/setup-cpp@v1
         with:
-          version: "10.0"
+          cmake: true
+          llvm: true
 
       - name: Dir LLVM dir
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
           name: llvm
-          path: C:\Program Files\LLVM
+          path: C:\Users\runneradmin\llvm
           retention-days: 1
 
       - name: Configure CMake
