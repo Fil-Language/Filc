@@ -32,11 +32,11 @@ jobs:
 
       - name: Dir LLVM dir
         if: matrix.os == 'windows-latest'
-        run: dir "C:\Program Files\LLVM\lib\cmake"
+        run: dir "C:\Program Files\LLVM\lib\cmake\llvm"
 
       - name: Configure CMake
         env:
-          LLVM_DIR: C:\Program Files\LLVM
+          LLVM_DIR: C:\Program Files\LLVM\lib\cmake\llvm
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: cmake --build ${{github.workspace}}/build
