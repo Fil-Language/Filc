@@ -32,7 +32,11 @@ jobs:
 
       - name: Dir LLVM dir
         if: matrix.os == 'windows-latest'
-        run: dir "C:\Program Files\LLVM\lib\cmake\llvm"
+        uses: actions/upload-artifact@v3
+        with:
+          name: llvm
+          path: C:\Program Files\LLVM
+          retention-days: 1
 
       - name: Configure CMake
         env:
