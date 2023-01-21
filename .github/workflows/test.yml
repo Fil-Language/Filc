@@ -32,7 +32,7 @@ jobs:
 
       - name: Configure CMake
         env:
-          LLVM_DIR: C:\Users\runneradmin\llvm
+          LLVM_DIR: C:\Program Files\LLVM
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: cmake --build ${{github.workspace}}/build
