@@ -30,13 +30,9 @@ jobs:
           cmake: true
           llvm: true
 
-      - name: Export LLVM path
-        if: matrix.os == 'windows-latest'
-        run: echo "LLVM_DIR=C:\Users\runneradmin\llvm"
+      - name: Configure CMake
         env:
           LLVM_DIR: C:\Users\runneradmin\llvm
-
-      - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: cmake --build ${{github.workspace}}/build
