@@ -32,7 +32,7 @@ jobs:
 
       - name: Dir LLVM dir
         if: matrix.os == 'windows-latest'
-        run: dir "C:\Program Files\LLVM"
+        run: dir "C:\Program Files\LLVM\lib"
 
       - name: Configure CMake
         env:
