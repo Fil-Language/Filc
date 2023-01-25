@@ -28,6 +28,11 @@ jobs:
         with:
           node-version: 16
 
+      - name: Install LLVM
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "10.0"
+
       - run: lli --version
 
       - name: Configure CMake
