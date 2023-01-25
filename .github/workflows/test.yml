@@ -28,15 +28,7 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install LLVM
-        if: matrix.os != 'windows-2019' && matrix.os != 'windows-2022'
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: "10.0"
-
-      - name: Install LLVM
-        if: matrix.os == 'windows-2019' || matrix.os == 'windows-2022'
-        run: choco install llvm --version 10.0.0 -y
+      - run: lli --version
 
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
