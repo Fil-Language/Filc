@@ -35,9 +35,9 @@ jobs:
           cd llvm-project
           mkdir build
           cd build
-          cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ../llvm
+          cmake -DCMAKE_BUILD_TYPE=Release ../llvm
           cmake --build .
-          echo "CMake files : ${{github.workspace}}/llvm-project/build/lib/cmake/llvm"
+          cmake --install .
 
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
