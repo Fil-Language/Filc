@@ -98,8 +98,8 @@ add_executable(filc
         src/fil/ast/FunctionCall.cpp src/fil/ast/Cast.cpp src/fil/ast/BinaryCalcul.cpp src/fil/ast/ParenthesisBody.cpp
         src/fil/ast/AbstractLiteral.cpp src/fil/ast/AST_decl.h src/fil/ast/AbstractType.cpp
         # === Environment ===
-        src/fil/environment/Environment.cpp src/fil/environment/Environment.h src/fil/environment/SymbolTable.cpp
-        src/fil/environment/SymbolTable.h
+        src/fil/environment/Environment.cpp src/fil/environment/Environment.h src/fil/environment/Symbol.cpp
+        src/fil/environment/Symbol.h
         # === Errors ===
         src/fil/errors/ErrorsRegister.cpp src/fil/errors/ErrorsRegister.h src/fil/errors/Message.h
         src/fil/errors/Message.cpp

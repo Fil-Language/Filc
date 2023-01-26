@@ -41,7 +41,7 @@ AbstractType *BinaryCalcul::inferType(Environment *env) {
         case Operator::LEQ:
         case Operator::GEQ:
         case Operator::NEQ:
-            _exprType = env->getSymbol("bool")->getType();
+            _exprType = env->getSymbol("bool")->getSignature();
             break;
 
         case Operator::FLEFT:

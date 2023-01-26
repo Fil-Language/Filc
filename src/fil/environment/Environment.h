@@ -7,7 +7,8 @@
 #ifndef FILC_ENVIRONMENT_H
 #define FILC_ENVIRONMENT_H
 
-#include "SymbolTable.h"
+#include "Symbol.h"
+#include <deque>
 
 class Environment {
 public:
@@ -17,34 +18,17 @@ public:
 
     static Environment *getGlobalEnvironment();
 
-    Symbol *addFunction(const std::string &name, Position *position);
+    Symbol *addSymbol(const std::string &name, Position *position, Symbol::SymbolType type);
 
-    Symbol *addFunction(Symbol *symbol);
+    bool hasSymbol(const std::string &name, ast::AbstractType *signature);
 
-    Symbol *addVariable(const std::string &name, Position *position);
-
-    Symbol *addVariable(Symbol *symbol);
-
-    Symbol *addType(const std::string &name, Position *position);
-
-    bool hasSymbol(const std::string &name) const;
-
-    bool hasFunction(const std::string &name) const;
-
-    bool hasVariable(const std::string &name) const;
-
-    Symbol *getSymbol(const std::string &name) const;
-
-    bool hasType(const std::string &name) const;
+    Symbol *getSymbol(const std::string &name, ast::AbstractType *signature);
 
     void merge(Environment *environment);
 
 private:
     Environment *_parent;
-
-    SymbolTable *_functions;
-    SymbolTable *_variables;
-    SymbolTable *_types;
+    std::deque<Symbol *> _symbols;
 };
 
 

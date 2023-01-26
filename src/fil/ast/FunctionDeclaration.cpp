@@ -64,7 +64,7 @@ AbstractType *FunctionDeclaration::inferType(Environment *env) {
     }
 
     _exprType = new LambdaType(params, _type);
-    env->getSymbol(_name->getName())->setType(_exprType);
+    env->getSymbol(_name->getName())->setSignature(_exprType);
 
     return _exprType;
 }

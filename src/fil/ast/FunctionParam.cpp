@@ -41,7 +41,7 @@ void FunctionParam::resolveParam(Environment *function) {
 }
 
 AbstractType *FunctionParam::inferType(Environment *env) const {
-    env->getSymbol(_name->getName())->setType(_type);
+    env->getSymbol(_name->getName())->setSignature(_type);
 
     return _type;
 }

@@ -17,7 +17,7 @@ string FloatLiteral::decompile(int indent) const {
 }
 
 AbstractType *FloatLiteral::inferType(Environment *env) {
-    _exprType = env->getSymbol("float")->getType();
+    _exprType = env->getSymbol("float")->getSignature();
 
     return _exprType;
 }

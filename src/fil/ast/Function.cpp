@@ -34,7 +34,7 @@ void Function::resolveEnvironment(Environment *parent) {
 
 AbstractType *Function::inferType(Environment *env) {
     _exprType = _declaration->inferType(_environment);
-    env->getSymbol(_symbol->getName())->setType(_exprType);
+    env->getSymbol(_symbol->getName())->setSignature(_exprType);
 
     auto returnType = ((LambdaType *) _exprType)->getReturnType();
     auto bodyType = _body->inferType(_environment);

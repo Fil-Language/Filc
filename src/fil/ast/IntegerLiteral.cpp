@@ -17,7 +17,7 @@ string IntegerLiteral::decompile(int indent) const {
 }
 
 AbstractType *IntegerLiteral::inferType(Environment *env) {
-    _exprType = env->getSymbol("int")->getType();
+    _exprType = env->getSymbol("int")->getSignature();
 
     return _exprType;
 }

@@ -36,7 +36,7 @@ void Identifier::resolveEnvironment(Environment *parent) {
 
 AbstractType *Identifier::inferType(Environment *env) {
     // Infer
-    _exprType = env->getSymbol(_name)->getType();
+    _exprType = env->getSymbol(_name)->getSignature();
 
     // Check
     if (_exprType == nullptr) {

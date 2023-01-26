@@ -18,7 +18,7 @@ string CharLiteral::decompile(int indent) const {
 }
 
 AbstractType *CharLiteral::inferType(Environment *env) {
-    _exprType = env->getSymbol("char")->getType();
+    _exprType = env->getSymbol("char")->getSignature();
 
     return _exprType;
 }

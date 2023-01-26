@@ -39,7 +39,7 @@ void ForIterCondition::inferCondition(Environment *env, Environment *loop) {
         );
     }
 
-    loop->getSymbol(_iterable->getName())->setType(type->getIterableType());
+    loop->getSymbol(_iterable->getName())->setSignature(type->getIterableType());
 }
 
 string ForIterCondition::dump(int indent) const {

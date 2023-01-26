@@ -61,7 +61,7 @@ Environment *Program::getPublicEnvironment() const {
             } else {
                 auto pos = expr->getPosition();
                 auto symbol = new Symbol(replace(_module, '.', '_') + "_" + to_string(pos->getLine()), pos);
-                symbol->setType(expr->getExprType());
+                symbol->setSignature(expr->getExprType());
                 env->addVariable(symbol);
             }
         }

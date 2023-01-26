@@ -39,7 +39,7 @@ void FunctionCall::resolveEnvironment(Environment *parent) {
 }
 
 AbstractType *FunctionCall::inferType(Environment *env) {
-    auto functionType = env->getSymbol(_name->getName())->getType();
+    auto functionType = env->getSymbol(_name->getName())->getSignature();
     // If it's a recursive call, the return type is nullptr here
     _exprType = ((LambdaType *) functionType)->getReturnType();
 

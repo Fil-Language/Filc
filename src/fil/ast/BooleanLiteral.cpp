@@ -17,7 +17,7 @@ string BooleanLiteral::decompile(int indent) const {
 }
 
 AbstractType *BooleanLiteral::inferType(Environment *env) {
-    _exprType = env->getSymbol("bool")->getType();
+    _exprType = env->getSymbol("bool")->getSignature();
 
     return _exprType;
 }
