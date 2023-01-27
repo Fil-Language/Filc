@@ -93,6 +93,18 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
 }
 
 Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
+    static auto imports = map<string, Program *>();
+
+    // Check if the module is already imported
+    if (imports.find(moduleName) != imports.end()) {
+        return imports[moduleName];
+    } else {
+        // It fixes the infinite loop of import
+        // When it will resolve the environment, it will look again for the module
+        // and replace nullptr by the correct one
+        imports[moduleName] = nullptr;
+    }
+
 #ifdef _WIN32
     char sep = '\\';
     string ssep = "\\";
@@ -100,8 +112,9 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
     char sep = '/';
     string ssep = "/";
 #endif
+
     // Lambda to parse the file and return the AST
-    auto getProgram = [](ifstream &file) {
+    auto getProgram = [moduleName](ifstream &file) {
         ANTLRInputStream input(file);
         FilLexer lexer(&input);
         CommonTokenStream tokens(&lexer);
@@ -110,6 +123,7 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
 
         FilParser parser(&tokens);
         Program *program = parser.parseTree();
+        imports[moduleName] = program;
 
         file.close();
 
@@ -146,8 +160,9 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
             return getProgram(file);
         }
         // ----
-        filename = path + ssep + replace(moduleName, '.', sep) + ssep +
-                   *(split(moduleName, '.').end() - 1) + ".fil";
+        filename = path + ssep;
+        filename += replace(moduleName, '.', sep) + ssep;
+        filename += *(split(moduleName, '.').end() - 1) + ".fil";
         file = ifstream(filename);
         if (file.is_open()) {
             return getProgram(file);
