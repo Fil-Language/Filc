@@ -6,11 +6,6 @@
  */
 #include "Message.h"
 
-Message::Message(const std::string &message, Position *position)
-        : _message(message), _position(position) {}
-
-Warning::Warning(const std::string &message, Position *position) : Message(message, position) {}
-
 std::string printMessage(const std::string &message,
                          Position *position,
                          const std::string &type,
@@ -29,8 +24,21 @@ std::string printMessage(const std::string &message,
     return res + "\n";
 }
 
+// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
+
+Message::Message(const std::string &message, Position *position)
+        : _message(message), _position(position) {}
+
+Warning::Warning(const std::string &message, Position *position) : Message(message, position) {}
+
 std::string Warning::dump() const {
     return printMessage(_message, _position, "WARNING", "\033[1;33m");
+}
+
+BasicError::BasicError(const std::string &message) : Message(message, nullptr) {}
+
+std::string BasicError::dump() const {
+    return "\033[1;31mERROR: " + _message + "\033[0m\n";
 }
 
 Error::Error(const std::string &message, Position *position) : Message(message, position) {}

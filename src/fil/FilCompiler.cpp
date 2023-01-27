@@ -81,7 +81,7 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
 
         // Check that the main function is defined
         if (!program->hasMain()) {
-            ErrorsRegister::addError("The main function is not defined", nullptr);
+            ErrorsRegister::addError(new BasicError("The main function is not defined"));
             ErrorsRegister::dump(cerr);
 
             return 1;
@@ -178,12 +178,12 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
     }
 
     // Module not found
-    ErrorsRegister::addError(
+    ErrorsRegister::addError(new Error(
             "Module " + moduleName + " not found",
             new Position((int) tkn->getLine(),
                          (int) tkn->getCharPositionInLine(),
                          tkn->getTokenSource()->getSourceName())
-    );
+    ));
 
     return nullptr;
 }

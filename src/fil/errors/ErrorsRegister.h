@@ -26,9 +26,9 @@ public:
 
     static bool containsWarning();
 
-    static void addWarning(const std::string &message, Position *position);
+    static void addWarning(Message *message);
 
-    static void addError(const std::string &message, Position *position);
+    static void addError(Message *message);
 
     static void dump(std::ostream &out);
 

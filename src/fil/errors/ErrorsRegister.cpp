@@ -30,16 +30,16 @@ bool ErrorsRegister::containsWarning() {
     return _instance != nullptr && _instance->_containsWarning;
 }
 
-void ErrorsRegister::addWarning(const std::string &message, Position *position) {
+void ErrorsRegister::addWarning(Message *message) {
     if (_instance) {
-        _instance->_messages.push_back(new Warning(message, position));
+        _instance->_messages.push_back(message);
         _instance->_containsWarning = true;
     }
 }
 
-void ErrorsRegister::addError(const std::string &message, Position *position) {
+void ErrorsRegister::addError(Message *message) {
     if (_instance) {
-        _instance->_messages.push_back(new Error(message, position));
+        _instance->_messages.push_back(message);
         _instance->_containsError = true;
     }
 }

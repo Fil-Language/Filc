@@ -31,6 +31,13 @@ public:
     std::string dump() const override;
 };
 
+class BasicError : public Message {
+public:
+    BasicError(const std::string &message);
+
+    std::string dump() const override;
+};
+
 class Error : public Message {
 public:
     Error(const std::string &message, Position *position);
