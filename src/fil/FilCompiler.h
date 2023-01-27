@@ -15,9 +15,12 @@ class FilCompiler {
 public:
     explicit FilCompiler(std::string filename);
 
-    int compile(int flag, bool debug, const std::string& output);
+    int compile(int flag, bool debug, const std::string &output);
 
     static ast::Program *import(const std::string &moduleName, antlr4::Token *tkn);
+
+private:
+    static ast::Program *getSystemProgram();
 
 private:
     std::string _filename;

@@ -158,6 +158,14 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         return getProgram(file);
     }
 
+    // Special case for the standard library
+    if (moduleName == "fil.system") {
+        auto prog = getSystemProgram();
+        imports[moduleName] = prog;
+
+        return prog;
+    }
+
     // Looking for the module in the include path $FIL_PATH
     auto filPath = to_string(getenv("FIL_PATH"));
     auto paths = split(filPath, ':');
@@ -186,4 +194,24 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
     ));
 
     return nullptr;
+}
+
+Program *FilCompiler::getSystemProgram() {
+    static auto *systemProgram = new Program("fil.system", {}, {});
+    static bool initialized = false;
+
+    if (initialized) {
+        return systemProgram;
+    }
+
+    initialized = true;
+
+    auto env = Environment::getGlobalEnvironment();
+
+    // Add system functions
+    // TODO
+
+    systemProgram->setEnvironment(env);
+
+    return systemProgram;
 }

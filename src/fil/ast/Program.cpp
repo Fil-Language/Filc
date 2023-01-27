@@ -103,3 +103,7 @@ string Program::dump(int indent) const {
 
     return res;
 }
+
+void Program::setEnvironment(Environment *environment) {
+    _environment = environment;
+}

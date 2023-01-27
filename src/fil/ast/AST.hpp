@@ -73,6 +73,8 @@ namespace ast {
 
         bool hasMain() const;
 
+        void setEnvironment(Environment *environment);
+
         //void resolveGlobalEnvironment();
 
         //void inferTypes();
