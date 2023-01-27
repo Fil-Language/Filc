@@ -61,7 +61,7 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
             return 0;
         }
 
-        // Generate symbols tables (environment)
+        // Generate symbols tables (environment) TODO
         //program->resolveGlobalEnvironment();
 
         // Type inference and checking
@@ -135,7 +135,7 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
 
         file.close();
 
-        // Generate symbols tables (environment)
+        // Generate symbols tables (environment) TODO
         //program->resolveGlobalEnvironment();
 
         // Type inference and checking
