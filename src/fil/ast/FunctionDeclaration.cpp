@@ -31,6 +31,18 @@ string FunctionDeclaration::decompile(int indent) const {
     return result;
 }
 
+Symbol *FunctionDeclaration::resolveSymbols(Environment *parent) {
+    auto symbol = _name->resolveFunc(parent);
+
+    return symbol;
+}
+
+void FunctionDeclaration::resolveParams(Environment *function) {
+    for (auto param: _params) {
+        param->resolveSymbol(function);
+    }
+}
+
 //Symbol *FunctionDeclaration::resolveDeclaration(Environment *parent, Environment *function) {
 //    auto symbol = _name->resolveFunc(parent);
 //    if (symbol == nullptr) {

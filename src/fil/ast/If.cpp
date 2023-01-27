@@ -22,14 +22,15 @@ string If::decompile(int indent) const {
     return res;
 }
 
-//void If::resolveEnvironment(Environment *parent) {
-//    _condition->resolveEnvironment(parent);
-//    _then->resolveEnvironment(parent);
-//    if (_else) {
-//        _else->resolveEnvironment(parent);
-//    }
-//}
-//
+Symbol *If::resolveSymbols(Environment *parent) {
+    _condition->resolveSymbols(parent);
+    _then->resolveSymbols(parent);
+    if (_else)
+        _else->resolveSymbols(parent);
+
+    return nullptr;
+}
+
 //AbstractType *If::inferType(Environment *env) {
 //    _condition->inferType(env);
 //

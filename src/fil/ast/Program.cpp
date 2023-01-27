@@ -38,6 +38,15 @@ bool Program::hasMain() const {
     return _environment->hasSymbol("main", nullptr);
 }
 
+void Program::resolveSymbols() {
+    _environment = Environment::getGlobalEnvironment();
+
+    // Resolve exprs
+    for (auto &expr: _exprs) {
+        expr->resolveSymbols(_environment);
+    }
+}
+
 //void Program::resolveGlobalEnvironment() {
 //    _environment = Environment::getGlobalEnvironment();
 //    resolveEnvironment();

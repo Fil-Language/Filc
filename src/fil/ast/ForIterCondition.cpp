@@ -19,6 +19,10 @@ string ForIterCondition::decompile(int indent) const {
            + _iterable->decompile(indent);
 }
 
+void ForIterCondition::resolveSymbols(Environment *loop) {
+    _iterator->resolveVar(loop);
+}
+
 //void ForIterCondition::resolveCondition(Environment *loop) {
 //    _iterator->resolveVar(loop);
 //

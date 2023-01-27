@@ -17,13 +17,15 @@ string While::decompile(int indent) const {
            + _body->decompile(indent);
 }
 
-//void While::resolveEnvironment(Environment *parent) {
-//    _environment = new Environment(parent);
-//
-//    _condition->resolveEnvironment(parent);
-//    _body->resolveEnvironment(_environment);
-//}
-//
+Symbol *While::resolveSymbols(Environment *parent) {
+    _condition->resolveSymbols(parent);
+
+    _environment = new Environment(parent);
+    _body->resolveSymbols(_environment);
+
+    return nullptr;
+}
+
 //AbstractType *While::inferType(Environment *env) {
 //    _condition->inferType(env);
 //

@@ -31,6 +31,16 @@ string Lambda::decompile(int indent) const {
     return res;
 }
 
+Symbol *Lambda::resolveSymbols(Environment *parent) {
+    _environment = new Environment(parent);
+
+    for (auto param: _params) {
+        param->resolveSymbol(_environment);
+    }
+
+    return _body->resolveSymbols(_environment);
+}
+
 //void Lambda::resolveEnvironment(Environment *parent) {
 //    _environment = new Environment(parent);
 //

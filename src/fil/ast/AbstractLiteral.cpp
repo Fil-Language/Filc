@@ -9,6 +9,7 @@
 using namespace std;
 using namespace ast;
 
-//void AbstractLiteral::resolveEnvironment(Environment *parent) {
-//    // Nothing to do
-//}
+Symbol *AbstractLiteral::resolveSymbols(Environment *parent) {
+    // Do nothing
+    return nullptr;
+}

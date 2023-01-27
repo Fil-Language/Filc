@@ -18,12 +18,15 @@ string ForICondition::decompile(int indent) const {
            + _increment->decompile(indent);
 }
 
-//void ForICondition::resolveCondition(Environment *loop) {
-//    _declaration->resolveEnvironment(loop);
-//    _condition->resolveEnvironment(loop);
-//    _increment->resolveEnvironment(loop);
-//}
-//
+void ForICondition::resolveSymbols(Environment *loop) {
+    if (_declaration)
+        _declaration->resolveSymbols(loop);
+    if (_condition)
+        _condition->resolveSymbols(loop);
+    if (_increment)
+        _increment->resolveSymbols(loop);
+}
+
 //void ForICondition::inferCondition(Environment *env, Environment *loop) {
 //    if (_declaration)
 //        _declaration->inferType(loop);

@@ -16,11 +16,13 @@ string BinaryCalcul::decompile(int indent) const {
     return _left->decompile(indent) + " " + _op->decompile(indent) + " " + _right->decompile(indent);
 }
 
-//void BinaryCalcul::resolveEnvironment(Environment *parent) {
-//    _left->resolveEnvironment(parent);
-//    _right->resolveEnvironment(parent);
-//}
-//
+Symbol *BinaryCalcul::resolveSymbols(Environment *parent) {
+    _left->resolveSymbols(parent);
+    _right->resolveSymbols(parent);
+
+    return nullptr;
+}
+
 //AbstractType *BinaryCalcul::inferType(Environment *env) {
 //    auto leftType = _left->inferType(env);
 //    auto rightType = _right->inferType(env);

@@ -16,6 +16,15 @@ string ForIter::decompile(int indent) const {
     return "for (" + _condition->decompile(indent) + ") " + _body->decompile(indent);
 }
 
+Symbol *ForIter::resolveSymbols(Environment *parent) {
+    _environment = new Environment(parent);
+
+    _condition->resolveSymbols(_environment);
+    _body->resolveSymbols(_environment);
+
+    return nullptr;
+}
+
 //void ForIter::resolveEnvironment(Environment *parent) {
 //    _environment = new Environment(parent);
 //

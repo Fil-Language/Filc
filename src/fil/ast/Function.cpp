@@ -24,14 +24,16 @@ Symbol *Function::getSymbol() const {
     return _symbol;
 }
 
-//void Function::resolveEnvironment(Environment *parent) {
-//    _environment = new Environment(parent);
-//
-//    _symbol = _declaration->resolveDeclaration(parent, _environment);
-//
-//    _body->resolveEnvironment(_environment);
-//}
-//
+Symbol *Function::resolveSymbols(Environment *parent) {
+    _symbol = _declaration->resolveSymbols(parent);
+
+    _environment = new Environment(parent);
+    _declaration->resolveParams(_environment);
+    _body->resolveSymbols(_environment);
+
+    return _symbol;
+}
+
 //AbstractType *Function::inferType(Environment *env) {
 //    _exprType = _declaration->inferType(_environment);
 //    env->getSymbol(_symbol->getName())->setSignature(_exprType);

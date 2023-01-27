@@ -16,10 +16,10 @@ string ParenthesisBody::decompile(int indent) const {
     return "(" + _expr->decompile(indent) + ")";
 }
 
-//void ParenthesisBody::resolveEnvironment(Environment *parent) {
-//    _expr->resolveEnvironment(parent);
-//}
-//
+Symbol *ParenthesisBody::resolveSymbols(Environment *parent) {
+    return _expr->resolveSymbols(parent);
+}
+
 //AbstractType *ParenthesisBody::inferType(Environment *env) {
 //    _exprType = _expr->inferType(env);
 //

@@ -16,6 +16,10 @@ string Assignation::decompile(int indent) const {
     return "= " + _expr->decompile(indent);
 }
 
+Symbol *Assignation::resolveSymbols(Environment *parent) {
+    return _expr->resolveSymbols(parent);
+}
+
 //void Assignation::resolveEnvironment(Environment *parent) {
 //    _expr->resolveEnvironment(parent);
 //}

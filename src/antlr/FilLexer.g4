@@ -69,14 +69,6 @@ STRING:
             setText(text);
         }
 };
-FSTRING:
-    'f"' (STRING_CHAR | '\\"' | '\\\\')* '"' {
-        {
-            auto text = getText();
-            text = text.substr(2, text.size() - 3);
-            setText(text);
-        }
-};
 CHARACTER: '\'' ~('\'' | '\\' | '\n') '\'';
 
 // Comments

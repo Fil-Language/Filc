@@ -23,10 +23,10 @@ std::string UnaryCalcul::decompile(int indent) const {
     }
 }
 
-//void UnaryCalcul::resolveEnvironment(Environment *parent) {
-//    // Nothing to do
-//}
-//
+Symbol *UnaryCalcul::resolveSymbols(Environment *parent) {
+    return _identifier->resolveSymbols(parent);
+}
+
 //AbstractType *UnaryCalcul::inferType(Environment *env) {
 //    _exprType = _identifier->inferType(env);
 //

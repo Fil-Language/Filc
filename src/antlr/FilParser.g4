@@ -190,10 +190,6 @@ literal returns[AbstractLiteral *tree]
         $tree = new StringLiteral($l4.text);
         $tree->setPosition($l4);
     }
-    | l5=FSTRING {
-        $tree = new FStringLiteral($l5.text);
-        $tree->setPosition($l5);
-    }
     ;
 
 boolean returns[BooleanLiteral *tree]

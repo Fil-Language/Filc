@@ -24,13 +24,15 @@ string Switch::decompile(int indent) const {
     return res;
 }
 
-//void Switch::resolveEnvironment(Environment *parent) {
-//    _condition->resolveEnvironment(parent);
-//    for (auto &c: _cases) {
-//        c->resolveEnvironment(parent);
-//    }
-//}
-//
+Symbol *Switch::resolveSymbols(Environment *parent) {
+    _condition->resolveSymbols(parent);
+    for (auto &c: _cases) {
+        c->resolveSymbols(parent);
+    }
+
+    return nullptr;
+}
+
 //AbstractType *Switch::inferType(Environment *env) {
 //    auto conditionType = _condition->inferType(env);
 //

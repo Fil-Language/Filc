@@ -10,22 +10,31 @@ using namespace std;
 using namespace ast;
 
 Identifier::Identifier(const string &name)
-        : _name(name) {}
+        : _name(name), _symbol(nullptr) {}
 
 string Identifier::decompile(int indent) const {
     return _name;
 }
 
-//Symbol *Identifier::resolveVar(Environment *parent) {
-//    return parent->addVariable(_name, _pos);
-//}
-//
-//Symbol *Identifier::resolveFunc(Environment *parent) {
-//    return parent->addFunction(_name, _pos);
-//}
+Symbol *Identifier::resolveVar(Environment *parent) {
+    _symbol = parent->addSymbol(_name, _pos, Symbol::VARIABLE);
+
+    return _symbol;
+}
+
+Symbol *Identifier::resolveFunc(Environment *parent) {
+    _symbol = parent->addSymbol(_name, _pos, Symbol::FUNCTION);
+
+    return _symbol;
+}
 
 const string &Identifier::getName() const {
     return _name;
+}
+
+Symbol *Identifier::resolveSymbols(Environment *parent) {
+    // Nothing to do
+    return nullptr;
 }
 
 //void Identifier::resolveEnvironment(Environment *parent) {

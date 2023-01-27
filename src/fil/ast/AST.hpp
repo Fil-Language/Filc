@@ -41,7 +41,7 @@ namespace ast {
 
         bool isExported() const;
 
-        //virtual void resolveEnvironment(Environment *parent);
+        virtual Symbol *resolveSymbols(Environment *parent);
 
         virtual bool isVar() const;
 
@@ -75,14 +75,12 @@ namespace ast {
 
         void setEnvironment(Environment *environment);
 
-        //void resolveGlobalEnvironment();
+        void resolveSymbols();
 
         //void inferTypes();
 
     private:
-//        Environment *getPublicEnvironment() const;
-
-//        void resolveEnvironment();
+        //Environment *getPublicEnvironment() const;
 
     private:
         std::string _module;
@@ -99,11 +97,11 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-//        Symbol *resolveVar(Environment *parent);
+        Symbol *resolveVar(Environment *parent);
 
-//        Symbol *resolveFunc(Environment *parent);
+        Symbol *resolveFunc(Environment *parent);
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         const std::string &getName() const;
 
@@ -113,6 +111,7 @@ namespace ast {
 
     private:
         std::string _name;
+        Symbol *_symbol;
     };
 
     class AbstractType : public AST {
@@ -182,7 +181,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -199,7 +198,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -213,7 +212,7 @@ namespace ast {
 
     class AbstractLiteral : public AbstractExpr {
     public:
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
     };
 
     class BooleanLiteral : public AbstractLiteral {
@@ -286,15 +285,6 @@ namespace ast {
         std::string _value;
     };
 
-    class FStringLiteral : public StringLiteral {
-    public:
-        explicit FStringLiteral(const std::string &value);
-
-        std::string decompile(int indent) const override;
-
-        std::string dump(int indent) const override;
-    };
-
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
     class Assignation : public AbstractExpr {
@@ -303,7 +293,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -323,7 +313,7 @@ namespace ast {
 
         Symbol *getSymbol() const;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -386,7 +376,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -404,7 +394,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -424,9 +414,9 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-//        void resolveParam(Environment *function);
+        Symbol *resolveSymbol(Environment *function);
 
-//        AbstractType *inferType(Environment *env) const;
+        //AbstractType *inferType(Environment *env) const;
 
         std::string dump(int indent) const override;
 
@@ -441,7 +431,9 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-//        Symbol *resolveDeclaration(Environment *parent, Environment *function);
+        Symbol *resolveSymbols(Environment *parent) override;
+
+        void resolveParams(Environment *function);
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -463,7 +455,7 @@ namespace ast {
 
         Symbol *getSymbol() const;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -484,7 +476,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -504,7 +496,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -525,7 +517,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -564,11 +556,9 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
-
         //AbstractType *inferType(Environment *env) override;
 
-//        AbstractType *inferPatternType(Environment *env);
+        //AbstractType *inferPatternType(Environment *env);
 
         std::string dump(int indent) const override;
 
@@ -583,7 +573,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -602,9 +592,9 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-//        void resolveCondition(Environment *loop);
+        void resolveSymbols(Environment *loop);
 
-//        void inferCondition(Environment *env, Environment *loop);
+        //void inferCondition(Environment *env, Environment *loop);
 
         std::string dump(int indent) const override;
 
@@ -620,7 +610,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -640,9 +630,9 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-//        void resolveCondition(Environment *loop);
+        void resolveSymbols(Environment *loop);
 
-//        void inferCondition(Environment *env, Environment *loop);
+        //void inferCondition(Environment *env, Environment *loop);
 
         std::string dump(int indent) const override;
 
@@ -658,7 +648,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -678,7 +668,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -698,7 +688,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 
@@ -717,7 +707,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //void resolveEnvironment(Environment *parent) override;
+        Symbol *resolveSymbols(Environment *parent) override;
 
         //AbstractType *inferType(Environment *env) override;
 

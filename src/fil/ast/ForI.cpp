@@ -16,13 +16,15 @@ string ForI::decompile(int indent) const {
     return "for (" + _condition->decompile(indent) + ") " + _body->decompile(indent);
 }
 
-//void ForI::resolveEnvironment(Environment *parent) {
-//    _environment = new Environment(parent);
-//
-//    _condition->resolveCondition(_environment);
-//    _body->resolveEnvironment(_environment);
-//}
-//
+Symbol *ForI::resolveSymbols(Environment *parent) {
+    _environment = new Environment(parent);
+
+    _condition->resolveSymbols(_environment);
+    _body->resolveSymbols(_environment);
+
+    return nullptr;
+}
+
 //AbstractType *ForI::inferType(Environment *env) {
 //    _condition->inferCondition(env, _environment);
 //

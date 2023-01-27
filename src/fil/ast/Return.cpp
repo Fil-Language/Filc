@@ -22,10 +22,10 @@ string Return::decompile(int indent) const {
     return ret;
 }
 
-//void Return::resolveEnvironment(Environment *parent) {
-//    _expr->resolveEnvironment(parent);
-//}
-//
+Symbol *Return::resolveSymbols(Environment *parent) {
+    return _expr->resolveSymbols(parent);
+}
+
 //AbstractType *Return::inferType(Environment *env) {
 //    _exprType = _expr->inferType(env);
 //

@@ -34,6 +34,14 @@ Symbol *VariableDeclaration::getSymbol() const {
     return _symbol;
 }
 
+Symbol *VariableDeclaration::resolveSymbols(Environment *parent) {
+    _symbol = _name->resolveVar(parent);
+
+    _assignation->resolveSymbols(parent);
+
+    return _symbol;
+}
+
 //void VariableDeclaration::resolveEnvironment(Environment *parent) {
 //    _symbol = _name->resolveVar(parent);
 //    if (_symbol == nullptr) {

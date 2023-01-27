@@ -25,6 +25,14 @@ string FunctionCall::decompile(int indent) const {
     return res;
 }
 
+Symbol *FunctionCall::resolveSymbols(Environment *parent) {
+    for (auto &arg: _args) {
+        arg->resolveSymbols(parent);
+    }
+
+    return nullptr;
+}
+
 //void FunctionCall::resolveEnvironment(Environment *parent) {
 //    if (!parent->hasFunction(_name->getName())) {
 //        ErrorsRegister::addError(

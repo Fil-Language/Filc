@@ -88,7 +88,7 @@ add_executable(filc
         # === AST ===
         src/fil/ast/AST.hpp src/fil/ast/AST.cpp src/fil/ast/Program.cpp src/fil/ast/AbstractExpr.cpp
         src/fil/ast/BooleanLiteral.cpp src/fil/ast/IntegerLiteral.cpp src/fil/ast/FloatLiteral.cpp
-        src/fil/ast/CharLiteral.cpp src/fil/ast/StringLiteral.cpp src/fil/ast/FStringLiteral.cpp
+        src/fil/ast/CharLiteral.cpp src/fil/ast/StringLiteral.cpp
         src/fil/ast/VariableDeclaration.cpp src/fil/ast/Type.cpp src/fil/ast/Assignation.cpp src/fil/ast/Identifier.cpp
         src/fil/ast/Operator.cpp src/fil/ast/UnaryCalcul.cpp src/fil/ast/Function.cpp
         src/fil/ast/FunctionDeclaration.cpp src/fil/ast/FunctionParam.cpp src/fil/ast/BlockBody.cpp

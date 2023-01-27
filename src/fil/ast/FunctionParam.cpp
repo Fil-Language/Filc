@@ -22,6 +22,10 @@ string FunctionParam::decompile(int indent) const {
     return result;
 }
 
+Symbol *FunctionParam::resolveSymbol(Environment *function) {
+    return _name->resolveVar(function);
+}
+
 //void FunctionParam::resolveParam(Environment *function) {
 //    if (_name->resolveVar(function) == nullptr) {
 //        std::string n = _name->getName();

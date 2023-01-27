@@ -24,14 +24,16 @@ string BlockBody::decompile(int indent) const {
     return result;
 }
 
-//void BlockBody::resolveEnvironment(Environment *parent) {
-//    _environment = new Environment(parent);
-//
-//    for (auto expr: _exprs) {
-//        expr->resolveEnvironment(_environment);
-//    }
-//}
-//
+Symbol *BlockBody::resolveSymbols(Environment *parent) {
+    _environment = new Environment(parent);
+
+    for (auto expr: _exprs) {
+        expr->resolveSymbols(_environment);
+    }
+
+    return nullptr;
+}
+
 //AbstractType *BlockBody::inferType(Environment *env) {
 //    for (auto it = _exprs.begin(); it != _exprs.end(); it++) {
 //        if ((*it)->isReturn()) {

@@ -61,11 +61,20 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
             return 0;
         }
 
-        // Generate symbols tables (environment) TODO
-        //program->resolveGlobalEnvironment();
+        // Resolve symbols
+        program->resolveSymbols();
 
-        // Type inference and checking
-        //program->inferTypes();
+        // TODO : Check symbols
+
+        ErrorsRegister::dump(cerr);
+        if (ErrorsRegister::containsError()) {
+            return 1;
+        }
+        ErrorsRegister::clean();
+
+        // TODO : Resolve types
+
+        // TODO : Check types
 
         ErrorsRegister::dump(cerr);
         if (ErrorsRegister::containsError()) {

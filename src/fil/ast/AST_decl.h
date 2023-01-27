@@ -41,8 +41,6 @@ namespace ast {
 
     class StringLiteral;
 
-    class FStringLiteral;
-
     class Assignation;
 
     class VariableDeclaration;
@@ -51,7 +49,7 @@ namespace ast {
 
     class UnaryCalcul;
 
-    class BinarayCalcul;
+    class BinaryCalcul;
 
     class FunctionParam;
 

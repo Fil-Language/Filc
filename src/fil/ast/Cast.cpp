@@ -16,6 +16,10 @@ string Cast::decompile(int indent) const {
     return "(" + _type->decompile(indent) + ")" + _expr->decompile(indent);
 }
 
+Symbol *Cast::resolveSymbols(Environment *parent) {
+    return _expr->resolveSymbols(parent);
+}
+
 //void Cast::resolveEnvironment(Environment *parent) {
 //    if (!parent->hasType(_type->getName())) {
 //        ErrorsRegister::addError(

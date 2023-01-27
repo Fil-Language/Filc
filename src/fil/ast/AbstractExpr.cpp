@@ -23,9 +23,9 @@ bool AbstractExpr::isExported() const {
     return _isExported;
 }
 
-//void AbstractExpr::resolveEnvironment(Environment *parent) {
-//    throw;
-//}
+Symbol *AbstractExpr::resolveSymbols(Environment *parent) {
+    throw;
+}
 
 bool AbstractExpr::isVar() const {
     return false;
