@@ -16,20 +16,20 @@ string ForI::decompile(int indent) const {
     return "for (" + _condition->decompile(indent) + ") " + _body->decompile(indent);
 }
 
-void ForI::resolveEnvironment(Environment *parent) {
-    _environment = new Environment(parent);
-
-    _condition->resolveCondition(_environment);
-    _body->resolveEnvironment(_environment);
-}
-
-AbstractType *ForI::inferType(Environment *env) {
-    _condition->inferCondition(env, _environment);
-
-    _exprType = _body->inferType(_environment);
-
-    return _exprType;
-}
+//void ForI::resolveEnvironment(Environment *parent) {
+//    _environment = new Environment(parent);
+//
+//    _condition->resolveCondition(_environment);
+//    _body->resolveEnvironment(_environment);
+//}
+//
+//AbstractType *ForI::inferType(Environment *env) {
+//    _condition->inferCondition(env, _environment);
+//
+//    _exprType = _body->inferType(_environment);
+//
+//    return _exprType;
+//}
 
 string ForI::dump(int indent) const {
     string res = string(indent, '\t') + "[ForI]" + (_isExported ? " <exported> " : " ") +

@@ -62,10 +62,10 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         }
 
         // Generate symbols tables (environment)
-        program->resolveGlobalEnvironment();
+        //program->resolveGlobalEnvironment();
 
         // Type inference and checking
-        program->inferTypes();
+        //program->inferTypes();
 
         ErrorsRegister::dump(cerr);
         if (ErrorsRegister::containsError()) {
@@ -114,10 +114,10 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         file.close();
 
         // Generate symbols tables (environment)
-        program->resolveGlobalEnvironment();
+        //program->resolveGlobalEnvironment();
 
         // Type inference and checking
-        program->inferTypes();
+        //program->inferTypes();
 
         return program;
     };

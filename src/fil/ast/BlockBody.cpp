@@ -24,30 +24,30 @@ string BlockBody::decompile(int indent) const {
     return result;
 }
 
-void BlockBody::resolveEnvironment(Environment *parent) {
-    _environment = new Environment(parent);
-
-    for (auto expr: _exprs) {
-        expr->resolveEnvironment(_environment);
-    }
-}
-
-AbstractType *BlockBody::inferType(Environment *env) {
-    for (auto it = _exprs.begin(); it != _exprs.end(); it++) {
-        if ((*it)->isReturn()) {
-            _exprType = (*it)->inferType(_environment);
-            break;
-        } else {
-            auto type = (*it)->inferType(_environment);
-
-            if (it + 1 == _exprs.end()) {
-                _exprType = type;
-            }
-        }
-    }
-
-    return _exprType;
-}
+//void BlockBody::resolveEnvironment(Environment *parent) {
+//    _environment = new Environment(parent);
+//
+//    for (auto expr: _exprs) {
+//        expr->resolveEnvironment(_environment);
+//    }
+//}
+//
+//AbstractType *BlockBody::inferType(Environment *env) {
+//    for (auto it = _exprs.begin(); it != _exprs.end(); it++) {
+//        if ((*it)->isReturn()) {
+//            _exprType = (*it)->inferType(_environment);
+//            break;
+//        } else {
+//            auto type = (*it)->inferType(_environment);
+//
+//            if (it + 1 == _exprs.end()) {
+//                _exprType = type;
+//            }
+//        }
+//    }
+//
+//    return _exprType;
+//}
 
 string BlockBody::dump(int indent) const {
     string res = string(indent, '\t') + "[BlockBody]" + (_isExported ? " <exported>" : "") +

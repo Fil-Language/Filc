@@ -17,20 +17,20 @@ string While::decompile(int indent) const {
            + _body->decompile(indent);
 }
 
-void While::resolveEnvironment(Environment *parent) {
-    _environment = new Environment(parent);
-
-    _condition->resolveEnvironment(parent);
-    _body->resolveEnvironment(_environment);
-}
-
-AbstractType *While::inferType(Environment *env) {
-    _condition->inferType(env);
-
-    _exprType = _body->inferType(_environment);
-
-    return _exprType;
-}
+//void While::resolveEnvironment(Environment *parent) {
+//    _environment = new Environment(parent);
+//
+//    _condition->resolveEnvironment(parent);
+//    _body->resolveEnvironment(_environment);
+//}
+//
+//AbstractType *While::inferType(Environment *env) {
+//    _condition->inferType(env);
+//
+//    _exprType = _body->inferType(_environment);
+//
+//    return _exprType;
+//}
 
 string While::dump(int indent) const {
     string res = string(indent, '\t') + "[While]" + (_isExported ? " <exported> " : " ") +

@@ -22,15 +22,15 @@ string Return::decompile(int indent) const {
     return ret;
 }
 
-void Return::resolveEnvironment(Environment *parent) {
-    _expr->resolveEnvironment(parent);
-}
-
-AbstractType *Return::inferType(Environment *env) {
-    _exprType = _expr->inferType(env);
-
-    return _exprType;
-}
+//void Return::resolveEnvironment(Environment *parent) {
+//    _expr->resolveEnvironment(parent);
+//}
+//
+//AbstractType *Return::inferType(Environment *env) {
+//    _exprType = _expr->inferType(env);
+//
+//    return _exprType;
+//}
 
 bool Return::isReturn() const {
     return true;

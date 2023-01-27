@@ -30,57 +30,57 @@ string Program::decompile(int indent) const {
     return result;
 }
 
-void Program::resolveGlobalEnvironment() {
-    _environment = Environment::getGlobalEnvironment();
-    resolveEnvironment();
-}
-
-void Program::resolveEnvironment() {
-    // Merge imports
-    for (auto &imp: _imports) {
-        _environment->merge(imp->getPublicEnvironment());
-    }
-
-    // Resolve exprs
-    for (auto &expr: _exprs) {
-        expr->resolveEnvironment(_environment);
-    }
-}
-
-Environment *Program::getPublicEnvironment() const {
-    auto *env = new Environment();
-
-    for (auto &expr: _exprs) {
-        if (expr->isExported()) {
-            if (expr->isVar()) {
-                auto *symbol = ((VariableDeclaration *) expr)->getSymbol();
-                env->addVariable(symbol);
-            } else if (expr->isFunc()) {
-                auto *symbol = ((Function *) expr)->getSymbol();
-                env->addFunction(symbol);
-            } else {
-                auto pos = expr->getPosition();
-                auto symbol = new Symbol(replace(_module, '.', '_') + "_" + to_string(pos->getLine()), pos);
-                symbol->setSignature(expr->getExprType());
-                env->addVariable(symbol);
-            }
-        }
-    }
-
-    return env;
-}
-
-void Program::inferTypes() {
-    // Merge imports
-    for (auto &imp: _imports) {
-        _environment->merge(imp->getPublicEnvironment());
-    }
-
-    // Infer exprs
-    for (auto &expr: _exprs) {
-        expr->inferType(_environment);
-    }
-}
+//void Program::resolveGlobalEnvironment() {
+//    _environment = Environment::getGlobalEnvironment();
+//    resolveEnvironment();
+//}
+//
+//void Program::resolveEnvironment() {
+//    // Merge imports
+//    for (auto &imp: _imports) {
+//        _environment->merge(imp->getPublicEnvironment());
+//    }
+//
+//    // Resolve exprs
+//    for (auto &expr: _exprs) {
+//        expr->resolveEnvironment(_environment);
+//    }
+//}
+//
+//Environment *Program::getPublicEnvironment() const {
+//    auto *env = new Environment();
+//
+//    for (auto &expr: _exprs) {
+//        if (expr->isExported()) {
+//            if (expr->isVar()) {
+//                auto *symbol = ((VariableDeclaration *) expr)->getSymbol();
+//                env->addVariable(symbol);
+//            } else if (expr->isFunc()) {
+//                auto *symbol = ((Function *) expr)->getSymbol();
+//                env->addFunction(symbol);
+//            } else {
+//                auto pos = expr->getPosition();
+//                auto symbol = new Symbol(replace(_module, '.', '_') + "_" + to_string(pos->getLine()), pos);
+//                symbol->setSignature(expr->getExprType());
+//                env->addVariable(symbol);
+//            }
+//        }
+//    }
+//
+//    return env;
+//}
+//
+//void Program::inferTypes() {
+//    // Merge imports
+//    for (auto &imp: _imports) {
+//        _environment->merge(imp->getPublicEnvironment());
+//    }
+//
+//    // Infer exprs
+//    for (auto &expr: _exprs) {
+//        expr->inferType(_environment);
+//    }
+//}
 
 string Program::dump(int indent) const {
     string res = string(indent, '\t') + "[Program] <module:" + _module + ">\n";

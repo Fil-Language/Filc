@@ -18,20 +18,20 @@ string ForICondition::decompile(int indent) const {
            + _increment->decompile(indent);
 }
 
-void ForICondition::resolveCondition(Environment *loop) {
-    _declaration->resolveEnvironment(loop);
-    _condition->resolveEnvironment(loop);
-    _increment->resolveEnvironment(loop);
-}
-
-void ForICondition::inferCondition(Environment *env, Environment *loop) {
-    if (_declaration)
-        _declaration->inferType(loop);
-    if (_condition)
-        _condition->inferType(loop);
-    if (_increment)
-        _increment->inferType(loop);
-}
+//void ForICondition::resolveCondition(Environment *loop) {
+//    _declaration->resolveEnvironment(loop);
+//    _condition->resolveEnvironment(loop);
+//    _increment->resolveEnvironment(loop);
+//}
+//
+//void ForICondition::inferCondition(Environment *env, Environment *loop) {
+//    if (_declaration)
+//        _declaration->inferType(loop);
+//    if (_condition)
+//        _condition->inferType(loop);
+//    if (_increment)
+//        _increment->inferType(loop);
+//}
 
 string ForICondition::dump(int indent) const {
     string res = string(indent, '\t') + "[ForICondition]\n";

@@ -10,13 +10,13 @@ using namespace std;
 using namespace ast;
 
 Type::Type(Identifier *name)
-        : _name(name), _isArray(false), _isPointer(false), _arraySize(0), _subType(nullptr) {}
+        : _name(name), _isArray(false), _arraySize(0), _isPointer(false), _subType(nullptr) {}
 
 Type::Type(int arraySize, AbstractType *subType)
-        : _name(nullptr), _isArray(true), _isPointer(false), _arraySize(arraySize), _subType(subType) {}
+        : _name(nullptr), _isArray(true), _arraySize(arraySize), _isPointer(false), _subType(subType) {}
 
 Type::Type(AbstractType *subType)
-        : _name(nullptr), _isArray(false), _isPointer(true), _arraySize(0), _subType(subType) {}
+        : _name(nullptr), _isArray(false), _arraySize(0), _isPointer(true), _subType(subType) {}
 
 string Type::decompile(int indent) const {
     if (_isPointer) {
@@ -42,7 +42,7 @@ bool Type::isIterable() const {
     return _isArray;
 }
 
-AbstractType * Type::getIterableType() {
+AbstractType *Type::getIterableType() {
     if (isIterable()) {
         return _subType;
     } else {

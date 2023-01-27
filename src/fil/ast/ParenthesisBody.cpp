@@ -16,15 +16,15 @@ string ParenthesisBody::decompile(int indent) const {
     return "(" + _expr->decompile(indent) + ")";
 }
 
-void ParenthesisBody::resolveEnvironment(Environment *parent) {
-    _expr->resolveEnvironment(parent);
-}
-
-AbstractType *ParenthesisBody::inferType(Environment *env) {
-    _exprType = _expr->inferType(env);
-
-    return _exprType;
-}
+//void ParenthesisBody::resolveEnvironment(Environment *parent) {
+//    _expr->resolveEnvironment(parent);
+//}
+//
+//AbstractType *ParenthesisBody::inferType(Environment *env) {
+//    _exprType = _expr->inferType(env);
+//
+//    return _exprType;
+//}
 
 string ParenthesisBody::dump(int indent) const {
     string res = string(indent, '\t') + "[ParenthesisBody]" + (_isExported ? " <exported>" : "") +

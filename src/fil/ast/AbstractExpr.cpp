@@ -23,9 +23,9 @@ bool AbstractExpr::isExported() const {
     return _isExported;
 }
 
-void AbstractExpr::resolveEnvironment(Environment *parent) {
-    throw;
-}
+//void AbstractExpr::resolveEnvironment(Environment *parent) {
+//    throw;
+//}
 
 bool AbstractExpr::isVar() const {
     return false;
@@ -39,9 +39,9 @@ bool AbstractExpr::isReturn() const {
     return false;
 }
 
-AbstractType *AbstractExpr::inferType(Environment *env) {
-    throw;
-}
+//AbstractType *AbstractExpr::inferType(Environment *env) {
+//    throw;
+//}
 
 AbstractType *AbstractExpr::getExprType() const {
     return _exprType;

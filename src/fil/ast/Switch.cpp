@@ -24,68 +24,68 @@ string Switch::decompile(int indent) const {
     return res;
 }
 
-void Switch::resolveEnvironment(Environment *parent) {
-    _condition->resolveEnvironment(parent);
-    for (auto &c: _cases) {
-        c->resolveEnvironment(parent);
-    }
-}
-
-AbstractType *Switch::inferType(Environment *env) {
-    auto conditionType = _condition->inferType(env);
-
-    if (_cases.empty()) {
-        ErrorsRegister::addError(
-                "Switch expression must have at least one case",
-                _pos
-        );
-
-        return nullptr;
-    }
-
-    bool hasDefault = false;
-    for (auto &_case: _cases) {
-        auto currentType = _case->inferType(env);
-
-        if (_exprType == nullptr) {
-            _exprType = currentType;
-        } else if (_exprType != currentType) {
-            ErrorsRegister::addError(
-                    "Type mismatch in switch cases, expected " + _exprType->getName() +
-                    " but got " + currentType->getName(),
-                    _case->getPosition()
-            );
-        }
-
-        auto patternType = _case->inferPatternType(env);
-        if (patternType != nullptr) {
-            if (patternType != conditionType) {
-                ErrorsRegister::addError(
-                        "Type mismatch in switch case pattern, expected " + conditionType->getName() +
-                        " but got " + patternType->getName(),
-                        _case->getPosition()
-                );
-            }
-        } else {
-            if (hasDefault) {
-                ErrorsRegister::addError(
-                        "Multiple default cases in switch",
-                        _case->getPosition()
-                );
-            }
-            hasDefault = true;
-        }
-    }
-
-    if (!hasDefault) {
-        ErrorsRegister::addWarning(
-                "Switch without default case",
-                _pos
-        );
-    }
-
-    return _exprType;
-}
+//void Switch::resolveEnvironment(Environment *parent) {
+//    _condition->resolveEnvironment(parent);
+//    for (auto &c: _cases) {
+//        c->resolveEnvironment(parent);
+//    }
+//}
+//
+//AbstractType *Switch::inferType(Environment *env) {
+//    auto conditionType = _condition->inferType(env);
+//
+//    if (_cases.empty()) {
+//        ErrorsRegister::addError(
+//                "Switch expression must have at least one case",
+//                _pos
+//        );
+//
+//        return nullptr;
+//    }
+//
+//    bool hasDefault = false;
+//    for (auto &_case: _cases) {
+//        auto currentType = _case->inferType(env);
+//
+//        if (_exprType == nullptr) {
+//            _exprType = currentType;
+//        } else if (_exprType != currentType) {
+//            ErrorsRegister::addError(
+//                    "Type mismatch in switch cases, expected " + _exprType->getName() +
+//                    " but got " + currentType->getName(),
+//                    _case->getPosition()
+//            );
+//        }
+//
+//        auto patternType = _case->inferPatternType(env);
+//        if (patternType != nullptr) {
+//            if (patternType != conditionType) {
+//                ErrorsRegister::addError(
+//                        "Type mismatch in switch case pattern, expected " + conditionType->getName() +
+//                        " but got " + patternType->getName(),
+//                        _case->getPosition()
+//                );
+//            }
+//        } else {
+//            if (hasDefault) {
+//                ErrorsRegister::addError(
+//                        "Multiple default cases in switch",
+//                        _case->getPosition()
+//                );
+//            }
+//            hasDefault = true;
+//        }
+//    }
+//
+//    if (!hasDefault) {
+//        ErrorsRegister::addWarning(
+//                "Switch without default case",
+//                _pos
+//        );
+//    }
+//
+//    return _exprType;
+//}
 
 string Switch::dump(int indent) const {
     string res = string(indent, '\t') + "[Switch]" + (_isExported ? " <exported> " : " ") +

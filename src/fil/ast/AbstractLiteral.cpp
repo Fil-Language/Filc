@@ -9,6 +9,6 @@
 using namespace std;
 using namespace ast;
 
-void AbstractLiteral::resolveEnvironment(Environment *parent) {
-    // Nothing to do
-}
+//void AbstractLiteral::resolveEnvironment(Environment *parent) {
+//    // Nothing to do
+//}

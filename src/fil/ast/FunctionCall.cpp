@@ -25,47 +25,47 @@ string FunctionCall::decompile(int indent) const {
     return res;
 }
 
-void FunctionCall::resolveEnvironment(Environment *parent) {
-    if (!parent->hasFunction(_name->getName())) {
-        ErrorsRegister::addError(
-                "Unknown function " + _name->getName(),
-                _name->getPosition()
-        );
-    }
-
-    for (auto &arg: _args) {
-        arg->resolveEnvironment(parent);
-    }
-}
-
-AbstractType *FunctionCall::inferType(Environment *env) {
-    auto functionType = env->getSymbol(_name->getName())->getSignature();
-    // If it's a recursive call, the return type is nullptr here
-    _exprType = ((LambdaType *) functionType)->getReturnType();
-
-    // Check args types
-    auto argsTypes = ((LambdaType *) functionType)->getArgsTypes();
-    if (argsTypes.size() != _args.size()) {
-        ErrorsRegister::addError(
-                _name->getName() + " expects " + to_string(argsTypes.size()) + " arguments, " +
-                to_string(_args.size()) + " provided",
-                _name->getPosition()
-        );
-    } else {
-        for (int i = 0; i < _args.size(); i++) {
-            auto argType = _args[i]->inferType(env);
-            if (*argType != *argsTypes[i]) {
-                ErrorsRegister::addError(
-                        "Argument " + to_string(i) + " of " + _name->getName() + " expects type " +
-                        argsTypes[i]->getName() + ", " + argType->getName() + " provided",
-                        _args[i]->getPosition()
-                );
-            }
-        }
-    }
-
-    return _exprType;
-}
+//void FunctionCall::resolveEnvironment(Environment *parent) {
+//    if (!parent->hasFunction(_name->getName())) {
+//        ErrorsRegister::addError(
+//                "Unknown function " + _name->getName(),
+//                _name->getPosition()
+//        );
+//    }
+//
+//    for (auto &arg: _args) {
+//        arg->resolveEnvironment(parent);
+//    }
+//}
+//
+//AbstractType *FunctionCall::inferType(Environment *env) {
+//    auto functionType = env->getSymbol(_name->getName())->getSignature();
+//    // If it's a recursive call, the return type is nullptr here
+//    _exprType = ((LambdaType *) functionType)->getReturnType();
+//
+//    // Check args types
+//    auto argsTypes = ((LambdaType *) functionType)->getArgsTypes();
+//    if (argsTypes.size() != _args.size()) {
+//        ErrorsRegister::addError(
+//                _name->getName() + " expects " + to_string(argsTypes.size()) + " arguments, " +
+//                to_string(_args.size()) + " provided",
+//                _name->getPosition()
+//        );
+//    } else {
+//        for (int i = 0; i < _args.size(); i++) {
+//            auto argType = _args[i]->inferType(env);
+//            if (*argType != *argsTypes[i]) {
+//                ErrorsRegister::addError(
+//                        "Argument " + to_string(i) + " of " + _name->getName() + " expects type " +
+//                        argsTypes[i]->getName() + ", " + argType->getName() + " provided",
+//                        _args[i]->getPosition()
+//                );
+//            }
+//        }
+//    }
+//
+//    return _exprType;
+//}
 
 string FunctionCall::dump(int indent) const {
     string res = string(indent, '\t') + "[FunctionCall]" + (_isExported ? " <exported> " : " ") +

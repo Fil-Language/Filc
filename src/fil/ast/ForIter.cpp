@@ -16,20 +16,20 @@ string ForIter::decompile(int indent) const {
     return "for (" + _condition->decompile(indent) + ") " + _body->decompile(indent);
 }
 
-void ForIter::resolveEnvironment(Environment *parent) {
-    _environment = new Environment(parent);
-
-    _condition->resolveCondition(_environment);
-    _body->resolveEnvironment(_environment);
-}
-
-AbstractType *ForIter::inferType(Environment *env) {
-    _condition->inferCondition(env, _environment);
-
-    _exprType = _body->inferType(_environment);
-
-    return _exprType;
-}
+//void ForIter::resolveEnvironment(Environment *parent) {
+//    _environment = new Environment(parent);
+//
+//    _condition->resolveCondition(_environment);
+//    _body->resolveEnvironment(_environment);
+//}
+//
+//AbstractType *ForIter::inferType(Environment *env) {
+//    _condition->inferCondition(env, _environment);
+//
+//    _exprType = _body->inferType(_environment);
+//
+//    return _exprType;
+//}
 
 string ForIter::dump(int indent) const {
     string res = string(indent, '\t') + "[ForIter]" + (_isExported ? " <exported> " : " ") +

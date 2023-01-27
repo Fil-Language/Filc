@@ -19,28 +19,28 @@ string ForIterCondition::decompile(int indent) const {
            + _iterable->decompile(indent);
 }
 
-void ForIterCondition::resolveCondition(Environment *loop) {
-    _iterator->resolveVar(loop);
-
-    if (!loop->hasVariable(_iterable->getName())) {
-        ErrorsRegister::addError(
-                "Unknown variable " + _iterable->getName(),
-                _iterable->getPosition()
-        );
-    }
-}
-
-void ForIterCondition::inferCondition(Environment *env, Environment *loop) {
-    auto type = _iterable->inferType(env);
-    if (!type->isIterable()) {
-        ErrorsRegister::addError(
-                "Cannot iterate over " + type->getName(),
-                _iterable->getPosition()
-        );
-    }
-
-    loop->getSymbol(_iterable->getName())->setSignature(type->getIterableType());
-}
+//void ForIterCondition::resolveCondition(Environment *loop) {
+//    _iterator->resolveVar(loop);
+//
+//    if (!loop->hasVariable(_iterable->getName())) {
+//        ErrorsRegister::addError(
+//                "Unknown variable " + _iterable->getName(),
+//                _iterable->getPosition()
+//        );
+//    }
+//}
+//
+//void ForIterCondition::inferCondition(Environment *env, Environment *loop) {
+//    auto type = _iterable->inferType(env);
+//    if (!type->isIterable()) {
+//        ErrorsRegister::addError(
+//                "Cannot iterate over " + type->getName(),
+//                _iterable->getPosition()
+//        );
+//    }
+//
+//    loop->getSymbol(_iterable->getName())->setSignature(type->getIterableType());
+//}
 
 string ForIterCondition::dump(int indent) const {
     string res = string(indent, '\t') + "[ForIterCondition] " + (_isVal ? "<val>" : "<var>") + "\n";
