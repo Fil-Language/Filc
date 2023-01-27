@@ -18,7 +18,12 @@ Environment::Environment(Environment *parent)
 Environment::~Environment() = default;
 
 Environment *Environment::getGlobalEnvironment() {
-    auto *globalEnvironment = new Environment();
+    static auto *globalEnvironment = new Environment();
+    static bool initialized = false;
+
+    if (initialized)
+        return globalEnvironment;
+    initialized = true;
 
     // Add builtins types
     auto tInt = globalEnvironment->addSymbol("int", new Position(0, 0, "builtin"), Symbol::SymbolType::TYPE)
