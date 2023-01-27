@@ -30,6 +30,14 @@ string Program::decompile(int indent) const {
     return result;
 }
 
+bool Program::hasMain() const {
+    if (_environment == nullptr) {
+        return false;
+    }
+
+    return _environment->hasSymbol("main", nullptr);
+}
+
 //void Program::resolveGlobalEnvironment() {
 //    _environment = Environment::getGlobalEnvironment();
 //    resolveEnvironment();

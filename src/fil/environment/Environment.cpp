@@ -44,7 +44,10 @@ Symbol *Environment::addSymbol(const std::string &name, Position *position, Symb
 
 bool Environment::hasSymbol(const std::string &name, ast::AbstractType *signature) {
     if (std::any_of(_symbols.begin(), _symbols.end(), [name, signature](Symbol *symbol) {
-        return symbol->getName() == name && symbol->getSignature() == signature;
+        if (signature == nullptr)
+            return symbol->getName() == name;
+        else
+            return symbol->getName() == name && symbol->getSignature() == signature;
     })) {
         return true;
     }
@@ -58,7 +61,10 @@ bool Environment::hasSymbol(const std::string &name, ast::AbstractType *signatur
 
 Symbol *Environment::getSymbol(const std::string &name, ast::AbstractType *signature) {
     auto it = std::find_if(_symbols.begin(), _symbols.end(), [name, signature](Symbol *symbol) {
-        return symbol->getName() == name && symbol->getSignature() == signature;
+        if (signature == nullptr)
+            return symbol->getName() == name;
+        else
+            return symbol->getName() == name && symbol->getSignature() == signature;
     });
 
     if (it != _symbols.end()) {

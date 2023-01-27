@@ -20,9 +20,9 @@ public:
 
     Symbol *addSymbol(const std::string &name, Position *position, Symbol::SymbolType type);
 
-    bool hasSymbol(const std::string &name, ast::AbstractType *signature);
+    bool hasSymbol(const std::string &name, ast::AbstractType *signature = nullptr);
 
-    Symbol *getSymbol(const std::string &name, ast::AbstractType *signature);
+    Symbol *getSymbol(const std::string &name, ast::AbstractType *signature = nullptr);
 
     void merge(Environment *environment);
 

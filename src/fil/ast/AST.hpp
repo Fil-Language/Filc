@@ -71,6 +71,8 @@ namespace ast {
 
         std::string dump(int indent) const override;
 
+        bool hasMain() const;
+
         //void resolveGlobalEnvironment();
 
         //void inferTypes();

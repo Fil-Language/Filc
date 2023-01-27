@@ -79,6 +79,14 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
             return 0;
         }
 
+        // Check that the main function is defined
+        if (!program->hasMain()) {
+            ErrorsRegister::addError("The main function is not defined", nullptr);
+            ErrorsRegister::dump(cerr);
+
+            return 1;
+        }
+
         // TODO : LLVM IR generation
     } catch (exception &e) {
         cout << e.what() << endl;
