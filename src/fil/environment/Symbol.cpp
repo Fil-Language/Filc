@@ -6,7 +6,10 @@
  */
 #include "Symbol.h"
 
-Symbol::Symbol(const std::string &name, Position *position, SymbolType type)
+using namespace std;
+using namespace ast;
+
+Symbol::Symbol(const string &name, Position *position, SymbolType type)
         : _name(name), _position(position), _type(type), _signature(nullptr) {}
 
 Symbol::~Symbol() {
@@ -29,8 +32,10 @@ ast::AbstractType *Symbol::getSignature() const {
     return _signature;
 }
 
-void Symbol::setSignature(ast::AbstractType *signature) {
+AbstractType *Symbol::setSignature(AbstractType *signature) {
     _signature = signature;
+
+    return _signature;
 }
 
 bool Symbol::operator==(const Symbol &b) const {

@@ -32,7 +32,7 @@ public:
 
     ast::AbstractType *getSignature() const;
 
-    void setSignature(ast::AbstractType *signature);
+    ast::AbstractType *setSignature(ast::AbstractType *signature);
 
     bool operator==(const Symbol &b) const;
 
