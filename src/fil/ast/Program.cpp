@@ -48,60 +48,41 @@ void Program::resolveSymbols() {
 }
 
 void Program::mergeImports() {
-    Environment *prev = nullptr;
+    Environment *prev = Environment::getGlobalEnvironment();
+
     for (auto &imp: _imports) {
-        if (prev == nullptr) {
-            prev = imp->_environment;
-        } else {
-            imp->_environment->setParent(prev);
-            prev = imp->_environment;
-        }
+        imp->_environment->setParent(prev);
+        prev = imp->getPublicEnvironment();
     }
 
     if (prev)
         _environment->setParent(prev);
 }
 
-//void Program::resolveGlobalEnvironment() {
-//    _environment = Environment::getGlobalEnvironment();
-//    resolveEnvironment();
-//}
-//
-//void Program::resolveEnvironment() {
-//    // Merge imports
-//    for (auto &imp: _imports) {
-//        _environment->merge(imp->getPublicEnvironment());
-//    }
-//
-//    // Resolve exprs
-//    for (auto &expr: _exprs) {
-//        expr->resolveEnvironment(_environment);
-//    }
-//}
-//
-//Environment *Program::getPublicEnvironment() const {
-//    auto *env = new Environment();
-//
-//    for (auto &expr: _exprs) {
-//        if (expr->isExported()) {
-//            if (expr->isVar()) {
-//                auto *symbol = ((VariableDeclaration *) expr)->getSymbol();
-//                env->addVariable(symbol);
-//            } else if (expr->isFunc()) {
-//                auto *symbol = ((Function *) expr)->getSymbol();
-//                env->addFunction(symbol);
-//            } else {
-//                auto pos = expr->getPosition();
-//                auto symbol = new Symbol(replace(_module, '.', '_') + "_" + to_string(pos->getLine()), pos);
-//                symbol->setSignature(expr->getExprType());
-//                env->addVariable(symbol);
-//            }
-//        }
-//    }
-//
-//    return env;
-//}
-//
+Environment *Program::getPublicEnvironment() const {
+    auto *env = new Environment();
+
+    for (auto &expr: _exprs) {
+        if (expr->isExported()) {
+            if (expr->isVar()) {
+                auto symbol = ((VariableDeclaration *) expr)->getSymbol();
+                env->addSymbol(symbol->getName(), symbol->getPosition(), Symbol::VARIABLE)
+                        ->setSignature(symbol->getSignature());
+            } else if (expr->isFunc()) {
+                auto symbol = ((Function *) expr)->getSymbol();
+                env->addSymbol(symbol->getName(), symbol->getPosition(), Symbol::FUNCTION)
+                        ->setSignature(symbol->getSignature());
+            } else {
+                auto pos = expr->getPosition();
+                env->addSymbol(replace(_module, '.', '_') + "_" + to_string(pos->getLine()), pos, Symbol::VARIABLE)
+                        ->setSignature(expr->getExprType());
+            }
+        }
+    }
+
+    return env;
+}
+
 //void Program::inferTypes() {
 //    // Merge imports
 //    for (auto &imp: _imports) {
