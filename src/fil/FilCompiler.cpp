@@ -64,9 +64,9 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         // Resolve symbols
         program->resolveSymbols();
 
-        // TODO : Resolve types
+        // TODO : Resolve & check types
 
-        // TODO : Check
+        // TODO : Check symbols
 
         ErrorsRegister::dump(cerr);
         if (ErrorsRegister::containsError()) {
