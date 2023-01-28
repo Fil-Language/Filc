@@ -92,9 +92,6 @@ expr returns[AbstractExpr *tree]
     | e9=control {
         $tree = $e9.tree;
     }
-    | e11=cast {
-        $tree = $e11.tree;
-    }
     | e12=parenthesis_body {
         $tree = $e12.tree;
     }
@@ -620,11 +617,3 @@ function_call_params returns[vector<AbstractExpr *> tree]
     } (COMMA ei=expr {
         res.push_back($ei.tree);
     })*;
-
-// _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-
-cast returns[Cast *tree]
-    : s=LPAREN t=type RPAREN e=expr {
-        $tree = new Cast($t.tree, $e.tree);
-        $tree->setPosition($s);
-    };

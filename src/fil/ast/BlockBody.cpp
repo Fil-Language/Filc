@@ -34,22 +34,25 @@ Symbol *BlockBody::resolveSymbols(Environment *parent) {
     return nullptr;
 }
 
-//AbstractType *BlockBody::inferType(Environment *env) {
-//    for (auto it = _exprs.begin(); it != _exprs.end(); it++) {
-//        if ((*it)->isReturn()) {
-//            _exprType = (*it)->inferType(_environment);
-//            break;
-//        } else {
-//            auto type = (*it)->inferType(_environment);
-//
-//            if (it + 1 == _exprs.end()) {
-//                _exprType = type;
-//            }
-//        }
-//    }
-//
-//    return _exprType;
-//}
+AbstractType *BlockBody::inferType(Environment *parent) {
+    if (_exprs.empty()) {
+        _exprType = parent->getSymbol("void")->getSignature();
+    } else {
+        for (auto it = _exprs.begin(); it != _exprs.end(); it++) {
+            if ((*it)->isReturn()) {
+                _exprType = (*it)->inferType(parent);
+            } else {
+                auto type = (*it)->inferType(parent);
+
+                if (it + 1 == _exprs.end()) {
+                    _exprType = type;
+                }
+            }
+        }
+    }
+
+    return _exprType;
+}
 
 string BlockBody::dump(int indent) const {
     string res = string(indent, '\t') + "[BlockBody]" + (_isExported ? " <exported>" : "") +

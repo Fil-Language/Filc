@@ -27,11 +27,43 @@ Symbol *UnaryCalcul::resolveSymbols(Environment *parent) {
     return _identifier->resolveSymbols(parent);
 }
 
-//AbstractType *UnaryCalcul::inferType(Environment *env) {
-//    _exprType = _identifier->inferType(env);
-//
-//    return _exprType;
-//}
+AbstractType *UnaryCalcul::inferType(Environment *parent) {
+    auto type = _identifier->inferType(parent);
+
+    if (_op->getOp() == Operator::ARRAY && !type->isIterable()) {
+        auto operators = parent->getSymbols("operator[]");
+        bool found = false;
+        for (auto op: operators) {
+            auto opType = (LambdaType *) op->getSignature();
+            if (*opType->getArgsTypes()[0] == *type) {
+                found = true;
+                _exprType = opType->getReturnType();
+                break;
+            }
+        }
+        if (!found) {
+            ErrorsRegister::addError(new Error("Type " + type->getName() + " has no overload for operator []", _pos));
+        }
+    } else {
+        auto operators = parent->getSymbols("operator" + _op->decompile(0));
+        bool found = false;
+        for (auto op: operators) {
+            auto opType = (LambdaType *) op->getSignature();
+            if (*opType->getArgsTypes()[0] == *type) {
+                found = true;
+                _exprType = opType->getReturnType();
+                break;
+            }
+        }
+        if (!found) {
+            ErrorsRegister::addError(
+                    new Error("Type " + type->getName() + " has no overload for operator " + _op->decompile(0), _pos)
+            );
+        }
+    }
+
+    return _exprType;
+}
 
 string UnaryCalcul::dump(int indent) const {
     string res = string(indent, '\t') + "[UnaryCalcul]"

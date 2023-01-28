@@ -34,26 +34,28 @@ Symbol *Function::resolveSymbols(Environment *parent) {
     return _symbol;
 }
 
-//AbstractType *Function::inferType(Environment *env) {
-//    _exprType = _declaration->inferType(_environment);
-//    env->getSymbol(_symbol->getName())->setSignature(_exprType);
-//
-//    auto returnType = ((LambdaType *) _exprType)->getReturnType();
-//    auto bodyType = _body->inferType(_environment);
-//    if (returnType) {
-//        if (*returnType != *bodyType) {
-//            ErrorsRegister::addError(
-//                    "Type mismatch: function " + _symbol->getName() + " must returns " + returnType->getName()
-//                    + ", but its body returns " + bodyType->getName(),
-//                    _pos
-//            );
-//        }
-//    } else {
-//        ((LambdaType *) _exprType)->setReturnType(bodyType);
-//    }
-//
-//    return _exprType;
-//}
+AbstractType *Function::inferType(Environment *parent) {
+    _declaration->inferParamsTypes(_environment);
+    auto declarationType = (LambdaType *) _declaration->inferType(parent);
+    auto returnType = declarationType->getReturnType();
+    auto bodyType = _body->inferType(_environment);
+
+    if (returnType) {
+        if (*bodyType != *returnType) {
+            ErrorsRegister::addError(
+                    new Error("Type mismatch: function " + _symbol->getName() + " must returns " + returnType->getName()
+                              + ", but its body returns " + bodyType->getName(),
+                              _pos)
+            );
+        }
+    } else {
+        declarationType->setReturnType(bodyType);
+    }
+
+    _exprType = declarationType;
+
+    return _exprType;
+}
 
 string Function::dump(int indent) const {
     string res = string(indent, '\t') + "[Function]" + (_isExported ? " <exported> " : " ")

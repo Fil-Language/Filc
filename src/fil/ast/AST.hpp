@@ -43,13 +43,13 @@ namespace ast {
 
         virtual Symbol *resolveSymbols(Environment *parent);
 
+        virtual AbstractType *inferType(Environment *parent);
+
         virtual bool isVar() const;
 
         virtual bool isFunc() const;
 
         virtual bool isReturn() const;
-
-        //virtual AbstractType *inferType(Environment *env);
 
         AbstractType *getExprType() const;
 
@@ -79,7 +79,7 @@ namespace ast {
 
         void mergeImports();
 
-        //void inferTypes();
+        void inferTypes();
 
     private:
         Environment *getPublicEnvironment() const;
@@ -105,9 +105,9 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        const std::string &getName() const;
+        AbstractType *inferType(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        const std::string &getName() const;
 
         std::string dump(int indent) const override;
 
@@ -185,7 +185,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -202,7 +202,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -223,7 +223,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -237,7 +237,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -251,7 +251,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -265,7 +265,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -279,7 +279,7 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -297,7 +297,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -317,7 +317,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -380,7 +380,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -398,7 +398,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -418,7 +418,7 @@ namespace ast {
 
         Symbol *resolveSymbol(Environment *function);
 
-        //AbstractType *inferType(Environment *env) const;
+        AbstractType *inferType(Environment *function) const;
 
         std::string dump(int indent) const override;
 
@@ -437,7 +437,9 @@ namespace ast {
 
         void resolveParams(Environment *function);
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
+
+        void inferParamsTypes(Environment *function);
 
         std::string dump(int indent) const override;
 
@@ -459,7 +461,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -480,7 +482,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         bool isReturn() const override;
 
@@ -500,7 +502,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -521,7 +523,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -558,9 +560,9 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
-        //AbstractType *inferPatternType(Environment *env);
+        AbstractType *inferPatternType(Environment *parent) const;
 
         std::string dump(int indent) const override;
 
@@ -577,7 +579,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -596,7 +598,7 @@ namespace ast {
 
         void resolveSymbols(Environment *loop);
 
-        //void inferCondition(Environment *env, Environment *loop);
+        void inferTypes(Environment *loop);
 
         std::string dump(int indent) const override;
 
@@ -614,7 +616,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -634,7 +636,7 @@ namespace ast {
 
         void resolveSymbols(Environment *loop);
 
-        //void inferCondition(Environment *env, Environment *loop);
+        void inferTypes(Environment *loop);
 
         std::string dump(int indent) const override;
 
@@ -642,6 +644,7 @@ namespace ast {
         bool _isVal;
         Identifier *_iterator;
         Identifier *_iterable;
+        Symbol *_iteratorSymbol;
     };
 
     class ForIter : public AbstractExpr {
@@ -652,7 +655,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -672,7 +675,7 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
@@ -692,32 +695,13 @@ namespace ast {
 
         Symbol *resolveSymbols(Environment *parent) override;
 
-        //AbstractType *inferType(Environment *env) override;
+        AbstractType *inferType(Environment *parent) override;
 
         std::string dump(int indent) const override;
 
     private:
         Identifier *_name;
         std::vector<AbstractExpr *> _args;
-    };
-
-    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-
-    class Cast : public AbstractExpr {
-    public:
-        Cast(AbstractType *type, AbstractExpr *expr);
-
-        std::string decompile(int indent) const override;
-
-        Symbol *resolveSymbols(Environment *parent) override;
-
-        //AbstractType *inferType(Environment *env) override;
-
-        std::string dump(int indent) const override;
-
-    private:
-        AbstractType *_type;
-        AbstractExpr *_expr;
     };
 }
 

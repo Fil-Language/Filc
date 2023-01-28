@@ -252,6 +252,21 @@ Symbol *Environment::getSymbol(const std::string &name, ast::AbstractType *signa
     return nullptr;
 }
 
+std::deque<Symbol *> Environment::getSymbols(const std::string &name) {
+    std::deque<Symbol *> symbols;
+
+    std::copy_if(_symbols.begin(), _symbols.end(), std::back_inserter(symbols), [name](Symbol *symbol) {
+        return symbol->getName() == name;
+    });
+
+    if (_parent != nullptr) {
+        auto parentSymbols = _parent->getSymbols(name);
+        symbols.insert(symbols.end(), parentSymbols.begin(), parentSymbols.end());
+    }
+
+    return symbols;
+}
+
 void Environment::setParent(Environment *parent) {
     _parent = parent;
 }

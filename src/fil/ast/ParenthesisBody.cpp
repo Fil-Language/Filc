@@ -20,11 +20,11 @@ Symbol *ParenthesisBody::resolveSymbols(Environment *parent) {
     return _expr->resolveSymbols(parent);
 }
 
-//AbstractType *ParenthesisBody::inferType(Environment *env) {
-//    _exprType = _expr->inferType(env);
-//
-//    return _exprType;
-//}
+AbstractType *ParenthesisBody::inferType(Environment *parent) {
+    _exprType = _expr->inferType(parent);
+
+    return _exprType;
+}
 
 string ParenthesisBody::dump(int indent) const {
     string res = string(indent, '\t') + "[ParenthesisBody]" + (_isExported ? " <exported>" : "") +

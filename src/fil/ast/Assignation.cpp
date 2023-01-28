@@ -20,15 +20,11 @@ Symbol *Assignation::resolveSymbols(Environment *parent) {
     return _expr->resolveSymbols(parent);
 }
 
-//void Assignation::resolveEnvironment(Environment *parent) {
-//    _expr->resolveEnvironment(parent);
-//}
-//
-//AbstractType *Assignation::inferType(Environment *env) {
-//    _exprType = _expr->inferType(env);
-//
-//    return _exprType;
-//}
+AbstractType *Assignation::inferType(Environment *parent) {
+    _exprType = _expr->inferType(parent);
+
+    return _exprType;
+}
 
 string Assignation::dump(int indent) const {
     string res = string(indent, '\t') + "[Assignation]" + (_isExported ? " <exported>" : "") +

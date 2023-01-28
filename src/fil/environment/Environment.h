@@ -24,6 +24,8 @@ public:
 
     Symbol *getSymbol(const std::string &name, ast::AbstractType *signature = nullptr);
 
+    std::deque<Symbol *> getSymbols(const std::string &name);
+
     void setParent(Environment *parent);
 
 private:

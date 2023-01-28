@@ -25,20 +25,13 @@ Symbol *ForIter::resolveSymbols(Environment *parent) {
     return nullptr;
 }
 
-//void ForIter::resolveEnvironment(Environment *parent) {
-//    _environment = new Environment(parent);
-//
-//    _condition->resolveCondition(_environment);
-//    _body->resolveEnvironment(_environment);
-//}
-//
-//AbstractType *ForIter::inferType(Environment *env) {
-//    _condition->inferCondition(env, _environment);
-//
-//    _exprType = _body->inferType(_environment);
-//
-//    return _exprType;
-//}
+AbstractType *ForIter::inferType(Environment *parent) {
+    _condition->inferTypes(_environment);
+
+    _exprType = _body->inferType(_environment);
+
+    return _exprType;
+}
 
 string ForIter::dump(int indent) const {
     string res = string(indent, '\t') + "[ForIter]" + (_isExported ? " <exported> " : " ") +

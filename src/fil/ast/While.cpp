@@ -26,13 +26,19 @@ Symbol *While::resolveSymbols(Environment *parent) {
     return nullptr;
 }
 
-//AbstractType *While::inferType(Environment *env) {
-//    _condition->inferType(env);
-//
-//    _exprType = _body->inferType(_environment);
-//
-//    return _exprType;
-//}
+AbstractType *While::inferType(Environment *parent) {
+    auto condType = _condition->inferType(parent);
+    if (condType->getName() != "bool") {
+        ErrorsRegister::addError(
+                new Error("Type mismatch: while condition must be a boolean, but got " + condType->getName(),
+                          _condition->getPosition())
+        );
+    }
+
+    _exprType = _body->inferType(parent);
+
+    return _exprType;
+}
 
 string While::dump(int indent) const {
     string res = string(indent, '\t') + "[While]" + (_isExported ? " <exported> " : " ") +

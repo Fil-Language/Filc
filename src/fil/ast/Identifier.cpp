@@ -37,23 +37,11 @@ Symbol *Identifier::resolveSymbols(Environment *parent) {
     return nullptr;
 }
 
-//void Identifier::resolveEnvironment(Environment *parent) {
-//    if (!parent->hasSymbol(_name)) {
-//        ErrorsRegister::addError("Unknown symbol " + _name, _pos);
-//    }
-//}
-//
-//AbstractType *Identifier::inferType(Environment *env) {
-//    // Infer
-//    _exprType = env->getSymbol(_name)->getSignature();
-//
-//    // Check
-//    if (_exprType == nullptr) {
-//        ErrorsRegister::addError(_name + " has no type", _pos);
-//    }
-//
-//    return _exprType;
-//}
+AbstractType *Identifier::inferType(Environment *parent) {
+    _exprType = parent->getSymbol(_name)->getSignature();
+
+    return _exprType;
+}
 
 string Identifier::dump(int indent) const {
     return string(indent, '\t') + "[Identifier]" + (_isExported ? " <exported>" : "") +

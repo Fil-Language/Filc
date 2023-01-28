@@ -27,6 +27,10 @@ Symbol *AbstractExpr::resolveSymbols(Environment *parent) {
     throw;
 }
 
+AbstractType *AbstractExpr::inferType(Environment *env) {
+    throw;
+}
+
 bool AbstractExpr::isVar() const {
     return false;
 }
@@ -38,10 +42,6 @@ bool AbstractExpr::isFunc() const {
 bool AbstractExpr::isReturn() const {
     return false;
 }
-
-//AbstractType *AbstractExpr::inferType(Environment *env) {
-//    throw;
-//}
 
 AbstractType *AbstractExpr::getExprType() const {
     return _exprType;

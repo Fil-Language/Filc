@@ -67,7 +67,8 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         // Merge imports environment
         program->mergeImports();
 
-        // TODO : Resolve & check types
+        // Resolve & check types
+        program->inferTypes();
 
         // TODO : Check symbols
 

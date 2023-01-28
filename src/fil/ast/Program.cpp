@@ -83,17 +83,11 @@ Environment *Program::getPublicEnvironment() const {
     return env;
 }
 
-//void Program::inferTypes() {
-//    // Merge imports
-//    for (auto &imp: _imports) {
-//        _environment->merge(imp->getPublicEnvironment());
-//    }
-//
-//    // Infer exprs
-//    for (auto &expr: _exprs) {
-//        expr->inferType(_environment);
-//    }
-//}
+void Program::inferTypes() {
+    for (auto &expr: _exprs) {
+        expr->inferType(_environment);
+    }
+}
 
 string Program::dump(int indent) const {
     string res = string(indent, '\t') + "[Program] <module:" + _module + ">\n";

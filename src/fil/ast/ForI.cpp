@@ -25,13 +25,13 @@ Symbol *ForI::resolveSymbols(Environment *parent) {
     return nullptr;
 }
 
-//AbstractType *ForI::inferType(Environment *env) {
-//    _condition->inferCondition(env, _environment);
-//
-//    _exprType = _body->inferType(_environment);
-//
-//    return _exprType;
-//}
+AbstractType *ForI::inferType(Environment *parent) {
+    _condition->inferTypes(_environment);
+
+    _exprType = _body->inferType(_environment);
+
+    return _exprType;
+}
 
 string ForI::dump(int indent) const {
     string res = string(indent, '\t') + "[ForI]" + (_isExported ? " <exported> " : " ") +

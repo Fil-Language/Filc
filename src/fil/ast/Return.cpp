@@ -26,11 +26,11 @@ Symbol *Return::resolveSymbols(Environment *parent) {
     return _expr->resolveSymbols(parent);
 }
 
-//AbstractType *Return::inferType(Environment *env) {
-//    _exprType = _expr->inferType(env);
-//
-//    return _exprType;
-//}
+AbstractType *Return::inferType(Environment *parent) {
+    _exprType = _expr->inferType(parent);
+
+    return _exprType;
+}
 
 bool Return::isReturn() const {
     return true;

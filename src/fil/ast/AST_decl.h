@@ -80,8 +80,6 @@ namespace ast {
     class While;
 
     class FunctionCall;
-
-    class Cast;
 }
 
 #endif //FILC_AST_DECL_H
