@@ -252,6 +252,6 @@ Symbol *Environment::getSymbol(const std::string &name, ast::AbstractType *signa
     return nullptr;
 }
 
-void Environment::merge(Environment *environment) {
-    exit(42); // TODO : implement
+void Environment::setParent(Environment *parent) {
+    _parent = parent;
 }

@@ -24,7 +24,7 @@ public:
 
     Symbol *getSymbol(const std::string &name, ast::AbstractType *signature = nullptr);
 
-    void merge(Environment *environment);
+    void setParent(Environment *parent);
 
 private:
     Environment *_parent;

@@ -77,10 +77,12 @@ namespace ast {
 
         void resolveSymbols();
 
+        void mergeImports();
+
         //void inferTypes();
 
     private:
-        //Environment *getPublicEnvironment() const;
+        Environment *getPublicEnvironment() const;
 
     private:
         std::string _module;

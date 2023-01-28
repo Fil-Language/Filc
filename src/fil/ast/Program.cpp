@@ -47,6 +47,21 @@ void Program::resolveSymbols() {
     }
 }
 
+void Program::mergeImports() {
+    Environment *prev = nullptr;
+    for (auto &imp: _imports) {
+        if (prev == nullptr) {
+            prev = imp->_environment;
+        } else {
+            imp->_environment->setParent(prev);
+            prev = imp->_environment;
+        }
+    }
+
+    if (prev)
+        _environment->setParent(prev);
+}
+
 //void Program::resolveGlobalEnvironment() {
 //    _environment = Environment::getGlobalEnvironment();
 //    resolveEnvironment();
