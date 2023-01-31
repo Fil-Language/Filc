@@ -12,7 +12,7 @@ using namespace ast;
 Program::Program(const string &module,
                  const vector<Program *> &imports,
                  const vector<AbstractExpr *> &exprs)
-        : _module(module), _imports(imports), _exprs(exprs), _environment(nullptr) {}
+        : _module(module), _imports(imports), _exprs(exprs), _environment(nullptr), _resolved(false) {}
 
 string Program::decompile(int indent) const {
     string result = "module " + _module + "\n\n";
@@ -36,6 +36,21 @@ bool Program::hasMain() const {
     }
 
     return _environment->hasSymbol("main", nullptr);
+}
+
+void Program::resolveEnvironment() {
+    if (_resolved) {
+        return;
+    }
+
+    _resolved = true;
+
+    // Resolve imports
+    for (auto &imp: _imports) {
+        imp->resolveEnvironment();
+    }
+
+    // TODO
 }
 
 void Program::resolveSymbols() {

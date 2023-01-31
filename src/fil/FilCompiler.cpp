@@ -61,16 +61,8 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
             return 0;
         }
 
-        // Resolve symbols
-        program->resolveSymbols();
-
-        // Merge imports environment
-        program->mergeImports();
-
-        // Resolve & check types
-        program->inferTypes();
-
-        // TODO : Check symbols
+        // Resolve environement
+        program->resolveEnvironment();
 
         ErrorsRegister::dump(cerr);
         if (ErrorsRegister::containsError()) {
@@ -82,14 +74,6 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
             cout << program->dump(0) << endl;
 
             return 0;
-        }
-
-        // Check that the main function is defined
-        if (!program->hasMain()) {
-            ErrorsRegister::addError(new BasicError("The main function is not defined"));
-            ErrorsRegister::dump(cerr);
-
-            return 1;
         }
 
         // TODO : LLVM IR generation
@@ -141,12 +125,6 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         imports[moduleName] = program;
 
         file.close();
-
-        // Generate symbols tables (environment) TODO
-        //program->resolveGlobalEnvironment();
-
-        // Type inference and checking
-        //program->inferTypes();
 
         return program;
     };

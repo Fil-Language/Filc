@@ -75,6 +75,8 @@ namespace ast {
 
         void setEnvironment(Environment *environment);
 
+        void resolveEnvironment();
+
         void resolveSymbols();
 
         void mergeImports();
@@ -89,6 +91,8 @@ namespace ast {
         std::vector<Program *> _imports;
         std::vector<AbstractExpr *> _exprs;
         Environment *_environment;
+
+        bool _resolved;
     };
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
