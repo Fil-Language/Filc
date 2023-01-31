@@ -17,12 +17,6 @@ string CharLiteral::decompile(int indent) const {
     return "'" + string(1, _value) + "'";
 }
 
-AbstractType *CharLiteral::inferType(Environment *parent) {
-    _exprType = parent->getSymbol("char")->getSignature();
-
-    return _exprType;
-}
-
 string CharLiteral::dump(int indent) const {
     return string(indent, '\t') + "[CharLiteral]" + (_isExported ? " <exported>" : "") +
            " <value:" + string(1, _value) + ">\n";

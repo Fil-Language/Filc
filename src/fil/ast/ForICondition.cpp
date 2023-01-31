@@ -18,30 +18,6 @@ string ForICondition::decompile(int indent) const {
            + _increment->decompile(indent);
 }
 
-void ForICondition::resolveSymbols(Environment *loop) {
-    if (_declaration)
-        _declaration->resolveSymbols(loop);
-    if (_condition)
-        _condition->resolveSymbols(loop);
-    if (_increment)
-        _increment->resolveSymbols(loop);
-}
-
-void ForICondition::inferTypes(Environment *loop) {
-    if (_declaration)
-        _declaration->inferType(loop);
-    if (_condition) {
-        auto condType = _condition->inferType(loop);
-        if (condType->getName() != "bool")
-            ErrorsRegister::addError(
-                    new Error("Type mismatch: condition of for loop must be a boolean expression, but got " +
-                              condType->getName(), _pos)
-            );
-    }
-    if (_increment)
-        _increment->inferType(loop);
-}
-
 string ForICondition::dump(int indent) const {
     string res = string(indent, '\t') + "[ForICondition]\n";
 

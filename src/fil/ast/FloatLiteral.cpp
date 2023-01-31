@@ -16,12 +16,6 @@ string FloatLiteral::decompile(int indent) const {
     return to_string(_value);
 }
 
-AbstractType *FloatLiteral::inferType(Environment *parent) {
-    _exprType = parent->getSymbol("float")->getSignature();
-
-    return _exprType;
-}
-
 string FloatLiteral::dump(int indent) const {
     return string(indent, '\t') + "[FloatLiteral]" + (_isExported ? " <exported>" : "") +
            " <value:" + to_string(_value) + ">\n";

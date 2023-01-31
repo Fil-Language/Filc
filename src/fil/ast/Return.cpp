@@ -22,16 +22,6 @@ string Return::decompile(int indent) const {
     return ret;
 }
 
-Symbol *Return::resolveSymbols(Environment *parent) {
-    return _expr->resolveSymbols(parent);
-}
-
-AbstractType *Return::inferType(Environment *parent) {
-    _exprType = _expr->inferType(parent);
-
-    return _exprType;
-}
-
 bool Return::isReturn() const {
     return true;
 }

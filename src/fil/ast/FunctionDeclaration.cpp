@@ -31,22 +31,10 @@ string FunctionDeclaration::decompile(int indent) const {
     return result;
 }
 
-Symbol *FunctionDeclaration::resolveSymbols(Environment *parent) {
-    auto symbol = _name->resolveFunc(parent);
-
-    return symbol;
-}
-
 void FunctionDeclaration::resolveParams(Environment *function) {
     for (auto param: _params) {
         param->resolveSymbol(function);
     }
-}
-
-AbstractType *FunctionDeclaration::inferType(Environment *parent) {
-    ((LambdaType *) _exprType)->setReturnType(_type);
-
-    return _exprType;
 }
 
 void FunctionDeclaration::inferParamsTypes(Environment *function) {

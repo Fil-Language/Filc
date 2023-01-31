@@ -23,14 +23,6 @@ bool AbstractExpr::isExported() const {
     return _isExported;
 }
 
-Symbol *AbstractExpr::resolveSymbols(Environment *parent) {
-    throw;
-}
-
-AbstractType *AbstractExpr::inferType(Environment *env) {
-    throw;
-}
-
 bool AbstractExpr::isVar() const {
     return false;
 }

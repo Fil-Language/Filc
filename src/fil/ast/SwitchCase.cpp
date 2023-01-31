@@ -16,20 +16,6 @@ string SwitchCase::decompile(int indent) const {
     return _pattern->decompile(indent) + " -> " + _body->decompile(indent) + "\n";
 }
 
-AbstractType *SwitchCase::inferType(Environment *parent) {
-    _exprType = _body->inferType(parent);
-
-    return _exprType;
-}
-
-AbstractType *SwitchCase::inferPatternType(Environment *parent) const {
-    if (!_pattern->isDefault()) {
-        return _pattern->getLiteral()->inferType(parent);
-    }
-
-    return nullptr;
-}
-
 string SwitchCase::dump(int indent) const {
     string res = string(indent, '\t') + "[SwitchCase]" + (_isExported ? " <exported> " : " ") +
                  "<type:" + _exprType->getName() + ">\n";

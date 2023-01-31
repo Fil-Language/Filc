@@ -50,16 +50,8 @@ void Program::resolveEnvironment() {
         imp->resolveEnvironment();
     }
 
-    // TODO
-}
-
-void Program::resolveSymbols() {
-    _environment = Environment::getGlobalEnvironment();
-
-    // Resolve exprs
-    for (auto &expr: _exprs) {
-        expr->resolveSymbols(_environment);
-    }
+    // Merge imports environments
+    mergeImports();
 }
 
 void Program::mergeImports() {
@@ -96,12 +88,6 @@ Environment *Program::getPublicEnvironment() const {
     }
 
     return env;
-}
-
-void Program::inferTypes() {
-    for (auto &expr: _exprs) {
-        expr->inferType(_environment);
-    }
 }
 
 string Program::dump(int indent) const {

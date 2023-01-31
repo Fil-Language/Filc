@@ -32,17 +32,6 @@ const string &Identifier::getName() const {
     return _name;
 }
 
-Symbol *Identifier::resolveSymbols(Environment *parent) {
-    // Nothing to do
-    return nullptr;
-}
-
-AbstractType *Identifier::inferType(Environment *parent) {
-    _exprType = parent->getSymbol(_name)->getSignature();
-
-    return _exprType;
-}
-
 string Identifier::dump(int indent) const {
     return string(indent, '\t') + "[Identifier]" + (_isExported ? " <exported>" : "") +
            " <name:" + _name + "> <type:" + _exprType->getName() + ">\n";

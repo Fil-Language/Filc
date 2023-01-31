@@ -16,12 +16,6 @@ string BooleanLiteral::decompile(int indent) const {
     return _value ? "true" : "false";
 }
 
-AbstractType *BooleanLiteral::inferType(Environment *parent) {
-    _exprType = parent->getSymbol("bool")->getSignature();
-
-    return _exprType;
-}
-
 string BooleanLiteral::dump(int indent) const {
     string res = string(indent, '\t') + "[BooleanLiteral]" + (_isExported ? " <exported>" : "") + " <value:";
     res += _value ? "true" : "false";

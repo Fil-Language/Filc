@@ -24,39 +24,6 @@ Symbol *Function::getSymbol() const {
     return _symbol;
 }
 
-Symbol *Function::resolveSymbols(Environment *parent) {
-    _symbol = _declaration->resolveSymbols(parent);
-
-    _environment = new Environment(parent);
-    _declaration->resolveParams(_environment);
-    _body->resolveSymbols(_environment);
-
-    return _symbol;
-}
-
-AbstractType *Function::inferType(Environment *parent) {
-    _declaration->inferParamsTypes(_environment);
-    auto declarationType = (LambdaType *) _declaration->inferType(parent);
-    auto returnType = declarationType->getReturnType();
-    auto bodyType = _body->inferType(_environment);
-
-    if (returnType) {
-        if (*bodyType != *returnType) {
-            ErrorsRegister::addError(
-                    new Error("Type mismatch: function " + _symbol->getName() + " must returns " + returnType->getName()
-                              + ", but its body returns " + bodyType->getName(),
-                              _pos)
-            );
-        }
-    } else {
-        declarationType->setReturnType(bodyType);
-    }
-
-    _exprType = declarationType;
-
-    return _exprType;
-}
-
 string Function::dump(int indent) const {
     string res = string(indent, '\t') + "[Function]" + (_isExported ? " <exported> " : " ")
                  + "<name:" + _symbol->getName() + "> "

@@ -16,41 +16,6 @@ string BinaryCalcul::decompile(int indent) const {
     return _left->decompile(indent) + " " + _op->decompile(indent) + " " + _right->decompile(indent);
 }
 
-Symbol *BinaryCalcul::resolveSymbols(Environment *parent) {
-    _left->resolveSymbols(parent);
-    _right->resolveSymbols(parent);
-
-    return nullptr;
-}
-
-AbstractType *BinaryCalcul::inferType(Environment *parent) {
-    auto leftType = _left->inferType(parent);
-    auto rightType = _right->inferType(parent);
-
-    auto operators = parent->getSymbols("operator" + _op->decompile(0));
-    bool found = false;
-    for (auto &op: operators) {
-        auto signature = (LambdaType *) op->getSignature();
-        if (signature->getArgsTypes().size() == 2) {
-            if (*signature->getArgsTypes()[0] == *leftType &&
-                *signature->getArgsTypes()[1] == *rightType) {
-                _exprType = signature->getReturnType();
-                found = true;
-                break;
-            }
-        }
-    }
-
-    if (!found) {
-        ErrorsRegister::addError(new Error(
-                "There is no operator " + _op->decompile(0) + " for types " + leftType->getName() + " and " +
-                rightType->getName(), _pos)
-        );
-    }
-
-    return _exprType;
-}
-
 //AbstractType *BinaryCalcul::inferType(Environment *env) {
 //    auto leftType = _left->inferType(env);
 //    auto rightType = _right->inferType(env);

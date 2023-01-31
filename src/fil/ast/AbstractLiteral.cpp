@@ -9,7 +9,3 @@
 using namespace std;
 using namespace ast;
 
-Symbol *AbstractLiteral::resolveSymbols(Environment *parent) {
-    // Do nothing
-    return nullptr;
-}

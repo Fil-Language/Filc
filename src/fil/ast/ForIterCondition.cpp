@@ -19,34 +19,6 @@ string ForIterCondition::decompile(int indent) const {
            + _iterable->decompile(indent);
 }
 
-void ForIterCondition::resolveSymbols(Environment *loop) {
-    _iteratorSymbol = _iterator->resolveVar(loop);
-}
-
-void ForIterCondition::inferTypes(Environment *loop) {
-    auto iterableType = _iterable->inferType(loop);
-
-    if (!iterableType->isIterable()) {
-        auto operators = loop->getSymbols("operator[]");
-        bool found = false;
-        for (auto &op: operators) {
-            auto opType = (LambdaType *) op->getSignature();
-            if (*opType->getArgsTypes()[0] == *iterableType) {
-                _iteratorSymbol->setSignature(opType->getReturnType());
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            ErrorsRegister::addError(
-                    new Error("Type " + iterableType->getName() + " is not iterable", _iterable->getPosition())
-            );
-        }
-    } else {
-        _iteratorSymbol->setSignature(iterableType->getIterableType());
-    }
-}
-
 string ForIterCondition::dump(int indent) const {
     string res = string(indent, '\t') + "[ForIterCondition] " + (_isVal ? "<val>" : "<var>") + "\n";
 

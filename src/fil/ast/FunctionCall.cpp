@@ -25,45 +25,6 @@ string FunctionCall::decompile(int indent) const {
     return res;
 }
 
-Symbol *FunctionCall::resolveSymbols(Environment *parent) {
-    for (auto &arg: _args) {
-        arg->resolveSymbols(parent);
-    }
-
-    return nullptr;
-}
-
-AbstractType *FunctionCall::inferType(Environment *parent) {
-    auto functionType = (LambdaType *) _name->inferType(parent);
-
-    // Check args types
-    auto argsTypes = functionType->getArgsTypes();
-    if (argsTypes.size() == _args.size()) {
-        for (long unsigned int i = 0; i < argsTypes.size(); i++) {
-            auto expected = argsTypes[i];
-            auto argType = _args[i]->inferType(parent);
-
-            if (*argType != *expected) {
-                ErrorsRegister::addError(
-                        new Error("Argument " + to_string(i) + " of " + _name->getName() + " expects type " +
-                                  expected->getName() + ", " + argType->getName() + " provided",
-                                  _args[i]->getPosition())
-                );
-            }
-        }
-    } else {
-        ErrorsRegister::addError(
-                new Error("Function " + _name->getName() + " expects " + to_string(argsTypes.size()) + " arguments, " +
-                          to_string(_args.size()) + " provided",
-                          _name->getPosition())
-        );
-    }
-
-    _exprType = functionType->getReturnType();
-
-    return _exprType;
-}
-
 string FunctionCall::dump(int indent) const {
     string res = string(indent, '\t') + "[FunctionCall]" + (_isExported ? " <exported> " : " ") +
                  "<name:" + _name->getName() + ">";
