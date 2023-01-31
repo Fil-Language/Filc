@@ -93,6 +93,8 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         }
 
         // TODO : LLVM IR generation
+        (void) debug;
+        (void) output;
     } catch (exception &e) {
         cout << e.what() << endl;
         return 1;
