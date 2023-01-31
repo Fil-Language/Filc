@@ -63,6 +63,8 @@ if (tests.length > 0) {
 
     fs.rmSync('log.txt', {force: true});
     console.log(`Running ${tests.length} tests...`);
+    let p_passed = 0;
+    let p_total = 0;
     for (const test of tests) {
         console.log('');
         total++;
@@ -78,20 +80,23 @@ if (tests.length > 0) {
             switch (result) {
                 case true:
                     passed++;
-                    console.log(' ✓ '.bgGreen);
+                    console.log(` ✓ ${n_passed - p_passed}/${n_total - p_total} `.bgGreen);
                     break;
                 case false:
-                    console.log(' ✗ '.bgRed);
+                    console.log(` ✗ ${n_passed - p_passed}/${n_total - p_total} `.bgRed);
                     break;
                 case undefined:
                     passed++;
-                    console.log(' ⚠ '.bgYellow);
+                    console.log(` ⚠ ${n_passed - p_passed}/${n_total - p_total} `.bgYellow);
                     break;
             }
         } catch (e) {
             console.log(` ${test} ` + ' Not found '.bgMagenta);
             f_log(`${test} not found\n`);
         }
+
+        p_passed = n_passed;
+        p_total = n_total;
     }
 
     test_time = Date.now() - start;
