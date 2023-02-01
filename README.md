@@ -2,6 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://github.com/Fil-Language/Filc/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/Fil-Language/Filc/actions/workflows/test.yml)
+![Version](version.svg)
+
 [![wakatime](https://wakatime.com/badge/user/c1e2386d-065c-4366-b163-d98f957273dc/project/4027e072-9adb-4c9e-a1a1-52cd4d188c7d.svg)](https://wakatime.com/badge/user/c1e2386d-065c-4366-b163-d98f957273dc/project/4027e072-9adb-4c9e-a1a1-52cd4d188c7d)
 
 Fil language compiler (version in `src/VERSION.h`)
@@ -10,7 +12,8 @@ Have used `figlet -f slant "Filc"` for the version message.
 
 ## Grammar
 
-Refer to documentation for used grammar : [https://github.com/Fil-Language/Documentation](https://github.com/Fil-Language/Documentation).
+Refer to documentation for used
+grammar : [https://github.com/Fil-Language/Documentation](https://github.com/Fil-Language/Documentation).
 
 ## External dependencies
 
@@ -55,3 +58,14 @@ npm install
 # Run tests
 npm test
 ```
+
+## Quick note
+
+If during compilation you got a warning with a dev code, please open an issue on GitHub with the warning message and
+your code.
+
+|   Dev code    | Meaning                                                  |                 File                  |
+|:-------------:|----------------------------------------------------------|:-------------------------------------:|
+| <kbd>2</kdbd> | A variable declaration is resolved with an expected type | `src/fil/ast/VariableDeclaration.cpp` |
+
+These codes are for events that should not happen, but if they do, it's better to fix them.
