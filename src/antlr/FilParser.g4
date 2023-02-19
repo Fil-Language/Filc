@@ -330,15 +330,47 @@ function_declaration returns[FunctionDeclaration *tree]
 }
 @after {
     auto id = new Identifier($i.text);
-    id->setPosition($i);
+    id->setPosition($i.start);
     $tree = new FunctionDeclaration(id, params, ft);
     $tree->setPosition($f);
 }
-    : f=FUN i=IDENTIFIER LPAREN (p=function_params {
+    : f=FUN i=function_identifier LPAREN (p=function_params {
         params = $p.tree;
     })? RPAREN (t=function_type {
         ft = $t.tree;
     })?;
+
+function_identifier returns[std::string text]
+    : (o=OPERATOR f=function_operator) {
+        $text = $o.text + $f.text;
+    }
+    | i=IDENTIFIER {
+        $text = $i.text;
+    };
+
+function_operator returns[std::string text]
+    : (LBRACK RBRACK) { $text = "[]"; }
+    | STAR { $text = "*"; }
+    | PLUSPLUS { $text = "++"; }
+    | MINUSMINUS { $text = "--"; }
+    | REF { $text = "&"; }
+    | NOT { $text = "!"; }
+    | AND { $text = "&&"; }
+    | OR { $text = "||"; }
+    | LESS { $text = "<"; }
+    | GREATER { $text = ">"; }
+    | EQEQ { $text = "=="; }
+    | LEQ { $text = "<="; }
+    | GEQ { $text = ">="; }
+    | NEQ { $text = "!="; }
+    | FLEFT { $text = "<<"; }
+    | FRIGHT { $text = ">>"; }
+    | PLUS { $text = "+"; }
+    | MINUS { $text = "-"; }
+    | DIV { $text = "/"; }
+    | MOD { $text = "%"; }
+    | (LPAREN RPAREN) { $text = "()"; }
+    ;
 
 function_params returns[vector<FunctionParam *> tree]
 @init {

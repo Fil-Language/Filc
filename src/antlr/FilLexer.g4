@@ -19,6 +19,7 @@ SWITCH: 'switch';
 DEFAULT: 'default';
 FOR: 'for';
 WHILE: 'while';
+OPERATOR: 'operator';
 
 // Operators
 EQ: '=';

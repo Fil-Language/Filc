@@ -59,7 +59,9 @@ string to_string(Operator::Op op) {
         case Operator::MOD:
             return "%";
         case Operator::ARRAY:
+            return "[]";
         case Operator::FUNCTION:
+            return "()";
         default:
             return "";
     }
