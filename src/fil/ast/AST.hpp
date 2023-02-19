@@ -95,10 +95,6 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        Symbol *resolveVar(Environment *parent);
-
-        Symbol *resolveFunc(Environment *parent);
-
         const std::string &getName() const;
 
         std::string dump(int indent) const override;
@@ -372,10 +368,6 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        Symbol *resolveSymbol(Environment *function);
-
-        AbstractType *inferType(Environment *function) const;
-
         std::string dump(int indent) const override;
 
     private:
@@ -388,10 +380,6 @@ namespace ast {
         FunctionDeclaration(Identifier *name, const std::vector<FunctionParam *> &params, AbstractType *type);
 
         std::string decompile(int indent) const override;
-
-        void resolveParams(Environment *function);
-
-        void inferParamsTypes(Environment *function);
 
         std::string dump(int indent) const override;
 
@@ -480,8 +468,6 @@ namespace ast {
 
         std::string decompile(int indent) const override;
 
-        AbstractType *inferPatternType(Environment *parent) const;
-
         std::string dump(int indent) const override;
 
     private:
@@ -509,10 +495,6 @@ namespace ast {
         ForICondition(VariableDeclaration *declaration, AbstractExpr *condition, AbstractExpr *increment);
 
         std::string decompile(int indent) const override;
-
-        void resolveSymbols(Environment *loop);
-
-        void inferTypes(Environment *loop);
 
         std::string dump(int indent) const override;
 
@@ -543,10 +525,6 @@ namespace ast {
         ForIterCondition(bool isVal, Identifier *iterator, Identifier *iterable);
 
         std::string decompile(int indent) const override;
-
-        void resolveSymbols(Environment *loop);
-
-        void inferTypes(Environment *loop);
 
         std::string dump(int indent) const override;
 

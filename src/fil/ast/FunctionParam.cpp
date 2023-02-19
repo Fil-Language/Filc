@@ -22,16 +22,6 @@ string FunctionParam::decompile(int indent) const {
     return result;
 }
 
-Symbol *FunctionParam::resolveSymbol(Environment *function) {
-    return _name->resolveVar(function);
-}
-
-AbstractType *FunctionParam::inferType(Environment *function) const {
-    function->getSymbol(_name->getName())->setSignature(_type);
-
-    return _type;
-}
-
 string FunctionParam::dump(int indent) const {
     return string(indent, '\t') + "[FunctionParam] <name:" + _name->getName() + "> <type:" + _type->getName() + ">\n";
 }

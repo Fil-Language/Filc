@@ -31,22 +31,6 @@ string FunctionDeclaration::decompile(int indent) const {
     return result;
 }
 
-void FunctionDeclaration::resolveParams(Environment *function) {
-    for (auto param: _params) {
-        param->resolveSymbol(function);
-    }
-}
-
-void FunctionDeclaration::inferParamsTypes(Environment *function) {
-    auto paramsTypes = vector<AbstractType *>();
-
-    for (auto param: _params) {
-        paramsTypes.push_back(param->inferType(function));
-    }
-
-    _exprType = new LambdaType(paramsTypes, _type);
-}
-
 string FunctionDeclaration::dump(int indent) const {
     string res = string(indent, '\t') + "[FunctionDeclaration]" + (_isExported ? " <exported> " : " ")
                  + "<name:" + _name->getName() + "> "
