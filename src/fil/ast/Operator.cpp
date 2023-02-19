@@ -15,6 +15,9 @@ Operator::Operator(Op op)
 Operator::Operator(AbstractExpr *index)
         : _op(ARRAY), _index(index) {}
 
+Operator::Operator(const vector<AbstractExpr *> &args)
+        : _op(FUNCTION), _args(args) {}
+
 string to_string(Operator::Op op) {
     switch (op) {
         case Operator::STAR:
@@ -56,6 +59,7 @@ string to_string(Operator::Op op) {
         case Operator::MOD:
             return "%";
         case Operator::ARRAY:
+        case Operator::FUNCTION:
         default:
             return "";
     }
@@ -64,6 +68,15 @@ string to_string(Operator::Op op) {
 string Operator::decompile(int indent) const {
     if (_op == ARRAY) {
         return "[" + _index->decompile(indent) + "]";
+    } else if (_op == FUNCTION) {
+        string args;
+        for (auto arg: _args) {
+            args += arg->decompile(0) + ", ";
+        }
+        if (!_args.empty()) {
+            args = args.substr(0, args.size() - 2);
+        }
+        return "(" + args + ")";
     } else {
         return to_string(_op);
     }

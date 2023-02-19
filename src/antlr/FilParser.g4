@@ -73,9 +73,6 @@ expr returns[AbstractExpr *tree]
     | e3=assignation {
         $tree = $e3.tree;
     }
-    | e4=function_call {
-        $tree = $e4.tree;
-    }
     | e6=unary_calcul {
         $tree = $e6.tree;
     }
@@ -221,9 +218,13 @@ post_operator returns[Operator *tree]
         $tree = new Operator(Operator::MINUSMINUS);
         $tree->setPosition($o2);
     }
-    | (o3=LBRACK e=expr RBRACK) {
-        $tree = new Operator($e.tree);
+    | (o3=LBRACK e1=expr RBRACK) {
+        $tree = new Operator($e1.tree);
         $tree->setPosition($o3);
+    }
+    | (o4=LPAREN e2=function_call_params RPAREN) {
+        $tree = new Operator($e2.tree);
+        $tree->setPosition($o4);
     };
 
 pre_operator returns[Operator *tree]
@@ -582,20 +583,6 @@ while_ returns[While *tree]
     };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-
-function_call returns[FunctionCall *tree]
-@init {
-    vector<AbstractExpr *> args;
-}
-@after {
-    auto id = new Identifier($n.text);
-    id->setPosition($n);
-    $tree = new FunctionCall(id, args);
-    $tree->setPosition($n);
-}
-    : n=IDENTIFIER LPAREN (p=function_call_params {
-        args = $p.tree;
-    })? RPAREN;
 
 function_call_params returns[vector<AbstractExpr *> tree]
 @init {

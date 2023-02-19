@@ -314,12 +314,15 @@ namespace ast {
             DIV,
             MOD,
             ARRAY,
+            FUNCTION,
         } Op;
 
     public:
         explicit Operator(Op op);
 
         explicit Operator(AbstractExpr *index);
+
+        explicit Operator(const std::vector<AbstractExpr *> &args);
 
         std::string decompile(int indent) const override;
 
@@ -328,6 +331,7 @@ namespace ast {
     private:
         Op _op;
         AbstractExpr *_index;
+        std::vector<AbstractExpr *> _args;
     };
 
     class UnaryCalcul : public AbstractExpr {
