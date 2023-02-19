@@ -18,7 +18,7 @@ string Program::decompile(int indent) const {
     string result = "module " + _module + "\n\n";
 
     for (auto &import: _imports) {
-        result += "import " + import->_module + "\n";
+        result += "use " + import->_module + "\n";
     }
 
     result += "\n";

@@ -7,7 +7,7 @@ lexer grammar FilLexer;
 // Keywords
 EXPORT: 'export';
 MODULE: 'module';
-IMPORT: 'import';
+USE: 'use';
 TRUE: 'true';
 FALSE: 'false';
 VAL: 'val';

@@ -54,7 +54,7 @@ import_ returns[Program *tree]
 @after {
     $tree = FilCompiler::import(name, $s);
 }
-    : s=IMPORT i1=IDENTIFIER {
+    : s=USE i1=IDENTIFIER {
         name = $i1.text;
     } (DOT ii=IDENTIFIER {
         name += "." + $ii.text;
