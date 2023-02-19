@@ -13,14 +13,14 @@
 
 class Symbol {
 public:
-    enum SymbolType {
+    enum SymbolKind {
         FUNCTION,
         VARIABLE,
         TYPE
     };
 
 public:
-    Symbol(const std::string &name, Position *position, SymbolType type);
+    Symbol(const std::string &name, Position *position, SymbolKind kind);
 
     ~Symbol();
 
@@ -28,7 +28,7 @@ public:
 
     Position *getPosition() const;
 
-    SymbolType getType() const;
+    SymbolKind getKind() const;
 
     ast::AbstractType *getSignature() const;
 
@@ -41,7 +41,7 @@ public:
 private:
     std::string _name;
     Position *_position;
-    SymbolType _type;
+    SymbolKind _kind;
     ast::AbstractType *_signature;
 };
 

@@ -18,7 +18,7 @@ public:
 
     static Environment *getGlobalEnvironment();
 
-    Symbol *addSymbol(const std::string &name, Position *position, Symbol::SymbolType type);
+    Symbol *addSymbol(const std::string &name, Position *position, Symbol::SymbolKind type);
 
     bool hasSymbol(const std::string &name, ast::AbstractType *signature = nullptr);
 

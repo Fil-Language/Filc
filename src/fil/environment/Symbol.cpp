@@ -9,8 +9,8 @@
 using namespace std;
 using namespace ast;
 
-Symbol::Symbol(const string &name, Position *position, SymbolType type)
-        : _name(name), _position(position), _type(type), _signature(nullptr) {}
+Symbol::Symbol(const string &name, Position *position, SymbolKind kind)
+        : _name(name), _position(position), _kind(kind), _signature(nullptr) {}
 
 Symbol::~Symbol() {
     delete _position;
@@ -24,8 +24,8 @@ Position *Symbol::getPosition() const {
     return _position;
 }
 
-Symbol::SymbolType Symbol::getType() const {
-    return _type;
+Symbol::SymbolKind Symbol::getKind() const {
+    return _kind;
 }
 
 ast::AbstractType *Symbol::getSignature() const {
@@ -40,7 +40,7 @@ AbstractType *Symbol::setSignature(AbstractType *signature) {
 
 bool Symbol::operator==(const Symbol &b) const {
     return _name == b._name &&
-           _type == b._type &&
+           _kind == b._kind &&
            _signature == b._signature;
 }
 

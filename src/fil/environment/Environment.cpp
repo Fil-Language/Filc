@@ -26,190 +26,190 @@ Environment *Environment::getGlobalEnvironment() {
     initialized = true;
 
     // Add builtins types
-    auto tInt = globalEnvironment->addSymbol("int", new Position(0, 0, "builtin"), Symbol::SymbolType::TYPE)
+    auto tInt = globalEnvironment->addSymbol("int", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
             ->setSignature(new Type(new Identifier("int")));
-    auto tFloat = globalEnvironment->addSymbol("float", new Position(0, 0, "builtin"), Symbol::SymbolType::TYPE)
+    auto tFloat = globalEnvironment->addSymbol("float", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
             ->setSignature(new Type(new Identifier("float")));
-    auto tChar = globalEnvironment->addSymbol("char", new Position(0, 0, "builtin"), Symbol::SymbolType::TYPE)
+    auto tChar = globalEnvironment->addSymbol("char", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
             ->setSignature(new Type(new Identifier("char")));
-    auto tBool = globalEnvironment->addSymbol("bool", new Position(0, 0, "builtin"), Symbol::SymbolType::TYPE)
+    auto tBool = globalEnvironment->addSymbol("bool", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
             ->setSignature(new Type(new Identifier("bool")));
-    globalEnvironment->addSymbol("void", new Position(0, 0, "builtin"), Symbol::SymbolType::TYPE)
+    globalEnvironment->addSymbol("void", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
             ->setSignature(new Type(new Identifier("void")));
 
     // Add builtins operators
-    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tInt}, tInt));
-    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tChar}, tChar));
-    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tInt}, tFloat));
-    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tInt}, tInt));
-    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tChar}, tInt));
-    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tChar}, tFloat));
-    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tInt}, tInt));
-    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tChar}, tChar));
-    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tInt}, tFloat));
-    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tInt}, tInt));
-    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tChar}, tInt));
-    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator-", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tChar}, tFloat));
-    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tInt}, tInt));
-    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tChar}, tChar));
-    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tInt}, tFloat));
-    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tInt}, tInt));
-    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tChar}, tInt));
-    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator*", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tChar}, tFloat));
-    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tInt}, tInt));
-    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tChar}, tChar));
-    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tInt}, tFloat));
-    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tInt}, tInt));
-    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tChar}, tInt));
-    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator/", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tChar}, tFloat));
-    globalEnvironment->addSymbol("operator%", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator%", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tInt}, tInt));
-    globalEnvironment->addSymbol("operator%", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator%", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tInt}, tInt));
-    globalEnvironment->addSymbol("operator%", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator%", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tInt}, tInt));
-    globalEnvironment->addSymbol("operator++", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator++", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt}, tInt));
-    globalEnvironment->addSymbol("operator++", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator++", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator++", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator++", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar}, tChar));
-    globalEnvironment->addSymbol("operator--", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator--", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt}, tInt));
-    globalEnvironment->addSymbol("operator--", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator--", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat}, tFloat));
-    globalEnvironment->addSymbol("operator--", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator--", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar}, tChar));
-    globalEnvironment->addSymbol("operator==", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator==", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tInt}, tBool));
-    globalEnvironment->addSymbol("operator==", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator==", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tFloat}, tBool));
-    globalEnvironment->addSymbol("operator==", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator==", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tChar}, tBool));
-    globalEnvironment->addSymbol("operator==", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator==", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tBool, tBool}, tBool));
-    globalEnvironment->addSymbol("operator==", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator==", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tInt}, tBool));
-    globalEnvironment->addSymbol("operator==", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator==", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tChar}, tBool));
-    globalEnvironment->addSymbol("operator!=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator!=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tInt}, tBool));
-    globalEnvironment->addSymbol("operator!=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator!=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tFloat}, tBool));
-    globalEnvironment->addSymbol("operator!=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator!=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tChar}, tBool));
-    globalEnvironment->addSymbol("operator!=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator!=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tBool, tBool}, tBool));
-    globalEnvironment->addSymbol("operator!=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator!=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tInt}, tBool));
-    globalEnvironment->addSymbol("operator!=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator!=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tChar}, tBool));
-    globalEnvironment->addSymbol("operator>", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator>", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tInt}, tBool));
-    globalEnvironment->addSymbol("operator>", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator>", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tFloat}, tBool));
-    globalEnvironment->addSymbol("operator>", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator>", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tChar}, tBool));
-    globalEnvironment->addSymbol("operator>", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator>", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tInt}, tBool));
-    globalEnvironment->addSymbol("operator>", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator>", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tChar}, tBool));
-    globalEnvironment->addSymbol("operator>=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator>=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tInt}, tBool));
-    globalEnvironment->addSymbol("operator>=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator>=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tFloat}, tBool));
-    globalEnvironment->addSymbol("operator>=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator>=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tChar}, tBool));
-    globalEnvironment->addSymbol("operator>=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator>=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tInt}, tBool));
-    globalEnvironment->addSymbol("operator>=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator>=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tChar}, tBool));
-    globalEnvironment->addSymbol("operator<", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator<", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tInt}, tBool));
-    globalEnvironment->addSymbol("operator<", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator<", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tFloat}, tBool));
-    globalEnvironment->addSymbol("operator<", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator<", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tChar}, tBool));
-    globalEnvironment->addSymbol("operator<", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator<", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tInt}, tBool));
-    globalEnvironment->addSymbol("operator<", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator<", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tChar}, tBool));
-    globalEnvironment->addSymbol("operator<=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator<=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tInt}, tBool));
-    globalEnvironment->addSymbol("operator<=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator<=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tFloat, tFloat}, tBool));
-    globalEnvironment->addSymbol("operator<=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator<=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tChar}, tBool));
-    globalEnvironment->addSymbol("operator<=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator<=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tChar, tInt}, tBool));
-    globalEnvironment->addSymbol("operator<=", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator<=", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tInt, tChar}, tBool));
-    globalEnvironment->addSymbol("operator!", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator!", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tBool}, tBool));
-    globalEnvironment->addSymbol("operator&&", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator&&", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tBool, tBool}, tBool));
-    globalEnvironment->addSymbol("operator||", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator||", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tBool, tBool}, tBool));
 
     // FIXME : temporary, to be removed later as string is part of stl
-    auto tString = globalEnvironment->addSymbol("string", new Position(0, 0, "builtin"), Symbol::SymbolType::TYPE)
+    auto tString = globalEnvironment->addSymbol("string", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
             ->setSignature(new Type(new Identifier("string")));
-    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolType::FUNCTION)
+    globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tString, tString}, tString));
     // FIXME : end of fixme
 
     return globalEnvironment;
 }
 
-Symbol *Environment::addSymbol(const std::string &name, Position *position, Symbol::SymbolType type) {
+Symbol *Environment::addSymbol(const std::string &name, Position *position, Symbol::SymbolKind type) {
     auto *symbol = new Symbol(name, position, type);
     _symbols.push_back(symbol);
 
