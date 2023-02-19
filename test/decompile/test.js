@@ -22,7 +22,7 @@ module.exports = {
                 // Push first to temp file
                 fs.writeFileSync(__dirname + '/temp.fil', first);
                 // Decompile file second
-                const second = execSync(filc + ' ' + __dirname + '/temp.fil -d 2> err.txt').toString();
+                const second = execSync(filc + ' ' + __dirname + '/temp.fil -d 2>> err.txt').toString();
 
                 const errs = fs.readFileSync('err.txt').toString();
                 if (errs !== '') {
