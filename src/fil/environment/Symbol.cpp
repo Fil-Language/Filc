@@ -1,7 +1,7 @@
 /**
  *   === Fil compiler ===
  * Created by Kevin Traini
- *      Under GPL-3.0
+ *        Under MIT
  * -----------------------
  */
 #include "Symbol.h"
