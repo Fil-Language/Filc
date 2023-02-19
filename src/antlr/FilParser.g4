@@ -73,100 +73,31 @@ expr returns[AbstractExpr *tree]
     | e3=assignation {
         $tree = $e3.tree;
     }
-    | e10=function_call {
-        $tree = $e10.tree;
+    | e4=function_call {
+        $tree = $e4.tree;
     }
-    | e4=IDENTIFIER {
-        $tree = new Identifier($e4.text);
-        $tree->setPosition($e4);
-    }
-    | e5=calcul {
-        $tree = $e5.tree;
-    }
-    | e6=function {
+    | e6=unary_calcul {
         $tree = $e6.tree;
     }
-    | e8=lambda {
-        $tree = $e8.tree;
+    | e7=expr e8=binary_operator e9=expr {
+        $tree = new BinaryCalcul($e7.tree, $e8.tree, $e9.tree);
+        $tree->setPosition($e7.start);
     }
-    | e9=control {
-        $tree = $e9.tree;
+    | e10=function {
+        $tree = $e10.tree;
     }
-    | e12=parenthesis_body {
+    | e11=lambda {
+        $tree = $e11.tree;
+    }
+    | e12=control {
         $tree = $e12.tree;
     }
-    // Rule for binary calcul, need to be here to avoid left-recursion errors
-    // Long but needed, the higher the most priority, the lower the less priority
-    // The groups are for operators with same priority
-    // TODO : find a way to move this part in another rule without the left-recursion error
-    | b1=expr STAR b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::STAR), $b2.tree);
-        $tree->setPosition($b1.start);
+    | e13=parenthesis_body {
+        $tree = $e13.tree;
     }
-    | b1=expr DIV b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::DIV), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-    | b1=expr MOD b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::MOD), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-
-    | b1=expr PLUS b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::PLUS), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-    | b1=expr MINUS b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::MINUS), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-
-    | b1=expr FLEFT b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::FLEFT), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-    | b1=expr FRIGHT b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::FRIGHT), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-
-    | b1=expr LESS b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::LESS), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-    | b1=expr GREATER b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::GREATER), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-    | b1=expr EQEQ b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::EQEQ), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-    | b1=expr LEQ b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::LEQ), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-    | b1=expr GEQ b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::GEQ), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-    | b1=expr NEQ b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::NEQ), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-
-    | b1=expr AND b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::AND), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-    | b1=expr OR b2=expr {
-        $tree = new BinaryCalcul($b1.tree, new Operator(Operator::OR), $b2.tree);
-        $tree->setPosition($b1.start);
-    }
-
-    | r=RETURN e7=expr {
-        $tree = new Return($e7.tree);
-        $tree->setPosition($r);
+    | e5=IDENTIFIER {
+        $tree = new Identifier($e5.text);
+        $tree->setPosition($e5);
     }
     ;
 
@@ -267,11 +198,6 @@ type returns[AbstractType *tree]
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-calcul returns[UnaryCalcul *tree]
-    : c=unary_calcul {
-        $tree = $c.tree;
-    };
-
 unary_calcul returns[UnaryCalcul *tree]
     : i1=IDENTIFIER o1=post_operator {
         auto id = new Identifier($i1.text);
@@ -321,6 +247,72 @@ pre_operator returns[Operator *tree]
         $tree = new Operator(Operator::NOT);
         $tree->setPosition($o5);
     };
+
+binary_operator returns[Operator *tree]
+    : b1=STAR {
+          $tree = new Operator(Operator::STAR);
+          $tree->setPosition($b1);
+      }
+      | b2=DIV {
+          $tree = new Operator(Operator::DIV);
+          $tree->setPosition($b2);
+      }
+      | b3=MOD {
+          $tree = new Operator(Operator::MOD);
+          $tree->setPosition($b3);
+      }
+
+      | b4=PLUS {
+          $tree = new Operator(Operator::PLUS);
+          $tree->setPosition($b4);
+      }
+      | b5=MINUS {
+          $tree = new Operator(Operator::MINUS);
+          $tree->setPosition($b5);
+      }
+
+      | b6=FLEFT {
+          $tree = new Operator(Operator::FLEFT);
+          $tree->setPosition($b6);
+      }
+      | b7=FRIGHT {
+          $tree = new Operator(Operator::FRIGHT);
+          $tree->setPosition($b7);
+      }
+
+      | b8=LESS {
+          $tree = new Operator(Operator::LESS);
+          $tree->setPosition($b8);
+      }
+      | b9=GREATER {
+          $tree = new Operator(Operator::GREATER);
+          $tree->setPosition($b9);
+      }
+      | b10=EQEQ {
+          $tree = new Operator(Operator::EQEQ);
+          $tree->setPosition($b10);
+      }
+      | b11=LEQ {
+          $tree = new Operator(Operator::LEQ);
+          $tree->setPosition($b11);
+      }
+      | b12=GEQ {
+          $tree = new Operator(Operator::GEQ);
+          $tree->setPosition($b12);
+      }
+      | b13=NEQ {
+          $tree = new Operator(Operator::NEQ);
+          $tree->setPosition($b13);
+      }
+
+      | b14=AND {
+          $tree = new Operator(Operator::AND);
+          $tree->setPosition($b14);
+      }
+      | b15=OR {
+          $tree = new Operator(Operator::OR);
+          $tree->setPosition($b15);
+      };
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 

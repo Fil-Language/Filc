@@ -7,9 +7,9 @@
 				[BinaryCalcul] <operator:==> <type:bool>
 					[Identifier] <name:n> <type:int>
 					[IntegerLiteral] <value:0>
-				[Return] <type:int>
+				<then>
 					[IntegerLiteral] <value:1>
-				[Return] <type:int>
+				<else>
 					[BinaryCalcul] <operator:*> <type:int>
 						[Identifier] <name:n> <type:int>
 						[FunctionCall] <name:fact>

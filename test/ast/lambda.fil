@@ -1,3 +1,3 @@
 module lambda
 
-val l = () -> { return 42 }
+val l = () -> { 42 }

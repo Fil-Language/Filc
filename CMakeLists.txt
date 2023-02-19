@@ -92,7 +92,7 @@ add_executable(filc
         src/fil/ast/VariableDeclaration.cpp src/fil/ast/Type.cpp src/fil/ast/Assignation.cpp src/fil/ast/Identifier.cpp
         src/fil/ast/Operator.cpp src/fil/ast/UnaryCalcul.cpp src/fil/ast/Function.cpp
         src/fil/ast/FunctionDeclaration.cpp src/fil/ast/FunctionParam.cpp src/fil/ast/BlockBody.cpp
-        src/fil/ast/Return.cpp src/fil/ast/Lambda.cpp src/fil/ast/LambdaType.cpp src/fil/ast/If.cpp
+        src/fil/ast/Lambda.cpp src/fil/ast/LambdaType.cpp src/fil/ast/If.cpp
         src/fil/ast/Switch.cpp src/fil/ast/SwitchCase.cpp src/fil/ast/SwitchPattern.cpp src/fil/ast/ForI.cpp
         src/fil/ast/ForICondition.cpp src/fil/ast/ForIter.cpp src/fil/ast/ForIterCondition.cpp src/fil/ast/While.cpp
         src/fil/ast/FunctionCall.cpp src/fil/ast/BinaryCalcul.cpp src/fil/ast/ParenthesisBody.cpp

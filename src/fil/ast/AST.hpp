@@ -422,22 +422,6 @@ namespace ast {
 
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 
-    class Return : public AbstractExpr {
-    public:
-        explicit Return(AbstractExpr *expr);
-
-        std::string decompile(int indent) const override;
-
-        bool isReturn() const override;
-
-        std::string dump(int indent) const override;
-
-    private:
-        AbstractExpr *_expr;
-    };
-
-    // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-
     class Lambda : public AbstractExpr {
     public:
         Lambda(const std::vector<FunctionParam *> &params, AbstractType *type, AbstractExpr *body);

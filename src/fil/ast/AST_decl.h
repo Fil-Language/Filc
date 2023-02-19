@@ -57,8 +57,6 @@ namespace ast {
 
     class Function;
 
-    class Return;
-
     class Lambda;
 
     class If;

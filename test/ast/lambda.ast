@@ -3,6 +3,5 @@
 		[Assignation] <type:() -> int>
 			[Lambda] <type:() -> int>
 				[BlockBody] <type:int>
-					[Return] <type:int>
-						[IntegerLiteral] <value:42>
+					[IntegerLiteral] <value:42>
 

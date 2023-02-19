@@ -27,8 +27,10 @@ string If::dump(int indent) const {
                  "<type:" + _exprType->getName() + ">\n";
 
     res += _condition->dump(indent + 1);
+    res += string(indent, '\t') + "<then>\n";
     res += _then->dump(indent + 1);
     if (_else) {
+        res += string(indent, '\t') + "<else>\n";
         res += _else->dump(indent + 1);
     }
 
