@@ -1,6 +1,6 @@
 module function4
 
-fun fact(n : int) {
+fun fact(n : int) : int {
     if (n == 0)
         1
     else

@@ -1,5 +1,5 @@
 module export3
 
-export val a = 2
+export val a : int = 2
 
-export val b = 3
+export val b : int = 3

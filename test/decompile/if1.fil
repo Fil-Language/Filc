@@ -1,5 +1,5 @@
 module if1
 
-val res = if (true) {
+val res : int = if (true) {
     1
 }

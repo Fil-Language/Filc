@@ -1,3 +1,3 @@
 module export2
 
-export fun myFun() = 1
+export fun myFun() : int = 1

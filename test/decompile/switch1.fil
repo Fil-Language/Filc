@@ -1,6 +1,6 @@
 module switch1
 
-val a = switch (1 == 1) {
+val a : int = switch (1 == 1) {
     true -> 42
     false -> 21
     default -> -1

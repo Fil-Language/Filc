@@ -1,3 +1,3 @@
 module val1
 
-val hello = "Hello World"
+val hello : String = "Hello World"

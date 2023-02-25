@@ -1,5 +1,5 @@
 module fil
 
-export fun test() {
-    return 2
+export fun test() : int {
+    2
 }

@@ -155,13 +155,11 @@ variable_declaration returns[VariableDeclaration *tree]
     } | v=VAR) i=IDENTIFIER {
         name = new Identifier($i.text);
         name->setPosition($i);
-    } ((COLON t=type {
+    } COLON t=type {
         vt = $t.tree;
-    }) | (COLON t=type {
-        vt = $t.tree;
-    })? a=assignation {
+    } (a=assignation {
         va = $a.tree;
-    });
+    })?;
 
 assignation returns[Assignation *tree]
     : s=EQ e=expr {
@@ -336,9 +334,9 @@ function_declaration returns[FunctionDeclaration *tree]
 }
     : f=FUN i=function_identifier LPAREN (p=function_params {
         params = $p.tree;
-    })? RPAREN (t=function_type {
+    })? RPAREN t=function_type {
         ft = $t.tree;
-    })?;
+    };
 
 function_identifier returns[std::string text]
     : (o=OPERATOR f=function_operator) {
@@ -442,9 +440,9 @@ lambda returns[Lambda *tree]
 }
     : s=LPAREN (p=function_params {
         lp = $p.tree;
-    })? RPAREN (t=function_type {
+    })? RPAREN t=function_type {
         lt = $t.tree;
-    })? ARROW (b1=expr {
+    } ARROW (b1=expr {
         lb = $b1.tree;
     } | b2=parenthesis_body {
         lb = $b2.tree;

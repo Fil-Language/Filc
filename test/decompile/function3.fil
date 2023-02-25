@@ -1,5 +1,5 @@
 module function3
 
-fun test() (
+fun test() : String (
     "Are you sure? " + "Maybe..."
 )

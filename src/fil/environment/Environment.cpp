@@ -200,8 +200,8 @@ Environment *Environment::getGlobalEnvironment() {
             ->setSignature(new LambdaType({tBool, tBool}, tBool));
 
     // FIXME : temporary, to be removed later as string is part of stl
-    auto tString = globalEnvironment->addSymbol("string", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
-            ->setSignature(new Type(new Identifier("string")));
+    auto tString = globalEnvironment->addSymbol("String", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
+            ->setSignature(new Type(new Identifier("String")));
     globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tString, tString}, tString));
     // FIXME : end of fixme
