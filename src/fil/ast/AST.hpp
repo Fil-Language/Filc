@@ -45,8 +45,6 @@ namespace ast {
 
         virtual bool isFunc() const;
 
-        virtual bool isReturn() const;
-
         AbstractType *getExprType() const;
 
     protected:
@@ -67,16 +65,16 @@ namespace ast {
 
         std::string dump(int indent) const override;
 
-        bool hasMain() const;
+        //bool hasMain() const;
 
         void setEnvironment(Environment *environment);
 
-        void resolveEnvironment();
+        //void resolveEnvironment();
 
     private:
-        void mergeImports();
+        //void mergeImports();
 
-        Environment *getPublicEnvironment() const;
+        //Environment *getPublicEnvironment() const;
 
     private:
         std::string _module;
