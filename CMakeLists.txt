@@ -117,5 +117,5 @@ enable_testing()
 find_program(BASH_EXECUTABLE NAMES bash REQUIRED)
 add_test(
         NAME tests
-        COMMAND ${BASH_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/test.sh "${CMAKE_CURRENT_SOURCE_DIR}/test"
+        COMMAND ${BASH_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/run_tests.sh "${CMAKE_CURRENT_SOURCE_DIR}/test"
 )
