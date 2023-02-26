@@ -4,6 +4,9 @@
 
 - Add `--debug` option to compile with debug information
 - Add `-o,--out` option to specify executable name
+- Change base grammar to be more functional : remove `return` and `functionCall` + transform `()` to be an operator
+- Override `BaseErrorListener` of Antlr to use my `ErrorsRegister`
+- Specify type is mandatory, so no more type inference
 
 ## v0.2.0
 
