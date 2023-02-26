@@ -31,11 +31,13 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         file.close();
         return 1;
     }
+    file.close();
 
     try {
         ErrorsRegister::init();
 
-        ANTLRInputStream input(file);
+        ANTLRFileStream input;
+        input.loadFromFile(_filename);
         FilLexer lexer(&input);
         CommonTokenStream tokens(&lexer);
 
@@ -48,15 +50,9 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
 
         ErrorsRegister::dump(cerr);
         if (ErrorsRegister::containsError()) {
-            file.close();
-
             return 1;
         }
         ErrorsRegister::clean();
-
-        if (file.is_open()) {
-            file.close();
-        }
 
         if (flag == DECOMPILE) {
             cout << program->decompile(0) << endl;
@@ -87,10 +83,6 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         return 1;
     }
 
-    if (file.is_open()) {
-        file.close();
-    }
-
     return 0;
 }
 
@@ -116,8 +108,9 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
 #endif
 
     // Lambda to parse the file and return the AST
-    auto getProgram = [moduleName](ifstream &file) {
-        ANTLRInputStream input(file);
+    auto getProgram = [moduleName](const string &filename) {
+        ANTLRFileStream input;
+        input.loadFromFile(filename);
         FilLexer lexer(&input);
         CommonTokenStream tokens(&lexer);
 
@@ -129,8 +122,6 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         Program *program = parser.parseTree();
         imports[moduleName] = program;
 
-        file.close();
-
         return program;
     };
 
@@ -138,14 +129,16 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
     auto filename = _currentDir + ssep + replace(moduleName, '.', sep) + ".fil";
     ifstream file(filename);
     if (file.is_open()) {
-        return getProgram(file);
+        file.close();
+        return getProgram(filename);
     }
     // ----
     filename = _currentDir + ssep + replace(moduleName, '.', sep) + ssep +
                *(split(moduleName, '.').end() - 1) + ".fil";
     file = ifstream(filename);
     if (file.is_open()) {
-        return getProgram(file);
+        file.close();
+        return getProgram(filename);
     }
 
     // Special case for the standard library
@@ -163,7 +156,8 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         filename = path + ssep + replace(moduleName, '.', sep) + ".fil";
         file = ifstream(filename);
         if (file.is_open()) {
-            return getProgram(file);
+            file.close();
+            return getProgram(filename);
         }
         // ----
         filename = path + ssep;
@@ -171,7 +165,8 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         filename += *(split(moduleName, '.').end() - 1) + ".fil";
         file = ifstream(filename);
         if (file.is_open()) {
-            return getProgram(file);
+            file.close();
+            return getProgram(filename);
         }
     }
 
