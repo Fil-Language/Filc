@@ -7,6 +7,7 @@
 - Change base grammar to be more functional : remove `return` and `functionCall` + transform `()` to be an operator
 - Override `BaseErrorListener` of Antlr to use my `ErrorsRegister`
 - Specify type is mandatory, so no more type inference
+- Add a script to easily change the version
 
 ## v0.2.0
 
