@@ -1,5 +1,6 @@
 require('colors');
 const fs = require('fs');
+const {execSync} = require('child_process');
 
 console.log('    _______ __    \n' +
     '   / ____(_) /____\n' +
@@ -17,6 +18,7 @@ let passed = 0; // Number of passed tests
 let n_total = 0; // Number of single tests
 let n_passed = 0; // Number of passed single tests
 let tests = [
+    {dir: 'decompile', name: 'Decompile', command: '-d'},
 ]; // Array of tests
 
 const f_passed = (name) => {
@@ -36,6 +38,82 @@ const f_ignore = (name) => {
 
 const f_log = (msg) => {
     fs.writeFileSync('log.txt', msg, {flag: 'a'});
+}
+
+const run_test = (dir, command) => {
+    const tests = fs.readdirSync(dir).filter(f => f.endsWith('.fil'));
+
+    if (tests.length === 0) {
+        f_log('No tests found\n');
+        return undefined;
+    }
+
+    let total = 0;
+    let passed = 0;
+    for (const test of tests) {
+        total++;
+        try {
+            const path = `${dir}/${test}`;
+            const name = test.replace('.fil', '');
+            if (!fs.existsSync(`${dir}/${name}.res`)) {
+                f_ignore(test);
+                f_log(`- ${test} ignored\n`);
+                passed++;
+                continue;
+            }
+
+            const pass = name.split('_')[0]; // If the test is pass of fail
+            if (pass !== 'pass' && pass !== 'fail') {
+                f_ignore(test);
+                f_log(`- ${test} ignored\n`);
+                passed++;
+                continue;
+            }
+
+            const result = execSync(`${filc} ${command} ${path} 2> err.txt`).toString();
+            const expected = fs.readFileSync(`${dir}/${name}.res`).toString();
+            const errs = fs.readFileSync('err.txt').toString();
+
+            if (pass) { // If the test should pass
+                if (errs !== '') {
+                    f_failed(test);
+                    f_log(`- ${test} failed\n`);
+                    f_log(`Error: ${errs}\n`);
+                } else
+                    // Result
+                if (result === expected) {
+                    f_passed(test);
+                    f_log(`- ${test} passed\n`);
+                    passed++;
+                } else {
+                    f_failed(test);
+                    f_log(`- ${test} failed\n`);
+                    f_log(`Result: ${result}\n`);
+                    f_log(`Expected: ${expected}\n`);
+                }
+            } else { // If the test should fail
+                if (errs !== '' && errs === expected) {
+                    f_passed(test);
+                    f_log(`- ${test} passed\n`);
+                    passed++;
+                } else {
+                    f_failed(test);
+                    f_log(`- ${test} failed\n`);
+                    f_log(`Error: ${errs}\n`);
+                    f_log(`Expected: ${expected}\n`);
+                }
+            }
+        } catch (e) {
+            f_failed(test);
+            f_log(`- ${test} failed\n`);
+            f_log(`Error: ${fs.readFileSync('err.txt').toString()}\n`);
+        }
+    }
+
+    // Remove temp file
+    fs.rmSync('err.txt', {force: true});
+
+    return passed === total;
 }
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
@@ -63,15 +141,14 @@ if (tests.length > 0) {
     console.log(`Running ${tests.length} tests...`);
     let p_passed = 0;
     let p_total = 0;
-    for (const test of tests) {
+    for (const {dir, name, command} of tests) {
         console.log('');
         total++;
 
         try {
-            const {test_f, name} = require('./' + test);
             console.log(` ${name} `.bgBlue)
             f_log(`=== ${name} ===\n`);
-            const result = test_f(filc, f_passed, f_failed, f_ignore, f_log);
+            const result = run_test(dir, command);
             f_log(`--> ${result} <--\n`)
             f_log(`=== ${name} ===\n`);
 
@@ -89,8 +166,8 @@ if (tests.length > 0) {
                     break;
             }
         } catch (e) {
-            console.log(` ${test} ` + ' Not found '.bgMagenta);
-            f_log(`${test} not found\n`);
+            console.log(` ${name} ` + ' Not found '.bgMagenta);
+            f_log(`${name} not found\n`);
         }
 
         p_passed = n_passed;

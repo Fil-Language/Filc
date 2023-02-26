@@ -32,7 +32,7 @@ prog returns[Program *tree]
     $tree = new Program($m.text, imports, exprs);
 }
     : m=module (i=import_ {
-        imports.push_back($i.tree);
+        imports.push_back($i.text);
     })* (exported=EXPORT? e=expr {
         auto e = $e.tree;
         if (e)
