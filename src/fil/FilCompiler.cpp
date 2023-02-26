@@ -61,7 +61,7 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         }
 
         // Resolve environement
-        //program->resolveEnvironment();
+        program->resolveEnvironment();
 
         ErrorsRegister::dump(cerr);
         if (ErrorsRegister::containsError()) {
