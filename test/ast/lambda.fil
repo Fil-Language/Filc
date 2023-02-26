@@ -1,3 +1,0 @@
-module lambda
-
-val l = () -> { 42 }

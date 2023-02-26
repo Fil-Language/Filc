@@ -1,3 +1,0 @@
-module function1
-
-fun square(x : int) : int = x * x

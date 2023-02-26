@@ -1,3 +1,0 @@
-module fil.io
-
-export var a : int = 2

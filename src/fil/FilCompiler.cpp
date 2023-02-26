@@ -19,6 +19,7 @@ using namespace antlr4;
 using namespace antlrcppfil;
 
 string FilCompiler::_currentDir;
+map<string, Program *> FilCompiler::_modules;
 
 FilCompiler::FilCompiler(string filename) : _filename(std::move(filename)) {
     _currentDir = _filename.substr(0, _filename.find_last_of("/\\"));
@@ -87,16 +88,14 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
 }
 
 Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
-    static auto imports = map<string, Program *>();
-
     // Check if the module is already imported
-    if (imports.find(moduleName) != imports.end()) {
-        return imports[moduleName];
+    if (_modules.find(moduleName) != _modules.end()) {
+        return _modules[moduleName];
     } else {
         // It fixes the infinite loop of import
         // When it will resolve the environment, it will look again for the module
         // and replace nullptr by the correct one
-        imports[moduleName] = nullptr;
+        _modules[moduleName] = nullptr;
     }
 
 #ifdef _WIN32
@@ -120,7 +119,7 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         parser.removeErrorListeners();
         parser.addErrorListener(new ParserErrorListener());
         Program *program = parser.parseTree();
-        imports[moduleName] = program;
+        _modules[moduleName] = program;
 
         return program;
     };
@@ -144,7 +143,7 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
     // Special case for the standard library
     if (moduleName == "fil.system") {
         auto prog = getSystemProgram();
-        imports[moduleName] = prog;
+        _modules[moduleName] = prog;
 
         return prog;
     }

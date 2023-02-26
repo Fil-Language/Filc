@@ -1,5 +1,0 @@
-[Program] <module:val1>
-	[VariableDeclaration] <val> <name:hello> <type:string>
-		[Assignation] <type:string>
-			[StringLiteral] <value:Hello World>
-

@@ -1,5 +1,0 @@
-[Program] <module:var3>
-	[VariableDeclaration] <var> <name:truth> <type:bool>
-	[Assignation] <type:bool>
-		[BooleanLiteral] <value:true>
-

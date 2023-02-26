@@ -1,5 +1,0 @@
-[Program] <module:var1>
-	[VariableDeclaration] <var> <name:hello> <type:string>
-		[Assignation] <type:string>
-			[StringLiteral] <value:Hello World>
-

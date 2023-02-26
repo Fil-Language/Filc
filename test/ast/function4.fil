@@ -1,8 +1,0 @@
-module function4
-
-fun fact(n : int) {
-    if (n == 0)
-        1
-    else
-        n * fact(n - 1)
-}

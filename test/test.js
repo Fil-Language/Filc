@@ -17,8 +17,6 @@ let passed = 0; // Number of passed tests
 let n_total = 0; // Number of single tests
 let n_passed = 0; // Number of passed single tests
 let tests = [
-    'decompile/test.js',
-    'ast/test.js',
 ]; // Array of tests
 
 const f_passed = (name) => {

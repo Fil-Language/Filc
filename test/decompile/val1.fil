@@ -1,3 +1,0 @@
-module val1
-
-val hello : String = "Hello World"

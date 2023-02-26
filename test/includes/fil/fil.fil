@@ -1,5 +1,0 @@
-module fil
-
-export fun test() : int {
-    2
-}

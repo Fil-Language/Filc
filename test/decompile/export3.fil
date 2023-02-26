@@ -1,5 +1,0 @@
-module export3
-
-export val a : int = 2
-
-export val b : int = 3

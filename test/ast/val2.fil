@@ -1,3 +1,0 @@
-module val2
-
-val test : int

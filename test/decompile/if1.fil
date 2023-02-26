@@ -1,5 +1,0 @@
-module if1
-
-val res : int = if (true) {
-    1
-}

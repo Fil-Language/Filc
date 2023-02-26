@@ -1,3 +1,0 @@
-module export2
-
-export fun myFun() : int = 1

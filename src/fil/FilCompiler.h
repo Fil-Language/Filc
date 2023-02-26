@@ -7,7 +7,7 @@
 #ifndef FILC_FILCOMPILER_H
 #define FILC_FILCOMPILER_H
 
-#include "AST.hpp"
+#include "AST_decl.h"
 #include <string>
 #include "antlr4-runtime.h"
 
@@ -25,6 +25,7 @@ private:
 private:
     std::string _filename;
     static std::string _currentDir;
+    static std::map<std::string, ast::Program *> _modules;
 };
 
 typedef enum FLAGS {

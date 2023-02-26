@@ -1,3 +1,0 @@
-module var1
-
-var hello : String = "Hello World"

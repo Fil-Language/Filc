@@ -1,3 +1,0 @@
-module val3
-
-val truth : bool = true

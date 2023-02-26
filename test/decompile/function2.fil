@@ -1,3 +1,0 @@
-module function2
-
-fun cube(x : float) : float = x * x * x

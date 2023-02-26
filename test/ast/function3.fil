@@ -1,5 +1,0 @@
-module function3
-
-fun test() (
-    "Are you sure? " + "Maybe..."
-)

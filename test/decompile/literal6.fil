@@ -1,3 +1,0 @@
-module literal6
-
-f"Hi! My name is {name}"

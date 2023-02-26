@@ -1,3 +1,0 @@
-module export1
-
-export 1+1

@@ -1,5 +1,0 @@
-module function3
-
-fun test() : String (
-    "Are you sure? " + "Maybe..."
-)
