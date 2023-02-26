@@ -70,8 +70,8 @@ npm test
 If during compilation you got a warning with a dev code, please open an issue on GitHub with the warning message and
 your code.
 
-|   Dev code    | Meaning                                                  |                 File                  |
-|:-------------:|----------------------------------------------------------|:-------------------------------------:|
-| <kbd>2</kdbd> | A variable declaration is resolved with an expected type | `src/fil/ast/VariableDeclaration.cpp` |
+|   Dev code   | Meaning                                                          |           File            |
+|:------------:|------------------------------------------------------------------|:-------------------------:|
+| <kbd>2</kbd> | A module was not imported during part A, and no error was raised | `src/fil/ast/Program.cpp` |
 
 These codes are for events that should not happen, but if they do, it's better to fix them.

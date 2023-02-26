@@ -29,6 +29,12 @@ std::string printMessage(const std::string &message,
 Message::Message(const std::string &message, Position *position)
         : _message(message), _position(position) {}
 
+BasicWarning::BasicWarning(const std::string &message) : Message(message, nullptr) {}
+
+std::string BasicWarning::dump() const {
+    return "\033[1;33mWARNING: " + _message + "\033[0m\n";
+}
+
 Warning::Warning(const std::string &message, Position *position) : Message(message, position) {}
 
 std::string Warning::dump() const {

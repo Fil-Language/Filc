@@ -25,7 +25,7 @@ Program* parseTree() {
 
 prog returns[Program *tree]
 @init {
-    auto imports = vector<Program *>();
+    auto imports = vector<std::string>();
     auto exprs = vector<AbstractExpr *>();
 }
 @after {
@@ -48,12 +48,12 @@ module returns[string text]
     })*
     ;
 
-import_ returns[Program *tree]
+import_ returns[std::string text]
 @init {
     string name;
 }
 @after {
-    $tree = FilCompiler::import(name, $s);
+    $text = FilCompiler::import(name, $s);
 }
     : s=USE i1=IDENTIFIER {
         name = $i1.text;

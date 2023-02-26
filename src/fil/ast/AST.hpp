@@ -58,7 +58,7 @@ namespace ast {
     class Program : public AST {
     public:
         Program(const std::string &module,
-                const std::vector<Program *> &imports,
+                const std::vector<std::string> &imports,
                 const std::vector<AbstractExpr *> &exprs);
 
         std::string decompile(int indent) const override;
@@ -71,7 +71,8 @@ namespace ast {
 
     private:
         std::string _module;
-        std::vector<Program *> _imports;
+        std::vector<std::string> _imports;
+        std::vector<Program *> _importedModules;
         std::vector<AbstractExpr *> _exprs;
         Environment *_environment;
 

@@ -87,14 +87,13 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
     return 0;
 }
 
-Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
+string FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
     // Check if the module is already imported
     if (_modules.find(moduleName) != _modules.end()) {
-        return _modules[moduleName];
+        return moduleName;
     } else {
         // It fixes the infinite loop of import
-        // When it will resolve the environment, it will look again for the module
-        // and replace nullptr by the correct one
+        // The nullptr is replaced by the Program pointer just after the parsing
         _modules[moduleName] = nullptr;
     }
 
@@ -120,8 +119,6 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         parser.addErrorListener(new ParserErrorListener());
         Program *program = parser.parseTree();
         _modules[moduleName] = program;
-
-        return program;
     };
 
     // Looking for the module in the current directory
@@ -129,7 +126,8 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
     ifstream file(filename);
     if (file.is_open()) {
         file.close();
-        return getProgram(filename);
+        getProgram(filename);
+        return moduleName;
     }
     // ----
     filename = _currentDir + ssep + replace(moduleName, '.', sep) + ssep +
@@ -137,15 +135,15 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
     file = ifstream(filename);
     if (file.is_open()) {
         file.close();
-        return getProgram(filename);
+        getProgram(filename);
+        return moduleName;
     }
 
     // Special case for the standard library
     if (moduleName == "fil.system") {
         auto prog = getSystemProgram();
         _modules[moduleName] = prog;
-
-        return prog;
+        return moduleName;
     }
 
     // Looking for the module in the include path $FIL_PATH
@@ -156,7 +154,8 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         file = ifstream(filename);
         if (file.is_open()) {
             file.close();
-            return getProgram(filename);
+            getProgram(filename);
+            return moduleName;
         }
         // ----
         filename = path + ssep;
@@ -165,7 +164,8 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         file = ifstream(filename);
         if (file.is_open()) {
             file.close();
-            return getProgram(filename);
+            getProgram(filename);
+            return moduleName;
         }
     }
 
@@ -177,7 +177,11 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
                          tkn->getTokenSource()->getSourceName())
     ));
 
-    return nullptr;
+    return "";
+}
+
+ast::Program *FilCompiler::getModule(const std::string &moduleName) {
+    return _modules[moduleName];
 }
 
 Program *FilCompiler::getSystemProgram() {

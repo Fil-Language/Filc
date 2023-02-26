@@ -24,6 +24,13 @@ protected:
     Position *_position;
 };
 
+class BasicWarning : public Message {
+public:
+    explicit BasicWarning(const std::string &message);
+
+    std::string dump() const override;
+};
+
 class Warning : public Message {
 public:
     Warning(const std::string &message, Position *position);

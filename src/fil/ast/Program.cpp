@@ -5,12 +5,13 @@
  * -----------------------
  */
 #include "AST.hpp"
+#include "FilCompiler.h"
 
 using namespace std;
 using namespace ast;
 
 Program::Program(const string &module,
-                 const vector<Program *> &imports,
+                 const vector<std::string> &imports,
                  const vector<AbstractExpr *> &exprs)
         : _module(module), _imports(imports), _exprs(exprs), _environment(nullptr), _resolved(false) {}
 
@@ -18,7 +19,7 @@ string Program::decompile(int indent) const {
     string result = "module " + _module + "\n\n";
 
     for (auto &import: _imports) {
-        result += "use " + import->_module + "\n";
+        result += "use " + import + "\n";
     }
 
     result += "\n";
@@ -31,7 +32,27 @@ string Program::decompile(int indent) const {
 }
 
 void Program::resolveEnvironment() {
-    // TODO : resolve imports
+    if (_resolved) // Fix infinite loop of resolve
+        return;
+    _resolved = true;
+
+    // Remove duplicate imports
+    sort(_imports.begin(), _imports.end());
+    _imports.erase(unique(_imports.begin(), _imports.end()), _imports.end());
+
+    // Resolve imports
+    for (auto &import: _imports) {
+        auto module = FilCompiler::getModule(import);
+        if (module == nullptr) {
+            ErrorsRegister::addWarning(
+                    new BasicWarning("\033[1mDev code 2\033[21m\nModule '" + import + "' not found")
+            );
+            continue;
+        }
+
+        module->resolveEnvironment();
+        _importedModules.push_back(module);
+    }
 
     // TODO : merge imports env to _environment
 
@@ -41,7 +62,7 @@ void Program::resolveEnvironment() {
 string Program::dump(int indent) const {
     string res = string(indent, '\t') + "[Program] <module:" + _module + ">\n";
 
-    for (auto &imp: _imports) {
+    for (auto &imp: _importedModules) {
         res += imp->dump(indent + 1);
     }
 

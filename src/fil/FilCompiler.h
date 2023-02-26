@@ -17,7 +17,9 @@ public:
 
     int compile(int flag, bool debug, const std::string &output);
 
-    static ast::Program *import(const std::string &moduleName, antlr4::Token *tkn);
+    static std::string import(const std::string &moduleName, antlr4::Token *tkn);
+
+    static ast::Program *getModule(const std::string &moduleName);
 
 private:
     static ast::Program *getSystemProgram();
