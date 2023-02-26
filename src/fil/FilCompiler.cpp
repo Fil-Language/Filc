@@ -9,6 +9,7 @@
 #include "FilLexer.h"
 #include "FilParser.h"
 #include "ErrorsRegister.h"
+#include "ParserErrorListener.h"
 
 #include <utility>
 #include <iostream>
@@ -41,6 +42,8 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         tokens.fill();
 
         FilParser parser(&tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(new ParserErrorListener());
         Program *program = parser.parseTree();
 
         ErrorsRegister::dump(cerr);
@@ -121,6 +124,8 @@ Program *FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         tokens.fill();
 
         FilParser parser(&tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(new ParserErrorListener());
         Program *program = parser.parseTree();
         imports[moduleName] = program;
 

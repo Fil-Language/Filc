@@ -33,7 +33,7 @@ public:
 
 class BasicError : public Message {
 public:
-    BasicError(const std::string &message);
+    explicit BasicError(const std::string &message);
 
     std::string dump() const override;
 };

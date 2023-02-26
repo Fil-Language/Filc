@@ -102,7 +102,7 @@ add_executable(filc
         src/fil/environment/Symbol.h
         # === Errors ===
         src/fil/errors/ErrorsRegister.cpp src/fil/errors/ErrorsRegister.h src/fil/errors/Message.h
-        src/fil/errors/Message.cpp
+        src/fil/errors/Message.cpp src/fil/errors/ParserErrorListener.cpp src/fil/errors/ParserErrorListener.h
         # === LLVM ===
         )
 target_link_libraries(filc antlr4_static ${llvm_libs})
