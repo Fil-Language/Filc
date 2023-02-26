@@ -35,6 +35,12 @@ Tests are written with [Node.js](https://nodejs.org), you need at least version 
 - [Setup Node.js](https://github.com/marketplace/actions/setup-node-js-environment)
 - [Install LLVM and Clang](https://github.com/marketplace/actions/install-llvm-and-clang)
 
+### `version.sh`
+
+This script is used to update the version badge and the file `src/VERSION.h`.
+
+- [HTTPie](https://github.com/httpie/httpie)
+
 ## Building and Testing
 
 If you want to build and test the compiler, please follow the steps below.
