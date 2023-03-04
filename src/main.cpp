@@ -7,6 +7,7 @@
 #include "cxxopts.hpp"
 #include "VERSION.h"
 #include "FilCompiler.h"
+#include "utils.h"
 #include <string>
 
 using namespace std;
@@ -57,6 +58,11 @@ int main(int argc, char **argv) {
         cout << options.help() << endl;
         return 1;
     }
+    string filename = result["filename"].as<string>();
+    if (extension(filename) != "fil") {
+        cout << "\033[1;31mError: \033[00m" << "Invalid file extension" << endl;
+        return 1;
+    }
 
     // Flags
     FLAGS flag = NONE;
@@ -72,7 +78,7 @@ int main(int argc, char **argv) {
     }
     string out = result["out"].as<string>();
 
-    auto compiler = FilCompiler(result["filename"].as<string>());
+    auto compiler = FilCompiler(filename);
 
     return compiler.compile(flag, debug, out);
 }

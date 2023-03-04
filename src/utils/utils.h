@@ -57,4 +57,6 @@ std::string to_string(char *str);
 
 std::vector<std::string> split(const std::string &str, char delim);
 
+std::string extension(const std::string &filename);
+
 #endif //FILC_UTILS_H

@@ -8,6 +8,7 @@
 - Override `BaseErrorListener` of Antlr to use my `ErrorsRegister`
 - Specify type is mandatory, so no more type inference
 - Add a script to easily change the version
+- Rewrite all tests
 
 ## v0.2.0
 

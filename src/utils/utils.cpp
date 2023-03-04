@@ -74,3 +74,8 @@ std::vector<std::string> split(const std::string &str, char delim) {
 
     return result;
 }
+
+std::string extension(const std::string &filename) {
+    auto dot = filename.find_last_of('.');
+    return filename.substr(dot + 1);
+}
