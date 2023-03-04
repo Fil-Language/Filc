@@ -17,6 +17,8 @@ let total = 0; // Number of tests
 let passed = 0; // Number of passed tests
 let n_total = 0; // Number of single tests
 let n_passed = 0; // Number of passed single tests
+let ignored = []; // Array of ignored tests
+let failed = []; // Array of failed tests
 let tests = [
     {dir: 'decompile', name: 'Decompile', command: '-d'},
 ]; // Array of tests
@@ -29,11 +31,13 @@ const f_passed = (name) => {
 const f_failed = (name) => {
     n_total++;
     console.log('  ' + '✗'.red + ' ' + name);
+    failed.push(name);
 }
 const f_ignore = (name) => {
     n_passed++;
     n_total++;
     console.log('  ' + '⚠'.yellow + ' ' + name);
+    ignored.push(name);
 }
 
 const f_log = (msg) => {
@@ -52,62 +56,63 @@ const run_test = (dir, command) => {
     let passed = 0;
     for (const test of tests) {
         total++;
-        try {
-            const path = `${dir}/${test}`;
-            const name = test.replace('.fil', '');
-            if (!fs.existsSync(`${dir}/${name}.res`)) {
-                f_ignore(test);
-                f_log(`- ${test} ignored\n`);
-                passed++;
-                continue;
-            }
 
-            const pass = name.split('_')[0]; // If the test is pass of fail
-            if (pass !== 'pass' && pass !== 'fail') {
-                f_ignore(test);
-                f_log(`- ${test} ignored\n`);
-                passed++;
-                continue;
-            }
-
-            const result = execSync(`${filc} ${command} ${path} 2> err.txt`).toString();
-            const expected = fs.readFileSync(`${dir}/${name}.res`).toString();
-            const errs = fs.readFileSync('err.txt').toString();
-
-            if (pass) { // If the test should pass
-                if (errs !== '') {
-                    f_failed(test);
-                    f_log(`- ${test} failed\n`);
-                    f_log(`Error: ${errs}\n`);
-                } else
-                    // Result
-                if (result === expected) {
-                    f_passed(test);
-                    f_log(`- ${test} passed\n`);
-                    passed++;
-                } else {
-                    f_failed(test);
-                    f_log(`- ${test} failed\n`);
-                    f_log(`Result: ${result}\n`);
-                    f_log(`Expected: ${expected}\n`);
-                }
-            } else { // If the test should fail
-                if (errs !== '' && errs === expected) {
-                    f_passed(test);
-                    f_log(`- ${test} passed\n`);
-                    passed++;
-                } else {
-                    f_failed(test);
-                    f_log(`- ${test} failed\n`);
-                    f_log(`Error: ${errs}\n`);
-                    f_log(`Expected: ${expected}\n`);
-                }
-            }
-        } catch (e) {
-            f_failed(test);
-            f_log(`- ${test} failed\n`);
-            f_log(`Error: ${fs.readFileSync('err.txt').toString()}\n`);
+        const path = `${dir}/${test}`;
+        const name = test.replace('.fil', '');
+        if (!fs.existsSync(`${dir}/${name}.res`)) {
+            f_ignore(test);
+            f_log(`- ${test} ignored\n`);
+            passed++;
+            continue;
         }
+
+        const pass = name.split('_')[0]; // If the test is pass of fail
+        if (pass !== 'pass' && pass !== 'fail') {
+            f_ignore(test);
+            f_log(`- ${test} ignored\n`);
+            passed++;
+            continue;
+        }
+
+        let result = '';
+        try {
+            result = execSync(`${filc} ${command} ${path} 2> err.txt`).toString();
+        } catch (e) {
+            // Ignore
+        }
+        const expected = fs.readFileSync(`${dir}/${name}.res`).toString();
+        const errs = fs.readFileSync('err.txt').toString();
+
+        if (pass === 'pass') { // If the test should pass
+            if (errs !== '') {
+                f_failed(test);
+                f_log(`- ${test} failed\n`);
+                f_log(`Error: ${errs}\n`);
+            } else
+                // Result
+            if (result === expected) {
+                f_passed(test);
+                f_log(`- ${test} passed\n`);
+                passed++;
+            } else {
+                f_failed(test);
+                f_log(`- ${test} failed\n`);
+                f_log(`Result: |${result}|\n`);
+                f_log(`Expected: |${expected}|\n`);
+            }
+        } else { // If the test should fail
+            if (errs !== '' && errs === expected) {
+                f_passed(test);
+                f_log(`- ${test} passed\n`);
+                passed++;
+            } else {
+                f_failed(test);
+                f_log(`- ${test} failed\n`);
+                f_log(`Error: |${errs}|\n`);
+                f_log(`Expected: |${expected}|\n`);
+            }
+        }
+
     }
 
     // Remove temp file
@@ -187,6 +192,22 @@ console.log('\n=== Conclusion ===\n'.magenta);
 console.log('Runs  : ' + ((passed === total) ? ' PASS '.bgGreen : ' FAIL '.bgRed) + `\t${passed}/${total}`);
 console.log('Tests : ' + ((n_passed === n_total) ? ' PASS '.bgGreen : ' FAIL '.bgRed) + `\t${n_passed}/${n_total}`);
 console.log('Time  : ' + `${test_time}ms`.bgBlue);
+
+console.log('\n');
+
+if (ignored.length > 0) {
+    console.log('Ignored tests:'.yellow);
+    for (const test of ignored) {
+        console.log(`- ${test}`);
+    }
+}
+
+if (failed.length > 0) {
+    console.log('Failed tests:'.red);
+    for (const test of failed) {
+        console.log(`- ${test}`);
+    }
+}
 
 console.log('\n');
 

@@ -16,14 +16,16 @@ Program::Program(const string &module,
         : _module(module), _imports(imports), _exprs(exprs), _environment(nullptr), _resolved(false) {}
 
 string Program::decompile(int indent) const {
-    string result = "module " + _module + "\n\n";
+    string result = "module " + _module + "\n";
 
+    if (!_imports.empty())
+        result += "\n";
     for (auto &import: _imports) {
         result += "use " + import + "\n";
     }
 
-    result += "\n";
-
+    if (!_exprs.empty())
+        result += "\n";
     for (auto &expr: _exprs) {
         result += (expr->isExported() ? "export " : "") + expr->decompile(indent) + "\n\n";
     }

@@ -56,7 +56,7 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         ErrorsRegister::clean();
 
         if (flag == DECOMPILE) {
-            cout << program->decompile(0) << endl;
+            cout << program->decompile(0);
 
             return 0;
         }

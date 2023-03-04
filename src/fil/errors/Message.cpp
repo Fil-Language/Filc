@@ -21,7 +21,7 @@ std::string printMessage(const std::string &message,
     std::string spaces = position->getColumn() > 0 ? std::string(position->getColumn() - 1, ' ') : "";
     res += spaces + color + "^" + reset + "\n";
 
-    return res + "\n";
+    return res;
 }
 
 // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
