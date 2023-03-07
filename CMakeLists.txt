@@ -109,13 +109,3 @@ target_link_libraries(filc antlr4_static ${llvm_libs})
 target_compile_options(filc PUBLIC -Wall)
 
 install(TARGETS filc DESTINATION bin)
-
-# _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-# Tests section
-
-enable_testing()
-find_program(BASH_EXECUTABLE NAMES bash REQUIRED)
-add_test(
-        NAME tests
-        COMMAND ${BASH_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/run_tests.sh "${CMAKE_CURRENT_SOURCE_DIR}/test"
-)
