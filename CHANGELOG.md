@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.0
+## v0.2.1
 
 - Add `--debug` option to compile with debug information
 - Add `-o,--out` option to specify executable name
