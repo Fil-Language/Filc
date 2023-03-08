@@ -425,7 +425,7 @@ namespace ast {
 
     class If : public AbstractExpr {
     public:
-        If(AbstractExpr *condition, AbstractExpr *then, AbstractExpr *else_);
+        If(AbstractExpr *condition, AbstractExpr *thenCase, AbstractExpr *elseCase);
 
         std::string decompile(int indent) const override;
 
