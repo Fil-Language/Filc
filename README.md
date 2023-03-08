@@ -4,8 +4,6 @@
 [![Tests](https://github.com/Fil-Language/Filc/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/Fil-Language/Filc/actions/workflows/test.yml)
 ![Version](version.svg)
 
-[![wakatime](https://wakatime.com/badge/user/c1e2386d-065c-4366-b163-d98f957273dc/project/4027e072-9adb-4c9e-a1a1-52cd4d188c7d.svg)](https://wakatime.com/badge/user/c1e2386d-065c-4366-b163-d98f957273dc/project/4027e072-9adb-4c9e-a1a1-52cd4d188c7d)
-
 [![CodeFactor](https://www.codefactor.io/repository/github/fil-language/filc/badge)](https://www.codefactor.io/repository/github/fil-language/filc)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/749c60420a9244dbac4ce1e0bd594f1e)](https://www.codacy.com/gh/Fil-Language/Filc/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Fil-Language/Filc&amp;utm_campaign=Badge_Grade)
 
