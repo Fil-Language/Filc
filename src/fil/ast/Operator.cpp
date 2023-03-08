@@ -16,7 +16,7 @@ Operator::Operator(AbstractExpr *index)
         : _op(ARRAY), _index(index) {}
 
 Operator::Operator(const vector<AbstractExpr *> &args)
-        : _op(FUNCTION), _args(args) {}
+        : _op(FUNCTION), _index(nullptr), _args(args) {}
 
 string to_string(Operator::Op op) {
     switch (op) {
@@ -76,7 +76,7 @@ string Operator::decompile(int indent) const {
             args += arg->decompile(0) + ", ";
         }
         if (!_args.empty()) {
-            args = args.substr(0, args.size() - 2);
+            args.resize(args.size() - 2);
         }
         return "(" + args + ")";
     } else {

@@ -11,9 +11,7 @@ using namespace std;
 using namespace ast;
 
 Environment::Environment(Environment *parent)
-        : _parent(parent) {
-    _symbols = std::deque<Symbol *>();
-}
+        : _parent(parent), _symbols(deque<Symbol *>()) {}
 
 Environment::~Environment() = default;
 

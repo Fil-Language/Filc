@@ -8,9 +8,8 @@
 
 ErrorsRegister *ErrorsRegister::_instance = nullptr;
 
-ErrorsRegister::ErrorsRegister() {
-    _messages = std::vector<Message *>();
-}
+ErrorsRegister::ErrorsRegister()
+        : _messages(std::vector<Message *>()) {}
 
 void ErrorsRegister::init() {
     if (_instance == nullptr)
