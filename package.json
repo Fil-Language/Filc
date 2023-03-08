@@ -2,10 +2,14 @@
     "name": "filc",
     "main": "test/test.js",
     "scripts": {
-        "test": "cd test && node test.js"
+        "test": "cd test && node test.js",
+        "lint": "cpplint --exclude=\"src/utils/*.hpp\" --recursive src"
     },
     "author": "Kevin Traini <kevin@ktraini.com>",
     "dependencies": {
         "colors": "^1.4.0"
+    },
+    "devDependencies": {
+        "cpplint.js": "^2.0.0"
     }
 }
