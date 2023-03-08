@@ -61,14 +61,7 @@ fragment UPPERCASE: [A-Z];
 fragment LOWERCASE: [a-z];
 fragment LETTER: LOWERCASE | UPPERCASE;
 fragment STRING_CHAR: ~('"' | '\\' | '\n');
-STRING:
-	'"' (STRING_CHAR | '\\"' | '\\\\')* '"' {
-        {
-            auto text = getText();
-            text = text.substr(1, text.size() - 2);
-            setText(text);
-        }
-};
+STRING: '"' (STRING_CHAR | '\\"' | '\\\\')* '"';
 CHARACTER: '\'' ~('\'' | '\\' | '\n') '\'';
 
 // Comments

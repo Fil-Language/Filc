@@ -9,8 +9,9 @@
 using namespace std;
 using namespace ast;
 
-StringLiteral::StringLiteral(const std::string &value)
-        : _value(value) {}
+StringLiteral::StringLiteral(const std::string &value) {
+    _value = value.substr(1, value.size() - 2);
+}
 
 string StringLiteral::decompile(int indent) const {
     return "\"" + _value + "\"";

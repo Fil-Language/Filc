@@ -26,8 +26,12 @@ string Program::decompile(int indent) const {
 
     if (!_exprs.empty())
         result += "\n";
-    for (auto &expr: _exprs) {
-        result += (expr->isExported() ? "export " : "") + expr->decompile(indent) + "\n\n";
+    for (auto it = _exprs.begin(); it != _exprs.end(); it++) {
+        result += ((*it)->isExported() ? "export " : "") + (*it)->decompile(indent) + "\n";
+
+        if (it + 1 != _exprs.end()) {
+            result += "\n";
+        }
     }
 
     return result;
