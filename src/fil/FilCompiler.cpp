@@ -10,6 +10,7 @@
 #include "FilParser.h"
 #include "ErrorsRegister.h"
 #include "ParserErrorListener.h"
+#include "LexerErrorListener.h"
 
 #include <utility>
 #include <iostream>
@@ -40,6 +41,8 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
         ANTLRFileStream input;
         input.loadFromFile(_filename);
         FilLexer lexer(&input);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(new LexerErrorListener());
         CommonTokenStream tokens(&lexer);
 
         tokens.fill();
