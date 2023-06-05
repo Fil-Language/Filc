@@ -32,6 +32,7 @@ grammar : [https://fil.ktraini.com/doc/advanced/grammar](https://fil.ktraini.com
 
 - [Checkout](https://github.com/marketplace/actions/checkout)
 - [Install LLVM and Clang](https://github.com/marketplace/actions/install-llvm-and-clang)
+- [Codacy coverage report](https://github.com/codacy/codacy-coverage-reporter-action)
 
 ### `version.sh`
 

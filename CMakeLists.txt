@@ -133,3 +133,14 @@ target_link_libraries(tests GTest::gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(tests)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
+    include(CodeCoverage)
+    append_coverage_compiler_flags()
+    setup_target_for_coverage_lcov(
+            NAME tests_coverage
+            EXECUTABLE ctest -j ${n_cores}
+            DEPENDENCIES tests filc
+            EXCLUDE "/usr" "build" "src/utils/cxxopts.hpp"
+    )
+endif () # CMAKE_BUILD_TYPE STREQUAL "Coverage"
