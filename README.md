@@ -26,14 +26,11 @@ grammar : [https://fil.ktraini.com/doc/advanced/grammar](https://fil.ktraini.com
 
 ### Tests
 
-Tests are written with [Node.js](https://nodejs.org), you need at least version 16.
-
-- [Colors](https://www.npmjs.com/package/colors)
+- [GoogleTest](https://google.github.io/googletest/)
 
 ### GitHub actions
 
 - [Checkout](https://github.com/marketplace/actions/checkout)
-- [Setup Node.js](https://github.com/marketplace/actions/setup-node-js-environment)
 - [Install LLVM and Clang](https://github.com/marketplace/actions/install-llvm-and-clang)
 
 ### `version.sh`

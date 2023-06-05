@@ -23,9 +23,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
 
       - name: Install LLVM
         uses: KyleMayes/install-llvm-action@v1
@@ -37,15 +34,5 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build
 
-      - name: Prepare tests
-        run: npm install
       - name: Run tests
-        run: npm test
-
-      - name: Archive tests logs
-        uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: tests-logs_${{ matrix.os }}
-          path: ${{github.workspace}}/test/log.txt
-          retention-days: 1
+        run: cd ${{github.workspace}}/build && ctest
