@@ -11,7 +11,6 @@ on:
       - "src/**"
       - "test/**"
       - ".github/workflows/coverage.yml"
-  workflow_dispatch:
 
 jobs:
   coverage:
@@ -35,4 +34,5 @@ jobs:
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: ${{github.workspace}}/build/coverage.info
+          coverage-reports: ${{github.workspace}}/build/coverage.capture
+          language: cpp

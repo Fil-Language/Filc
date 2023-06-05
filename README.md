@@ -50,18 +50,16 @@ If you want to build and test the compiler, please follow the steps below.
 # Configure CMake in build directory
 cmake -B ./build -DCMAKE_BUILD_TYPE=Release
 # Build
-cmake --build ./build
+cmake --build ./build --target filc
 ```
 
 ### Testing
 
 ```shell
-# Go to test directory
-cd test
-# Install dependencies
-npm install
+# Configure CMake in build directory
+cmake -B ./build -DCMAKE_BUILD_TYPE=Release
 # Run tests
-npm test
+cmake --build ./build --target tests
 ```
 
 ## Quick note
