@@ -28,6 +28,8 @@ jobs:
         uses: KyleMayes/install-llvm-action@v1
         with:
           version: 10
+      - name: Setup LCOV
+        uses: hrishikesh-kadam/setup-lcov@v1
 
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Coverage
