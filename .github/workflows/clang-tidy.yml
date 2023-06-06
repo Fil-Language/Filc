@@ -1,0 +1,25 @@
+name: Clang-tidy
+
+on:
+  push:
+    paths:
+      - "src/**"
+      - "test/**"
+      - ".github/workflows/clang-tidy.yml"
+  pull_request:
+    paths:
+      - "src/**"
+      - "test/**"
+      - ".github/workflows/clang-tidy.yml"
+
+jobs:
+  clang-tidy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_EXPORT_COMPILE_COMMANDS=on
+
+      - name: Run clang-tidy
+        run: clang-tidy -p ${{github.workspace}}/build/ src/**/* test/**/*
