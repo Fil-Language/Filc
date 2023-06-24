@@ -22,4 +22,4 @@ jobs:
         run: cmake -B ${{github.workspace}}/build -DCMAKE_EXPORT_COMPILE_COMMANDS=on
 
       - name: Run clang-tidy
-        run: clang-tidy -p ${{github.workspace}}/build/ src/**/* test/**/*
+        run: clang-tidy -p ${{github.workspace}}/build/ src/**/*.{cpp,hpp,h} test/**/*.cpp
