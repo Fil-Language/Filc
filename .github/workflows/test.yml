@@ -27,6 +27,9 @@ jobs:
         uses: KyleMayes/install-llvm-action@v1
         with:
           version: 10
+      - name: Setup LCOV
+        if: ${{ matrix.os == 'ubuntu-22.04' }}
+        uses: hrishikesh-kadam/setup-lcov@v1
 
       - name: Configure CMake
         if: ${{ matrix.os == 'ubuntu-22.04' }}
