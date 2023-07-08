@@ -22,28 +22,28 @@
  * SOFTWARE.
  */
 #include "FilCompiler.h"
-#include "antlr4-runtime.h"
+#include "ErrorsRegister.h"
 #include "FilLexer.h"
 #include "FilParser.h"
-#include "ErrorsRegister.h"
-#include "ParserErrorListener.h"
 #include "LexerErrorListener.h"
+#include "ParserErrorListener.h"
+#include "antlr4-runtime.h"
 
-#include <utility>
 #include <iostream>
+#include <utility>
 
 using namespace std;
 using namespace antlr4;
 using namespace antlrcppfil;
 
-string FilCompiler::_currentDir;
+string FilCompiler::_current_dir;
 map<string, Program *> FilCompiler::_modules;
 
 FilCompiler::FilCompiler(string filename) : _filename(std::move(filename)) {
-    _currentDir = _filename.substr(0, _filename.find_last_of("/\\"));
+    _current_dir = _filename.substr(0, _filename.find_last_of("/\\"));
 }
 
-int FilCompiler::compile(int flag, bool debug, const string &output) {
+auto FilCompiler::compile(int flag, bool debug, const string &output) -> int {
     ifstream file(_filename);
     if (!file.is_open()) {
         cout << "File " << _filename << " not found" << endl;
@@ -81,7 +81,7 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
             return 0;
         }
 
-        // Resolve environement
+        // Resolve environment
         program->resolveEnvironment();
 
         ErrorsRegister::dump(cerr);
@@ -107,26 +107,26 @@ int FilCompiler::compile(int flag, bool debug, const string &output) {
     return 0;
 }
 
-string FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
+auto FilCompiler::import(const string &module_name, antlr4::Token *tkn) -> string {
     // Check if the module is already imported
-    if (_modules.find(moduleName) != _modules.end()) {
-        return moduleName;
-    } else {
-        // It fixes the infinite loop of import
-        // The nullptr is replaced by the Program pointer just after the parsing
-        _modules[moduleName] = nullptr;
+    if (_modules.find(module_name) != _modules.end()) {
+        return module_name;
     }
+    // It fixes the infinite loop of import
+    // The nullptr is replaced by the Program pointer just after the parsing
+    _modules[module_name] = nullptr;
+
 
 #ifdef _WIN32
-    char sep = '\\';
+    char sep    = '\\';
     string ssep = "\\";
 #else
-    char sep = '/';
+    char sep    = '/';
     string ssep = "/";
 #endif
 
     // Lambda to parse the file and return the AST
-    auto getProgram = [moduleName](const string &filename) {
+    auto get_program = [module_name](const string &filename) {
         ANTLRFileStream input;
         input.loadFromFile(filename);
         FilLexer lexer(&input);
@@ -137,89 +137,88 @@ string FilCompiler::import(const string &moduleName, antlr4::Token *tkn) {
         FilParser parser(&tokens);
         parser.removeErrorListeners();
         parser.addErrorListener(new ParserErrorListener());
-        Program *program = parser.parseTree();
-        _modules[moduleName] = program;
+        Program *program      = parser.parseTree();
+        _modules[module_name] = program;
     };
 
     // Looking for the module in the current directory
-    auto filename = _currentDir + ssep + replace(moduleName, '.', sep) + ".fil";
+    auto filename = _current_dir + ssep + replace(module_name, '.', sep) + ".fil";
     ifstream file(filename);
     if (file.is_open()) {
         file.close();
-        getProgram(filename);
-        return moduleName;
+        get_program(filename);
+        return module_name;
     }
     // ----
-    filename = _currentDir + ssep + replace(moduleName, '.', sep) + ssep +
-               *(split(moduleName, '.').end() - 1) + ".fil";
+    filename = _current_dir + ssep + replace(module_name, '.', sep) + ssep +
+               *(split(module_name, '.').end() - 1) + ".fil";
     file = ifstream(filename);
     if (file.is_open()) {
         file.close();
-        getProgram(filename);
-        return moduleName;
+        get_program(filename);
+        return module_name;
     }
 
     // Special case for the standard library
-    if (moduleName == "fil.system") {
-        auto prog = getSystemProgram();
-        _modules[moduleName] = prog;
-        return moduleName;
+    if (module_name == "fil.system") {
+        auto *prog            = getSystemProgram();
+        _modules[module_name] = prog;
+        return module_name;
     }
 
     // Looking for the module in the include path $FIL_PATH
-    auto filPath = to_string(getenv("FIL_PATH"));
-    auto paths = split(filPath, ':');
+    auto fil_path = toString(getenv("FIL_PATH"));
+    auto paths    = split(fil_path, ':');
     for (auto &path: paths) {
-        filename = path + ssep + replace(moduleName, '.', sep) + ".fil";
-        file = ifstream(filename);
+        filename = path + ssep + replace(module_name, '.', sep) + ".fil";
+        file     = ifstream(filename);
         if (file.is_open()) {
             file.close();
-            getProgram(filename);
-            return moduleName;
+            get_program(filename);
+            return module_name;
         }
         // ----
         filename = path + ssep;
-        filename += replace(moduleName, '.', sep) + ssep;
-        filename += *(split(moduleName, '.').end() - 1) + ".fil";
+        filename += replace(module_name, '.', sep) + ssep;
+        filename += *(split(module_name, '.').end() - 1) + ".fil";
         file = ifstream(filename);
         if (file.is_open()) {
             file.close();
-            getProgram(filename);
-            return moduleName;
+            get_program(filename);
+            return module_name;
         }
     }
 
     // Module not found
     ErrorsRegister::addError(new Error(
-            "Module " + moduleName + " not found",
+            "Module " + module_name + " not found",
             new Position((int) tkn->getLine(),
                          (int) tkn->getCharPositionInLine(),
-                         tkn->getTokenSource()->getSourceName())
-    ));
+                         tkn->getTokenSource()->getSourceName())));
 
     return "";
 }
 
-ast::Program *FilCompiler::getModule(const std::string &moduleName) {
-    return _modules[moduleName];
+auto FilCompiler::getModule(const std::string &module_name) -> ast::Program * {
+    return _modules[module_name];
 }
 
-Program *FilCompiler::getSystemProgram() {
-    static auto *systemProgram = new Program("fil.system", {}, {});
-    static bool initialized = false;
+auto FilCompiler::getSystemProgram() -> Program * {
+    static auto *system_program = new Program("fil.system", {}, {});
+    static bool initialized     = false;
 
     if (initialized) {
-        return systemProgram;
+        return system_program;
     }
 
     initialized = true;
 
-    auto env = Environment::getGlobalEnvironment();
+    auto *env = Environment::getGlobalEnvironment();
 
     // Add system functions
     // TODO
 
-    systemProgram->setEnvironment(env);
+    system_program->setEnvironment(env);
 
-    return systemProgram;
+    return system_program;
 }

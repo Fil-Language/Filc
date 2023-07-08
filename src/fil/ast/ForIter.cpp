@@ -27,15 +27,15 @@ using namespace std;
 using namespace ast;
 
 ForIter::ForIter(ForIterCondition *condition, AbstractExpr *body)
-        : _condition(condition), _body(body), _environment(nullptr) {}
+    : _condition(condition), _body(body), _environment(nullptr) {}
 
-string ForIter::decompile(int indent) const {
+auto ForIter::decompile(int indent) const -> string {
     return "for (" + _condition->decompile(indent) + ") " + _body->decompile(indent);
 }
 
-string ForIter::dump(int indent) const {
-    string res = string(indent, '\t') + "[ForIter]" + (_isExported ? " <exported> " : " ") +
-                 "<type:" + _exprType->getName() + ">\n";
+auto ForIter::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[ForIter]" + (_is_exported ? " <exported> " : " ") +
+                 "<type:" + _expr_type->getName() + ">\n";
 
     res += _condition->dump(indent + 1);
     res += _body->dump(indent + 1);

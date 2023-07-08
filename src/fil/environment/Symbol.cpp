@@ -23,44 +23,46 @@
  */
 #include "Symbol.h"
 
+#include <utility>
+
 using namespace std;
 using namespace ast;
 
-Symbol::Symbol(const string &name, Position *position, SymbolKind kind)
-        : _name(name), _position(position), _kind(kind), _signature(nullptr) {}
+Symbol::Symbol(string name, Position *position, SymbolKind kind)
+    : _name(std::move(name)), _position(position), _kind(kind), _signature(nullptr) {}
 
 Symbol::~Symbol() {
     delete _position;
 }
 
-std::string Symbol::getName() const {
+auto Symbol::getName() const -> std::string {
     return _name;
 }
 
-Position *Symbol::getPosition() const {
+auto Symbol::getPosition() const -> Position * {
     return _position;
 }
 
-Symbol::SymbolKind Symbol::getKind() const {
+auto Symbol::getKind() const -> Symbol::SymbolKind {
     return _kind;
 }
 
-ast::AbstractType *Symbol::getSignature() const {
+auto Symbol::getSignature() const -> ast::AbstractType * {
     return _signature;
 }
 
-AbstractType *Symbol::setSignature(AbstractType *signature) {
+auto Symbol::setSignature(AbstractType *signature) -> AbstractType * {
     _signature = signature;
 
     return _signature;
 }
 
-bool Symbol::operator==(const Symbol &b) const {
-    return _name == b._name &&
-           _kind == b._kind &&
-           _signature == b._signature;
+auto Symbol::operator==(const Symbol &other) const -> bool {
+    return _name == other._name &&
+           _kind == other._kind &&
+           _signature == other._signature;
 }
 
-bool Symbol::operator!=(const Symbol &b) const {
-    return !(b == *this);
+auto Symbol::operator!=(const Symbol &other) const -> bool {
+    return !(other == *this);
 }

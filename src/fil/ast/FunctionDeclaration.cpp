@@ -27,9 +27,9 @@ using namespace std;
 using namespace ast;
 
 FunctionDeclaration::FunctionDeclaration(Identifier *name, const vector<FunctionParam *> &params, AbstractType *type)
-        : _name(name), _params(params), _type(type) {}
+    : _name(name), _params(params), _type(type) {}
 
-string FunctionDeclaration::decompile(int indent) const {
+auto FunctionDeclaration::decompile(int indent) const -> string {
     string result = _name->decompile(indent);
 
     result += "(";
@@ -41,19 +41,17 @@ string FunctionDeclaration::decompile(int indent) const {
     }
     result += ")";
 
-    if (_type) {
+    if (_type != nullptr) {
         result += " : " + _type->decompile(indent);
     }
 
     return result;
 }
 
-string FunctionDeclaration::dump(int indent) const {
-    string res = string(indent, '\t') + "[FunctionDeclaration]" + (_isExported ? " <exported> " : " ")
-                 + "<name:" + _name->getName() + "> "
-                 + "<type:" + _exprType->getName() + ">\n";
+auto FunctionDeclaration::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[FunctionDeclaration]" + (_is_exported ? " <exported> " : " ") + "<name:" + _name->getName() + "> " + "<type:" + _expr_type->getName() + ">\n";
 
-    for (auto param: _params) {
+    for (auto *param: _params) {
         res += param->dump(indent + 1);
     }
 

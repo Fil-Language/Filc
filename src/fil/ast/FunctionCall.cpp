@@ -27,9 +27,9 @@ using namespace std;
 using namespace ast;
 
 FunctionCall::FunctionCall(Identifier *name, const vector<AbstractExpr *> &args)
-        : _name(name), _args(args) {}
+    : _name(name), _args(args) {}
 
-string FunctionCall::decompile(int indent) const {
+auto FunctionCall::decompile(int indent) const -> string {
     string res = _name->decompile(indent) + "(";
     for (auto it = _args.begin(); it != _args.end(); ++it) {
         res += (*it)->decompile(indent);
@@ -42,15 +42,15 @@ string FunctionCall::decompile(int indent) const {
     return res;
 }
 
-string FunctionCall::dump(int indent) const {
-    string res = string(indent, '\t') + "[FunctionCall]" + (_isExported ? " <exported> " : " ") +
+auto FunctionCall::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[FunctionCall]" + (_is_exported ? " <exported> " : " ") +
                  "<name:" + _name->getName() + ">";
-    if (_exprType) { // Problem from recursive call, see inferType
-        res += " <type:" + _exprType->getName() + ">";
+    if (_expr_type != nullptr) {// Problem from recursive call, see inferType
+        res += " <type:" + _expr_type->getName() + ">";
     }
     res += "\n";
 
-    for (auto &arg: _args) {
+    for (const auto &arg: _args) {
         res += arg->dump(indent + 1);
     }
 

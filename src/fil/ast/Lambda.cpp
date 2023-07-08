@@ -27,9 +27,9 @@ using namespace std;
 using namespace ast;
 
 Lambda::Lambda(const vector<FunctionParam *> &params, AbstractType *type, AbstractExpr *body)
-        : _params(params), _type(type), _body(body), _environment(nullptr) {}
+    : _params(params), _type(type), _body(body), _environment(nullptr) {}
 
-string Lambda::decompile(int indent) const {
+auto Lambda::decompile(int indent) const -> string {
     string res = "(";
     for (auto it = _params.begin(); it != _params.end(); ++it) {
         res += (*it)->decompile(indent);
@@ -39,7 +39,7 @@ string Lambda::decompile(int indent) const {
     }
     res += ")";
 
-    if (_type) {
+    if (_type != nullptr) {
         res += " : " + _type->decompile(indent);
     }
 
@@ -48,11 +48,11 @@ string Lambda::decompile(int indent) const {
     return res;
 }
 
-string Lambda::dump(int indent) const {
-    string res = string(indent, '\t') + "[Lambda]" + (_isExported ? " <exported> " : " ") +
-                 "<type:" + _exprType->getName() + ">\n";
+auto Lambda::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[Lambda]" + (_is_exported ? " <exported> " : " ") +
+                 "<type:" + _expr_type->getName() + ">\n";
 
-    for (auto param: _params) {
+    for (auto *param: _params) {
         res += param->dump(indent + 1);
     }
 

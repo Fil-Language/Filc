@@ -26,26 +26,21 @@
 using namespace std;
 using namespace ast;
 
-UnaryCalcul::UnaryCalcul(Identifier *identifier, Operator *op)
-        : _op(op), _identifier(identifier), _isPrefix(false) {}
+UnaryCalcul::UnaryCalcul(Identifier *identifier, Operator *p_operator)
+    : _operator(p_operator), _identifier(identifier), _is_prefix(false) {}
 
-UnaryCalcul::UnaryCalcul(Operator *op, Identifier *identifier)
-        : _op(op), _identifier(identifier), _isPrefix(true) {}
+UnaryCalcul::UnaryCalcul(Operator *p_operator, Identifier *identifier)
+    : _operator(p_operator), _identifier(identifier), _is_prefix(true) {}
 
-std::string UnaryCalcul::decompile(int indent) const {
-    if (_isPrefix) {
-        return _op->decompile(indent) + _identifier->decompile(indent);
-    } else {
-        return _identifier->decompile(indent) + _op->decompile(indent);
+auto UnaryCalcul::decompile(int indent) const -> std::string {
+    if (_is_prefix) {
+        return _operator->decompile(indent) + _identifier->decompile(indent);
     }
+    return _identifier->decompile(indent) + _operator->decompile(indent);
 }
 
-string UnaryCalcul::dump(int indent) const {
-    string res = string(indent, '\t') + "[UnaryCalcul]"
-                 + (_isExported ? " <exported> " : " ")
-                 + (_isPrefix ? "<prefix>" : "<postfix>")
-                 + " <operator:" + _op->decompile(indent) + ">"
-                 + " <type:" + _exprType->getName() + ">\n";
+auto UnaryCalcul::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[UnaryCalcul]" + (_is_exported ? " <exported> " : " ") + (_is_prefix ? "<prefix>" : "<postfix>") + " <operator:" + _operator->decompile(indent) + ">" + " <type:" + _expr_type->getName() + ">\n";
 
     res += _identifier->dump(indent + 1);
 

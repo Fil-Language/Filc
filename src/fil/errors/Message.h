@@ -24,17 +24,17 @@
 #ifndef FILC_MESSAGE_H
 #define FILC_MESSAGE_H
 
-#include <string>
 #include "utils.h"
+#include <string>
 
 class Message {
 protected:
-    Message(const std::string &message, Position *position);
+    Message(std::string message, Position *position);
 
 public:
-    ~Message() = default;
+    virtual ~Message() = default;
 
-    virtual std::string dump() const = 0;
+    [[nodiscard]] virtual auto dump() const -> std::string = 0;
 
 protected:
     std::string _message;
@@ -45,29 +45,28 @@ class BasicWarning : public Message {
 public:
     explicit BasicWarning(const std::string &message);
 
-    std::string dump() const override;
+    [[nodiscard]] auto dump() const -> std::string override;
 };
 
 class Warning : public Message {
 public:
     Warning(const std::string &message, Position *position);
 
-    std::string dump() const override;
+    [[nodiscard]] auto dump() const -> std::string override;
 };
 
 class BasicError : public Message {
 public:
     explicit BasicError(const std::string &message);
 
-    std::string dump() const override;
+    [[nodiscard]] auto dump() const -> std::string override;
 };
 
 class Error : public Message {
 public:
     Error(const std::string &message, Position *position);
 
-    std::string dump() const override;
+    [[nodiscard]] auto dump() const -> std::string override;
 };
 
-
-#endif //FILC_MESSAGE_H
+#endif//FILC_MESSAGE_H

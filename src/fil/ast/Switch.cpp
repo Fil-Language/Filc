@@ -27,13 +27,13 @@ using namespace std;
 using namespace ast;
 
 Switch::Switch(AbstractExpr *condition, const vector<SwitchCase *> &cases)
-        : _condition(condition), _cases(cases) {}
+    : _condition(condition), _cases(cases) {}
 
-string Switch::decompile(int indent) const {
+auto Switch::decompile(int indent) const -> string {
     string res = "switch (" + _condition->decompile(indent) + ") {\n";
 
-    for (auto &c: _cases) {
-        res += string(indent + 1, '\t') + c->decompile(indent);
+    for (const auto &current_case: _cases) {
+        res += string(indent + 1, '\t') + current_case->decompile(indent);
     }
 
     res += "}";
@@ -41,14 +41,14 @@ string Switch::decompile(int indent) const {
     return res;
 }
 
-string Switch::dump(int indent) const {
-    string res = string(indent, '\t') + "[Switch]" + (_isExported ? " <exported> " : " ") +
-                 "<type:" + _exprType->getName() + ">\n";
+auto Switch::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[Switch]" + (_is_exported ? " <exported> " : " ") +
+                 "<type:" + _expr_type->getName() + ">\n";
 
     res += _condition->dump(indent + 1);
 
-    for (auto &c: _cases) {
-        res += c->dump(indent + 1);
+    for (const auto &current_case: _cases) {
+        res += current_case->dump(indent + 1);
     }
 
     return res;

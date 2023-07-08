@@ -25,43 +25,44 @@
 
 ErrorsRegister *ErrorsRegister::_instance = nullptr;
 
-ErrorsRegister::ErrorsRegister()
-        : _messages(std::vector<Message *>()) {}
+ErrorsRegister::ErrorsRegister() {}
 
 void ErrorsRegister::init() {
-    if (_instance == nullptr)
+    if (_instance == nullptr) {
         _instance = new ErrorsRegister();
+    }
 }
 
 void ErrorsRegister::clean() {
-    if (_instance)
+    if (_instance != nullptr) {
         _instance->_messages.clear();
+    }
 }
 
-bool ErrorsRegister::containsError() {
-    return _instance != nullptr && _instance->_containsError;
+auto ErrorsRegister::containsError() -> bool {
+    return _instance != nullptr && _instance->_contains_error;
 }
 
-bool ErrorsRegister::containsWarning() {
-    return _instance != nullptr && _instance->_containsWarning;
+auto ErrorsRegister::containsWarning() -> bool {
+    return _instance != nullptr && _instance->_contains_warning;
 }
 
 void ErrorsRegister::addWarning(Message *message) {
-    if (_instance) {
+    if (_instance != nullptr) {
         _instance->_messages.push_back(message);
-        _instance->_containsWarning = true;
+        _instance->_contains_warning = true;
     }
 }
 
 void ErrorsRegister::addError(Message *message) {
-    if (_instance) {
+    if (_instance != nullptr) {
         _instance->_messages.push_back(message);
-        _instance->_containsError = true;
+        _instance->_contains_error = true;
     }
 }
 
 void ErrorsRegister::dump(std::ostream &out) {
-    if (_instance) {
+    if (_instance != nullptr) {
         for (auto &message: _instance->_messages) {
             out << message->dump() << std::endl;
         }

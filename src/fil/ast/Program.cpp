@@ -21,28 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <utility>
+
 #include "AST.hpp"
 #include "FilCompiler.h"
 
 using namespace std;
 using namespace ast;
 
-Program::Program(const string &module,
+Program::Program(string module,
                  const vector<std::string> &imports,
                  const vector<AbstractExpr *> &exprs)
-        : _module(module), _imports(imports), _exprs(exprs), _environment(nullptr), _resolved(false) {}
+    : _module(std::move(module)), _imports(imports), _exprs(exprs), _environment(nullptr), _resolved(false) {}
 
-string Program::decompile(int indent) const {
+auto Program::decompile(int indent) const -> string {
     string result = "module " + _module + "\n";
 
-    if (!_imports.empty())
+    if (!_imports.empty()) {
         result += "\n";
-    for (auto &import: _imports) {
+    }
+    for (const auto &import: _imports) {
         result += "use " + import + "\n";
     }
 
-    if (!_exprs.empty())
+    if (!_exprs.empty()) {
         result += "\n";
+    }
     for (auto it = _exprs.begin(); it != _exprs.end(); it++) {
         result += ((*it)->isExported() ? "export " : "") + (*it)->decompile(indent) + "\n";
 
@@ -55,8 +59,9 @@ string Program::decompile(int indent) const {
 }
 
 void Program::resolveEnvironment() {
-    if (_resolved) // Fix infinite loop of resolve
+    if (_resolved) {// Fix infinite loop of resolve
         return;
+    }
     _resolved = true;
 
     // Remove duplicate imports
@@ -65,16 +70,15 @@ void Program::resolveEnvironment() {
 
     // Resolve imports
     for (auto &import: _imports) {
-        auto module = FilCompiler::getModule(import);
+        auto *module = FilCompiler::getModule(import);
         if (module == nullptr) {
             ErrorsRegister::addWarning(
-                    new BasicWarning("\033[1mDev code 2\033[21m\nModule '" + import + "' not found")
-            );
+                    new BasicWarning("\033[1mDev code 2\033[21m\nModule '" + import + "' not found"));
             continue;
         }
 
         module->resolveEnvironment();
-        _importedModules.push_back(module);
+        _imported_modules.push_back(module);
     }
 
     // TODO : merge imports env to _environment
@@ -82,14 +86,14 @@ void Program::resolveEnvironment() {
     // TODO : resolve exprs
 }
 
-string Program::dump(int indent) const {
+auto Program::dump(int indent) const -> string {
     string res = string(indent, '\t') + "[Program] <module:" + _module + ">\n";
 
-    for (auto &imp: _importedModules) {
+    for (const auto &imp: _imported_modules) {
         res += imp->dump(indent + 1);
     }
 
-    for (auto &expr: _exprs) {
+    for (const auto &expr: _exprs) {
         res += expr->dump(indent + 1);
     }
 

@@ -27,12 +27,12 @@ using namespace std;
 using namespace ast;
 
 BlockBody::BlockBody(const vector<AbstractExpr *> &exprs)
-        : _exprs(exprs), _environment(nullptr) {}
+    : _exprs(exprs), _environment(nullptr) {}
 
-string BlockBody::decompile(int indent) const {
+auto BlockBody::decompile(int indent) const -> string {
     string result = "{\n";
 
-    for (auto expr: _exprs) {
+    for (auto *expr: _exprs) {
         result += string(indent + 1, '\t') + expr->decompile(indent + 1) + "\n";
     }
 
@@ -41,11 +41,11 @@ string BlockBody::decompile(int indent) const {
     return result;
 }
 
-string BlockBody::dump(int indent) const {
-    string res = string(indent, '\t') + "[BlockBody]" + (_isExported ? " <exported>" : "") +
-                 " <type:" + _exprType->getName() + ">\n";
+auto BlockBody::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[BlockBody]" + (_is_exported ? " <exported>" : "") +
+                 " <type:" + _expr_type->getName() + ">\n";
 
-    for (auto expr: _exprs) {
+    for (auto *expr: _exprs) {
         res += expr->dump(indent + 1);
     }
 

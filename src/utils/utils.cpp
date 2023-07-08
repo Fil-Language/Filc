@@ -25,27 +25,28 @@
 
 #include <fstream>
 #include <sstream>
+#include <utility>
 
-std::string &ltrim(std::string &input) {
+auto ltrim(std::string &input) -> std::string & {
     return input.erase(0, input.find_first_not_of(' '));
 }
 
-Position::Position(int line, int column, const std::string &filename)
-        : _line(line), _column(column), _filename(filename) {}
+Position::Position(int line, int column, std::string filename)
+    : _line(line), _column(column), _filename(std::move(filename)) {}
 
-int Position::getLine() const {
+auto Position::getLine() const -> int {
     return _line;
 }
 
-int Position::getColumn() const {
+auto Position::getColumn() const -> int {
     return _column;
 }
 
-std::string Position::getFilename() const {
+auto Position::getFilename() const -> std::string {
     return _filename;
 }
 
-std::string Position::getLineContent() const {
+auto Position::getLineContent() const -> std::string {
     std::ifstream file(_filename);
     std::string line;
 
@@ -58,41 +59,41 @@ std::string Position::getLineContent() const {
     return line;
 }
 
-std::string Position::dump() const {
+auto Position::dump() const -> std::string {
     return _filename + ":" + std::to_string(_line) + ":" + std::to_string(_column);
 }
 
-std::string replace(const std::string &str, char from, char to) {
-    auto cpy = str;
-    for (char &c: cpy) {
-        if (c == from) {
-            c = to;
+auto replace(const std::string &str, char from, char target) -> std::string {
+    auto copy = str;
+    for (char &current: copy) {
+        if (current == from) {
+            current = target;
         }
     }
 
-    return cpy;
+    return copy;
 }
 
-std::string to_string(char *str) {
-    std::stringstream ss;
-    ss << str;
+auto toString(char *str) -> std::string {
+    std::stringstream stream;
+    stream << str;
 
-    return ss.str();
+    return stream.str();
 }
 
-std::vector<std::string> split(const std::string &str, char delim) {
+auto split(const std::string &str, char delim) -> std::vector<std::string> {
     std::vector<std::string> result;
 
-    std::stringstream ss(str);
+    std::stringstream stream(str);
     std::string item;
-    while (std::getline(ss, item, delim)) {
+    while (std::getline(stream, item, delim)) {
         result.push_back(item);
     }
 
     return result;
 }
 
-std::string extension(const std::string &filename) {
+auto extension(const std::string &filename) -> std::string {
     auto dot = filename.find_last_of('.');
     return filename.substr(dot + 1);
 }

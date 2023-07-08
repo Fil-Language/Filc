@@ -30,11 +30,11 @@ StringLiteral::StringLiteral(const std::string &value) {
     _value = value.substr(1, value.size() - 2);
 }
 
-string StringLiteral::decompile(int indent) const {
+auto StringLiteral::decompile(int indent) const -> string {
     return "\"" + _value + "\"";
 }
 
-string StringLiteral::dump(int indent) const {
-    return string(indent, '\t') + "[StringLiteral]" + (_isExported ? " <exported>" : "") +
+auto StringLiteral::dump(int indent) const -> string {
+    return string(indent, '\t') + "[StringLiteral]" + (_is_exported ? " <exported>" : "") +
            " <value:" + _value + ">\n";
 }

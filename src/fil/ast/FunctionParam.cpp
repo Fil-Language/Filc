@@ -27,18 +27,18 @@ using namespace std;
 using namespace ast;
 
 FunctionParam::FunctionParam(Identifier *name, AbstractType *type)
-        : _name(name), _type(type) {}
+    : _name(name), _type(type) {}
 
-string FunctionParam::decompile(int indent) const {
+auto FunctionParam::decompile(int indent) const -> string {
     string result = _name->decompile(indent);
 
-    if (_type) {
+    if (_type != nullptr) {
         result += " : " + _type->decompile(indent);
     }
 
     return result;
 }
 
-string FunctionParam::dump(int indent) const {
+auto FunctionParam::dump(int indent) const -> string {
     return string(indent, '\t') + "[FunctionParam] <name:" + _name->getName() + "> <type:" + _type->getName() + ">\n";
 }

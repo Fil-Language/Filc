@@ -28,12 +28,11 @@
 
 class ParserErrorListener : public antlr4::BaseErrorListener {
     void syntaxError(antlr4::Recognizer *recognizer,
-                     antlr4::Token *offendingSymbol,
+                     antlr4::Token *offending_symbol,
                      size_t line,
-                     size_t charPositionInLine,
+                     size_t char_position_in_line,
                      const std::string &msg,
-                     std::exception_ptr e) override;
+                     std::exception_ptr exception_ptr) override;
 };
 
-
-#endif //FILC_PARSERERRORLISTENER_H
+#endif//FILC_PARSERERRORLISTENER_H

@@ -27,9 +27,9 @@ using namespace std;
 using namespace ast;
 
 LambdaType::LambdaType(const vector<AbstractType *> &args, AbstractType *ret)
-        : _args(args), _ret(ret) {}
+    : _args(args), _ret(ret) {}
 
-string LambdaType::decompile(int indent) const {
+auto LambdaType::decompile(int indent) const -> string {
     string res = "(";
     for (auto it = _args.begin(); it != _args.end(); ++it) {
         res += (*it)->decompile(indent);
@@ -42,7 +42,7 @@ string LambdaType::decompile(int indent) const {
     return res;
 }
 
-string LambdaType::getName() const {
+auto LambdaType::getName() const -> string {
     string res = "(";
     for (auto it = _args.begin(); it != _args.end(); ++it) {
         res += (*it)->getName();
@@ -54,11 +54,11 @@ string LambdaType::getName() const {
     return res + ") -> " + _ret->getName();
 }
 
-AbstractType *LambdaType::getReturnType() const {
+auto LambdaType::getReturnType() const -> AbstractType * {
     return _ret;
 }
 
-const vector<AbstractType *> &LambdaType::getArgsTypes() const {
+auto LambdaType::getArgsTypes() const -> const vector<AbstractType *> & {
     return _args;
 }
 

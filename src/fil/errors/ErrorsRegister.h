@@ -24,9 +24,9 @@
 #ifndef FILC_ERRORSREGISTER_H
 #define FILC_ERRORSREGISTER_H
 
-#include <vector>
-#include <ostream>
 #include "Message.h"
+#include <ostream>
+#include <vector>
 
 class ErrorsRegister {
 private:
@@ -39,9 +39,9 @@ public:
 
     static void clean();
 
-    static bool containsError();
+    static auto containsError() -> bool;
 
-    static bool containsWarning();
+    static auto containsWarning() -> bool;
 
     static void addWarning(Message *message);
 
@@ -50,10 +50,9 @@ public:
     static void dump(std::ostream &out);
 
 private:
-    bool _containsError = false;
-    bool _containsWarning = false;
+    bool _contains_error   = false;
+    bool _contains_warning = false;
     std::vector<Message *> _messages;
 };
 
-
-#endif //FILC_ERRORSREGISTER_H
+#endif//FILC_ERRORSREGISTER_H

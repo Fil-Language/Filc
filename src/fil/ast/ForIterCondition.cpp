@@ -26,18 +26,15 @@
 using namespace std;
 using namespace ast;
 
-ForIterCondition::ForIterCondition(bool isVal, Identifier *iterator, Identifier *iterable)
-        : _isVal(isVal), _iterator(iterator), _iterable(iterable), _iteratorSymbol(nullptr) {}
+ForIterCondition::ForIterCondition(bool is_val, Identifier *iterator, Identifier *iterable)
+    : _is_val(is_val), _iterator(iterator), _iterable(iterable), _iterator_symbol(nullptr) {}
 
-string ForIterCondition::decompile(int indent) const {
-    return (_isVal ? "val " : "var ")
-           + _iterator->decompile(indent)
-           + ": "
-           + _iterable->decompile(indent);
+auto ForIterCondition::decompile(int indent) const -> string {
+    return (_is_val ? "val " : "var ") + _iterator->decompile(indent) + ": " + _iterable->decompile(indent);
 }
 
-string ForIterCondition::dump(int indent) const {
-    string res = string(indent, '\t') + "[ForIterCondition] " + (_isVal ? "<val>" : "<var>") + "\n";
+auto ForIterCondition::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[ForIterCondition] " + (_is_val ? "<val>" : "<var>") + "\n";
 
     res += _iterator->dump(indent + 1);
     res += _iterable->dump(indent + 1);

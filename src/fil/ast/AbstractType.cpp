@@ -26,22 +26,22 @@
 using namespace std;
 using namespace ast;
 
-bool AbstractType::equals(const AbstractType &other) const {
+auto AbstractType::equals(const AbstractType &other) const -> bool {
     return getName() == other.getName();
 }
 
-bool AbstractType::isIterable() const {
+auto AbstractType::isIterable() const -> bool {
     return false;
 }
 
-AbstractType *AbstractType::getIterableType() {
+auto AbstractType::getIterableType() -> AbstractType * {
     return this;
 }
 
-bool operator==(const AbstractType &a, const AbstractType &b) {
-    return a.equals(b);
+auto operator==(const AbstractType &first, const AbstractType &other) -> bool {
+    return first.equals(other);
 }
 
-bool operator!=(const AbstractType &a, const AbstractType &b) {
-    return !a.equals(b);
+auto operator!=(const AbstractType &first, const AbstractType &other) -> bool {
+    return !first.equals(other);
 }

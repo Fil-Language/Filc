@@ -27,31 +27,30 @@ using namespace std;
 using namespace ast;
 
 SwitchPattern::SwitchPattern()
-        : _isDefault(true), _literal(nullptr) {}
+    : _is_default(true), _literal(nullptr) {}
 
 SwitchPattern::SwitchPattern(AbstractLiteral *literal)
-        : _isDefault(false), _literal(literal) {}
+    : _is_default(false), _literal(literal) {}
 
-string SwitchPattern::decompile(int indent) const {
-    return _isDefault ? "default" : _literal->decompile(indent);
+auto SwitchPattern::decompile(int indent) const -> string {
+    return _is_default ? "default" : _literal->decompile(indent);
 }
 
-AbstractLiteral *SwitchPattern::getLiteral() const {
+auto SwitchPattern::getLiteral() const -> AbstractLiteral * {
     return _literal;
 }
 
-string SwitchPattern::dump(int indent) const {
-    if (_isDefault) {
+auto SwitchPattern::dump(int indent) const -> string {
+    if (_is_default) {
         return string(indent, '\t') + "[SwitchPattern] <default>\n";
-    } else {
-        string res = string(indent, '\t') + "[SwitchPattern]\n";
-
-        res += _literal->dump(indent + 1);
-
-        return res;
     }
+    string res = string(indent, '\t') + "[SwitchPattern]\n";
+
+    res += _literal->dump(indent + 1);
+
+    return res;
 }
 
-bool SwitchPattern::isDefault() const {
-    return _isDefault;
+auto SwitchPattern::isDefault() const -> bool {
+    return _is_default;
 }

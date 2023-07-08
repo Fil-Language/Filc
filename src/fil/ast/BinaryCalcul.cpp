@@ -26,10 +26,10 @@
 using namespace std;
 using namespace ast;
 
-BinaryCalcul::BinaryCalcul(AbstractExpr *left, Operator *op, AbstractExpr *right)
-        : _left(left), _op(op), _right(right) {}
+BinaryCalcul::BinaryCalcul(AbstractExpr *left, Operator *p_operator, AbstractExpr *right)
+    : _left(left), _op(p_operator), _right(right) {}
 
-string BinaryCalcul::decompile(int indent) const {
+auto BinaryCalcul::decompile(int indent) const -> string {
     return _left->decompile(indent) + " " + _op->decompile(indent) + " " + _right->decompile(indent);
 }
 
@@ -77,10 +77,8 @@ string BinaryCalcul::decompile(int indent) const {
 //    return _exprType;
 //}
 
-string BinaryCalcul::dump(int indent) const {
-    string res = string(indent, '\t') + "[BinaryCalcul]" + (_isExported ? " <exported>" : "")
-                 + " <operator:" + _op->decompile(0) + "> "
-                 + "<type:" + _exprType->getName() + ">\n";
+auto BinaryCalcul::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[BinaryCalcul]" + (_is_exported ? " <exported>" : "") + " <operator:" + _op->decompile(0) + "> " + "<type:" + _expr_type->getName() + ">\n";
 
     res += _left->dump(indent + 1);
     res += _right->dump(indent + 1);

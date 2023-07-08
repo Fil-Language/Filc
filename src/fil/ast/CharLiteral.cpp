@@ -26,15 +26,14 @@
 using namespace std;
 using namespace ast;
 
-CharLiteral::CharLiteral(const string &value) {
-    _value = value[1];
-}
+CharLiteral::CharLiteral(const string &value)
+    : _value(value[1]) {}
 
-string CharLiteral::decompile(int indent) const {
+auto CharLiteral::decompile(int indent) const -> string {
     return "'" + string(1, _value) + "'";
 }
 
-string CharLiteral::dump(int indent) const {
-    return string(indent, '\t') + "[CharLiteral]" + (_isExported ? " <exported>" : "") +
+auto CharLiteral::dump(int indent) const -> string {
+    return string(indent, '\t') + "[CharLiteral]" + (_is_exported ? " <exported>" : "") +
            " <value:" + string(1, _value) + ">\n";
 }

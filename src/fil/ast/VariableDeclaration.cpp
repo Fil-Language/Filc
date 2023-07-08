@@ -26,39 +26,35 @@
 using namespace std;
 using namespace ast;
 
-VariableDeclaration::VariableDeclaration(bool isVal, Identifier *name, AbstractType *type, Assignation *assignation)
-        : _isVal(isVal), _name(name), _type(type), _assignation(assignation), _symbol(nullptr) {}
+VariableDeclaration::VariableDeclaration(bool is_val, Identifier *name, AbstractType *type, Assignation *assignation)
+    : _is_val(is_val), _name(name), _type(type), _assignation(assignation), _symbol(nullptr) {}
 
-string VariableDeclaration::decompile(int indent) const {
-    string result = (_isVal ? "val " : "var ") + _name->decompile(indent);
+auto VariableDeclaration::decompile(int indent) const -> string {
+    string result = (_is_val ? "val " : "var ") + _name->decompile(indent);
 
-    if (_type) {
+    if (_type != nullptr) {
         result += " : " + _type->decompile(indent);
     }
 
-    if (_assignation) {
+    if (_assignation != nullptr) {
         result += " " + _assignation->decompile(indent);
     }
 
     return result;
 }
 
-bool VariableDeclaration::isVar() const {
+auto VariableDeclaration::isVar() const -> bool {
     return true;
 }
 
-Symbol *VariableDeclaration::getSymbol() const {
+auto VariableDeclaration::getSymbol() const -> Symbol * {
     return _symbol;
 }
 
-string VariableDeclaration::dump(int indent) const {
-    string res = string(indent, '\t') + "[VariableDeclaration]"
-                 + (_isExported ? " <exported> " : " ")
-                 + (_isVal ? "<val> " : "<var> ")
-                 + "<name:" + _name->getName() + "> "
-                 + "<type:" + _exprType->getName() + ">\n";
+auto VariableDeclaration::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[VariableDeclaration]" + (_is_exported ? " <exported> " : " ") + (_is_val ? "<val> " : "<var> ") + "<name:" + _name->getName() + "> " + "<type:" + _expr_type->getName() + ">\n";
 
-    if (_assignation) {
+    if (_assignation != nullptr) {
         res += _assignation->dump(indent + 1);
     }
 

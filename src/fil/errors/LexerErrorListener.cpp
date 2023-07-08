@@ -26,11 +26,11 @@
 
 using namespace std;
 
-void LexerErrorListener::syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol, size_t line,
-                                     size_t charPositionInLine, const std::string &msg, std::exception_ptr e) {
+void LexerErrorListener::syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offending_symbol, size_t line,
+                                     size_t char_position_in_line, const std::string &msg, std::exception_ptr exception_ptr) {
     ErrorsRegister::addError(new Error(
             msg,
-            new Position((int) line, (int) charPositionInLine,
+            new Position((int) line, (int) char_position_in_line,
                          recognizer->getInputStream()->getSourceName())
     ));
 }

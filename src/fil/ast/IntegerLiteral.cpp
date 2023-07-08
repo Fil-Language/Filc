@@ -27,13 +27,13 @@ using namespace std;
 using namespace ast;
 
 IntegerLiteral::IntegerLiteral(int value)
-        : _value(value) {}
+    : _value(value) {}
 
-string IntegerLiteral::decompile(int indent) const {
+auto IntegerLiteral::decompile(int indent) const -> string {
     return to_string(_value);
 }
 
-string IntegerLiteral::dump(int indent) const {
-    return string(indent, '\t') + "[IntegerLiteral]" + (_isExported ? " <exported>" : "") +
+auto IntegerLiteral::dump(int indent) const -> string {
+    return string(indent, '\t') + "[IntegerLiteral]" + (_is_exported ? " <exported>" : "") +
            " <value:" + to_string(_value) + ">\n";
 }

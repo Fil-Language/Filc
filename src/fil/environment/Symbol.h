@@ -24,9 +24,9 @@
 #ifndef FILC_SYMBOL_H
 #define FILC_SYMBOL_H
 
-#include <string>
-#include "utils.h"
 #include "AST_decl.h"
+#include "utils.h"
+#include <string>
 
 class Symbol {
 public:
@@ -36,24 +36,23 @@ public:
         TYPE
     };
 
-public:
-    Symbol(const std::string &name, Position *position, SymbolKind kind);
+    Symbol(std::string name, Position *position, SymbolKind kind);
 
     ~Symbol();
 
-    std::string getName() const;
+    [[nodiscard]] auto getName() const -> std::string;
 
-    Position *getPosition() const;
+    [[nodiscard]] auto getPosition() const -> Position *;
 
-    SymbolKind getKind() const;
+    [[nodiscard]] auto getKind() const -> SymbolKind;
 
-    ast::AbstractType *getSignature() const;
+    [[nodiscard]] auto getSignature() const -> ast::AbstractType *;
 
-    ast::AbstractType *setSignature(ast::AbstractType *signature);
+    auto setSignature(ast::AbstractType *signature) -> ast::AbstractType *;
 
-    bool operator==(const Symbol &b) const;
+    auto operator==(const Symbol &other) const -> bool;
 
-    bool operator!=(const Symbol &b) const;
+    auto operator!=(const Symbol &other) const -> bool;
 
 private:
     std::string _name;
@@ -62,4 +61,4 @@ private:
     ast::AbstractType *_signature;
 };
 
-#endif //FILC_SYMBOL_H
+#endif//FILC_SYMBOL_H

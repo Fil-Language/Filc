@@ -27,42 +27,38 @@ using namespace std;
 using namespace ast;
 
 Type::Type(Identifier *name)
-        : _name(name), _isArray(false), _arraySize(0), _isPointer(false), _subType(nullptr) {}
+    : _name(name), _is_array(false), _array_size(0), _is_pointer(false), _sub_type(nullptr) {}
 
-Type::Type(int arraySize, AbstractType *subType)
-        : _name(nullptr), _isArray(true), _arraySize(arraySize), _isPointer(false), _subType(subType) {}
+Type::Type(int array_size, AbstractType *sub_type)
+    : _name(nullptr), _is_array(true), _array_size(array_size), _is_pointer(false), _sub_type(sub_type) {}
 
-Type::Type(AbstractType *subType)
-        : _name(nullptr), _isArray(false), _arraySize(0), _isPointer(true), _subType(subType) {}
+Type::Type(AbstractType *sub_type)
+    : _name(nullptr), _is_array(false), _array_size(0), _is_pointer(true), _sub_type(sub_type) {}
 
-string Type::decompile(int indent) const {
-    if (_isPointer) {
-        return _subType->decompile(indent) + "*";
-    } else if (_isArray) {
-        return _subType->decompile(indent) + "[" + to_string(_arraySize) + "]";
-    } else {
-        return _name->decompile(indent);
+auto Type::decompile(int indent) const -> string {
+    if (_is_pointer) {
+        return _sub_type->decompile(indent) + "*";
     }
+    if (_is_array) {
+        return _sub_type->decompile(indent) + "[" + to_string(_array_size) + "]";
+    }
+    return _name->decompile(indent);
 }
 
-string Type::getName() const {
-    if (_isPointer) {
-        return _subType->getName() + "*";
-    } else if (_isArray) {
-        return _subType->getName() + "[" + to_string(_arraySize) + "]";
-    } else {
-        return _name->getName();
+auto Type::getName() const -> string {
+    if (_is_pointer) {
+        return _sub_type->getName() + "*";
     }
+    if (_is_array) {
+        return _sub_type->getName() + "[" + to_string(_array_size) + "]";
+    }
+    return _name->getName();
 }
 
-bool Type::isIterable() const {
-    return _isArray;
+auto Type::isIterable() const -> bool {
+    return _is_array;
 }
 
-AbstractType *Type::getIterableType() {
-    if (isIterable()) {
-        return _subType;
-    } else {
-        return AbstractType::getIterableType();
-    }
+auto Type::getIterableType() -> AbstractType * {
+    return isIterable() ? _sub_type : AbstractType::getIterableType();
 }

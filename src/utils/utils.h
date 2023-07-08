@@ -33,7 +33,7 @@
  * @param input
  * @return
  */
-std::string &ltrim(std::string &input);
+auto ltrim(std::string &input) -> std::string &;
 
 /**
  * Describe a position in a file
@@ -47,20 +47,20 @@ public:
      * @param column
      * @param filename
      */
-    Position(int line, int column, const std::string &filename);
+    Position(int line, int column, std::string filename);
 
-    int getLine() const;
+    [[nodiscard]] auto getLine() const -> int;
 
-    int getColumn() const;
+    [[nodiscard]] auto getColumn() const -> int;
 
-    std::string getFilename() const;
+    [[nodiscard]] auto getFilename() const -> std::string;
 
     /**
      * @return The line in the file where the position is
      */
-    std::string getLineContent() const;
+    [[nodiscard]] auto getLineContent() const -> std::string;
 
-    std::string dump() const;
+    [[nodiscard]] auto dump() const -> std::string;
 
 private:
     int _line;
@@ -68,12 +68,12 @@ private:
     std::string _filename;
 };
 
-std::string replace(const std::string &str, char from, char to);
+auto replace(const std::string &str, char from, char target) -> std::string;
 
-std::string to_string(char *str);
+auto toString(char *str) -> std::string;
 
-std::vector<std::string> split(const std::string &str, char delim);
+auto split(const std::string &str, char delim) -> std::vector<std::string>;
 
-std::string extension(const std::string &filename);
+auto extension(const std::string &filename) -> std::string;
 
 #endif //FILC_UTILS_H

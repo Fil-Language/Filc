@@ -27,13 +27,13 @@ using namespace std;
 using namespace ast;
 
 FloatLiteral::FloatLiteral(float value)
-        : _value(value) {}
+    : _value(value) {}
 
-string FloatLiteral::decompile(int indent) const {
+auto FloatLiteral::decompile(int indent) const -> string {
     return to_string(_value);
 }
 
-string FloatLiteral::dump(int indent) const {
-    return string(indent, '\t') + "[FloatLiteral]" + (_isExported ? " <exported>" : "") +
+auto FloatLiteral::dump(int indent) const -> string {
+    return string(indent, '\t') + "[FloatLiteral]" + (_is_exported ? " <exported>" : "") +
            " <value:" + to_string(_value) + ">\n";
 }

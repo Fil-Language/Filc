@@ -3,11 +3,6 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
     cmake_policy(SET CMP0135 NEW)
 endif ()
 
-project(
-        Filc
-        VERSION 0.2.1
-)
-
 # minimum required CMAKE version
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
@@ -19,6 +14,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Don't use e.g. GNU extension (like -std=gnu++11) for portability
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+project(
+        Filc
+        VERSION 0.2.1
+)
 
 # Code Coverage Configuration
 add_library(coverage_config INTERFACE)

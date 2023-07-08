@@ -27,15 +27,15 @@ using namespace std;
 using namespace ast;
 
 Assignation::Assignation(AbstractExpr *expr)
-        : _expr(expr) {}
+    : _expr(expr) {}
 
-string Assignation::decompile(int indent) const {
+auto Assignation::decompile(int indent) const -> string {
     return "= " + _expr->decompile(indent);
 }
 
-string Assignation::dump(int indent) const {
-    string res = string(indent, '\t') + "[Assignation]" + (_isExported ? " <exported>" : "") +
-                 " <type:" + _exprType->getName() + ">\n";
+auto Assignation::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[Assignation]" + (_is_exported ? " <exported>" : "") +
+                 " <type:" + _expr_type->getName() + ">\n";
 
     res += _expr->dump(indent + 1);
 

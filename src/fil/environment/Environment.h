@@ -33,15 +33,15 @@ public:
 
     ~Environment();
 
-    static Environment *getGlobalEnvironment();
+    static auto getGlobalEnvironment() -> Environment *;
 
-    Symbol *addSymbol(const std::string &name, Position *position, Symbol::SymbolKind type);
+    auto addSymbol(const std::string &name, Position *position, Symbol::SymbolKind type) -> Symbol *;
 
-    bool hasSymbol(const std::string &name, ast::AbstractType *signature = nullptr);
+    auto hasSymbol(const std::string &name, ast::AbstractType *signature = nullptr) -> bool;
 
-    Symbol *getSymbol(const std::string &name, ast::AbstractType *signature = nullptr);
+    auto getSymbol(const std::string &name, ast::AbstractType *signature = nullptr) -> Symbol *;
 
-    std::deque<Symbol *> getSymbols(const std::string &name);
+    auto getSymbols(const std::string &name) -> std::deque<Symbol *>;
 
     void setParent(Environment *parent);
 
@@ -50,5 +50,4 @@ private:
     std::deque<Symbol *> _symbols;
 };
 
-
-#endif //FILC_ENVIRONMENT_H
+#endif//FILC_ENVIRONMENT_H

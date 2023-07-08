@@ -24,27 +24,29 @@
 #ifndef FILC_AST_HPP
 #define FILC_AST_HPP
 
+#include "antlr4-runtime.h"
 #include <string>
 #include <vector>
-#include "antlr4-runtime.h"
 
 #include "AST_decl.h"
-#include "utils.h"
 #include "Environment.h"
 #include "ErrorsRegister.h"
+#include "utils.h"
 
 namespace ast {
     class AST {
     public:
         AST();
 
-        virtual std::string decompile(int indent) const;
+        virtual ~AST() = default;
 
-        virtual std::string dump(int indent) const;
+        [[nodiscard]] virtual auto decompile(int indent) const -> std::string;
+
+        [[nodiscard]] virtual auto dump(int indent) const -> std::string;
 
         void setPosition(antlr4::Token *token);
 
-        Position *getPosition() const;
+        [[nodiscard]] auto getPosition() const -> Position *;
 
     protected:
         Position *_pos;
@@ -52,35 +54,34 @@ namespace ast {
 
     class AbstractExpr : public AST {
     public:
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
         void isExported(bool exported);
 
-        bool isExported() const;
+        [[nodiscard]] auto isExported() const -> bool;
 
-        virtual bool isVar() const;
+        [[nodiscard]] virtual auto isVar() const -> bool;
 
-        virtual bool isFunc() const;
+        [[nodiscard]] virtual auto isFunc() const -> bool;
 
-        AbstractType *getExprType() const;
+        [[nodiscard]] auto getExprType() const -> AbstractType *;
 
     protected:
         AbstractExpr();
 
-    protected:
-        bool _isExported;
-        AbstractType *_exprType;
+        bool _is_exported;
+        AbstractType *_expr_type;
     };
 
     class Program : public AST {
     public:
-        Program(const std::string &module,
+        Program(std::string module,
                 const std::vector<std::string> &imports,
                 const std::vector<AbstractExpr *> &exprs);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
         void resolveEnvironment();
 
@@ -89,7 +90,7 @@ namespace ast {
     private:
         std::string _module;
         std::vector<std::string> _imports;
-        std::vector<Program *> _importedModules;
+        std::vector<Program *> _imported_modules;
         std::vector<AbstractExpr *> _exprs;
         Environment *_environment;
 
@@ -100,13 +101,13 @@ namespace ast {
 
     class Identifier : public AbstractExpr {
     public:
-        explicit Identifier(const std::string &name);
+        explicit Identifier(std::string name);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        const std::string &getName() const;
+        [[nodiscard]] auto getName() const -> const std::string &;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         std::string _name;
@@ -118,54 +119,54 @@ namespace ast {
         AbstractType() = default;
 
     public:
-        virtual std::string getName() const = 0;
+        [[nodiscard]] virtual auto getName() const -> std::string = 0;
 
-        bool equals(const AbstractType &other) const;
+        [[nodiscard]] auto equals(const AbstractType &other) const -> bool;
 
-        virtual bool isIterable() const;
+        [[nodiscard]] virtual auto isIterable() const -> bool;
 
-        virtual AbstractType *getIterableType();
+        virtual auto getIterableType() -> AbstractType *;
     };
 
     class Type : public AbstractType {
     public:
-        explicit Type(Identifier *name); // IDENTIFIER
+        explicit Type(Identifier *name);// IDENTIFIER
 
-        Type(int arraySize, AbstractType *subType); // IDENTIFIER '[' INTEGER ']'
+        Type(int array_size, AbstractType *sub_type);// IDENTIFIER '[' INTEGER ']'
 
-        explicit Type(AbstractType *subType); // IDENTIFIER '*'
+        explicit Type(AbstractType *sub_type);// IDENTIFIER '*'
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string getName() const override;
+        [[nodiscard]] auto getName() const -> std::string override;
 
-        bool isIterable() const override;
+        [[nodiscard]] auto isIterable() const -> bool override;
 
-        AbstractType *getIterableType() override;
+        auto getIterableType() -> AbstractType * override;
 
     private:
         Identifier *_name;
 
-        bool _isArray;
-        int _arraySize;
+        bool _is_array;
+        int _array_size;
 
-        bool _isPointer;
-        AbstractType *_subType;
+        bool _is_pointer;
+        AbstractType *_sub_type;
     };
 
     class LambdaType : public AbstractType {
     public:
         LambdaType(const std::vector<AbstractType *> &args, AbstractType *ret);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string getName() const override;
+        [[nodiscard]] auto getName() const -> std::string override;
 
-        AbstractType *getReturnType() const;
+        [[nodiscard]] auto getReturnType() const -> AbstractType *;
 
         void setReturnType(AbstractType *ret);
 
-        const std::vector<AbstractType *> &getArgsTypes() const;
+        [[nodiscard]] auto getArgsTypes() const -> const std::vector<AbstractType *> &;
 
     private:
         std::vector<AbstractType *> _args;
@@ -178,9 +179,9 @@ namespace ast {
     public:
         explicit BlockBody(const std::vector<AbstractExpr *> &exprs);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         std::vector<AbstractExpr *> _exprs;
@@ -191,9 +192,9 @@ namespace ast {
     public:
         explicit ParenthesisBody(AbstractExpr *expr);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         AbstractExpr *_expr;
@@ -208,9 +209,9 @@ namespace ast {
     public:
         explicit BooleanLiteral(bool value);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         bool _value;
@@ -220,9 +221,9 @@ namespace ast {
     public:
         explicit IntegerLiteral(int value);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         int _value;
@@ -232,9 +233,9 @@ namespace ast {
     public:
         explicit FloatLiteral(float value);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         float _value;
@@ -244,9 +245,9 @@ namespace ast {
     public:
         explicit CharLiteral(const std::string &value);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         char _value;
@@ -256,9 +257,9 @@ namespace ast {
     public:
         explicit StringLiteral(const std::string &value);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     protected:
         std::string _value;
@@ -270,9 +271,9 @@ namespace ast {
     public:
         explicit Assignation(AbstractExpr *expr);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         AbstractExpr *_expr;
@@ -280,18 +281,18 @@ namespace ast {
 
     class VariableDeclaration : public AbstractExpr {
     public:
-        VariableDeclaration(bool isVal, Identifier *name, AbstractType *type, Assignation *assignation);
+        VariableDeclaration(bool is_val, Identifier *name, AbstractType *type, Assignation *assignation);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        bool isVar() const override;
+        [[nodiscard]] auto isVar() const -> bool override;
 
-        Symbol *getSymbol() const;
+        [[nodiscard]] auto getSymbol() const -> Symbol *;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
-        bool _isVal;
+        bool _is_val;
         Identifier *_name;
         AbstractType *_type;
         Assignation *_assignation;
@@ -302,7 +303,7 @@ namespace ast {
 
     class Operator : public AST {
     public:
-        typedef enum {
+        using Op = enum {
             STAR,
             PLUSPLUS,
             MINUSMINUS,
@@ -324,48 +325,47 @@ namespace ast {
             MOD,
             ARRAY,
             FUNCTION,
-        } Op;
+        };
 
-    public:
-        explicit Operator(Op op);
+        explicit Operator(Op p_operator);
 
         explicit Operator(AbstractExpr *index);
 
         explicit Operator(const std::vector<AbstractExpr *> &args);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        Op getOp() const;
+        [[nodiscard]] auto getOp() const -> Op;
 
     private:
-        Op _op;
+        Op _operator;
         AbstractExpr *_index;
         std::vector<AbstractExpr *> _args;
     };
 
     class UnaryCalcul : public AbstractExpr {
     public:
-        UnaryCalcul(Operator *op, Identifier *identifier);
+        UnaryCalcul(Operator *p_operator, Identifier *identifier);
 
-        UnaryCalcul(Identifier *identifier, Operator *op);
+        UnaryCalcul(Identifier *identifier, Operator *p_operator);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
-        Operator *_op;
+        Operator *_operator;
         Identifier *_identifier;
-        bool _isPrefix;
+        bool _is_prefix;
     };
 
     class BinaryCalcul : public AbstractExpr {
     public:
-        BinaryCalcul(AbstractExpr *left, Operator *op, AbstractExpr *right);
+        BinaryCalcul(AbstractExpr *left, Operator *p_operator, AbstractExpr *right);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         AbstractExpr *_left;
@@ -379,9 +379,9 @@ namespace ast {
     public:
         FunctionParam(Identifier *name, AbstractType *type);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         Identifier *_name;
@@ -392,9 +392,9 @@ namespace ast {
     public:
         FunctionDeclaration(Identifier *name, const std::vector<FunctionParam *> &params, AbstractType *type);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         Identifier *_name;
@@ -406,13 +406,13 @@ namespace ast {
     public:
         Function(FunctionDeclaration *declaration, AbstractExpr *body);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        bool isFunc() const override;
+        [[nodiscard]] auto isFunc() const -> bool override;
 
-        Symbol *getSymbol() const;
+        [[nodiscard]] auto getSymbol() const -> Symbol *;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         FunctionDeclaration *_declaration;
@@ -427,9 +427,9 @@ namespace ast {
     public:
         Lambda(const std::vector<FunctionParam *> &params, AbstractType *type, AbstractExpr *body);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         std::vector<FunctionParam *> _params;
@@ -442,11 +442,11 @@ namespace ast {
 
     class If : public AbstractExpr {
     public:
-        If(AbstractExpr *condition, AbstractExpr *thenCase, AbstractExpr *elseCase);
+        If(AbstractExpr *condition, AbstractExpr *then_case, AbstractExpr *else_case);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         AbstractExpr *_condition;
@@ -462,16 +462,16 @@ namespace ast {
 
         explicit SwitchPattern(AbstractLiteral *literal);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        AbstractLiteral *getLiteral() const;
+        [[nodiscard]] auto getLiteral() const -> AbstractLiteral *;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
-        bool isDefault() const;
+        [[nodiscard]] auto isDefault() const -> bool;
 
     private:
-        bool _isDefault;
+        bool _is_default;
         AbstractLiteral *_literal;
     };
 
@@ -479,9 +479,9 @@ namespace ast {
     public:
         explicit SwitchCase(SwitchPattern *pattern, AbstractExpr *body);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         SwitchPattern *_pattern;
@@ -492,9 +492,9 @@ namespace ast {
     public:
         Switch(AbstractExpr *condition, const std::vector<SwitchCase *> &cases);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         AbstractExpr *_condition;
@@ -507,9 +507,9 @@ namespace ast {
     public:
         ForICondition(VariableDeclaration *declaration, AbstractExpr *condition, AbstractExpr *increment);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         VariableDeclaration *_declaration;
@@ -521,9 +521,9 @@ namespace ast {
     public:
         ForI(ForICondition *condition, AbstractExpr *body);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         ForICondition *_condition;
@@ -535,26 +535,26 @@ namespace ast {
 
     class ForIterCondition : public AST {
     public:
-        ForIterCondition(bool isVal, Identifier *iterator, Identifier *iterable);
+        ForIterCondition(bool is_val, Identifier *iterator, Identifier *iterable);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
-        bool _isVal;
+        bool _is_val;
         Identifier *_iterator;
         Identifier *_iterable;
-        Symbol *_iteratorSymbol;
+        Symbol *_iterator_symbol;
     };
 
     class ForIter : public AbstractExpr {
     public:
         ForIter(ForIterCondition *condition, AbstractExpr *body);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         ForIterCondition *_condition;
@@ -568,9 +568,9 @@ namespace ast {
     public:
         While(AbstractExpr *condition, AbstractExpr *body);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         AbstractExpr *_condition;
@@ -584,18 +584,18 @@ namespace ast {
     public:
         FunctionCall(Identifier *name, const std::vector<AbstractExpr *> &args);
 
-        std::string decompile(int indent) const override;
+        [[nodiscard]] auto decompile(int indent) const -> std::string override;
 
-        std::string dump(int indent) const override;
+        [[nodiscard]] auto dump(int indent) const -> std::string override;
 
     private:
         Identifier *_name;
         std::vector<AbstractExpr *> _args;
     };
-}
+}// namespace ast
 
-bool operator==(const ast::AbstractType &a, const ast::AbstractType &b);
+auto operator==(const ast::AbstractType &first, const ast::AbstractType &other) -> bool;
 
-bool operator!=(const ast::AbstractType &a, const ast::AbstractType &b);
+auto operator!=(const ast::AbstractType &first, const ast::AbstractType &other) -> bool;
 
-#endif //FILC_AST_HPP
+#endif//FILC_AST_HPP

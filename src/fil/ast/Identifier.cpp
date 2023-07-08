@@ -21,23 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <utility>
+
 #include "AST.hpp"
 
 using namespace std;
 using namespace ast;
 
-Identifier::Identifier(const string &name)
-        : _name(name), _symbol(nullptr) {}
+Identifier::Identifier(string name)
+    : _name(std::move(name)), _symbol(nullptr) {}
 
-string Identifier::decompile(int indent) const {
+auto Identifier::decompile(int indent) const -> string {
     return _name;
 }
 
-const string &Identifier::getName() const {
+auto Identifier::getName() const -> const string & {
     return _name;
 }
 
-string Identifier::dump(int indent) const {
-    return string(indent, '\t') + "[Identifier]" + (_isExported ? " <exported>" : "") +
-           " <name:" + _name + "> <type:" + _exprType->getName() + ">\n";
+auto Identifier::dump(int indent) const -> string {
+    return string(indent, '\t') + "[Identifier]" + (_is_exported ? " <exported>" : "") +
+           " <name:" + _name + "> <type:" + _expr_type->getName() + ">\n";
 }

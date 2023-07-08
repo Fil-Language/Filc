@@ -28,11 +28,11 @@ using namespace ast;
 
 AST::AST() : _pos(nullptr) {}
 
-string AST::decompile(int indent) const {
+auto AST::decompile(int indent) const -> string {
     throw;
 }
 
-std::string AST::dump(int indent) const {
+auto AST::dump(int indent) const -> std::string {
     throw;
 }
 
@@ -42,6 +42,6 @@ void AST::setPosition(antlr4::Token *token) {
                         token->getTokenSource()->getSourceName());
 }
 
-Position *AST::getPosition() const {
+auto AST::getPosition() const -> Position * {
     return _pos;
 }

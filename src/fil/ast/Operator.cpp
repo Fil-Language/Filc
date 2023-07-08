@@ -26,17 +26,17 @@
 using namespace std;
 using namespace ast;
 
-Operator::Operator(Op op)
-        : _op(op), _index(nullptr) {}
+Operator::Operator(Op p_operator)
+    : _operator(p_operator), _index(nullptr) {}
 
 Operator::Operator(AbstractExpr *index)
-        : _op(ARRAY), _index(index) {}
+    : _operator(ARRAY), _index(index) {}
 
 Operator::Operator(const vector<AbstractExpr *> &args)
-        : _op(FUNCTION), _index(nullptr), _args(args) {}
+    : _operator(FUNCTION), _index(nullptr), _args(args) {}
 
-string to_string(Operator::Op op) {
-    switch (op) {
+auto toString(Operator::Op p_operator) -> string {
+    switch (p_operator) {
         case Operator::STAR:
             return "*";
         case Operator::PLUSPLUS:
@@ -84,23 +84,23 @@ string to_string(Operator::Op op) {
     }
 }
 
-string Operator::decompile(int indent) const {
-    if (_op == ARRAY) {
+auto Operator::decompile(int indent) const -> string {
+    if (_operator == ARRAY) {
         return "[" + _index->decompile(indent) + "]";
-    } else if (_op == FUNCTION) {
+    }
+    if (_operator == FUNCTION) {
         string args;
-        for (auto arg: _args) {
+        for (auto *arg: _args) {
             args += arg->decompile(0) + ", ";
         }
         if (!_args.empty()) {
             args.resize(args.size() - 2);
         }
         return "(" + args + ")";
-    } else {
-        return to_string(_op);
     }
+    return toString(_operator);
 }
 
-Operator::Op Operator::getOp() const {
-    return _op;
+auto Operator::getOp() const -> Operator::Op {
+    return _operator;
 }

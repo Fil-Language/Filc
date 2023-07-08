@@ -26,28 +26,28 @@
 using namespace std;
 using namespace ast;
 
-AbstractExpr::AbstractExpr() : _isExported(false), _exprType(nullptr) {}
+AbstractExpr::AbstractExpr() : _is_exported(false), _expr_type(nullptr) {}
 
-string AbstractExpr::decompile(int indent) const {
+auto AbstractExpr::decompile(int indent) const -> string {
     throw;
 }
 
 void AbstractExpr::isExported(bool exported) {
-    _isExported = exported;
+    _is_exported = exported;
 }
 
-bool AbstractExpr::isExported() const {
-    return _isExported;
+auto AbstractExpr::isExported() const -> bool {
+    return _is_exported;
 }
 
-bool AbstractExpr::isVar() const {
+auto AbstractExpr::isVar() const -> bool {
     return false;
 }
 
-bool AbstractExpr::isFunc() const {
+auto AbstractExpr::isFunc() const -> bool {
     return false;
 }
 
-AbstractType *AbstractExpr::getExprType() const {
-    return _exprType;
+auto AbstractExpr::getExprType() const -> AbstractType * {
+    return _expr_type;
 }

@@ -27,15 +27,15 @@ using namespace std;
 using namespace ast;
 
 ParenthesisBody::ParenthesisBody(AbstractExpr *expr)
-        : _expr(expr) {}
+    : _expr(expr) {}
 
-string ParenthesisBody::decompile(int indent) const {
+auto ParenthesisBody::decompile(int indent) const -> string {
     return "(" + _expr->decompile(indent) + ")";
 }
 
-string ParenthesisBody::dump(int indent) const {
-    string res = string(indent, '\t') + "[ParenthesisBody]" + (_isExported ? " <exported>" : "") +
-                 " <type:" + _exprType->getName() + ">\n";
+auto ParenthesisBody::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[ParenthesisBody]" + (_is_exported ? " <exported>" : "") +
+                 " <type:" + _expr_type->getName() + ">\n";
 
     res += _expr->dump(indent + 1);
 

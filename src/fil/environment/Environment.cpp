@@ -28,13 +28,13 @@ using namespace std;
 using namespace ast;
 
 Environment::Environment(Environment *parent)
-        : _parent(parent), _symbols(deque<Symbol *>()) {}
+    : _parent(parent), _symbols(deque<Symbol *>()) {}
 
 Environment::~Environment() = default;
 
 Environment *Environment::getGlobalEnvironment() {
     static auto *globalEnvironment = new Environment();
-    static bool initialized = false;
+    static bool initialized        = false;
 
     if (initialized)
         return globalEnvironment;
@@ -42,13 +42,13 @@ Environment *Environment::getGlobalEnvironment() {
 
     // Add builtins types
     auto tInt = globalEnvironment->addSymbol("int", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
-            ->setSignature(new Type(new Identifier("int")));
+                        ->setSignature(new Type(new Identifier("int")));
     auto tFloat = globalEnvironment->addSymbol("float", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
-            ->setSignature(new Type(new Identifier("float")));
+                          ->setSignature(new Type(new Identifier("float")));
     auto tChar = globalEnvironment->addSymbol("char", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
-            ->setSignature(new Type(new Identifier("char")));
+                         ->setSignature(new Type(new Identifier("char")));
     auto tBool = globalEnvironment->addSymbol("bool", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
-            ->setSignature(new Type(new Identifier("bool")));
+                         ->setSignature(new Type(new Identifier("bool")));
     globalEnvironment->addSymbol("void", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
             ->setSignature(new Type(new Identifier("void")));
 
@@ -216,7 +216,7 @@ Environment *Environment::getGlobalEnvironment() {
 
     // FIXME : temporary, to be removed later as string is part of stl
     auto tString = globalEnvironment->addSymbol("String", new Position(0, 0, "builtin"), Symbol::SymbolKind::TYPE)
-            ->setSignature(new Type(new Identifier("String")));
+                           ->setSignature(new Type(new Identifier("String")));
     globalEnvironment->addSymbol("operator+", new Position(0, 0, "builtin"), Symbol::SymbolKind::FUNCTION)
             ->setSignature(new LambdaType({tString, tString}, tString));
     // FIXME : end of fixme
@@ -233,11 +233,11 @@ Symbol *Environment::addSymbol(const std::string &name, Position *position, Symb
 
 bool Environment::hasSymbol(const std::string &name, ast::AbstractType *signature) {
     if (std::any_of(_symbols.begin(), _symbols.end(), [name, signature](Symbol *symbol) {
-        if (signature == nullptr)
-            return symbol->getName() == name;
-        else
-            return symbol->getName() == name && symbol->getSignature() == signature;
-    })) {
+            if (signature == nullptr)
+                return symbol->getName() == name;
+            else
+                return symbol->getName() == name && symbol->getSignature() == signature;
+        })) {
         return true;
     }
 

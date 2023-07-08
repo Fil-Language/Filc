@@ -1,5 +1,5 @@
 ---
-Checks: 'clang-diagnostic-*,clang-analyzer-*,bugprone-*,concurrency-*,cppcoreguidelines-*,modernize-*,performance-*,readability-*'
+Checks: 'clang-diagnostic-*,clang-analyzer-*,bugprone-*,concurrency-*,cppcoreguidelines-*,modernize-*,performance-*,readability-*,-bugprone-easily-swappable-parameters'
 WarningsAsErrors: true
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false

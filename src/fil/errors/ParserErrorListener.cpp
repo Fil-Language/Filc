@@ -26,11 +26,10 @@
 
 using namespace std;
 
-void ParserErrorListener::syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol, size_t line,
-                                      size_t charPositionInLine, const string &msg, exception_ptr e) {
+void ParserErrorListener::syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offending_symbol, size_t line,
+                                      size_t char_position_in_line, const string &msg, exception_ptr exception_ptr) {
     ErrorsRegister::addError(new Error(
             msg,
-            new Position((int) line, (int) charPositionInLine,
-                         recognizer->getInputStream()->getSourceName())
-    ));
+            new Position((int) line, (int) char_position_in_line,
+                         recognizer->getInputStream()->getSourceName())));
 }

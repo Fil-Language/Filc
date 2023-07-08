@@ -26,27 +26,27 @@
 using namespace std;
 using namespace ast;
 
-If::If(AbstractExpr *condition, AbstractExpr *thenCase, AbstractExpr *elseCase)
-        : _condition(condition), _then(thenCase), _else(elseCase) {}
+If::If(AbstractExpr *condition, AbstractExpr *then_case, AbstractExpr *else_case)
+    : _condition(condition), _then(then_case), _else(else_case) {}
 
-string If::decompile(int indent) const {
+auto If::decompile(int indent) const -> string {
     string res = "if (" + _condition->decompile(indent) + ") " + _then->decompile(indent);
 
-    if (_else) {
+    if (_else != nullptr) {
         res += " else " + _else->decompile(indent);
     }
 
     return res;
 }
 
-string If::dump(int indent) const {
-    string res = string(indent, '\t') + "[If]" + (_isExported ? " <exported> " : " ") +
-                 "<type:" + _exprType->getName() + ">\n";
+auto If::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[If]" + (_is_exported ? " <exported> " : " ") +
+                 "<type:" + _expr_type->getName() + ">\n";
 
     res += _condition->dump(indent + 1);
     res += string(indent, '\t') + "<then>\n";
     res += _then->dump(indent + 1);
-    if (_else) {
+    if (_else != nullptr) {
         res += string(indent, '\t') + "<else>\n";
         res += _else->dump(indent + 1);
     }

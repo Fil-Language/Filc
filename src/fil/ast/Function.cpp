@@ -27,24 +27,22 @@ using namespace std;
 using namespace ast;
 
 Function::Function(FunctionDeclaration *declaration, AbstractExpr *body)
-        : _declaration(declaration), _body(body), _symbol(nullptr), _environment(nullptr) {}
+    : _declaration(declaration), _body(body), _symbol(nullptr), _environment(nullptr) {}
 
-string Function::decompile(int indent) const {
+auto Function::decompile(int indent) const -> string {
     return "fun " + _declaration->decompile(indent) + " " + _body->decompile(indent);
 }
 
-bool Function::isFunc() const {
+auto Function::isFunc() const -> bool {
     return true;
 }
 
-Symbol *Function::getSymbol() const {
+auto Function::getSymbol() const -> Symbol * {
     return _symbol;
 }
 
-string Function::dump(int indent) const {
-    string res = string(indent, '\t') + "[Function]" + (_isExported ? " <exported> " : " ")
-                 + "<name:" + _symbol->getName() + "> "
-                 + " <type:" + _exprType->getName() + ">\n";
+auto Function::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[Function]" + (_is_exported ? " <exported> " : " ") + "<name:" + _symbol->getName() + "> " + " <type:" + _expr_type->getName() + ">\n";
 
     res += _declaration->dump(indent + 1);
     res += _body->dump(indent + 1);

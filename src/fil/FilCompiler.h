@@ -25,34 +25,32 @@
 #define FILC_FILCOMPILER_H
 
 #include "AST_decl.h"
-#include <string>
 #include "antlr4-runtime.h"
+#include <string>
 
 class FilCompiler {
 public:
     explicit FilCompiler(std::string filename);
 
-    int compile(int flag, bool debug, const std::string &output);
+    auto compile(int flag, bool debug, const std::string &output) -> int;
 
-    static std::string import(const std::string &moduleName, antlr4::Token *tkn);
+    static auto import(const std::string &module_name, antlr4::Token *tkn) -> std::string;
 
-    static ast::Program *getModule(const std::string &moduleName);
-
-private:
-    static ast::Program *getSystemProgram();
+    static auto getModule(const std::string &module_name) -> ast::Program *;
 
 private:
+    static auto getSystemProgram() -> ast::Program *;
+
     std::string _filename;
-    static std::string _currentDir;
+    static std::string _current_dir;
     static std::map<std::string, ast::Program *> _modules;
 };
 
-typedef enum FLAGS {
+using FLAGS = enum FLAGS {
     NONE,
 
     DECOMPILE,
     AST,
-} FLAGS;
+};
 
-
-#endif //FILC_FILCOMPILER_H
+#endif//FILC_FILCOMPILER_H

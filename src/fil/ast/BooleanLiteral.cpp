@@ -27,14 +27,14 @@ using namespace std;
 using namespace ast;
 
 BooleanLiteral::BooleanLiteral(bool value)
-        : _value(value) {}
+    : _value(value) {}
 
-string BooleanLiteral::decompile(int indent) const {
+auto BooleanLiteral::decompile(int indent) const -> string {
     return _value ? "true" : "false";
 }
 
-string BooleanLiteral::dump(int indent) const {
-    string res = string(indent, '\t') + "[BooleanLiteral]" + (_isExported ? " <exported>" : "") + " <value:";
+auto BooleanLiteral::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[BooleanLiteral]" + (_is_exported ? " <exported>" : "") + " <value:";
     res += _value ? "true" : "false";
 
     return res + ">\n";

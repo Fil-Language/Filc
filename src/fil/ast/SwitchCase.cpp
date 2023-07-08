@@ -27,15 +27,15 @@ using namespace std;
 using namespace ast;
 
 SwitchCase::SwitchCase(SwitchPattern *pattern, AbstractExpr *body)
-        : _pattern(pattern), _body(body) {}
+    : _pattern(pattern), _body(body) {}
 
-string SwitchCase::decompile(int indent) const {
+auto SwitchCase::decompile(int indent) const -> string {
     return _pattern->decompile(indent) + " -> " + _body->decompile(indent) + "\n";
 }
 
-string SwitchCase::dump(int indent) const {
-    string res = string(indent, '\t') + "[SwitchCase]" + (_isExported ? " <exported> " : " ") +
-                 "<type:" + _exprType->getName() + ">\n";
+auto SwitchCase::dump(int indent) const -> string {
+    string res = string(indent, '\t') + "[SwitchCase]" + (_is_exported ? " <exported> " : " ") +
+                 "<type:" + _expr_type->getName() + ">\n";
 
     res += _pattern->dump(indent + 1);
     res += _body->dump(indent + 1);
