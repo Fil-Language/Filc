@@ -1,0 +1,84 @@
+name: Tests
+
+on:
+  push:
+    paths:
+      - "src/**"
+      - "tests/**"
+      - ".github/workflows/tests.yml"
+  pull_request:
+    paths:
+      - "src/**"
+      - "tests/**"
+      - ".github/workflows/tests.yml"
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup LCOV
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: hrishikesh-kadam/setup-lcov@v1
+
+      - name: Configure CMake
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Debug -DCODE_COVERAGE=ON
+      - name: Configure CMake
+        if: ${{ matrix.os != 'ubuntu-latest' }}
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --target tests
+
+      - name: Run tests
+        run: cd ${{github.workspace}}/build && ctest
+
+      - name: Generate coverage report
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: ${{github.workspace}}/coverage.sh
+      - name: Upload coverage reports to Codecov
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ${{github.workspace}}/coverage.info
+
+  clang-tidy:
+    needs:
+      - tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Run clang-tidy
+        run: clang-tidy -p ${{github.workspace}}/build/ src/**/*.{cpp,hpp,h} tests/**/*.cpp
+
+  builds:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build
+
+      - name: Install
+        run: cmake --install ${{github.workspace}}/build
+
+      - name: Run
+        run: filc --version
