@@ -37,7 +37,7 @@ grammar : [https://fil.ktraini.com/doc/advanced/grammar](https://fil.ktraini.com
 
 ### `version.sh`
 
-This script is used to update the version badge and the file `src/VERSION.h`.
+This script is used to update the version badge and the file `src/lib/utils/VERSION.h`.
 
 - [HTTPie](https://github.com/httpie/httpie)
 
@@ -58,9 +58,11 @@ cmake --build ./build --target filc
 
 ```shell
 # Configure CMake in build directory
-cmake -B ./build -DCMAKE_BUILD_TYPE=Release
+cmake -B ./build -DCMAKE_BUILD_TYPE=Debug
+# Build
+cmake --build ./build
 # Run tests
-cmake --build ./build --target tests
+cd build && ctest
 ```
 
 ## Quick note

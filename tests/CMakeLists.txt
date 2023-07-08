@@ -1,6 +1,3 @@
-# _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
-# Tests section
-
 include(FetchContent)
 FetchContent_Declare(
         googletest
@@ -11,10 +8,9 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_executable(tests
-        main.cpp
-        )
+        unit/utils/OptionsParserTest.cpp)
 
-target_link_libraries(tests PRIVATE GTest::gtest_main filc_lib)
+target_link_libraries(tests PRIVATE GTest::gtest_main compiler_lib)
 
 include(GoogleTest)
 gtest_discover_tests(tests)

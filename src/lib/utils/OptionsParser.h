@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2022-Present Kevin Traini
+ * Copyright (c) 2023-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_VERSION_H
-#define FILC_VERSION_H
 
-#define FILC_VERSION_MAJOR 0
-#define FILC_VERSION_MINOR 2
-#define FILC_VERSION_PATCH 1
+#ifndef FILC_OPTIONSPARSER_H
+#define FILC_OPTIONSPARSER_H
 
-#define MAKE_VERSION(major, minor, patch) ((major) * 1000000 + (minor) * 1000 + (patch))
-#define MAKE_VERSION_STRING(major, minor, patch) std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(patch)
+#include "cxxopts.hpp"
 
-#define FILC_VERSION MAKE_VERSION(FILC_VERSION_MAJOR, FILC_VERSION_MINOR, FILC_VERSION_PATCH)
-#define FILC_VERSION_STRING MAKE_VERSION_STRING(FILC_VERSION_MAJOR, FILC_VERSION_MINOR, FILC_VERSION_PATCH)
+class OptionsParser final {
+public:
+    OptionsParser();
 
-#define FILC_LICENSE "MIT"
+    auto parse(int argc, const char **argv) -> bool;
 
-#endif //FILC_VERSION_H
+    auto getOptions() const -> const cxxopts::Options &;
+
+    auto getFilenames() const -> const std::vector<std::string> &;
+
+    auto getVerbose() const -> uint;
+
+    auto isDebug() const -> bool;
+
+    auto getOut() const -> const std::string &;
+
+    static auto extension(const std::string &filename) -> std::string;
+
+private:
+    cxxopts::Options _options;
+    std::vector<std::string> _filenames;
+    uint _verbose;
+    bool _debug;
+    std::string _out;
+
+    auto help() -> void;
+
+    static auto version() -> void;
+};
+
+#endif//FILC_OPTIONSPARSER_H
