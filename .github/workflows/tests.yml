@@ -41,7 +41,7 @@ jobs:
 
       - name: Generate coverage report
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: ${{github.workspace}}/coverage.sh
+        run: ${{github.workspace}}/bin/coverage.sh
       - name: Upload coverage reports to Codecov
         if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: codecov/codecov-action@v3
