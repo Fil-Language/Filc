@@ -57,7 +57,7 @@
 add_library(compiler_lib
         utils/OptionsParser.cpp
         )
-target_include_directories(compiler_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} utils)
+target_include_directories(compiler_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} utils ../../lib)
 target_link_libraries(compiler_lib PUBLIC coverage_config)
 
 target_compile_options(compiler_lib PUBLIC -Wall)
