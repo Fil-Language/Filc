@@ -26,15 +26,18 @@
 #include "VERSION.h"
 
 OptionsParser::OptionsParser()
-    : _options("filc", "Fil compiler\nVersion: " + FILC_VERSION_STRING + "\nLicense: " + FILC_LICENSE), _verbose(0), _debug(false) {
+        : _options("filc", "Fil compiler\nVersion: " + FILC_VERSION_STRING + "\nLicense: " + FILC_LICENSE), _verbose(0),
+          _debug(false), _out("a.out") {
     _options.custom_help("[options...]");
     _options.positional_help("<source files>");
     _options.add_options()("f,filenames", "Filenames", cxxopts::value<std::vector<std::string>>());
     _options.add_options()("h,help", "Display help message");
     _options.add_options()("v,version", "Display version of compiler");
-    _options.add_options()("verbose", "Verbose level (0-5)", cxxopts::value<uint>()->default_value("0")->implicit_value("1"));
+    _options.add_options()("verbose", "Verbose level (0-5)",
+                           cxxopts::value<uint>()->default_value("0")->implicit_value("1"));
     _options.add_options()("d,debug", "Compile with debug information");
-    _options.add_options()("o,out", "Executable output filename", cxxopts::value<std::string>()->default_value("a.out"));
+    _options.add_options()("o,out", "Executable output filename",
+                           cxxopts::value<std::string>()->default_value("a.out"));
     _options.parse_positional({"filenames"});
 }
 
@@ -77,11 +80,11 @@ auto OptionsParser::parse(int argc, const char **argv) -> bool {
             return false;
         }
     }
-    auto verbose           = result["verbose"].as<uint>();
+    auto verbose = result["verbose"].as<uint>();
     const auto MAX_VERBOSE = 5;
-    _verbose               = verbose > MAX_VERBOSE ? MAX_VERBOSE : verbose;
-    _debug                 = result.count("debug") != 0;
-    _out                   = result["out"].as<std::string>();
+    _verbose = verbose > MAX_VERBOSE ? MAX_VERBOSE : verbose;
+    _debug = result.count("debug") != 0;
+    _out = result["out"].as<std::string>();
 
     return true;
 }
@@ -104,7 +107,7 @@ auto OptionsParser::version() -> void {
 
 auto OptionsParser::extension(const std::string &filename) -> std::string {
     auto dot = filename.find_last_of('.');
-    if (dot == filename.npos) {
+    if (dot == std::string::npos) {
         return "";
     }
 
