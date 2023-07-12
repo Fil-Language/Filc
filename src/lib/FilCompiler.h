@@ -21,17 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#ifndef FILC_FILCOMPILER_H
+#define FILC_FILCOMPILER_H
+
 #include "OptionsParser.h"
-#include "FilCompiler.h"
 
-auto main(int argc, const char **argv) -> int {
-    auto options = filc::utils::OptionsParser();
+namespace filc {
+    class FilCompiler {
+    public:
+        explicit FilCompiler(utils::OptionsParser options);
 
-    if (!options.parse(argc, argv)) {
-        return EXIT_FAILURE;
-    }
+        auto compile() -> int;
 
-    auto compiler = filc::FilCompiler(options);
-
-    return compiler.compile();
+    private:
+        utils::OptionsParser _options;
+    };
 }
+
+#endif //FILC_FILCOMPILER_H

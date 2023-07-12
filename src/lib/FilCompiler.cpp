@@ -21,17 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "OptionsParser.h"
 #include "FilCompiler.h"
+#include <utility>
+#include <future>
 
-auto main(int argc, const char **argv) -> int {
-    auto options = filc::utils::OptionsParser();
+namespace filc {
+    FilCompiler::FilCompiler(utils::OptionsParser options)
+            : _options(std::move(options)) {}
 
-    if (!options.parse(argc, argv)) {
-        return EXIT_FAILURE;
+    auto FilCompiler::compile() -> int {
+        std::vector<std::future<bool>> futures;
+        for (const auto &filename: _options.getFilenames()) {
+            auto fut = std::async([](const std::string &filename) {
+                return false;
+            }, filename);
+            futures.push_back(std::move(fut));
+        }
+
+        std::for_each(futures.begin(), futures.end(), [](std::future<bool> &fut) {
+            fut.wait();
+        });
+
+        return 0;
     }
-
-    auto compiler = filc::FilCompiler(options);
-
-    return compiler.compile();
 }
