@@ -30,15 +30,11 @@ constexpr uint FILC_VERSION_MAJOR = 0;
 constexpr uint FILC_VERSION_MINOR = 2;
 constexpr uint FILC_VERSION_PATCH = 1;
 
-constexpr auto makeVersion(uint major, uint minor, uint patch) {
-    const uint VERSION_SPAN = 1000;
-    return ((major) * (VERSION_SPAN * VERSION_SPAN) + (minor) * VERSION_SPAN + (patch));
-}
-
+#define MAKE_VERSION(major, minor, patch) ((major) * 1000000 + (minor) * 1000 + (patch))
 #define MAKE_VERSION_STRING(major, minor, patch) std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(patch)
 
-#define FILC_VERSION makeVersion(FILC_VERSION_MAJOR, FILC_VERSION_MINOR, FILC_VERSION_PATCH)
-#define FILC_VERSION_STRING MAKE_VERSION_STRING (FILC_VERSION_MAJOR, FILC_VERSION_MINOR, FILC_VERSION_PATCH)
+#define FILC_VERSION MAKE_VERSION(FILC_VERSION_MAJOR, FILC_VERSION_MINOR, FILC_VERSION_PATCH)
+#define FILC_VERSION_STRING MAKE_VERSION_STRING(FILC_VERSION_MAJOR, FILC_VERSION_MINOR, FILC_VERSION_PATCH)
 
 constexpr const char *FILC_LICENSE = "MIT";
 
