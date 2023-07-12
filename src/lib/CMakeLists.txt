@@ -58,8 +58,10 @@ add_library(compiler_lib
         # === Main ===
         FilCompiler.cpp
         # === Utils ===
-        utils/OptionsParser.cpp)
-target_include_directories(compiler_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} utils ../../lib)
+        utils/OptionsParser.cpp
+        # === Message ===
+        message/Message.cpp)
+target_include_directories(compiler_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} utils message ../../lib)
 target_link_libraries(compiler_lib PUBLIC coverage_config)
 
 target_compile_options(compiler_lib PUBLIC -Wall)
