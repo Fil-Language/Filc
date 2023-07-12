@@ -30,7 +30,7 @@ TEST(OptionParser, constructor) {
     ASSERT_EQ(0, parser.getFilenames().size());
     ASSERT_EQ(0, parser.getVerbose());
     ASSERT_FALSE(parser.isDebug());
-    ASSERT_STREQ("", parser.getOut().c_str());
+    ASSERT_STREQ("a.out", parser.getOut().c_str());
 }
 
 TEST(OptionParser, parse) {
