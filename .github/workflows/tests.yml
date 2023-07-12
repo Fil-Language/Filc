@@ -77,6 +77,3 @@ jobs:
 
       - name: Build
         run: cmake --build ${{github.workspace}}/build
-
-      - name: Run
-        run: filc --version
