@@ -27,34 +27,36 @@
 
 #include "cxxopts.hpp"
 
-class OptionsParser final {
-public:
-    OptionsParser();
+namespace filc::utils {
+    class OptionsParser final {
+    public:
+        OptionsParser();
 
-    auto parse(int argc, const char **argv) -> bool;
+        auto parse(int argc, const char **argv) -> bool;
 
-    auto getOptions() const -> const cxxopts::Options &;
+        auto getOptions() const -> const cxxopts::Options &;
 
-    auto getFilenames() const -> const std::vector<std::string> &;
+        auto getFilenames() const -> const std::vector<std::string> &;
 
-    auto getVerbose() const -> uint;
+        auto getVerbose() const -> uint;
 
-    auto isDebug() const -> bool;
+        auto isDebug() const -> bool;
 
-    auto getOut() const -> const std::string &;
+        auto getOut() const -> const std::string &;
 
-    static auto extension(const std::string &filename) -> std::string;
+        static auto extension(const std::string &filename) -> std::string;
 
-private:
-    cxxopts::Options _options;
-    std::vector<std::string> _filenames;
-    uint _verbose;
-    bool _debug;
-    std::string _out;
+    private:
+        cxxopts::Options _options;
+        std::vector<std::string> _filenames;
+        uint _verbose;
+        bool _debug;
+        std::string _out;
 
-    auto help() -> void;
+        auto help() -> void;
 
-    static auto version() -> void;
-};
+        static auto version() -> void;
+    };
+}
 
 #endif//FILC_OPTIONSPARSER_H

@@ -25,7 +25,7 @@
 #include <gtest/gtest.h>
 
 TEST(OptionParser, constructor) {
-    auto parser = OptionsParser();
+    auto parser = filc::utils::OptionsParser();
 
     ASSERT_EQ(0, parser.getFilenames().size());
     ASSERT_EQ(0, parser.getVerbose());
@@ -34,7 +34,7 @@ TEST(OptionParser, constructor) {
 }
 
 TEST(OptionParser, parse) {
-    auto parser = OptionsParser();
+    auto parser = filc::utils::OptionsParser();
 
     std::vector<const char *> argv = {"filc"};
     ASSERT_FALSE(parser.parse(1, argv.data()));
@@ -65,13 +65,13 @@ TEST(OptionParser, parse) {
 }
 
 TEST(OptionParser, getOptions) {
-    auto parser = OptionsParser();
+    auto parser = filc::utils::OptionsParser();
 
     ASSERT_NO_THROW({ parser.getOptions(); });
 }
 
 TEST(OptionParser, getFilenames) {
-    auto parser = OptionsParser();
+    auto parser = filc::utils::OptionsParser();
 
     std::vector<const char *> argv = {"filc", "file1.fil", "file2.fil"};
     parser.parse(3, argv.data());
@@ -86,7 +86,7 @@ TEST(OptionParser, getFilenames) {
 }
 
 TEST(OptionParser, getVerbose) {
-    auto parser = OptionsParser();
+    auto parser = filc::utils::OptionsParser();
 
     std::vector<const char *> argv = {"filc", "--verbose=2", "file2.fil"};
     parser.parse(3, argv.data());
@@ -105,7 +105,7 @@ TEST(OptionParser, getVerbose) {
 }
 
 TEST(OptionParser, isDebug) {
-    auto parser = OptionsParser();
+    auto parser = filc::utils::OptionsParser();
 
     std::vector<const char *> argv = {"filc", "file2.fil"};
     parser.parse(2, argv.data());
@@ -121,7 +121,7 @@ TEST(OptionParser, isDebug) {
 }
 
 TEST(OptionParser, getOut) {
-    auto parser = OptionsParser();
+    auto parser = filc::utils::OptionsParser();
 
     std::vector<const char *> argv = {"filc", "file2.fil"};
     parser.parse(2, argv.data());
@@ -141,14 +141,14 @@ TEST(OptionParser, getOut) {
 
 TEST(OptionParser, extension) {
     std::string expected = "fil";
-    ASSERT_STREQ(expected.c_str(), OptionsParser::extension("file.fil").c_str());
+    ASSERT_STREQ(expected.c_str(), filc::utils::OptionsParser::extension("file.fil").c_str());
 
     expected = "";
-    ASSERT_STREQ(expected.c_str(), OptionsParser::extension("fil").c_str());
+    ASSERT_STREQ(expected.c_str(), filc::utils::OptionsParser::extension("fil").c_str());
 
     expected = "txt";
-    ASSERT_STREQ(expected.c_str(), OptionsParser::extension("some file with spaces.txt").c_str());
+    ASSERT_STREQ(expected.c_str(), filc::utils::OptionsParser::extension("some file with spaces.txt").c_str());
 
     expected = "teng";
-    ASSERT_STREQ(expected.c_str(), OptionsParser::extension("homepage.html.teng").c_str());
+    ASSERT_STREQ(expected.c_str(), filc::utils::OptionsParser::extension("homepage.html.teng").c_str());
 }

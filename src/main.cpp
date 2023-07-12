@@ -24,7 +24,7 @@
 #include "OptionsParser.h"
 
 auto main(int argc, const char **argv) -> int {
-    auto parser = OptionsParser();
+    auto parser = filc::utils::OptionsParser();
 
     if (!parser.parse(argc, argv)) {
         return EXIT_FAILURE;
