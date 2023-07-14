@@ -8,7 +8,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_executable(tests
-        unit/utils/OptionsParserTest.cpp unit/message/MessageTest.cpp)
+        unit/utils/OptionsParserTest.cpp unit/message/MessageTest.cpp unit/message/MessageCollectorTest.cpp)
 
 target_link_libraries(tests PRIVATE GTest::gtest_main compiler_lib)
 

@@ -21,31 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "Message.h"
-#include <utility>
+#ifndef FILC_MESSAGECOLLECTOR_H
+#define FILC_MESSAGECOLLECTOR_H
 
-constexpr uint MAX_LEVEL = 5;
+#include "Message.h"
+#include <vector>
 
 namespace filc::message {
-    Message::Message(uint level, std::string content)
-            : _level(level <= MAX_LEVEL ? level : MAX_LEVEL), _content(std::move(content)), _printed(false) {}
+    class MessageCollector {
+    public:
+        explicit MessageCollector(uint level);
 
-    auto Message::print(std::ostream &out) -> std::ostream & {
-        if (_printed) {
-            return out;
-        }
+        ~MessageCollector();
 
-        out << _content;
-        _printed = true;
+        auto addMessage(Message *message) -> MessageCollector &;
 
-        return out;
-    }
+        auto addError(Message *error) -> MessageCollector &;
 
-    auto Message::getLevel() const -> uint {
-        return _level;
-    }
+        auto hasMessages() -> bool;
+
+        auto printMessages() -> MessageCollector &;
+
+        auto hasErrors() -> bool;
+
+        auto printErrors() -> MessageCollector &;
+
+        static auto getCollector(uint level = 0) -> MessageCollector *;
+
+    private:
+        uint _level;
+        std::vector<Message *> _messages;
+        std::vector<Message *> _errors;
+    };
 }
 
-auto operator<<(std::ostream &out, filc::message::Message &message) -> std::ostream & {
-    return message.print(out);
-}
+#endif //FILC_MESSAGECOLLECTOR_H
