@@ -21,30 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_MESSAGE_H
-#define FILC_MESSAGE_H
+#ifndef FILC_ERROR_H
+#define FILC_ERROR_H
 
-#include <string>
-#include <iostream>
+#include "Message.h"
+#include <utility>
 
 namespace filc::message {
-    class Message {
+    class Error : public Message {
     public:
-        Message(uint level, std::string content);
+        Error(uint level, std::string content) : Message(level, std::move(content)) {}
 
-        virtual ~Message() = default;
-
-        virtual auto print(std::ostream &out) -> std::ostream &;
-
-        auto getLevel() const -> uint;
-
-    protected:
-        uint _level;
-        std::string _content;
-        bool _printed;
+        auto print(std::ostream &out) -> std::ostream & override;
     };
 }
 
-auto operator<<(std::ostream &out, filc::message::Message &message) -> std::ostream &;
-
-#endif //FILC_MESSAGE_H
+#endif //FILC_ERROR_H

@@ -55,8 +55,8 @@ namespace filc::message {
 
     auto MessageCollector::printMessages() -> MessageCollector & {
         std::for_each(_messages.begin(), _messages.end(), [this](Message *message) {
-            if (message->getLevel() >= _level) {
-                std::cout << message << std::endl;
+            if (message->getLevel() <= _level) {
+                std::cout << *message << std::endl;
             }
         });
 
@@ -71,8 +71,8 @@ namespace filc::message {
 
     auto MessageCollector::printErrors() -> MessageCollector & {
         std::for_each(_errors.begin(), _errors.end(), [this](Message *error) {
-            if (error->getLevel() >= _level) {
-                std::cerr << error << std::endl;
+            if (error->getLevel() <= _level) {
+                std::cerr << *error << std::endl;
             }
         });
 
