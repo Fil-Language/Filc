@@ -22,12 +22,15 @@
  * SOFTWARE.
  */
 #include "FilCompiler.h"
+#include "MessageCollector.h"
 #include <utility>
 #include <future>
 
 namespace filc {
     FilCompiler::FilCompiler(utils::OptionsParser options)
-            : _options(std::move(options)) {}
+            : _options(std::move(options)) {
+        message::MessageCollector::getCollector(_options.getVerbose());
+    }
 
     auto FilCompiler::compile() -> int {
         std::vector<std::future<bool>> futures;
