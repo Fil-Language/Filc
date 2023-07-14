@@ -60,7 +60,7 @@ add_library(compiler_lib
         # === Utils ===
         utils/OptionsParser.cpp
         # === Message ===
-        message/Message.cpp message/MessageCollector.cpp message/MessageCollector.h)
+        message/Message.cpp message/MessageCollector.cpp)
 target_include_directories(compiler_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} utils message ../../lib)
 target_link_libraries(compiler_lib PUBLIC coverage_config)
 
