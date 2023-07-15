@@ -35,7 +35,7 @@ TEST(MessageCollector, getCollector) {
     ASSERT_TRUE(collector2->hasMessages());
 }
 
-TEST(MesssageCollector, hasMessages) {
+TEST(MessageCollector, hasMessages) {
     auto *collector = filc::message::MessageCollector::getCollector();
 
     ASSERT_FALSE(collector->hasMessages());
@@ -45,7 +45,7 @@ TEST(MesssageCollector, hasMessages) {
     ASSERT_FALSE(collector->hasErrors());
 }
 
-TEST(MesssageCollector, hasErrors) {
+TEST(MessageCollector, hasErrors) {
     auto *collector = filc::message::MessageCollector::getCollector();
 
     ASSERT_FALSE(collector->hasMessages());
