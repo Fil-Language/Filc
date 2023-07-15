@@ -53,6 +53,6 @@ target_include_directories(compiler_lib PUBLIC
         utils message grammar
         ${ANTLR4_INCLUDE_DIRS} ${ANTLR_Lexer_OUTPUT_DIR} #${ANTLR_Parser_OUTPUT_DIR}
         ../../lib)
-target_link_libraries(compiler_lib PUBLIC coverage_config antlr4_static)
+target_link_libraries(compiler_lib PUBLIC additional_config antlr4_static)
 
 target_compile_options(compiler_lib PUBLIC -Wall)

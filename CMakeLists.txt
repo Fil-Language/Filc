@@ -21,21 +21,25 @@ project(
 # _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 # Code Coverage configuration
 
-add_library(coverage_config INTERFACE)
+add_library(additional_config INTERFACE)
 
 option(CODE_COVERAGE "Enable coverage reporting" OFF)
 if (CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(coverage_config INTERFACE
+    target_compile_options(additional_config INTERFACE
             -O0        # no optimization
             -g         # generate debug info
             --coverage # sets all required flags
             )
-    target_link_options(coverage_config INTERFACE --coverage)
-endif (CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_link_options(additional_config INTERFACE --coverage)
+else ()
+    target_compile_options(additional_config INTERFACE
+            -O3        # full optimization
+            )
+endif ()
 
 add_subdirectory(src)
 
-option(BUILD_TESTING "Build the testing tree." ON)
+option(BUILD_TESTING "Build the testing tree." OFF)
 if (BUILD_TESTING AND (PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
     enable_testing()
     add_subdirectory(tests)
