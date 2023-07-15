@@ -21,17 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "Error.h"
+#include "Lexer.h"
+#include "FilLexer.h"
 
-namespace filc::message {
-    auto BasicError::print(std::ostream &out) -> std::ostream & {
-        if (_printed) {
-            return out;
-        }
+namespace filc::grammar {
+    Lexer::Lexer(const std::string &filename) {
+        antlr4::ANTLRFileStream input;
+        input.loadFromFile(filename);
+        FilLexer lexer(&input);
+        _tokens = new antlr4::CommonTokenStream(&lexer);
+        _tokens->fill();
+    }
 
-        out << "\033[1;31mERROR:\033[0m " << _content;
-        _printed = true;
-
-        return out;
+    auto Lexer::getTokens() -> antlr4::CommonTokenStream * {
+        return _tokens;
     }
 }

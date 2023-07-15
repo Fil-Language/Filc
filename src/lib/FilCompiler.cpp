@@ -23,6 +23,8 @@
  */
 #include "FilCompiler.h"
 #include "MessageCollector.h"
+#include "Error.h"
+#include "Lexer.h"
 #include <utility>
 #include <future>
 
@@ -33,10 +35,20 @@ namespace filc {
     }
 
     auto FilCompiler::compile() -> int {
+        auto *collector = filc::message::MessageCollector::getCollector();
+
         std::vector<std::future<bool>> futures;
         for (const auto &filename: _options.getFilenames()) {
-            auto fut = std::async([](const std::string &filename) {
-                return false;
+            auto fut = std::async([collector](const std::string &filename) {
+                try {
+                    filc::grammar::Lexer lexer(filename);
+
+                    return true;
+                } catch (std::exception &e) {
+                    collector->addError(new filc::message::BasicError(5, e.what()));
+
+                    return false;
+                }
             }, filename);
             futures.push_back(std::move(fut));
         }

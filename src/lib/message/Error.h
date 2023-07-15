@@ -28,9 +28,9 @@
 #include <utility>
 
 namespace filc::message {
-    class Error : public Message {
+    class BasicError : public Message {
     public:
-        Error(uint level, std::string content) : Message(level, std::move(content)) {}
+        BasicError(uint level, std::string content) : Message(level, std::move(content)) {}
 
         auto print(std::ostream &out) -> std::ostream & override;
     };

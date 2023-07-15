@@ -45,11 +45,12 @@ add_library(compiler_lib
         utils/OptionsParser.cpp
         # === ANTLR ===
         ${ANTLR_Lexer_CXX_OUTPUTS} #${ANTLR_Parser_CXX_OUTPUTS}
+        grammar/Lexer.cpp
         # === Message ===
         message/Message.cpp message/MessageCollector.cpp message/Warning.cpp message/Error.cpp)
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
-        utils message
+        utils message grammar
         ${ANTLR4_INCLUDE_DIRS} ${ANTLR_Lexer_OUTPUT_DIR} #${ANTLR_Parser_OUTPUT_DIR}
         ../../lib)
 target_link_libraries(compiler_lib PUBLIC coverage_config antlr4_static)

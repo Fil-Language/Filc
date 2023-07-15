@@ -21,17 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "Error.h"
+#ifndef FILC_LEXER_H
+#define FILC_LEXER_H
 
-namespace filc::message {
-    auto BasicError::print(std::ostream &out) -> std::ostream & {
-        if (_printed) {
-            return out;
-        }
+#include <string>
+#include "antlr4-runtime.h"
 
-        out << "\033[1;31mERROR:\033[0m " << _content;
-        _printed = true;
+namespace filc::grammar {
+    class Lexer final {
+    public:
+        explicit Lexer(const std::string &filename);
 
-        return out;
-    }
+        auto getTokens() -> antlr4::CommonTokenStream *;
+
+    private:
+        antlr4::CommonTokenStream *_tokens;
+    };
 }
+
+#endif //FILC_LEXER_H
