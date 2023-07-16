@@ -16,10 +16,10 @@ find_package(ANTLR REQUIRED)
 
 antlr_target(Lexer ${PROJECT_SOURCE_DIR}/src/lib/grammar/FilLexer.g4 LEXER
         PACKAGE filc::grammar)
-#antlr_target(Parser ${PROJECT_SOURCE_DIR}/src/lib/grammar/FilParser.g4 PARSER
-#        PACKAGE filc::grammar
-#        DEPENDS_ANTLR Lexer
-#        COMPILE_FLAGS -lib ${ANTLR_Lexer_OUTPUT_DIR})
+antlr_target(Parser ${PROJECT_SOURCE_DIR}/src/lib/grammar/FilParser.g4 PARSER
+        PACKAGE filc::grammar
+        DEPENDS_ANTLR Lexer
+        COMPILE_FLAGS -lib ${ANTLR_Lexer_OUTPUT_DIR})
 
 ## _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 ## LLVM section
@@ -44,14 +44,14 @@ add_library(compiler_lib
         # === Utils ===
         utils/OptionsParser.cpp
         # === ANTLR ===
-        ${ANTLR_Lexer_CXX_OUTPUTS} #${ANTLR_Parser_CXX_OUTPUTS}
+        ${ANTLR_Lexer_CXX_OUTPUTS} ${ANTLR_Parser_CXX_OUTPUTS}
         grammar/Lexer.cpp
         # === Message ===
         message/Message.cpp message/MessageCollector.cpp message/Warning.cpp message/Error.cpp)
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
         utils message grammar
-        ${ANTLR4_INCLUDE_DIRS} ${ANTLR_Lexer_OUTPUT_DIR} #${ANTLR_Parser_OUTPUT_DIR}
+        ${ANTLR4_INCLUDE_DIRS} ${ANTLR_Lexer_OUTPUT_DIR} ${ANTLR_Parser_OUTPUT_DIR}
         ../../lib)
 target_link_libraries(compiler_lib PUBLIC additional_config antlr4_static)
 
