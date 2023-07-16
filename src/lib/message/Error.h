@@ -30,7 +30,7 @@
 namespace filc::message {
     class BasicError : public Message {
     public:
-        BasicError(uint level, std::string content) : Message(level, std::move(content)) {}
+        BasicError(LEVEL level, std::string content) : Message(level, std::move(content)) {}
 
         auto print(std::ostream &out) -> std::ostream & override;
     };

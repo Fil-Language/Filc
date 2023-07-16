@@ -24,10 +24,10 @@
 #include "Message.h"
 #include <utility>
 
-constexpr uint MAX_LEVEL = 5;
+constexpr filc::message::LEVEL MAX_LEVEL = filc::message::SYSTEM;
 
 namespace filc::message {
-    Message::Message(uint level, std::string content)
+    Message::Message(LEVEL level, std::string content)
             : _level(level <= MAX_LEVEL ? level : MAX_LEVEL), _content(std::move(content)), _printed(false) {}
 
     auto Message::print(std::ostream &out) -> std::ostream & {
@@ -41,7 +41,7 @@ namespace filc::message {
         return out;
     }
 
-    auto Message::getLevel() const -> uint {
+    auto Message::getLevel() const -> LEVEL {
         return _level;
     }
 }

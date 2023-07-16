@@ -36,19 +36,19 @@ auto getMessageContent(filc::message::Message &message) -> std::string {
 
 TEST(Message, constructor) {
     std::string expected = "My message";
-    auto message = filc::message::Message(4, expected);
-    ASSERT_EQ(4, message.getLevel());
+    auto message = filc::message::Message(filc::message::WARNING, expected);
+    ASSERT_EQ(filc::message::WARNING, message.getLevel());
     ASSERT_STREQ(expected.c_str(), getMessageContent(message).c_str());
 
     expected = "My message 2";
-    message = filc::message::Message(9, expected);
+    message = filc::message::Message((filc::message::LEVEL) 9, expected);
     ASSERT_EQ(5, message.getLevel());
     ASSERT_STREQ(expected.c_str(), getMessageContent(message).c_str());
 }
 
 TEST(Message, print) {
     std::string expected = "My message";
-    auto message = filc::message::Message(4, expected);
+    auto message = filc::message::Message(filc::message::WARNING, expected);
     ASSERT_STREQ(expected.c_str(), getMessageContent(message).c_str());
     ASSERT_STREQ("", getMessageContent(message).c_str());
 }

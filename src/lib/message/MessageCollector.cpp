@@ -25,7 +25,7 @@
 #include <algorithm>
 
 namespace filc::message {
-    MessageCollector::MessageCollector(uint level)
+    MessageCollector::MessageCollector(LEVEL level)
             : _level(level) {}
 
     MessageCollector::~MessageCollector() {
@@ -81,7 +81,7 @@ namespace filc::message {
         return *this;
     }
 
-    auto MessageCollector::getCollector(uint level) -> MessageCollector * {
+    auto MessageCollector::getCollector(LEVEL level) -> MessageCollector * {
         static auto *collector = new MessageCollector(level);
 
         return collector;

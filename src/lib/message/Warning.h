@@ -30,7 +30,7 @@
 namespace filc::message {
     class BasicWarning : public Message {
     public:
-        BasicWarning(uint level, std::string content) : Message(level, std::move(content)) {}
+        BasicWarning(LEVEL level, std::string content) : Message(level, std::move(content)) {}
 
         auto print(std::ostream &out) -> std::ostream & override;
     };

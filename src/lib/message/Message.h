@@ -28,18 +28,27 @@
 #include <iostream>
 
 namespace filc::message {
+    using LEVEL = enum LEVEL {
+        SYSTEM = 5,
+        INFO = 4,
+        DEBUG = 3,
+        WARNING = 2,
+        ERROR = 1,
+        FATAL_ERROR = 0,
+    };
+
     class Message {
     public:
-        Message(uint level, std::string content);
+        Message(LEVEL level, std::string content);
 
         virtual ~Message() = default;
 
         virtual auto print(std::ostream &out) -> std::ostream &;
 
-        auto getLevel() const -> uint;
+        auto getLevel() const -> LEVEL;
 
     protected:
-        uint _level;
+        LEVEL _level;
         std::string _content;
         bool _printed;
     };

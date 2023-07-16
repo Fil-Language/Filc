@@ -30,7 +30,7 @@
 namespace filc::message {
     class MessageCollector {
     public:
-        explicit MessageCollector(uint level);
+        explicit MessageCollector(LEVEL level);
 
         ~MessageCollector();
 
@@ -46,10 +46,10 @@ namespace filc::message {
 
         auto printErrors() -> MessageCollector &;
 
-        static auto getCollector(uint level = 0) -> MessageCollector *;
+        static auto getCollector(LEVEL level = FATAL_ERROR) -> MessageCollector *;
 
     private:
-        uint _level;
+        LEVEL _level;
         std::vector<Message *> _messages;
         std::vector<Message *> _errors;
     };

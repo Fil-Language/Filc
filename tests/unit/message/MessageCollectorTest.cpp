@@ -29,7 +29,7 @@ TEST(MessageCollector, getCollector) {
     auto *collector2 = filc::message::MessageCollector::getCollector();
     ASSERT_EQ(collector1, collector2);
 
-    collector1->addMessage(new filc::message::Message(1, "Hello"));
+    collector1->addMessage(new filc::message::Message(filc::message::INFO, "Hello"));
 
     ASSERT_TRUE(collector1->hasMessages());
     ASSERT_TRUE(collector2->hasMessages());
@@ -40,7 +40,7 @@ TEST(MessageCollector, hasMessages) {
 
     ASSERT_FALSE(collector->hasMessages());
     ASSERT_FALSE(collector->hasErrors());
-    collector->addMessage(new filc::message::Message(1, "Hello"));
+    collector->addMessage(new filc::message::Message(filc::message::INFO, "Hello"));
     ASSERT_TRUE(collector->hasMessages());
     ASSERT_FALSE(collector->hasErrors());
 }
@@ -50,14 +50,14 @@ TEST(MessageCollector, hasErrors) {
 
     ASSERT_FALSE(collector->hasMessages());
     ASSERT_FALSE(collector->hasErrors());
-    collector->addError(new filc::message::Message(1, "Hello"));
+    collector->addError(new filc::message::Message(filc::message::INFO, "Hello"));
     ASSERT_FALSE(collector->hasMessages());
     ASSERT_TRUE(collector->hasErrors());
 }
 
 TEST(MessageCollector, printMessages) {
     auto *collector = filc::message::MessageCollector::getCollector();
-    collector->addMessage(new filc::message::Message(1, "Hello"));
+    collector->addMessage(new filc::message::Message(filc::message::INFO, "Hello"));
     collector->printMessages();
 
     ASSERT_FALSE(collector->hasMessages());
@@ -65,7 +65,7 @@ TEST(MessageCollector, printMessages) {
 
 TEST(MessageCollector, printErrors) {
     auto *collector = filc::message::MessageCollector::getCollector();
-    collector->addError(new filc::message::Message(1, "Hello"));
+    collector->addError(new filc::message::Message(filc::message::INFO, "Hello"));
     collector->printErrors();
 
     ASSERT_FALSE(collector->hasErrors());

@@ -32,7 +32,7 @@
 namespace filc {
     FilCompiler::FilCompiler(utils::OptionsParser options)
             : _options(std::move(options)) {
-        message::MessageCollector::getCollector(_options.getVerbose());
+        message::MessageCollector::getCollector((filc::message::LEVEL) _options.getVerbose());
     }
 
     auto FilCompiler::compile() -> int {
@@ -48,7 +48,7 @@ namespace filc {
 
                     return true;
                 } catch (std::exception &e) {
-                    collector->addError(new filc::message::BasicError(5, e.what()));
+                    collector->addError(new filc::message::BasicError(filc::message::FATAL_ERROR, e.what()));
 
                     return false;
                 }
