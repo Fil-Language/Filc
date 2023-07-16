@@ -25,6 +25,7 @@
 #include "MessageCollector.h"
 #include "Error.h"
 #include "Lexer.h"
+#include "Parser.h"
 #include <utility>
 #include <future>
 
@@ -42,6 +43,8 @@ namespace filc {
             auto fut = std::async([collector](const std::string &filename) {
                 try {
                     filc::grammar::Lexer lexer(filename);
+
+                    filc::grammar::Parser parser(lexer.getTokens());
 
                     return true;
                 } catch (std::exception &e) {
