@@ -31,10 +31,13 @@ prog
     : module use* (EXPORT? expr)*;
 
 module
-    : MODULE IDENTIFIER (DOT IDENTIFIER)*;
+    : MODULE module_identifier;
 
 use
-    : USE (LBRACE IDENTIFIER (COMMA IDENTIFIER)* RBRACE FROM)? IDENTIFIER (DOT IDENTIFIER)*;
+    : USE module_identifier;
+
+module_identifier
+    : IDENTIFIER (DOT IDENTIFIER)*;
 
 expr
     : literal
