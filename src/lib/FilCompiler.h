@@ -27,7 +27,7 @@
 #include "OptionsParser.h"
 
 namespace filc {
-    class FilCompiler {
+    class FilCompiler final {
     public:
         explicit FilCompiler(utils::OptionsParser options);
 

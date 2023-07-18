@@ -28,7 +28,7 @@
 #include <vector>
 
 namespace filc::message {
-    class MessageCollector {
+    class MessageCollector final {
     public:
         explicit MessageCollector(LEVEL level);
 

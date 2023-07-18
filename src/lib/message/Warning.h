@@ -28,7 +28,7 @@
 #include <utility>
 
 namespace filc::message {
-    class BasicWarning : public Message {
+    class BasicWarning final : public Message {
     public:
         BasicWarning(LEVEL level, std::string content) : Message(level, std::move(content)) {}
 

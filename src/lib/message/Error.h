@@ -28,7 +28,7 @@
 #include <utility>
 
 namespace filc::message {
-    class BasicError : public Message {
+    class BasicError final : public Message {
     public:
         BasicError(LEVEL level, std::string content) : Message(level, std::move(content)) {}
 

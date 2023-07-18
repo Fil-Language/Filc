@@ -27,7 +27,7 @@
 #include "antlr4-runtime.h"
 
 namespace filc::grammar {
-    class Parser {
+    class Parser final {
     public:
         explicit Parser(antlr4::CommonTokenStream *tokens);
     };
