@@ -87,4 +87,4 @@ COMMENT: '//' (~('\n' | '\r'))* -> skip;
 COMMENT_BLOCK: '/*' .*? '*/' -> skip;
 SEPARATOR: (' ' | '\t' | '\r' | '\n' | EOF) -> skip;
 
-IDENTIFIER: (LETTER | '_') (LETTER | DIGIT | '_')+;
+IDENTIFIER: (LETTER | '_') (LETTER | DIGIT | '_')*;
