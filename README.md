@@ -40,6 +40,12 @@ This script is used to update the version badge and the file `src/lib/utils/VERS
 
 - [HTTPie](https://github.com/httpie/httpie)
 
+### Railroad diagram
+
+[The diagram](src/lib/grammar/diagram.html)
+
+- [bkiers/rrd-antlr4](https://github.com/bkiers/rrd-antlr4)
+
 ## Building and Testing
 
 If you want to build and test the compiler, please follow the steps below.
