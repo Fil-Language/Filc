@@ -36,4 +36,7 @@ namespace filc::grammar {
     auto Lexer::getTokens() -> antlr4::CommonTokenStream * {
         return _tokens;
     }
+
+    Lexer::Lexer(Lexer &other)
+            : _tokens(other._tokens) {}
 }

@@ -32,7 +32,7 @@ namespace filc::grammar {
     public:
         explicit Lexer(const std::string &filename);
 
-        Lexer(Lexer &other) = default;
+        Lexer(Lexer &other);
 
         auto getTokens() -> antlr4::CommonTokenStream *;
 
