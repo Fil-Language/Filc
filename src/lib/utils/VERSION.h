@@ -25,6 +25,7 @@
 #define FILC_VERSION_H
 
 #include <string>
+#include <cctype>
 
 constexpr uint FILC_VERSION_MAJOR = 0;
 constexpr uint FILC_VERSION_MINOR = 2;
