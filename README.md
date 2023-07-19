@@ -57,17 +57,21 @@ If you want to build and test the compiler, please follow the steps below.
 cmake -B ./build -DCMAKE_BUILD_TYPE=Release
 # Build
 cmake --build ./build --target filc
+# Install
+sudo cmake --install ./build
 ```
 
 ### Testing
 
 ```shell
 # Configure CMake in build directory
-cmake -B ./build -DCMAKE_BUILD_TYPE=Debug
+cmake -B ./build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DCODE_COVERAGE=ON
 # Build
 cmake --build ./build
 # Run tests
 cd build && ctest
+# Get coverage
+cd - && ./bin/coverage.sh
 ```
 
 ## Quick note
