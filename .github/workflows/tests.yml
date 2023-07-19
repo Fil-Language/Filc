@@ -49,19 +49,19 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ${{github.workspace}}/coverage.info
 
-  clang-tidy:
-    continue-on-error: true # It not really matter if this job failed
-    needs:
-      - tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
-      - name: Run clang-tidy
-        run: clang-tidy -p ${{github.workspace}}/build/ src/**/*.{cpp,hpp,h} tests/**/*.cpp
+#  clang-tidy:
+#    continue-on-error: true # It not really matter if this job failed
+#    needs:
+#      - tests
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Configure CMake
+#        run: cmake -B ${{github.workspace}}/build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+#
+#      - name: Run clang-tidy
+#        run: clang-tidy -p ${{github.workspace}}/build/ src/**/*.{cpp,hpp,h} tests/**/*.cpp
 
   build:
     strategy:
