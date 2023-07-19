@@ -80,7 +80,11 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build
 
+      - name: Install Windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: cmake --install ${{github.workspace}}/build
       - name: Install
+        if: ${{ matrix.os != 'windows-latest' }}
         run: sudo cmake --install ${{github.workspace}}/build
 
       - name: Show version and help
