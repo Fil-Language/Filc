@@ -38,7 +38,7 @@ namespace filc::utils {
 
         auto getFilenames() const -> const std::vector<std::string> &;
 
-        auto getVerbose() const -> uint;
+        auto getVerbose() const -> unsigned int;
 
         auto isDebug() const -> bool;
 
@@ -49,7 +49,7 @@ namespace filc::utils {
     private:
         cxxopts::Options _options;
         std::vector<std::string> _filenames;
-        uint _verbose;
+        unsigned int _verbose;
         bool _debug;
         std::string _out;
 
