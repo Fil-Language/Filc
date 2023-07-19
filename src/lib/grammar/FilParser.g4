@@ -86,6 +86,8 @@ post_operator
 pre_operator
     : PLUSPLUS
     | MINUSMINUS
+    | PLUS
+    | MINUS
     | REF
     | STAR
     | NOT;
