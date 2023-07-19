@@ -77,3 +77,11 @@ jobs:
 
       - name: Build
         run: cmake --build ${{github.workspace}}/build
+
+      - name: Install
+        run: sudo cmake --install ${{github.workspace}}/build
+
+      - name: Show version and help
+        run: |
+          filc --version
+          filc --help
