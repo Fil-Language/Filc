@@ -14,6 +14,7 @@ on:
 
 jobs:
   tests:
+    name: Tests
     strategy:
       fail-fast: false
       matrix:
@@ -64,6 +65,7 @@ jobs:
 #        run: clang-tidy -p ${{github.workspace}}/build/ src/**/*.{cpp,hpp,h} tests/**/*.cpp
 
   build:
+    name: Build & Run
     strategy:
       fail-fast: false
       matrix:
