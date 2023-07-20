@@ -42,7 +42,7 @@ add_library(compiler_lib
         # === Main ===
         FilCompiler.cpp
         # === Utils ===
-        utils/OptionsParser.cpp
+        utils/OptionsParser.cpp utils/Position.cpp
         # === ANTLR ===
         ${ANTLR_Lexer_CXX_OUTPUTS} ${ANTLR_Parser_CXX_OUTPUTS}
         grammar/Lexer.cpp grammar/Parser.cpp
