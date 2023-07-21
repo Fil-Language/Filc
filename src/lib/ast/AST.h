@@ -30,13 +30,16 @@
 namespace filc::ast {
     class Program {
     public:
-        Program();
+        explicit Program(std::string module);
+
+        auto getModule() const -> const std::string &;
 
         auto getFilename() const -> const std::string &;
 
         auto setFilename(const std::string &filename) -> void;
 
     private:
+        std::string _module;
         std::string _filename;
     };
 }

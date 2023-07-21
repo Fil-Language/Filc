@@ -24,8 +24,14 @@
 #include "AST.h"
 #include <gtest/gtest.h>
 
+TEST(Program, constructor) {
+    filc::ast::Program program("module.name");
+
+    ASSERT_STREQ("module.name", program.getModule().c_str());
+}
+
 TEST(Program, filename) {
-    filc::ast::Program program;
+    filc::ast::Program program("");
 
     const auto *filename = "example.txt";
     program.setFilename(filename);

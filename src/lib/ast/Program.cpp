@@ -22,9 +22,15 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include <utility>
 
 namespace filc::ast {
-    Program::Program() = default;
+    Program::Program(std::string module)
+            : _module(std::move(module)) {}
+
+    auto Program::getModule() const -> const std::string & {
+        return _module;
+    }
 
     auto Program::getFilename() const -> const std::string & {
         return _filename;

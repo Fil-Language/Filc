@@ -29,22 +29,36 @@ options {
 
 @parser::header {
 #include "AST.h"
+#include <string>
 }
 
 program returns[filc::ast::Program *tree]
 @after {
-    $tree = new filc::ast::Program();
+    $tree = new filc::ast::Program($m.text);
 }
-    : module use* (EXPORT? expr)*;
+    : m=module use* (EXPORT? expr)*;
 
-module
-    : MODULE module_identifier;
+module returns[std::string text]
+@after {
+    $text = $im.text;
+}
+    : MODULE im=module_identifier;
 
 use
     : USE module_identifier;
 
-module_identifier
-    : IDENTIFIER (DOT IDENTIFIER)*;
+module_identifier returns[std::string text]
+@init {
+    std::string result;
+}
+@after {
+    $text = result;
+}
+    : i1=IDENTIFIER {
+        result = $i1.text;
+    } (DOT ii=IDENTIFIER {
+        result += "." + $ii.text;
+    })*;
 
 expr
     : literal
