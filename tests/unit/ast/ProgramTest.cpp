@@ -25,13 +25,17 @@
 #include <gtest/gtest.h>
 
 TEST(Program, constructor) {
-    filc::ast::Program program("module.name");
+    filc::ast::Program program("module.name", {"a", "b"});
 
     ASSERT_STREQ("module.name", program.getModule().c_str());
+    auto imports = program.getImports();
+    ASSERT_EQ(2, imports.size());
+    ASSERT_STREQ("a", imports[0].c_str());
+    ASSERT_STREQ("b", imports[1].c_str());
 }
 
 TEST(Program, filename) {
-    filc::ast::Program program("");
+    filc::ast::Program program("", {});
 
     const auto *filename = "example.txt";
     program.setFilename(filename);

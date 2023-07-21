@@ -26,13 +26,16 @@
 
 #include "AST_decl.h"
 #include <string>
+#include <vector>
 
 namespace filc::ast {
     class Program {
     public:
-        explicit Program(std::string module);
+        explicit Program(std::string module, const std::vector<std::string> &imports);
 
         auto getModule() const -> const std::string &;
+
+        auto getImports() const -> const std::vector<std::string> &;
 
         auto getFilename() const -> const std::string &;
 
@@ -40,6 +43,7 @@ namespace filc::ast {
 
     private:
         std::string _module;
+        std::vector<std::string> _imports;
         std::string _filename;
     };
 }

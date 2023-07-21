@@ -30,22 +30,31 @@ options {
 @parser::header {
 #include "AST.h"
 #include <string>
+#include <vector>
 }
 
 program returns[filc::ast::Program *tree]
-@after {
-    $tree = new filc::ast::Program($m.text);
+@init {
+    std::vector<std::string> imports;
 }
-    : m=module use* (EXPORT? expr)*;
+@after {
+    $tree = new filc::ast::Program($m.text, imports);
+}
+    : m=module (u=use {
+        imports.push_back($u.text);
+    })* (EXPORT? expr)*;
 
 module returns[std::string text]
 @after {
-    $text = $im.text;
+    $text = $mi.text;
 }
-    : MODULE im=module_identifier;
+    : MODULE mi=module_identifier;
 
-use
-    : USE module_identifier;
+use returns[std::string text]
+@after {
+    $text = $mi.text;
+}
+    : USE mi=module_identifier;
 
 module_identifier returns[std::string text]
 @init {

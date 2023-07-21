@@ -25,11 +25,15 @@
 #include <utility>
 
 namespace filc::ast {
-    Program::Program(std::string module)
-            : _module(std::move(module)) {}
+    Program::Program(std::string module, const std::vector<std::string> &imports)
+            : _module(std::move(module)), _imports(imports) {}
 
     auto Program::getModule() const -> const std::string & {
         return _module;
+    }
+
+    auto Program::getImports() const -> const std::vector<std::string> & {
+        return _imports;
     }
 
     auto Program::getFilename() const -> const std::string & {
