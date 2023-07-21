@@ -46,6 +46,9 @@ namespace filc {
 
                     filc::grammar::Parser parser(lexer.getTokens());
 
+                    auto *program = parser.getProgram();
+                    program->setFilename(filename);
+
                     return true;
                 } catch (std::exception &e) {
                     collector->addError(new filc::message::BasicError(filc::message::FATAL_ERROR, e.what()));

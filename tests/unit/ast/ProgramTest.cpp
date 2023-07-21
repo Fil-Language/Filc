@@ -21,17 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "Parser.h"
-#include "FilParser.h"
+#include "AST.h"
+#include <gtest/gtest.h>
 
-namespace filc::grammar {
-    Parser::Parser(antlr4::CommonTokenStream *tokens) {
-        FilParser parser(tokens);
+TEST(Program, filename) {
+    filc::ast::Program program;
 
-        _program = parser.program()->tree;
-    }
-
-    auto Parser::getProgram() const -> ast::Program * {
-        return _program;
-    }
+    const auto *filename = "example.txt";
+    program.setFilename(filename);
+    ASSERT_STREQ(filename, program.getFilename().c_str());
 }

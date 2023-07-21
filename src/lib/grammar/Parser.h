@@ -25,11 +25,17 @@
 #define FILC_PARSER_H
 
 #include "antlr4-runtime.h"
+#include "AST.h"
 
 namespace filc::grammar {
     class Parser final {
     public:
         explicit Parser(antlr4::CommonTokenStream *tokens);
+
+        auto getProgram() const -> ast::Program *;
+
+    private:
+        filc::ast::Program *_program;
     };
 }
 

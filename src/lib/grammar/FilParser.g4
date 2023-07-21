@@ -27,7 +27,14 @@ options {
     tokenVocab = FilLexer;
 }
 
-prog
+@parser::header {
+#include "AST.h"
+}
+
+program returns[filc::ast::Program *tree]
+@after {
+    $tree = new filc::ast::Program();
+}
     : module use* (EXPORT? expr)*;
 
 module

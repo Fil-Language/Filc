@@ -21,17 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "Parser.h"
-#include "FilParser.h"
+#ifndef FILC_AST_H
+#define FILC_AST_H
 
-namespace filc::grammar {
-    Parser::Parser(antlr4::CommonTokenStream *tokens) {
-        FilParser parser(tokens);
+#include "AST_decl.h"
+#include <string>
 
-        _program = parser.program()->tree;
-    }
+namespace filc::ast {
+    class Program {
+    public:
+        Program();
 
-    auto Parser::getProgram() const -> ast::Program * {
-        return _program;
-    }
+        auto getFilename() const -> const std::string &;
+
+        auto setFilename(const std::string &filename) -> void;
+
+    private:
+        std::string _filename;
+    };
 }
+
+#endif //FILC_AST_H

@@ -9,7 +9,8 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(tests
         unit/utils/OptionsParserTest.cpp unit/utils/PositionTest.cpp
-        unit/message/MessageTest.cpp unit/message/MessageCollectorTest.cpp)
+        unit/message/MessageTest.cpp unit/message/MessageCollectorTest.cpp
+        unit/ast/ProgramTest.cpp)
 
 target_link_libraries(tests PRIVATE GTest::gtest_main compiler_lib)
 
