@@ -57,16 +57,10 @@ use returns[std::string text]
     : USE mi=module_identifier;
 
 module_identifier returns[std::string text]
-@init {
-    std::string result;
-}
-@after {
-    $text = result;
-}
     : i1=IDENTIFIER {
-        result = $i1.text;
+        $text = $i1.text;
     } (DOT ii=IDENTIFIER {
-        result += "." + $ii.text;
+        $text += "." + $ii.text;
     })*;
 
 expr
