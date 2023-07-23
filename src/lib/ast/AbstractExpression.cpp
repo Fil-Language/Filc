@@ -22,30 +22,13 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include <utility>
 
 namespace filc::ast {
-    Program::Program(std::string module, const std::vector<std::string> &imports,
-                     const std::vector<AbstractExpression *> &expressions)
-            : _module(std::move(module)), _imports(imports), _expressions(expressions) {}
-
-    auto Program::getModule() const -> const std::string & {
-        return _module;
+    auto AbstractExpression::isExported() const -> bool {
+        return _exported;
     }
 
-    auto Program::getImports() const -> const std::vector<std::string> & {
-        return _imports;
-    }
-
-    auto Program::getExpressions() const -> const std::vector<AbstractExpression *> & {
-        return _expressions;
-    }
-
-    auto Program::getFilename() const -> const std::string & {
-        return _filename;
-    }
-
-    auto Program::setFilename(const std::string &filename) -> void {
-        _filename = filename;
+    auto AbstractExpression::setExported(bool exported) -> void {
+        _exported = exported;
     }
 }

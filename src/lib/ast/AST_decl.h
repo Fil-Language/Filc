@@ -26,6 +26,8 @@
 
 namespace filc::ast {
     class Program;
+
+    class AbstractExpression;
 }
 
 #endif //FILC_AST_DECL_H

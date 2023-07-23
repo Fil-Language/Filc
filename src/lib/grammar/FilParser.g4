@@ -36,13 +36,20 @@ options {
 program returns[filc::ast::Program *tree]
 @init {
     std::vector<std::string> imports;
+    std::vector<filc::ast::AbstractExpression *> expressions;
 }
 @after {
-    $tree = new filc::ast::Program($m.text, imports);
+    $tree = new filc::ast::Program($m.text, imports, expressions);
 }
     : m=module (u=use {
         imports.push_back($u.text);
-    })* (EXPORT? expr)*;
+    })* (exp=EXPORT? e=expression {
+        auto e = $e.tree;
+        if (e != nullptr) {
+            e->setExported($exp ? true : false);
+            expressions.push_back(e);
+        }
+    })*;
 
 module returns[std::string text]
 @after {
@@ -63,12 +70,12 @@ module_identifier returns[std::string text]
         $text += "." + $ii.text;
     })*;
 
-expr
+expression returns[filc::ast::AbstractExpression *tree]
     : literal
     | variable_declaration
     | assignation
     | unary_calcul
-    | expr binary_operator expr
+    | expression binary_operator expression
     | function
     | lambda
     | control
@@ -91,7 +98,7 @@ variable_declaration
     : (VAL | VAR) IDENTIFIER COLON type assignation?;
 
 assignation
-    : EQ expr;
+    : EQ expression;
 
 type
     : IDENTIFIER ((LBRACK INTEGER RBRACK) | STAR)*
@@ -104,7 +111,7 @@ unary_calcul
 post_operator
     : PLUSPLUS
     | MINUSMINUS
-    | LBRACK expr RBRACK
+    | LBRACK expression RBRACK
     | LPAREN function_call_params RPAREN;
 
 pre_operator
@@ -182,13 +189,13 @@ function_body
     : assignation | parenthesis_body | block_body;
 
 parenthesis_body
-    : LPAREN expr RPAREN;
+    : LPAREN expression RPAREN;
 
 block_body
-    : LBRACE expr* RBRACE;
+    : LBRACE expression* RBRACE;
 
 lambda
-    : LPAREN function_params? RPAREN function_type ARROW (expr | parenthesis_body | block_body);
+    : LPAREN function_params? RPAREN function_type ARROW (expression | parenthesis_body | block_body);
 
 lambda_type
     : LPAREN (type (COMMA type)*)? RPAREN ARROW type;
@@ -203,10 +210,10 @@ if_
     : IF if_condition if_body (ELSE (if_ | if_body))?;
 
 if_condition
-    : LPAREN expr RPAREN;
+    : LPAREN expression RPAREN;
 
 if_body
-    : expr | block_body;
+    : expression | block_body;
 
 switch_
     : SWITCH if_condition switch_body;
@@ -215,7 +222,7 @@ switch_body
     : LBRACE switch_case* RBRACE;
 
 switch_case
-    : switch_pattern ARROW (expr | parenthesis_body | block_body);
+    : switch_pattern ARROW (expression | parenthesis_body | block_body);
 
 switch_pattern
     : DEFAULT | literal;
@@ -227,16 +234,16 @@ for_i
     : FOR for_i_condition if_body;
 
 for_i_condition
-    : LPAREN variable_declaration? SEMI expr? SEMI expr? RPAREN;
+    : LPAREN variable_declaration? SEMI expression? SEMI expression? RPAREN;
 
 for_iter
     : FOR for_iter_condition if_body;
 
 for_iter_condition
-    : LPAREN (VAL | VAR) IDENTIFIER COLON expr RPAREN;
+    : LPAREN (VAL | VAR) IDENTIFIER COLON expression RPAREN;
 
 while_
     : WHILE if_condition if_body;
 
 function_call_params
-    : expr (COMMA expr)*;
+    : expression (COMMA expression)*;

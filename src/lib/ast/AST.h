@@ -31,11 +31,14 @@
 namespace filc::ast {
     class Program {
     public:
-        explicit Program(std::string module, const std::vector<std::string> &imports);
+        explicit Program(std::string module, const std::vector<std::string> &imports,
+                         const std::vector<AbstractExpression *> &expressions);
 
         auto getModule() const -> const std::string &;
 
         auto getImports() const -> const std::vector<std::string> &;
+
+        auto getExpressions() const -> const std::vector<AbstractExpression *> &;
 
         auto getFilename() const -> const std::string &;
 
@@ -44,7 +47,22 @@ namespace filc::ast {
     private:
         std::string _module;
         std::vector<std::string> _imports;
+        std::vector<AbstractExpression *> _expressions;
         std::string _filename;
+    };
+
+    class AbstractExpression {
+    public:
+        AbstractExpression() = delete;
+
+        ~AbstractExpression() = delete;
+
+        auto isExported() const -> bool;
+
+        auto setExported(bool exported) -> void;
+
+    private:
+        bool _exported;
     };
 }
 
