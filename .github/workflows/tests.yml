@@ -74,7 +74,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Configure CMake for Windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: cmake -B ${{github.workspace}}/build --config Release
       - name: Configure CMake
+        if: ${{ matrix.os != 'windows-latest' }}
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
@@ -82,7 +86,7 @@ jobs:
 
       - name: Install for Windows
         if: ${{ matrix.os == 'windows-latest' }}
-        run: ls ${{github.workspace}}/build/src/Debug #cmake --install ${{github.workspace}}/build
+        run: cmake --install ${{github.workspace}}/build
       - name: Install
         if: ${{ matrix.os != 'windows-latest' }}
         run: sudo cmake --install ${{github.workspace}}/build
