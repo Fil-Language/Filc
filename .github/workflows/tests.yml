@@ -76,12 +76,16 @@ jobs:
 
       - name: Configure CMake for Windows
         if: ${{ matrix.os == 'windows-latest' }}
-        run: cmake -B ${{github.workspace}}/build --config Release
+        run: cmake -B ${{github.workspace}}/build
       - name: Configure CMake
         if: ${{ matrix.os != 'windows-latest' }}
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
 
+      - name: Build for Windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: cmake --build ${{github.workspace}}/build --config Release
       - name: Build
+        if: ${{ matrix.os != 'windows-latest' }}
         run: cmake --build ${{github.workspace}}/build
 
       - name: Install for Windows
