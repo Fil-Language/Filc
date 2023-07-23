@@ -73,8 +73,8 @@ TEST(OptionParser, getOptions) {
 TEST(OptionParser, getFilenames) {
     auto parser = filc::utils::OptionsParser();
 
-    std::vector<const char *> argv = {"filc", "file1.fil", "file2.fil"};
-    parser.parse(3, argv.data());
+    std::vector<const char *> argv = {"filc", "file1.fil", "file2.fil", "file2.fil"};
+    parser.parse(4, argv.data());
 
     auto filenames = parser.getFilenames();
 

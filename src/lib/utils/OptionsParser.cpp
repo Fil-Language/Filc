@@ -72,13 +72,16 @@ namespace filc::utils {
             return false;
         }
 
-        _filenames = result["filenames"].as<std::vector<std::string>>();
-        for (const auto &filename: _filenames) {
+        auto filenames = result["filenames"].as<std::vector<std::string>>();
+        for (const auto &filename: filenames) {
             if (extension(filename) != "fil") {
                 std::cout << "\033[1;31mError: \033[00m"
                           << "Invalid file extension" << std::endl;
 
                 return false;
+            }
+            if (std::find(_filenames.begin(), _filenames.end(), filename) == _filenames.end()) {
+                _filenames.push_back(filename);
             }
         }
         auto verbose = result["verbose"].as<unsigned int>();
