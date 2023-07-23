@@ -74,11 +74,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Configure CMake for Windows
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: cmake -B ${{github.workspace}}/build
+#      - name: Configure CMake for Windows
+#        if: ${{ matrix.os == 'windows-latest' }}
+#        run: cmake -B ${{github.workspace}}/build
       - name: Configure CMake
-        if: ${{ matrix.os != 'windows-latest' }}
+        #if: ${{ matrix.os != 'windows-latest' }}
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build for Windows
@@ -95,7 +95,13 @@ jobs:
         if: ${{ matrix.os != 'windows-latest' }}
         run: sudo cmake --install ${{github.workspace}}/build
 
+      - name: Show version and help for Windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          filc.exe --version
+          filc.exe --help
       - name: Show version and help
+        if: ${{ matrix.os != 'windows-latest' }}
         run: |
           filc --version
           filc --help
