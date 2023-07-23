@@ -24,8 +24,8 @@
 #include "FilCompiler.h"
 #include "MessageCollector.h"
 #include "Error.h"
-#include "Lexer.h"
-#include "Parser.h"
+#include "FilLexer.h"
+#include "FilParser.h"
 #include <utility>
 #include <future>
 
@@ -42,11 +42,15 @@ namespace filc {
         for (const auto &filename: _options.getFilenames()) {
             auto fut = std::async([collector](const std::string &filename) {
                 try {
-                    filc::grammar::Lexer lexer(filename);
+                    antlr4::ANTLRFileStream input;
+                    input.loadFromFile(filename);
+                    filc::grammar::FilLexer lexer(&input);
+                    antlr4::CommonTokenStream tokens(&lexer);
+                    tokens.fill();
 
-                    filc::grammar::Parser parser(lexer.getTokens());
+                    filc::grammar::FilParser parser(&tokens);
 
-                    auto *program = parser.getProgram();
+                    auto *program = parser.program()->tree;
                     program->setFilename(filename);
 
                     return program;
@@ -68,11 +72,26 @@ namespace filc {
         std::for_each(futures.begin(), futures.end(), [collector, this](std::future<filc::ast::Program *> &fut) {
             fut.wait();
             filc::ast::Program *program = fut.get();
-            collector->addMessage(
-                    new filc::message::Message(filc::message::DEBUG, "Getting module: " + program->getModule())
-            );
-            _modules.emplace(program->getModule(), program);
+            auto module_name = program->getModule();
+
+            if (_modules.find(module_name) != _modules.end()) {
+                collector->addError(
+                        new filc::message::BasicError(filc::message::ERROR, "Module " + module_name + " already exists")
+                );
+            } else {
+                _modules.emplace(module_name, program);
+                collector->addMessage(
+                        new filc::message::Message(filc::message::DEBUG, "Getting module: " + module_name)
+                );
+            }
         });
+
+        if (collector->hasErrors()) {
+            collector->printAll();
+
+            return 1;
+        }
+        collector->printAll();
 
         return 0;
     }
