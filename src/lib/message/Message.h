@@ -29,11 +29,29 @@
 
 namespace filc::message {
     using LEVEL = enum LEVEL {
+        /**
+         * Information on the system (# of thread, compilation time, ...)
+         */
         SYSTEM = 5,
+        /**
+         * Some additional information on the state of the compiler
+         */
         INFO = 4,
+        /**
+         * Some additional information on the state of the compiler and the code parsed
+         */
         DEBUG = 3,
+        /**
+         * Something is wrong, but not really important
+         */
         WARNING = 2,
+        /**
+         * Something is wrong and compiler must terminate
+         */
         ERROR = 1,
+        /**
+         * Always shown and terminate compiler
+         */
         FATAL_ERROR = 0,
     };
 

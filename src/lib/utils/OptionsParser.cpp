@@ -35,7 +35,7 @@ namespace filc::utils {
         _options.add_options()("h,help", "Display help message");
         _options.add_options()("v,version", "Display version of compiler");
         _options.add_options()("verbose", "Verbose level (0-5)",
-                               cxxopts::value<unsigned int>()->default_value("0")->implicit_value("1"));
+                               cxxopts::value<unsigned int>()->default_value("2")->implicit_value("3"));
         _options.add_options()("d,debug", "Compile with debug information");
         _options.add_options()("o,out", "Executable output filename",
                                cxxopts::value<std::string>()->default_value("a.out"));
