@@ -38,7 +38,7 @@ namespace filc {
     auto FilCompiler::compile() -> int {
         auto *collector = filc::message::MessageCollector::getCollector();
 
-        std::vector<std::future<bool>> futures;
+        std::vector<std::future<filc::ast::Program *>> futures;
         for (const auto &filename: _options.getFilenames()) {
             auto fut = std::async([collector](const std::string &filename) {
                 try {
@@ -49,18 +49,29 @@ namespace filc {
                     auto *program = parser.getProgram();
                     program->setFilename(filename);
 
-                    return true;
+                    return program;
                 } catch (std::exception &e) {
                     collector->addError(new filc::message::BasicError(filc::message::FATAL_ERROR, e.what()));
 
-                    return false;
+                    return (filc::ast::Program *) nullptr;
                 }
             }, filename);
             futures.push_back(std::move(fut));
         }
 
-        std::for_each(futures.begin(), futures.end(), [](std::future<bool> &fut) {
+        if (collector->hasErrors()) {
+            collector->printAll();
+
+            return 1;
+        }
+
+        std::for_each(futures.begin(), futures.end(), [collector, this](std::future<filc::ast::Program *> &fut) {
             fut.wait();
+            filc::ast::Program *program = fut.get();
+            collector->addMessage(
+                    new filc::message::Message(filc::message::DEBUG, "Getting module: " + program->getModule())
+            );
+            _modules.emplace(program->getModule(), program);
         });
 
         return 0;

@@ -25,6 +25,8 @@
 #define FILC_FILCOMPILER_H
 
 #include "OptionsParser.h"
+#include "AST.h"
+#include <map>
 
 namespace filc {
     class FilCompiler final {
@@ -35,6 +37,7 @@ namespace filc {
 
     private:
         utils::OptionsParser _options;
+        std::map<const std::string, filc::ast::Program *> _modules;
     };
 }
 

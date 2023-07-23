@@ -46,6 +46,8 @@ namespace filc::message {
 
         auto printErrors() -> MessageCollector &;
 
+        auto printAll() -> MessageCollector &;
+
         static auto getCollector(LEVEL level = FATAL_ERROR) -> MessageCollector *;
 
     private:

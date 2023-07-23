@@ -81,6 +81,10 @@ namespace filc::message {
         return *this;
     }
 
+    auto MessageCollector::printAll() -> MessageCollector & {
+        return printErrors().printMessages();
+    }
+
     auto MessageCollector::getCollector(LEVEL level) -> MessageCollector * {
         static auto *collector = new MessageCollector(level);
 

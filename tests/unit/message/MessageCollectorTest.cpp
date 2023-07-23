@@ -70,3 +70,13 @@ TEST(MessageCollector, printErrors) {
 
     ASSERT_FALSE(collector->hasErrors());
 }
+
+TEST(MessageCollector, printAll) {
+    auto *collector = filc::message::MessageCollector::getCollector();
+    collector->addMessage(new filc::message::Message(filc::message::INFO, "Hello"));
+    collector->addError(new filc::message::Message(filc::message::INFO, "Hello"));
+    collector->printAll();
+
+    ASSERT_FALSE(collector->hasMessages());
+    ASSERT_FALSE(collector->hasErrors());
+}
