@@ -24,8 +24,7 @@
 #include "FilCompiler.h"
 #include "MessageCollector.h"
 #include "Error.h"
-#include "FilLexer.h"
-#include "FilParser.h"
+#include "Parser.h"
 #include <utility>
 #include <future>
 
@@ -42,18 +41,9 @@ namespace filc {
         for (const auto &filename: _options.getFilenames()) {
             auto fut = std::async([collector](const std::string &filename) {
                 try {
-                    antlr4::ANTLRFileStream input;
-                    input.loadFromFile(filename);
-                    filc::grammar::FilLexer lexer(&input);
-                    antlr4::CommonTokenStream tokens(&lexer);
-                    tokens.fill();
+                    filc::grammar::Parser parser(filename);
 
-                    filc::grammar::FilParser parser(&tokens);
-
-                    auto *program = parser.program()->tree;
-                    program->setFilename(filename);
-
-                    return program;
+                    return parser.getProgram();
                 } catch (std::exception &e) {
                     collector->addError(new filc::message::BasicError(filc::message::FATAL_ERROR, e.what()));
 

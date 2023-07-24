@@ -1,0 +1,3 @@
+module test
+
+use an.example.with.many.dots

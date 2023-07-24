@@ -44,7 +44,7 @@ add_library(compiler_lib
         # === Utils ===
         utils/OptionsParser.cpp utils/Position.cpp
         # === ANTLR ===
-        ${ANTLR_Lexer_CXX_OUTPUTS} ${ANTLR_Parser_CXX_OUTPUTS}
+        ${ANTLR_Lexer_CXX_OUTPUTS} ${ANTLR_Parser_CXX_OUTPUTS} grammar/Parser.cpp
         # === Message ===
         message/Message.cpp message/MessageCollector.cpp message/Warning.cpp message/Error.cpp
         # === AST ===
