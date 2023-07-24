@@ -59,7 +59,7 @@ namespace filc {
             return 1;
         }
 
-        std::for_each(futures.begin(), futures.end(), [collector, this](std::future<filc::ast::Program *> &fut) {
+        for (auto &fut: futures) {
             fut.wait();
             filc::ast::Program *program = fut.get();
             auto module_name = program->getModule();
@@ -74,7 +74,7 @@ namespace filc {
                         new filc::message::Message(filc::message::DEBUG, "Getting module: " + module_name)
                 );
             }
-        });
+        }
 
         if (collector->hasErrors()) {
             collector->printAll();
@@ -82,6 +82,12 @@ namespace filc {
             return 1;
         }
         collector->printAll();
+
+        // Free memory
+        for (const auto &module: _modules) {
+            delete module.second;
+        }
+        _modules.clear();
 
         return 0;
     }
