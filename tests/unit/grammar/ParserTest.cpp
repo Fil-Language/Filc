@@ -89,3 +89,12 @@ TEST(Parser, BooleanLiteral) {
     ASSERT_NE(nullptr, expression2);
     ASSERT_FALSE(expression2->getValue());
 }
+
+TEST(Parser, IntegerLiteral) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/int1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::IntegerLiteral *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_EQ(42, expression1->getValue());
+}

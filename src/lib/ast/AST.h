@@ -92,6 +92,11 @@ namespace filc::ast {
     public:
         explicit BooleanLiteral(bool value);
     };
+
+    class IntegerLiteral : public AbstractLiteral<int> {
+    public:
+        explicit IntegerLiteral(int value);
+    };
 }
 
 #endif //FILC_AST_H

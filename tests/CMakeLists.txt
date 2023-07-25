@@ -10,7 +10,7 @@ FetchContent_MakeAvailable(googletest)
 add_executable(tests
         unit/utils/OptionsParserTest.cpp unit/utils/PositionTest.cpp
         unit/message/MessageTest.cpp unit/message/MessageCollectorTest.cpp
-        unit/ast/ProgramTest.cpp unit/grammar/ParserTest.cpp unit/ast/BooleanLiteralTest.cpp)
+        unit/ast/ProgramTest.cpp unit/grammar/ParserTest.cpp unit/ast/BooleanLiteralTest.cpp unit/ast/IntegerLiteralTest.cpp)
 target_include_directories(tests PUBLIC unit)
 
 target_link_libraries(tests PRIVATE GTest::gtest_main compiler_lib)

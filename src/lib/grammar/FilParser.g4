@@ -88,7 +88,9 @@ literal returns[filc::ast::AbstractExpression *tree]
     : b=boolean {
         $tree = $b.tree;
     }
-    | number
+    | n=number {
+        $tree = $n.tree;
+    }
     | CHARACTER
     | STRING;
 
@@ -100,8 +102,11 @@ boolean returns[filc::ast::BooleanLiteral *tree]
         $tree = new filc::ast::BooleanLiteral(false);
     };
 
-number
-    : INTEGER | FLOAT;
+number returns[filc::ast::AbstractExpression *tree]
+    : i=INTEGER {
+        $tree = new filc::ast::IntegerLiteral(42);
+    }
+    | FLOAT;
 
 variable_declaration
     : (VAL | VAR) IDENTIFIER COLON type assignation?;
