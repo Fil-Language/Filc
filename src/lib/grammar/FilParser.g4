@@ -71,7 +71,9 @@ module_identifier returns[std::string text]
     })*;
 
 expression returns[filc::ast::AbstractExpression *tree]
-    : literal
+    : l=literal {
+        $tree = $l.tree;
+    }
     | variable_declaration
     | assignation
     | unary_calcul
@@ -82,17 +84,24 @@ expression returns[filc::ast::AbstractExpression *tree]
     | parenthesis_body
     | IDENTIFIER;
 
-literal
-    : boolean
+literal returns[filc::ast::AbstractExpression *tree]
+    : b=boolean {
+        $tree = $b.tree;
+    }
     | number
     | CHARACTER
     | STRING;
 
-boolean
-    : TRUE | FALSE;
+boolean returns[filc::ast::BooleanLiteral *tree]
+    : TRUE {
+        $tree = new filc::ast::BooleanLiteral(true);
+    }
+    | FALSE {
+        $tree = new filc::ast::BooleanLiteral(false);
+    };
 
 number
-    : INTEGER | FALSE;
+    : INTEGER | FLOAT;
 
 variable_declaration
     : (VAL | VAR) IDENTIFIER COLON type assignation?;

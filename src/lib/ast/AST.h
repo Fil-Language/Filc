@@ -53,16 +53,44 @@ namespace filc::ast {
 
     class AbstractExpression {
     public:
-        AbstractExpression() = delete;
-
-        ~AbstractExpression() = delete;
-
         auto isExported() const -> bool;
 
         auto setExported(bool exported) -> void;
 
     private:
         bool _exported;
+
+    protected:
+        AbstractExpression() = default;
+
+        AbstractExpression(const AbstractExpression &other) = default;
+
+        AbstractExpression(AbstractExpression &&other) = default;
+
+        ~AbstractExpression() = default;
+
+        auto operator=(const AbstractExpression &other) -> AbstractExpression & = default;
+
+        auto operator=(AbstractExpression &&other) -> AbstractExpression & = default;
+    };
+
+    template<typename T>
+    class AbstractLiteral : public AbstractExpression {
+    public:
+        auto getValue() const -> T {
+            return _value;
+        };
+
+    private:
+        T _value;
+
+    protected:
+        explicit AbstractLiteral(T value) : AbstractExpression(), _value(value) {};
+    };
+
+    class BooleanLiteral : public AbstractLiteral<bool> {
+    public:
+        explicit BooleanLiteral(bool value);
     };
 }
 
