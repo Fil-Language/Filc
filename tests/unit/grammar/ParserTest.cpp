@@ -141,3 +141,33 @@ TEST(Parser, IntegerLiteral) {
     ASSERT_NE(nullptr, expression3);
     ASSERT_EQ(25, expression3->getValue());
 }
+
+TEST(Parser, FloatLiteral) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/float1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::FloatLiteral *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_EQ(42.0, expression1->getValue());
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/float2.fil");
+    auto *program2 = parser2.getProgram();
+    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
+    auto *expression2 = static_cast<filc::ast::FloatLiteral *>(program2->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression2);
+    ASSERT_EQ(-2.5, expression2->getValue());
+
+    filc::grammar::Parser parser3(FIXTURES_PATH "/float3.fil");
+    auto *program3 = parser3.getProgram();
+    ASSERT_THAT(program3->getExpressions(), SizeIs(1));
+    auto *expression3 = static_cast<filc::ast::FloatLiteral *>(program3->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression3);
+    ASSERT_EQ(4.45, expression3->getValue());
+
+    filc::grammar::Parser parser4(FIXTURES_PATH "/float4.fil");
+    auto *program4 = parser4.getProgram();
+    ASSERT_THAT(program4->getExpressions(), SizeIs(1));
+    auto *expression4 = static_cast<filc::ast::FloatLiteral *>(program4->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression4);
+    ASSERT_EQ(3.14159265359, expression4->getValue());
+}

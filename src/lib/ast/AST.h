@@ -103,6 +103,11 @@ namespace filc::ast {
     public:
         explicit IntegerLiteral(int value);
     };
+
+    class FloatLiteral : public AbstractLiteral<double> {
+    public:
+        explicit FloatLiteral(double value);
+    };
 }
 
 #endif //FILC_AST_H

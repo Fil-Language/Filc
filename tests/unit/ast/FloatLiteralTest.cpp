@@ -21,22 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
+#include <gtest/gtest.h>
 
-namespace filc::ast {
-    class Program;
+TEST(FloatLiteral, constructor) {
+    filc::ast::FloatLiteral fl1(42);
+    ASSERT_EQ(42, fl1.getValue());
 
-    class AbstractExpression;
+    filc::ast::FloatLiteral fl2(2.3);
+    ASSERT_EQ(2.3, fl2.getValue());
 
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
+    filc::ast::FloatLiteral fl3(-4.5);
+    ASSERT_EQ(-4.5, fl3.getValue());
 }
-
-#endif //FILC_AST_DECL_H

@@ -109,7 +109,10 @@ number returns[filc::ast::AbstractExpression *tree]
         $tree = new filc::ast::IntegerLiteral(stoi($i.text));
         $tree->setPosition(new filc::utils::Position($i));
     }
-    | FLOAT;
+    | f=FLOAT {
+        $tree = new filc::ast::FloatLiteral(stod($f.text));
+        $tree->setPosition(new filc::utils::Position($f));
+    };
 
 variable_declaration
     : (VAL | VAR) IDENTIFIER COLON type assignation?;
