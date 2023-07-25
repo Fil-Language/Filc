@@ -36,6 +36,22 @@ TEST(Parser, filename) {
     ASSERT_STREQ(FIXTURES_PATH "/module1.fil", program->getFilename().c_str());
 }
 
+TEST(Parser, exported) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/not-exported.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = program1->getExpressions()[0];
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_FALSE(expression1->isExported());
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/exported.fil");
+    auto *program2 = parser2.getProgram();
+    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
+    auto *expression2 = program2->getExpressions()[0];
+    ASSERT_NE(nullptr, expression2);
+    ASSERT_TRUE(expression2->isExported());
+}
+
 TEST(Parser, position) {
     filc::grammar::Parser parser(FIXTURES_PATH "/int1.fil");
     auto *program = parser.getProgram();
