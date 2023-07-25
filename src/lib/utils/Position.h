@@ -24,12 +24,15 @@
 #ifndef FILC_POSITION_H
 #define FILC_POSITION_H
 
+#include "antlr4-runtime.h"
 #include <string>
 
 namespace filc::utils {
     class Position final {
     public:
         Position(std::string filename, unsigned int line, unsigned int column);
+
+        Position(const antlr4::Token *token);
 
         auto getFilename() const -> const std::string &;
 

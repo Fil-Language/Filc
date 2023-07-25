@@ -31,4 +31,12 @@ namespace filc::ast {
     auto AbstractExpression::setExported(bool exported) -> void {
         _exported = exported;
     }
+
+    auto AbstractExpression::getPosition() const -> utils::Position * {
+        return _position;
+    }
+
+    auto AbstractExpression::setPosition(utils::Position *position) -> void {
+        _position = position;
+    }
 }

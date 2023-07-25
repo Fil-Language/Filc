@@ -31,6 +31,10 @@ namespace filc::utils {
     Position::Position(std::string filename, unsigned int line, unsigned int column)
             : _filename(std::move(filename)), _line(line), _column(column) {}
 
+    Position::Position(const antlr4::Token *token)
+            : _filename(token->getTokenSource()->getSourceName()), _line(token->getLine()),
+              _column(token->getCharPositionInLine()) {}
+
     auto Position::getFilename() const -> const std::string & {
         return _filename;
     }

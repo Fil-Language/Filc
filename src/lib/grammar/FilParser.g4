@@ -95,16 +95,19 @@ literal returns[filc::ast::AbstractExpression *tree]
     | STRING;
 
 boolean returns[filc::ast::BooleanLiteral *tree]
-    : TRUE {
+    : t=TRUE {
         $tree = new filc::ast::BooleanLiteral(true);
+        $tree->setPosition(new filc::utils::Position($t));
     }
-    | FALSE {
+    | f=FALSE {
         $tree = new filc::ast::BooleanLiteral(false);
+        $tree->setPosition(new filc::utils::Position($f));
     };
 
 number returns[filc::ast::AbstractExpression *tree]
     : i=INTEGER {
         $tree = new filc::ast::IntegerLiteral(42);
+        $tree->setPosition(new filc::utils::Position($i));
     }
     | FLOAT;
 

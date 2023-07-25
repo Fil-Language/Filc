@@ -25,6 +25,7 @@
 #define FILC_AST_H
 
 #include "AST_decl.h"
+#include "Position.h"
 #include <string>
 #include <vector>
 
@@ -57,8 +58,13 @@ namespace filc::ast {
 
         auto setExported(bool exported) -> void;
 
+        auto getPosition() const -> utils::Position *;
+
+        auto setPosition(utils::Position *position) -> void;
+
     private:
         bool _exported;
+        filc::utils::Position *_position;
 
     protected:
         AbstractExpression() = default;

@@ -36,6 +36,19 @@ TEST(Parser, filename) {
     ASSERT_STREQ(FIXTURES_PATH "/module1.fil", program->getFilename().c_str());
 }
 
+TEST(Parser, position) {
+    filc::grammar::Parser parser(FIXTURES_PATH "/int1.fil");
+    auto *program = parser.getProgram();
+    ASSERT_THAT(program->getExpressions(), SizeIs(1));
+    auto *expression = program->getExpressions()[0];
+    ASSERT_NE(nullptr, expression);
+    auto *position = expression->getPosition();
+    ASSERT_STREQ(FIXTURES_PATH "/int1.fil", position->getFilename().c_str());
+    ASSERT_EQ(3, position->getLine());
+    ASSERT_EQ(0, position->getColumn());
+    ASSERT_STREQ("42", position->getContent().c_str());
+}
+
 TEST(Parser, module) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/module1.fil");
     auto *program1 = parser1.getProgram();
