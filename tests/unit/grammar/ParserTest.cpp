@@ -23,8 +23,10 @@
  */
 #include "Parser.h"
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <string>
-#include "tools.h"
+
+using namespace ::testing;
 
 #define FIXTURES_PATH "../../tests/unit/Fixtures/grammar"
 
@@ -51,23 +53,23 @@ TEST(Parser, module) {
 TEST(Parser, use) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/use1.fil");
     auto *program1 = parser1.getProgram();
-    ASSERT_COUNT(1, program1->getImports());
-    ASSERT_CONTAINS(std::string("a"), program1->getImports());
+    ASSERT_THAT(program1->getImports(), SizeIs(1));
+    ASSERT_THAT(program1->getImports(), Contains("a"));
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/use2.fil");
     auto *program2 = parser2.getProgram();
-    ASSERT_COUNT(1, program2->getImports());
-    ASSERT_CONTAINS(std::string("a.b"), program2->getImports());
+    ASSERT_THAT(program2->getImports(), SizeIs(1));
+    ASSERT_THAT(program2->getImports(), Contains("a.b"));
 
     filc::grammar::Parser parser3(FIXTURES_PATH "/use3.fil");
     auto *program3 = parser3.getProgram();
-    ASSERT_COUNT(1, program3->getImports());
-    ASSERT_CONTAINS(std::string("an.example.with.many.dots"), program3->getImports());
+    ASSERT_THAT(program3->getImports(), SizeIs(1));
+    ASSERT_THAT(program3->getImports(), Contains("an.example.with.many.dots"));
 
     filc::grammar::Parser parser4(FIXTURES_PATH "/use4.fil");
     auto *program4 = parser4.getProgram();
-    ASSERT_COUNT(3, program4->getImports());
-    ASSERT_CONTAINS(std::string("a.b"), program4->getImports());
-    ASSERT_CONTAINS(std::string("c.d"), program4->getImports());
-    ASSERT_CONTAINS(std::string("e.f"), program4->getImports());
+    ASSERT_THAT(program4->getImports(), SizeIs(3));
+    ASSERT_THAT(program4->getImports(), Contains("a.b"));
+    ASSERT_THAT(program4->getImports(), Contains("c.d"));
+    ASSERT_THAT(program4->getImports(), Contains("e.f"));
 }
