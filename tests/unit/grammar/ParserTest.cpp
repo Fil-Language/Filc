@@ -126,4 +126,18 @@ TEST(Parser, IntegerLiteral) {
     auto *expression1 = static_cast<filc::ast::IntegerLiteral *>(program1->getExpressions()[0]);
     ASSERT_NE(nullptr, expression1);
     ASSERT_EQ(42, expression1->getValue());
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/int2.fil");
+    auto *program2 = parser2.getProgram();
+    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
+    auto *expression2 = static_cast<filc::ast::IntegerLiteral *>(program2->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression2);
+    ASSERT_EQ(-5, expression2->getValue());
+
+    filc::grammar::Parser parser3(FIXTURES_PATH "/int3.fil");
+    auto *program3 = parser3.getProgram();
+    ASSERT_THAT(program3->getExpressions(), SizeIs(1));
+    auto *expression3 = static_cast<filc::ast::IntegerLiteral *>(program3->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression3);
+    ASSERT_EQ(25, expression3->getValue());
 }

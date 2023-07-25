@@ -106,7 +106,7 @@ boolean returns[filc::ast::BooleanLiteral *tree]
 
 number returns[filc::ast::AbstractExpression *tree]
     : i=INTEGER {
-        $tree = new filc::ast::IntegerLiteral(42);
+        $tree = new filc::ast::IntegerLiteral(stoi($i.text));
         $tree->setPosition(new filc::utils::Position($i));
     }
     | FLOAT;
