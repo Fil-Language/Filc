@@ -73,3 +73,19 @@ TEST(Parser, use) {
     ASSERT_THAT(program4->getImports(), Contains("c.d"));
     ASSERT_THAT(program4->getImports(), Contains("e.f"));
 }
+
+TEST(Parser, BooleanLiteral) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/bool1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::BooleanLiteral *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_TRUE(expression1->getValue());
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/bool2.fil");
+    auto *program2 = parser2.getProgram();
+    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
+    auto *expression2 = static_cast<filc::ast::BooleanLiteral *>(program2->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression2);
+    ASSERT_FALSE(expression2->getValue());
+}
