@@ -21,34 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_POSITION_H
-#define FILC_POSITION_H
+#ifndef FILC_DEVWARNING_H
+#define FILC_DEVWARNING_H
 
-#include "antlr4-runtime.h"
-#include <string>
+#include "Message.h"
+#include "Position.h"
 
-namespace filc::utils {
-    class Position final {
+namespace filc::message {
+    class DevWarning final : public Message {
     public:
-        Position(std::string filename, unsigned int line, unsigned int column);
+        DevWarning(unsigned int code, filc::utils::Position *position, std::string content);
 
-        Position(const antlr4::Token *token);
-
-        auto getFilename() const -> const std::string &;
-
-        auto getLine() const -> unsigned int;
-
-        auto getColumn() const -> unsigned int;
-
-        auto getContent() const -> std::string;
-
-        auto dump(const std::string &color) const -> std::string;
+        auto print(std::ostream &out) -> std::ostream & override;
 
     private:
-        std::string _filename;
-        unsigned int _line;
-        unsigned int _column;
+        unsigned int _code;
+        filc::utils::Position *_position;
     };
 }
 
-#endif //FILC_POSITION_H
+#endif //FILC_DEVWARNING_H

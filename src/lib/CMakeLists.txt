@@ -46,7 +46,7 @@ add_library(compiler_lib
         # === ANTLR ===
         ${ANTLR_Lexer_CXX_OUTPUTS} ${ANTLR_Parser_CXX_OUTPUTS} grammar/Parser.cpp
         # === Message ===
-        message/Message.cpp message/MessageCollector.cpp message/Warning.cpp message/Error.cpp
+        message/Message.cpp message/MessageCollector.cpp message/Warning.cpp message/Error.cpp message/DevWarning.cpp
         # === AST ===
         ast/Program.cpp ast/AbstractExpression.cpp ast/BooleanLiteral.cpp ast/IntegerLiteral.cpp ast/FloatLiteral.cpp ast/CharacterLiteral.cpp)
 target_include_directories(compiler_lib PUBLIC

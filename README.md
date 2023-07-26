@@ -79,8 +79,17 @@ cd - && ./bin/coverage.sh
 If during compilation you got a warning with a dev code, please open an issue on GitHub with the warning message and
 your code.
 
-|   Dev code   | Meaning                                                          |           File            |
-|:------------:|------------------------------------------------------------------|:-------------------------:|
-| <kbd>2</kbd> | A module was not imported during part A, and no error was raised | `src/fil/ast/Program.cpp` |
+Dev warning are show like this :
+
+```
+DEV WARNING  <code>  <message>
+        <filename>
+<line> |<code>
+       |  ^
+```
+
+|   Dev code   | Meaning                                     | File                               |
+|:------------:|:--------------------------------------------|:-----------------------------------|
+| <kbd>2</kbd> | Lexer found a character that is not regular | `src/lib/ast/CharacterLiteral.cpp` |
 
 These codes are for events that should not happen, but if they do, it's better to fix them.

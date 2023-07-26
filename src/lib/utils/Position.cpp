@@ -67,4 +67,16 @@ namespace filc::utils {
 
         return line;
     }
+
+    auto Position::dump(const std::string &color) const -> std::string {
+        std::string nth = " " + std::to_string(_line) + " ";
+        std::string res = std::string(nth.length() + 1, ' ') + _filename + "\n";
+
+        res += nth + "|" + getContent() + "\n";
+        res += std::string(nth.length(), ' ') + "|";
+        std::string spaces = _column > 0 ? std::string(_column - 1, ' ') : "";
+        res += spaces + color + "^" + "\033[0m" + "\n";
+
+        return res;
+    }
 }

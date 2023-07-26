@@ -93,7 +93,7 @@ literal returns[filc::ast::AbstractExpression *tree]
     }
     | c=CHARACTER {
         $tree = new filc::ast::CharacterLiteral(
-            filc::ast::CharacterLiteral::stringToChar($c.text)
+            filc::ast::CharacterLiteral::stringToChar($c.text, $c)
         );
         $tree->setPosition(new filc::utils::Position($c));
     }

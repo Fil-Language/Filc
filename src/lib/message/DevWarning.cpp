@@ -21,34 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_POSITION_H
-#define FILC_POSITION_H
+#include "DevWarning.h"
+#include <utility>
 
-#include "antlr4-runtime.h"
-#include <string>
+namespace filc::message {
+    DevWarning::DevWarning(unsigned int code, filc::utils::Position *position, std::string content)
+            : Message(ERROR, std::move(content)), _code(code), _position(position) {}
 
-namespace filc::utils {
-    class Position final {
-    public:
-        Position(std::string filename, unsigned int line, unsigned int column);
+    auto DevWarning::print(std::ostream &out) -> std::ostream & {
+        if (_printed) {
+            return out;
+        }
 
-        Position(const antlr4::Token *token);
+        out << "\033[1;36mDEV WARNING:\033[0m " << "\033[1;46m " << _code << " \033[0m " << _content << std::endl;
+        out << _position->dump("\033[1;36m");
 
-        auto getFilename() const -> const std::string &;
+        _printed = true;
 
-        auto getLine() const -> unsigned int;
-
-        auto getColumn() const -> unsigned int;
-
-        auto getContent() const -> std::string;
-
-        auto dump(const std::string &color) const -> std::string;
-
-    private:
-        std::string _filename;
-        unsigned int _line;
-        unsigned int _column;
-    };
+        return out;
+    }
 }
-
-#endif //FILC_POSITION_H

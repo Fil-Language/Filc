@@ -113,7 +113,7 @@ namespace filc::ast {
     public:
         explicit CharacterLiteral(char value);
 
-        static auto stringToChar(const std::string &snippet) -> char;
+        static auto stringToChar(const std::string &snippet, antlr4::Token *token = nullptr) -> char;
     };
 }
 

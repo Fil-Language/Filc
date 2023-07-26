@@ -22,12 +22,14 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "MessageCollector.h"
+#include "DevWarning.h"
 
 namespace filc::ast {
     CharacterLiteral::CharacterLiteral(char value)
             : AbstractLiteral<char>(value) {}
 
-    auto CharacterLiteral::stringToChar(const std::string &snippet) -> char {
+    auto CharacterLiteral::stringToChar(const std::string &snippet, antlr4::Token *token) -> char {
         auto value = snippet.substr(1, snippet.size() - 2);
 
         if (value.size() == 1) {
@@ -64,7 +66,13 @@ namespace filc::ast {
         }
 
         // There is a problem with the lexer
-        // TODO : add dev warning
+        if (token != nullptr) {
+            filc::message::MessageCollector::getCollector()->addError(new filc::message::DevWarning(
+                    2,
+                    new filc::utils::Position(token),
+                    "Lexer found a character that is not regular: " + snippet
+            ));
+        }
 
         return '\0';
     }
