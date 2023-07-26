@@ -48,7 +48,7 @@ add_library(compiler_lib
         # === Message ===
         message/Message.cpp message/MessageCollector.cpp message/Warning.cpp message/Error.cpp
         # === AST ===
-        ast/Program.cpp ast/AbstractExpression.cpp ast/BooleanLiteral.cpp ast/IntegerLiteral.cpp ast/FloatLiteral.cpp)
+        ast/Program.cpp ast/AbstractExpression.cpp ast/BooleanLiteral.cpp ast/IntegerLiteral.cpp ast/FloatLiteral.cpp ast/CharacterLiteral.cpp)
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
         utils message grammar ast

@@ -11,7 +11,7 @@ add_executable(tests
         unit/utils/OptionsParserTest.cpp unit/utils/PositionTest.cpp
         unit/message/MessageTest.cpp unit/message/MessageCollectorTest.cpp
         unit/grammar/ParserTest.cpp
-        unit/ast/ProgramTest.cpp unit/ast/BooleanLiteralTest.cpp unit/ast/IntegerLiteralTest.cpp unit/ast/FloatLiteralTest.cpp
+        unit/ast/ProgramTest.cpp unit/ast/BooleanLiteralTest.cpp unit/ast/IntegerLiteralTest.cpp unit/ast/FloatLiteralTest.cpp unit/ast/CharacterLiteralTest.cpp
         )
 target_include_directories(tests PUBLIC unit)
 

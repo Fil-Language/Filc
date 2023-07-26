@@ -79,9 +79,10 @@ FLOAT: SIGN? DIGIT* '.' DIGIT+;
 fragment UPPERCASE: [A-Z];
 fragment LOWERCASE: [a-z];
 fragment LETTER: UPPERCASE | LOWERCASE;
-fragment STRING_CHAR: ~('"' | '\\' | '\n');
+fragment ESCAPE_CHAR: '\\' ['"?abfnrtv\\];
+fragment STRING_CHAR: ~('"' | '\\' | '\n') | ESCAPE_CHAR;
 STRING: '"' (STRING_CHAR | '\\"' | '\\\\')* '"';
-CHARACTER: '\'' ~('\'' | '\\' | '\n') '\'';
+CHARACTER: '\'' (~('\'' | '\\' | '\n') | ESCAPE_CHAR) '\'';
 
 COMMENT: '//' (~('\n' | '\r'))* -> skip;
 COMMENT_BLOCK: '/*' .*? '*/' -> skip;

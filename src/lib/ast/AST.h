@@ -108,6 +108,13 @@ namespace filc::ast {
     public:
         explicit FloatLiteral(double value);
     };
+
+    class CharacterLiteral : public AbstractLiteral<char> {
+    public:
+        explicit CharacterLiteral(char value);
+
+        static auto stringToChar(const std::string &snippet) -> char;
+    };
 }
 
 #endif //FILC_AST_H

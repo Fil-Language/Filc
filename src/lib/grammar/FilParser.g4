@@ -91,7 +91,12 @@ literal returns[filc::ast::AbstractExpression *tree]
     | n=number {
         $tree = $n.tree;
     }
-    | CHARACTER
+    | c=CHARACTER {
+        $tree = new filc::ast::CharacterLiteral(
+            filc::ast::CharacterLiteral::stringToChar($c.text)
+        );
+        $tree->setPosition(new filc::utils::Position($c));
+    }
     | STRING;
 
 boolean returns[filc::ast::BooleanLiteral *tree]

@@ -1,0 +1,71 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2023-Present Kevin Traini
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+#include "AST.h"
+
+namespace filc::ast {
+    CharacterLiteral::CharacterLiteral(char value)
+            : AbstractLiteral<char>(value) {}
+
+    auto CharacterLiteral::stringToChar(const std::string &snippet) -> char {
+        auto value = snippet.substr(1, snippet.size() - 2);
+
+        if (value.size() == 1) {
+            // Just a simple char
+            return value[0];
+        }
+
+        if (value.size() == 2) {
+            // An escaped char \\ + ['"?abfnrtv\\]
+            switch (value[1]) {
+                case '\'':
+                    return '\'';
+                case '"':
+                    return '"';
+                case '?':
+                    return '\?';
+                case 'a':
+                    return '\a';
+                case 'b':
+                    return '\b';
+                case 'f':
+                    return '\f';
+                case 'n':
+                    return '\n';
+                case 'r':
+                    return '\r';
+                case 't':
+                    return '\t';
+                case 'v':
+                    return '\v';
+                case '\\':
+                    return '\\';
+            }
+        }
+
+        // There is a problem with the lexer
+        // TODO : add dev warning
+
+        return '\0';
+    }
+}

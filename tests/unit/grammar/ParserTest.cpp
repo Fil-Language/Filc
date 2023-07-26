@@ -171,3 +171,26 @@ TEST(Parser, FloatLiteral) {
     ASSERT_NE(nullptr, expression4);
     ASSERT_EQ(3.14159265359, expression4->getValue());
 }
+
+TEST(Parser, CharacterLiteral) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/char1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::CharacterLiteral *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_EQ('a', expression1->getValue());
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/char2.fil");
+    auto *program2 = parser2.getProgram();
+    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
+    auto *expression2 = static_cast<filc::ast::CharacterLiteral *>(program2->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression2);
+    ASSERT_EQ('2', expression2->getValue());
+
+    filc::grammar::Parser parser3(FIXTURES_PATH "/char3.fil");
+    auto *program3 = parser3.getProgram();
+    ASSERT_THAT(program3->getExpressions(), SizeIs(1));
+    auto *expression3 = static_cast<filc::ast::CharacterLiteral *>(program3->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression3);
+    ASSERT_EQ('\t', expression3->getValue());
+}
