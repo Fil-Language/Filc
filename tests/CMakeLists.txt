@@ -1,7 +1,7 @@
 include(FetchContent)
 FetchContent_Declare(
         googletest
-        URL https://github.com/google/googletest/archive/cc366710bbf40a9816d47c35802d06dbaccb8792.zip
+        URL https://github.com/google/googletest/archive/refs/tags/v1.13.0.zip
 )
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
@@ -15,7 +15,7 @@ add_executable(tests
         )
 target_include_directories(tests PUBLIC unit)
 
-target_link_libraries(tests PRIVATE GTest::gtest_main compiler_lib)
+target_link_libraries(tests PRIVATE gtest_main gtest gmock compiler_lib)
 
 include(GoogleTest)
 gtest_discover_tests(tests)
