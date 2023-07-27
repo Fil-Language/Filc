@@ -39,6 +39,8 @@ namespace filc::ast {
     class FloatLiteral;
 
     class CharacterLiteral;
+
+    class StringLiteral;
 }
 
 #endif //FILC_AST_DECL_H

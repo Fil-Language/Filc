@@ -22,36 +22,9 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "MessageCollector.h"
-#include "DevWarning.h"
-#include "tools.h"
+#include <gtest/gtest.h>
 
-namespace filc::ast {
-    CharacterLiteral::CharacterLiteral(char value)
-            : AbstractLiteral<char>(value) {}
-
-    auto CharacterLiteral::stringToChar(const std::string &snippet, antlr4::Token *token) -> char {
-        auto value = snippet.substr(1, snippet.size() - 2);
-
-        if (value.size() == 1) {
-            // Just a simple char
-            return value[0];
-        }
-
-        if (value.size() == 2) {
-            // An escaped char \\ + ['"?abfnrtv\\]
-            return filc::utils::parseEscapedChar(value);
-        }
-
-        // There is a problem with the lexer
-        if (token != nullptr) {
-            filc::message::MessageCollector::getCollector()->addError(new filc::message::DevWarning(
-                    2,
-                    new filc::utils::Position(token),
-                    "Lexer found a character that is not regular: " + snippet
-            ));
-        }
-
-        return '\0';
-    }
+TEST(StringLiteral, constructor) {
+    filc::ast::StringLiteral sl1("\"Hello\"");
+    ASSERT_STREQ("Hello", sl1.getValue().c_str());
 }

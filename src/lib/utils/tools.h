@@ -21,37 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
-#include "MessageCollector.h"
-#include "DevWarning.h"
-#include "tools.h"
+#ifndef FILC_TOOLS_H
+#define FILC_TOOLS_H
 
-namespace filc::ast {
-    CharacterLiteral::CharacterLiteral(char value)
-            : AbstractLiteral<char>(value) {}
+#include <string>
 
-    auto CharacterLiteral::stringToChar(const std::string &snippet, antlr4::Token *token) -> char {
-        auto value = snippet.substr(1, snippet.size() - 2);
+namespace filc::utils {
+    auto parseEscapedChar(const std::string &escaped_char) -> char;
 
-        if (value.size() == 1) {
-            // Just a simple char
-            return value[0];
-        }
-
-        if (value.size() == 2) {
-            // An escaped char \\ + ['"?abfnrtv\\]
-            return filc::utils::parseEscapedChar(value);
-        }
-
-        // There is a problem with the lexer
-        if (token != nullptr) {
-            filc::message::MessageCollector::getCollector()->addError(new filc::message::DevWarning(
-                    2,
-                    new filc::utils::Position(token),
-                    "Lexer found a character that is not regular: " + snippet
-            ));
-        }
-
-        return '\0';
-    }
+    auto parseEscapedString(const std::string &escaped_string) -> std::string;
 }
+
+#endif //FILC_TOOLS_H

@@ -115,6 +115,11 @@ namespace filc::ast {
 
         static auto stringToChar(const std::string &snippet, antlr4::Token *token = nullptr) -> char;
     };
+
+    class StringLiteral : public AbstractLiteral<std::string> {
+    public:
+        explicit StringLiteral(const std::string &value);
+    };
 }
 
 #endif //FILC_AST_H

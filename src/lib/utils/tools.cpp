@@ -1,0 +1,73 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2023-Present Kevin Traini
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+#include "tools.h"
+
+namespace filc::utils {
+    auto parseEscapedChar(const std::string &escaped_char) -> char {
+        if (escaped_char.size() == 2) {
+            // An escaped char \\ + ['"?abfnrtv\\]
+            switch (escaped_char[1]) {
+                case '\'':
+                    return '\'';
+                case '"':
+                    return '"';
+                case '?':
+                    return '\?';
+                case 'a':
+                    return '\a';
+                case 'b':
+                    return '\b';
+                case 'f':
+                    return '\f';
+                case 'n':
+                    return '\n';
+                case 'r':
+                    return '\r';
+                case 't':
+                    return '\t';
+                case 'v':
+                    return '\v';
+                case '\\':
+                    return '\\';
+            }
+        }
+
+        return escaped_char[0];
+    }
+
+    auto parseEscapedString(const std::string &escaped_string) -> std::string {
+        std::string result;
+
+        for (unsigned int i = 0; i < escaped_string.length(); i++) {
+            if (escaped_string[i] == '\\' && i + 1 < escaped_string.length()) {
+                result += parseEscapedChar(escaped_string.substr(i, 2));
+                i++;
+            } else {
+                result += escaped_string[i];
+            }
+        }
+
+        return result;
+    }
+}

@@ -97,7 +97,10 @@ literal returns[filc::ast::AbstractExpression *tree]
         );
         $tree->setPosition(new filc::utils::Position($c));
     }
-    | STRING;
+    | s=STRING {
+        $tree = new filc::ast::StringLiteral($s.text);
+        $tree->setPosition(new filc::utils::Position($s));
+    };
 
 boolean returns[filc::ast::BooleanLiteral *tree]
     : t=TRUE {
