@@ -21,28 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
 
 namespace filc::ast {
-    class Program;
+    VariableDeclaration::VariableDeclaration(bool is_constant, std::string identifier)
+            : AbstractExpression(), _constant(is_constant), _identifier(std::move(identifier)) {}
 
-    class AbstractExpression;
+    auto VariableDeclaration::isConstant() const -> bool {
+        return _constant;
+    }
 
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
+    auto VariableDeclaration::getIdentifier() const -> const std::string & {
+        return _identifier;
+    }
 }
-
-#endif //FILC_AST_DECL_H

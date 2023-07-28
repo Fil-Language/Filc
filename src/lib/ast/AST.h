@@ -120,6 +120,19 @@ namespace filc::ast {
     public:
         explicit StringLiteral(const std::string &value);
     };
+
+    class VariableDeclaration : public AbstractExpression {
+    public:
+        VariableDeclaration(bool is_constant, std::string identifier);
+
+        auto isConstant() const -> bool;
+
+        auto getIdentifier() const -> const std::string &;
+
+    private:
+        bool _constant;
+        std::string _identifier;
+    };
 }
 
 #endif //FILC_AST_H

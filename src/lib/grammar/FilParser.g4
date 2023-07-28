@@ -74,7 +74,9 @@ expression returns[filc::ast::AbstractExpression *tree]
     : l=literal {
         $tree = $l.tree;
     }
-    | variable_declaration
+    | v=variable_declaration {
+        $tree = $v.tree;
+    }
     | assignation
     | unary_calcul
     | expression binary_operator expression
@@ -122,8 +124,17 @@ number returns[filc::ast::AbstractExpression *tree]
         $tree->setPosition(new filc::utils::Position($f));
     };
 
-variable_declaration
-    : (VAL | VAR) IDENTIFIER COLON type assignation?;
+variable_declaration returns[filc::ast::VariableDeclaration *tree]
+@init {
+    bool is_constant = true;
+}
+@after {
+    $tree = new filc::ast::VariableDeclaration(is_constant, $i.text);
+    $tree->setPosition(new filc::utils::Position($i));
+}
+    : (VAL | VAR {
+        is_constant = false;
+    }) i=IDENTIFIER COLON type assignation?;
 
 assignation
     : EQ expression;

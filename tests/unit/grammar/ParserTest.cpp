@@ -217,3 +217,17 @@ TEST(Parser, StringLiteral) {
     ASSERT_NE(nullptr, expression3);
     ASSERT_STREQ("\t\n\r\a\\\"", expression3->getValue().c_str());
 }
+
+TEST(Parser, VariableDeclaration) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/variable_declaration1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(2));
+    auto *expression1_1 = static_cast<filc::ast::VariableDeclaration *>(program1->getExpressions()[0]);
+    auto *expression1_2 = static_cast<filc::ast::VariableDeclaration *>(program1->getExpressions()[1]);
+    ASSERT_NE(nullptr, expression1_1);
+    ASSERT_NE(nullptr, expression1_2);
+    ASSERT_TRUE(expression1_1->isConstant());
+    ASSERT_STREQ("pi", expression1_1->getIdentifier().c_str());
+    ASSERT_FALSE(expression1_2->isConstant());
+    ASSERT_STREQ("potatoes", expression1_2->getIdentifier().c_str());
+}

@@ -21,28 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
+#include <gtest/gtest.h>
 
-namespace filc::ast {
-    class Program;
+TEST(VariableDeclaration, constructor) {
+    filc::ast::VariableDeclaration vd1(false, "my_var");
+    ASSERT_FALSE(vd1.isConstant());
+    ASSERT_STREQ("my_var", vd1.getIdentifier().c_str());
 
-    class AbstractExpression;
-
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
+    filc::ast::VariableDeclaration vd2(true, "my_val");
+    ASSERT_TRUE(vd2.isConstant());
+    ASSERT_STREQ("my_val", vd2.getIdentifier().c_str());
 }
-
-#endif //FILC_AST_DECL_H
