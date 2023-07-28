@@ -9,6 +9,8 @@ version=$1
 major=$(echo "$version" | cut -d. -f1)
 minor=$(echo "$version" | cut -d. -f2)
 patch=$(echo "$version" | cut -d. -f3)
+pre=$(echo "$patch" | cut -d- -f2 -s)
+patch=$(echo "$patch" | cut -d- -f1)
 
 # Check that command http is installed
 if ! type "http" >/dev/null; then
@@ -20,15 +22,25 @@ echo -e "\033[34mChange version to \033[1m$version\033[0m"
 
 # Download badge for version
 echo -e " -> Download badge"
-http --download --output=version.svg "https://img.shields.io/badge/version-$version-green" -q
+
+version_badge=$version
+if [ -n "$pre" ]
+then
+  version_badge="$major.$minor.$patch--$pre"
+fi
+
+echo -e "    https://img.shields.io/badge/version-$version_badge-green"
+http --download --output=version.svg "https://img.shields.io/badge/version-$version_badge-green" -q
 echo -e "    \033[32mDone\033[0m"
 
 # Change version in src/lib/utils/VERSION.h
-# constexpr unsigned int FILC_VERSION_MAJOR = $major;
-# constexpr unsigned int FILC_VERSION_MINOR = $minor;
-# constexpr unsigned int FILC_VERSION_PATCH = $patch;
+# #define FILC_VERSION_MAJOR $major
+# #define FILC_VERSION_MINOR $minor
+# #define FILC_VERSION_PATCH $patch
+# #define FILC_VERSION_PRE std::string("$pre")
 echo -e " -> Change version in src/lib/utils/VERSION.h"
-sed -i "s/constexpr unsigned int FILC_VERSION_MAJOR = .*;/constexpr unsigned int FILC_VERSION_MAJOR = $major;/" src/lib/utils/VERSION.h
-sed -i "s/constexpr unsigned int FILC_VERSION_MINOR = .*;/constexpr unsigned int FILC_VERSION_MINOR = $minor;/" src/lib/utils/VERSION.h
-sed -i "s/constexpr unsigned int FILC_VERSION_PATCH = .*;/constexpr unsigned int FILC_VERSION_PATCH = $patch;/" src/lib/utils/VERSION.h
+sed -i "s/#define FILC_VERSION_MAJOR .*/#define FILC_VERSION_MAJOR $major/" src/lib/utils/VERSION.h
+sed -i "s/#define FILC_VERSION_MINOR .*/#define FILC_VERSION_MINOR $minor/" src/lib/utils/VERSION.h
+sed -i "s/#define FILC_VERSION_PATCH .*/#define FILC_VERSION_PATCH $patch/" src/lib/utils/VERSION.h
+sed -i "s/#define FILC_VERSION_PRE .*/#define FILC_VERSION_PRE std::string(\"$pre\")/" src/lib/utils/VERSION.h
 echo -e "    \033[32mDone\033[0m"
