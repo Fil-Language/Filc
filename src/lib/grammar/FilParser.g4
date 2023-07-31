@@ -84,7 +84,9 @@ expression returns[filc::ast::AbstractExpression *tree]
     | lambda
     | control
     | parenthesis_body
-    | IDENTIFIER;
+    | i=IDENTIFIER {
+        $tree = new filc::ast::Identifier($i);
+    };
 
 literal returns[filc::ast::AbstractExpression *tree]
     : b=boolean {

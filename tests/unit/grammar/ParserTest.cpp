@@ -231,3 +231,26 @@ TEST(Parser, VariableDeclaration) {
     ASSERT_FALSE(expression1_2->isConstant());
     ASSERT_STREQ("potatoes", expression1_2->getIdentifier()->getName().c_str());
 }
+
+TEST(Parser, Identifier) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/identifier1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::Identifier *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_STREQ("abcd", expression1->getName().c_str());
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/identifier2.fil");
+    auto *program2 = parser2.getProgram();
+    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
+    auto *expression2 = static_cast<filc::ast::Identifier *>(program2->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression2);
+    ASSERT_STREQ("_name", expression2->getName().c_str());
+
+    filc::grammar::Parser parser3(FIXTURES_PATH "/identifier3.fil");
+    auto *program3 = parser3.getProgram();
+    ASSERT_THAT(program3->getExpressions(), SizeIs(1));
+    auto *expression3 = static_cast<filc::ast::Identifier *>(program3->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression3);
+    ASSERT_STREQ("is42", expression3->getName().c_str());
+}
