@@ -164,7 +164,9 @@ type returns[filc::ast::AbstractType *tree]
             );
         }
         previous = new filc::ast::ArrayType(previous, size);
-    }) | STAR)*
+    }) | STAR {
+        previous = new filc::ast::PointerType(previous);
+    })*
     | lambda_type;
 
 unary_calcul

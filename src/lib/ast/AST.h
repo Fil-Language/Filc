@@ -183,6 +183,16 @@ namespace filc::ast {
         AbstractType *_inner_type;
         unsigned int _size;
     };
+
+    class PointerType : public AbstractType {
+    public:
+        PointerType(AbstractType *inner_type);
+
+        auto getInnerType() const -> AbstractType *;
+
+    private:
+        AbstractType *_inner_type;
+    };
 }
 
 #endif //FILC_AST_H
