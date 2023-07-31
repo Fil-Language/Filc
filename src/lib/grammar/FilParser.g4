@@ -167,7 +167,9 @@ type returns[filc::ast::AbstractType *tree]
     }) | STAR {
         previous = new filc::ast::PointerType(previous);
     })*
-    | lambda_type;
+    | l=lambda_type {
+        previous = $l.tree;
+    };
 
 unary_calcul
     : IDENTIFIER post_operator
@@ -262,8 +264,18 @@ block_body
 lambda
     : LPAREN function_params? RPAREN function_type ARROW (expression | parenthesis_body | block_body);
 
-lambda_type
-    : LPAREN (type (COMMA type)*)? RPAREN ARROW type;
+lambda_type returns[filc::ast::LambdaType *tree]
+@init {
+    std::vector<filc::ast::AbstractType *> arguments;
+}
+@after {
+    $tree = new filc::ast::LambdaType(arguments, $t.tree);
+}
+    : LPAREN (t1=type {
+        arguments.push_back($t1.tree);
+    } (COMMA ti=type {
+        arguments.push_back($ti.tree);
+    })*)? RPAREN ARROW t=type;
 
 control
     : condition | loop;

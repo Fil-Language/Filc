@@ -186,12 +186,25 @@ namespace filc::ast {
 
     class PointerType : public AbstractType {
     public:
-        PointerType(AbstractType *inner_type);
+        explicit PointerType(AbstractType *inner_type);
 
         auto getInnerType() const -> AbstractType *;
 
     private:
         AbstractType *_inner_type;
+    };
+
+    class LambdaType : public AbstractType {
+    public:
+        LambdaType(const std::vector<AbstractType *> &argument_types, AbstractType *return_type);
+
+        auto getArgumentTypes() const -> const std::vector<AbstractType *> &;
+
+        auto getReturnType() const -> AbstractType *;
+
+    private:
+        std::vector<AbstractType *> _argument_types;
+        AbstractType *_return_type;
     };
 }
 

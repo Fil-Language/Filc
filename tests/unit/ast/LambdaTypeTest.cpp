@@ -21,40 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
-namespace filc::ast {
-    class Program;
+using namespace ::testing;
 
-    class AbstractExpression;
-
-    class Identifier;
-
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
-
-    class PointerType;
-
-    class LambdaType;
+TEST(LambdaType, constructor) {
+    auto *arg1 = new filc::ast::Type(new filc::ast::Identifier("arg1"));
+    auto *arg2 = new filc::ast::Type(new filc::ast::Identifier("arg2"));
+    auto *arg3 = new filc::ast::Type(new filc::ast::Identifier("arg3"));
+    auto *return_type = new filc::ast::Type(new filc::ast::Identifier("return_type"));
+    filc::ast::LambdaType lt1({arg1, arg2, arg3}, return_type);
+    ASSERT_EQ(return_type, lt1.getReturnType());
+    ASSERT_THAT(lt1.getArgumentTypes(), ElementsAre(arg1, arg2, arg3));
 }
-
-#endif //FILC_AST_DECL_H
