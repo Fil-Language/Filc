@@ -141,8 +141,16 @@ variable_declaration returns[filc::ast::VariableDeclaration *tree]
 assignation
     : EQ expression;
 
-type
-    : IDENTIFIER ((LBRACK INTEGER RBRACK) | STAR)*
+type returns[filc::ast::AbstractType *tree]
+@init {
+    filc::ast::AbstractType *previous = nullptr;
+}
+@after {
+    $tree = previous;
+}
+    : i=IDENTIFIER {
+        previous = new filc::ast::Type(new filc::ast::Identifier($i));
+    } ((LBRACK INTEGER RBRACK) | STAR)*
     | lambda_type;
 
 unary_calcul

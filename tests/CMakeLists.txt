@@ -8,12 +8,16 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_executable(tests
+        # === Utils ===
         unit/utils/OptionsParserTest.cpp unit/utils/PositionTest.cpp
+        # === Message ===
         unit/message/MessageTest.cpp unit/message/MessageCollectorTest.cpp
+        # === Grammar ===
         unit/grammar/ParserTest.cpp
+        # === AST ===
         unit/ast/ProgramTest.cpp unit/ast/BooleanLiteralTest.cpp unit/ast/IntegerLiteralTest.cpp
         unit/ast/FloatLiteralTest.cpp unit/ast/CharacterLiteralTest.cpp unit/ast/StringLiteralTest.cpp
-        unit/ast/VariableDeclarationTest.cpp unit/ast/IdentifierTest.cpp)
+        unit/ast/VariableDeclarationTest.cpp unit/ast/IdentifierTest.cpp unit/ast/TypeTest.cpp)
 target_include_directories(tests PUBLIC unit)
 
 target_link_libraries(tests PRIVATE gtest_main gtest gmock compiler_lib)

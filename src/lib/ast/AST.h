@@ -145,6 +145,31 @@ namespace filc::ast {
         bool _constant;
         Identifier *_identifier;
     };
+
+    class AbstractType {
+    protected:
+        AbstractType() = default;
+
+        AbstractType(const AbstractType &other) = default;
+
+        AbstractType(AbstractType &&other) = default;
+
+        ~AbstractType() = default;
+
+        auto operator=(const AbstractType &other) -> AbstractType & = default;
+
+        auto operator=(AbstractType &&other) -> AbstractType & = default;
+    };
+
+    class Type : public AbstractType {
+    public:
+        explicit Type(Identifier *name);
+
+        auto getName() const -> Identifier *;
+
+    private:
+        Identifier *_name;
+    };
 }
 
 #endif //FILC_AST_H

@@ -49,7 +49,7 @@ add_library(compiler_lib
         message/Message.cpp message/MessageCollector.cpp message/Warning.cpp message/Error.cpp message/DevWarning.cpp
         # === AST ===
         ast/Program.cpp ast/AbstractExpression.cpp ast/BooleanLiteral.cpp ast/IntegerLiteral.cpp ast/FloatLiteral.cpp
-        ast/CharacterLiteral.cpp ast/StringLiteral.cpp ast/VariableDeclaration.cpp ast/Identifier.cpp
+        ast/CharacterLiteral.cpp ast/StringLiteral.cpp ast/VariableDeclaration.cpp ast/Identifier.cpp ast/Type.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
