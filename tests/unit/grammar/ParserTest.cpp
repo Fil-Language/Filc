@@ -227,7 +227,7 @@ TEST(Parser, VariableDeclaration) {
     ASSERT_NE(nullptr, expression1_1);
     ASSERT_NE(nullptr, expression1_2);
     ASSERT_TRUE(expression1_1->isConstant());
-    ASSERT_STREQ("pi", expression1_1->getIdentifier().c_str());
+    ASSERT_STREQ("pi", expression1_1->getIdentifier()->getName().c_str());
     ASSERT_FALSE(expression1_2->isConstant());
-    ASSERT_STREQ("potatoes", expression1_2->getIdentifier().c_str());
+    ASSERT_STREQ("potatoes", expression1_2->getIdentifier()->getName().c_str());
 }

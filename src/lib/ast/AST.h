@@ -80,6 +80,18 @@ namespace filc::ast {
         auto operator=(AbstractExpression &&other) -> AbstractExpression & = default;
     };
 
+    class Identifier : public AbstractExpression {
+    public:
+        explicit Identifier(antlr4::Token *token);
+
+        explicit Identifier(std::string name);
+
+        auto getName() const -> const std::string &;
+
+    private:
+        std::string _name;
+    };
+
     template<typename T>
     class AbstractLiteral : public AbstractExpression {
     public:
@@ -123,15 +135,15 @@ namespace filc::ast {
 
     class VariableDeclaration : public AbstractExpression {
     public:
-        VariableDeclaration(bool is_constant, std::string identifier);
+        VariableDeclaration(bool is_constant, Identifier *identifier);
 
         auto isConstant() const -> bool;
 
-        auto getIdentifier() const -> const std::string &;
+        auto getIdentifier() const -> Identifier *;
 
     private:
         bool _constant;
-        std::string _identifier;
+        Identifier *_identifier;
     };
 }
 

@@ -129,7 +129,7 @@ variable_declaration returns[filc::ast::VariableDeclaration *tree]
     bool is_constant = true;
 }
 @after {
-    $tree = new filc::ast::VariableDeclaration(is_constant, $i.text);
+    $tree = new filc::ast::VariableDeclaration(is_constant, new filc::ast::Identifier($i));
     $tree->setPosition(new filc::utils::Position($i));
 }
     : (VAL | VAR {

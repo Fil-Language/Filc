@@ -22,16 +22,9 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include <gtest/gtest.h>
 
-namespace filc::ast {
-    VariableDeclaration::VariableDeclaration(bool is_constant, Identifier *identifier)
-            : AbstractExpression(), _constant(is_constant), _identifier(identifier) {}
-
-    auto VariableDeclaration::isConstant() const -> bool {
-        return _constant;
-    }
-
-    auto VariableDeclaration::getIdentifier() const -> Identifier* {
-        return _identifier;
-    }
+TEST(Identifier, constructor) {
+    filc::ast::Identifier id1("identifier 1");
+    ASSERT_STREQ("identifier 1", id1.getName().c_str());
 }

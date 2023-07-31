@@ -29,6 +29,8 @@ namespace filc::ast {
 
     class AbstractExpression;
 
+    class Identifier;
+
     template<typename T>
     class AbstractLiteral;
 

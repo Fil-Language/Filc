@@ -22,16 +22,18 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include <utility>
 
 namespace filc::ast {
-    VariableDeclaration::VariableDeclaration(bool is_constant, Identifier *identifier)
-            : AbstractExpression(), _constant(is_constant), _identifier(identifier) {}
-
-    auto VariableDeclaration::isConstant() const -> bool {
-        return _constant;
+    Identifier::Identifier(antlr4::Token *token)
+            : AbstractExpression(), _name(token->getText()) {
+        setPosition(new filc::utils::Position(token));
     }
 
-    auto VariableDeclaration::getIdentifier() const -> Identifier* {
-        return _identifier;
+    Identifier::Identifier(std::string name)
+            : AbstractExpression(), _name(std::move(name)) {}
+
+    auto Identifier::getName() const -> const std::string & {
+        return _name;
     }
 }
