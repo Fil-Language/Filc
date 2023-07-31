@@ -50,6 +50,7 @@ add_library(compiler_lib
         # === AST ===
         ast/Program.cpp ast/AbstractExpression.cpp ast/BooleanLiteral.cpp ast/IntegerLiteral.cpp ast/FloatLiteral.cpp
         ast/CharacterLiteral.cpp ast/StringLiteral.cpp ast/VariableDeclaration.cpp ast/Identifier.cpp ast/Type.cpp
+        ast/ArrayType.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}

@@ -29,6 +29,8 @@ options {
 
 @parser::header {
 #include "AST.h"
+#include "MessageCollector.h"
+#include "Error.h"
 #include <string>
 #include <vector>
 }
@@ -150,7 +152,19 @@ type returns[filc::ast::AbstractType *tree]
 }
     : i=IDENTIFIER {
         previous = new filc::ast::Type(new filc::ast::Identifier($i));
-    } ((LBRACK INTEGER RBRACK) | STAR)*
+    } ((LBRACK it=INTEGER RBRACK {
+        int size = stoi($it.text);
+        if (size < 0) {
+            filc::message::MessageCollector::getCollector()->addError(
+                new filc::message::Error(
+                    filc::message::ERROR,
+                    "Array size must be positive",
+                    new filc::utils::Position($it)
+                )
+            );
+        }
+        previous = new filc::ast::ArrayType(previous, size);
+    }) | STAR)*
     | lambda_type;
 
 unary_calcul

@@ -170,6 +170,19 @@ namespace filc::ast {
     private:
         Identifier *_name;
     };
+
+    class ArrayType : public AbstractType {
+    public:
+        ArrayType(AbstractType *inner_type, unsigned int size);
+
+        auto getInnerType() const -> AbstractType *;
+
+        auto getSize() const -> unsigned int;
+
+    private:
+        AbstractType *_inner_type;
+        unsigned int _size;
+    };
 }
 
 #endif //FILC_AST_H

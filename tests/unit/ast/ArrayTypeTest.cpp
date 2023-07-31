@@ -21,36 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
+#include <gtest/gtest.h>
 
-namespace filc::ast {
-    class Program;
-
-    class AbstractExpression;
-
-    class Identifier;
-
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
+TEST(ArrayType, constructor) {
+    auto *inner_type = new filc::ast::Type(new filc::ast::Identifier("array"));
+    filc::ast::ArrayType at1(
+            inner_type,
+            25
+    );
+    ASSERT_EQ(inner_type, at1.getInnerType());
+    ASSERT_EQ(25, at1.getSize());
 }
-
-#endif //FILC_AST_DECL_H

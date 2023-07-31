@@ -21,36 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
 
 namespace filc::ast {
-    class Program;
+    ArrayType::ArrayType(filc::ast::AbstractType *inner_type, unsigned int size)
+            : AbstractType(), _inner_type(inner_type), _size(size) {}
 
-    class AbstractExpression;
+    auto ArrayType::getInnerType() const -> AbstractType * {
+        return _inner_type;
+    }
 
-    class Identifier;
-
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
+    auto ArrayType::getSize() const -> unsigned int {
+        return _size;
+    }
 }
-
-#endif //FILC_AST_DECL_H

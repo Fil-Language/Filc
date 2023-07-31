@@ -25,6 +25,7 @@
 #define FILC_ERROR_H
 
 #include "Message.h"
+#include "Position.h"
 #include <utility>
 
 namespace filc::message {
@@ -33,6 +34,16 @@ namespace filc::message {
         BasicError(LEVEL level, std::string content) : Message(level, std::move(content)) {}
 
         auto print(std::ostream &out) -> std::ostream & override;
+    };
+
+    class Error final : public Message {
+    public:
+        Error(LEVEL level, std::string content, filc::utils::Position *position);
+
+        auto print(std::ostream &out) -> std::ostream & override;
+
+    private:
+        filc::utils::Position *_position;
     };
 }
 
