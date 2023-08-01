@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "Error.h"
+#include <utility>
 
 namespace filc::message {
     auto BasicError::print(std::ostream &out) -> std::ostream & {
@@ -36,14 +37,14 @@ namespace filc::message {
     }
 
     Error::Error(filc::message::LEVEL level, std::string content, filc::utils::Position *position)
-            : Message(level, content), _position(position) {}
+            : Message(level, std::move(content)), _position(position) {}
 
     auto Error::print(std::ostream &out) -> std::ostream & {
         if (_printed) {
             return out;
         }
 
-        out << "\033[1;31mERROR:\033[0m " << _content << std::endl;
+        out << "\033[1;31mERROR:\033[0m " << _content << '\n';
         out << _position->dump("\033[1;31m");
 
         return out;
