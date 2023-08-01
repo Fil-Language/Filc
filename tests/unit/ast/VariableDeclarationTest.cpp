@@ -25,11 +25,15 @@
 #include <gtest/gtest.h>
 
 TEST(VariableDeclaration, constructor) {
-    filc::ast::VariableDeclaration vd1(false, new filc::ast::Identifier("my_var"));
+    auto *tp1 = new filc::ast::Type(new filc::ast::Identifier("int"));
+    filc::ast::VariableDeclaration vd1(false, new filc::ast::Identifier("my_var"), tp1);
     ASSERT_FALSE(vd1.isConstant());
     ASSERT_STREQ("my_var", vd1.getIdentifier()->getName().c_str());
+    ASSERT_STREQ("int", vd1.getType()->dump().c_str());
 
-    filc::ast::VariableDeclaration vd2(true, new filc::ast::Identifier("my_val"));
+    auto *tp2 = new filc::ast::Type(new filc::ast::Identifier("float"));
+    filc::ast::VariableDeclaration vd2(true, new filc::ast::Identifier("my_val"), tp2);
     ASSERT_TRUE(vd2.isConstant());
     ASSERT_STREQ("my_val", vd2.getIdentifier()->getName().c_str());
+    ASSERT_STREQ("float", vd2.getType()->dump().c_str());
 }

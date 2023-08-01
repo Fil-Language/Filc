@@ -135,18 +135,24 @@ namespace filc::ast {
 
     class VariableDeclaration : public AbstractExpression {
     public:
-        VariableDeclaration(bool is_constant, Identifier *identifier);
+        VariableDeclaration(bool is_constant, Identifier *identifier, AbstractType *type);
 
         auto isConstant() const -> bool;
 
         auto getIdentifier() const -> Identifier *;
 
+        auto getType() const -> AbstractType *;
+
     private:
         bool _constant;
         Identifier *_identifier;
+        AbstractType *_type;
     };
 
     class AbstractType {
+    public:
+        virtual auto dump() const -> std::string = 0;
+
     protected:
         AbstractType() = default;
 
@@ -167,6 +173,8 @@ namespace filc::ast {
 
         auto getName() const -> Identifier *;
 
+        auto dump() const -> std::string override;
+
     private:
         Identifier *_name;
     };
@@ -179,6 +187,8 @@ namespace filc::ast {
 
         auto getSize() const -> unsigned int;
 
+        auto dump() const -> std::string override;
+
     private:
         AbstractType *_inner_type;
         unsigned int _size;
@@ -189,6 +199,8 @@ namespace filc::ast {
         explicit PointerType(AbstractType *inner_type);
 
         auto getInnerType() const -> AbstractType *;
+
+        auto dump() const -> std::string override;
 
     private:
         AbstractType *_inner_type;
@@ -201,6 +213,8 @@ namespace filc::ast {
         auto getArgumentTypes() const -> const std::vector<AbstractType *> &;
 
         auto getReturnType() const -> AbstractType *;
+
+        auto dump() const -> std::string override;
 
     private:
         std::vector<AbstractType *> _argument_types;

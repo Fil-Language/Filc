@@ -25,7 +25,7 @@
 
 namespace filc::ast {
     LambdaType::LambdaType(const std::vector<AbstractType *> &argument_types, filc::ast::AbstractType *return_type)
-            : AbstractType(), _argument_types(argument_types), _return_type(return_type) {}
+            : _argument_types(argument_types), _return_type(return_type) {}
 
     auto LambdaType::getArgumentTypes() const -> const std::vector<AbstractType *> & {
         return _argument_types;
@@ -33,5 +33,20 @@ namespace filc::ast {
 
     auto LambdaType::getReturnType() const -> AbstractType * {
         return _return_type;
+    }
+
+    auto LambdaType::dump() const -> std::string {
+        std::string result = "(";
+        for (const auto &argument: _argument_types) {
+            result += argument->dump() + ", ";
+        }
+        if (!_argument_types.empty()) {
+            result = result.substr(0, result.size() - 2);
+        }
+        result += ") -> ";
+
+        result += _return_type->dump();
+
+        return result;
     }
 }

@@ -27,4 +27,5 @@
 TEST(Type, constructor) {
     filc::ast::Type tp1(new filc::ast::Identifier("int"));
     ASSERT_STREQ("int", tp1.getName()->getName().c_str());
+    ASSERT_STREQ("int", tp1.dump().c_str());
 }

@@ -32,4 +32,5 @@ TEST(ArrayType, constructor) {
     );
     ASSERT_EQ(inner_type, at1.getInnerType());
     ASSERT_EQ(25, at1.getSize());
+    ASSERT_STREQ("array[25]", at1.dump().c_str());
 }

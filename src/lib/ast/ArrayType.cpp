@@ -25,7 +25,7 @@
 
 namespace filc::ast {
     ArrayType::ArrayType(filc::ast::AbstractType *inner_type, unsigned int size)
-            : AbstractType(), _inner_type(inner_type), _size(size) {}
+            : _inner_type(inner_type), _size(size) {}
 
     auto ArrayType::getInnerType() const -> AbstractType * {
         return _inner_type;
@@ -33,5 +33,9 @@ namespace filc::ast {
 
     auto ArrayType::getSize() const -> unsigned int {
         return _size;
+    }
+
+    auto ArrayType::dump() const -> std::string {
+        return _inner_type->dump() + "[" + std::to_string(_size) + "]";
     }
 }

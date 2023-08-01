@@ -133,12 +133,12 @@ variable_declaration returns[filc::ast::VariableDeclaration *tree]
     bool is_constant = true;
 }
 @after {
-    $tree = new filc::ast::VariableDeclaration(is_constant, new filc::ast::Identifier($i));
+    $tree = new filc::ast::VariableDeclaration(is_constant, new filc::ast::Identifier($i), $t.tree);
     $tree->setPosition(new filc::utils::Position($i));
 }
     : (VAL | VAR {
         is_constant = false;
-    }) i=IDENTIFIER COLON type assignation?;
+    }) i=IDENTIFIER COLON t=type assignation?;
 
 assignation
     : EQ expression;

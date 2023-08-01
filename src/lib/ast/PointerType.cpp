@@ -25,9 +25,13 @@
 
 namespace filc::ast {
     PointerType::PointerType(filc::ast::AbstractType *inner_type)
-            : AbstractType(), _inner_type(inner_type) {}
+            : _inner_type(inner_type) {}
 
     auto PointerType::getInnerType() const -> AbstractType * {
         return _inner_type;
+    }
+
+    auto PointerType::dump() const -> std::string {
+        return _inner_type->dump() + "*";
     }
 }

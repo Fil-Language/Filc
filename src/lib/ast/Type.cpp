@@ -25,9 +25,13 @@
 
 namespace filc::ast {
     Type::Type(filc::ast::Identifier *name)
-            : AbstractType(), _name(name) {}
+            : _name(name) {}
 
     auto Type::getName() const -> Identifier * {
         return _name;
+    }
+
+    auto Type::dump() const -> std::string {
+        return _name->getName();
     }
 }

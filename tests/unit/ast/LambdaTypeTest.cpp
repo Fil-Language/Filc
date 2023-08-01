@@ -35,4 +35,5 @@ TEST(LambdaType, constructor) {
     filc::ast::LambdaType lt1({arg1, arg2, arg3}, return_type);
     ASSERT_EQ(return_type, lt1.getReturnType());
     ASSERT_THAT(lt1.getArgumentTypes(), ElementsAre(arg1, arg2, arg3));
+    ASSERT_STREQ("(arg1, arg2, arg3) -> return_type", lt1.dump().c_str());
 }

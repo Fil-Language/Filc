@@ -24,8 +24,8 @@
 #include "AST.h"
 
 namespace filc::ast {
-    VariableDeclaration::VariableDeclaration(bool is_constant, Identifier *identifier)
-            : AbstractExpression(), _constant(is_constant), _identifier(identifier) {}
+    VariableDeclaration::VariableDeclaration(bool is_constant, Identifier *identifier, AbstractType *type)
+            : AbstractExpression(), _constant(is_constant), _identifier(identifier), _type(type) {}
 
     auto VariableDeclaration::isConstant() const -> bool {
         return _constant;
@@ -33,5 +33,9 @@ namespace filc::ast {
 
     auto VariableDeclaration::getIdentifier() const -> Identifier* {
         return _identifier;
+    }
+
+    auto VariableDeclaration::getType() const -> AbstractType * {
+        return _type;
     }
 }
