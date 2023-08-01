@@ -10,5 +10,7 @@ lcov --remove coverage.info '*/tests/*' --output-file coverage.info
 lcov --remove coverage.info '*/src/main.cpp' --output-file coverage.info
 # Remove lib files
 lcov --remove coverage.info '*/lib/cxxopts.hpp' --output-file coverage.info
+# Remove antlr4 files
+lcov --remove coverage.info '*antlr4*' --output-file coverage.info
 
 lcov --list coverage.info
