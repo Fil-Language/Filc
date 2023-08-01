@@ -143,10 +143,15 @@ namespace filc::ast {
 
         auto getType() const -> AbstractType *;
 
+        auto getAssignation() const -> AbstractExpression *;
+
+        auto setAssignation(AbstractExpression *assignation) -> void;
+
     private:
         bool _constant;
         Identifier *_identifier;
         AbstractType *_type;
+        AbstractExpression *_assignation;
     };
 
     class AbstractType {

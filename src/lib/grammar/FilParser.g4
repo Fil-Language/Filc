@@ -131,17 +131,25 @@ number returns[filc::ast::AbstractExpression *tree]
 variable_declaration returns[filc::ast::VariableDeclaration *tree]
 @init {
     bool is_constant = true;
+    filc::ast::AbstractExpression *assign = nullptr;
 }
 @after {
     $tree = new filc::ast::VariableDeclaration(is_constant, new filc::ast::Identifier($i), $t.tree);
     $tree->setPosition(new filc::utils::Position($i));
+    if (assign != nullptr) {
+        $tree->setAssignation(assign);
+    }
 }
     : (VAL | VAR {
         is_constant = false;
-    }) i=IDENTIFIER COLON t=type assignation?;
+    }) i=IDENTIFIER COLON t=type (a=assignation {
+        assign = $a.tree;
+    })?;
 
-assignation
-    : EQ expression;
+assignation returns[filc::ast::AbstractExpression *tree]
+    : EQ e=expression {
+        $tree = $e.tree;
+    };
 
 type returns[filc::ast::AbstractType *tree]
 @init {

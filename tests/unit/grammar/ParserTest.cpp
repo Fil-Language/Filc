@@ -232,6 +232,10 @@ TEST(Parser, VariableDeclaration) {
     ASSERT_FALSE(expression1_2->isConstant());
     ASSERT_STREQ("potatoes", expression1_2->getIdentifier()->getName().c_str());
     ASSERT_STREQ("int", expression1_2->getType()->dump().c_str());
+    auto *assignation1_1 = static_cast<filc::ast::FloatLiteral *>(expression1_1->getAssignation());
+    ASSERT_EQ(3.14, assignation1_1->getValue());
+    auto *assignation1_2 = static_cast<filc::ast::IntegerLiteral *>(expression1_2->getAssignation());
+    ASSERT_EQ(2, assignation1_2->getValue());
 }
 
 TEST(Parser, Identifier) {

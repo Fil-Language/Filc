@@ -37,3 +37,11 @@ TEST(VariableDeclaration, constructor) {
     ASSERT_STREQ("my_val", vd2.getIdentifier()->getName().c_str());
     ASSERT_STREQ("float", vd2.getType()->dump().c_str());
 }
+
+TEST(VariableDeclaration, assignation) {
+    auto *tp1 = new filc::ast::Type(new filc::ast::Identifier("int"));
+    filc::ast::VariableDeclaration vd1(false, new filc::ast::Identifier("my_var"), tp1);
+    auto *exp1 = new filc::ast::IntegerLiteral(12);
+    vd1.setAssignation(exp1);
+    ASSERT_EQ(exp1, vd1.getAssignation());
+}
