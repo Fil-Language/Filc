@@ -79,7 +79,9 @@ expression returns[filc::ast::AbstractExpression *tree]
     | v=variable_declaration {
         $tree = $v.tree;
     }
-    | assignation
+    | a=assignation {
+        $tree = $a.tree;
+    }
     | unary_calcul
     | expression binary_operator expression
     | function
