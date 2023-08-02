@@ -35,13 +35,13 @@ namespace filc::ast {
         explicit Program(std::string module, const std::vector<std::string> &imports,
                          const std::vector<AbstractExpression *> &expressions);
 
-        auto getModule() const -> const std::string &;
+        [[nodiscard]] auto getModule() const -> const std::string &;
 
-        auto getImports() const -> const std::vector<std::string> &;
+        [[nodiscard]] auto getImports() const -> const std::vector<std::string> &;
 
-        auto getExpressions() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getExpressions() const -> const std::vector<AbstractExpression *> &;
 
-        auto getFilename() const -> const std::string &;
+        [[nodiscard]] auto getFilename() const -> const std::string &;
 
         auto setFilename(const std::string &filename) -> void;
 
@@ -54,11 +54,11 @@ namespace filc::ast {
 
     class AbstractExpression {
     public:
-        auto isExported() const -> bool;
+        [[nodiscard]] auto isExported() const -> bool;
 
         auto setExported(bool exported) -> void;
 
-        auto getPosition() const -> utils::Position *;
+        [[nodiscard]] auto getPosition() const -> utils::Position *;
 
         auto setPosition(utils::Position *position) -> void;
 
@@ -86,7 +86,7 @@ namespace filc::ast {
 
         explicit Identifier(std::string name);
 
-        auto getName() const -> const std::string &;
+        [[nodiscard]] auto getName() const -> const std::string &;
 
     private:
         std::string _name;
@@ -137,13 +137,13 @@ namespace filc::ast {
     public:
         VariableDeclaration(bool is_constant, Identifier *identifier, AbstractType *type);
 
-        auto isConstant() const -> bool;
+        [[nodiscard]] auto isConstant() const -> bool;
 
-        auto getIdentifier() const -> Identifier *;
+        [[nodiscard]] auto getIdentifier() const -> Identifier *;
 
-        auto getType() const -> AbstractType *;
+        [[nodiscard]] auto getType() const -> AbstractType *;
 
-        auto getAssignation() const -> AbstractExpression *;
+        [[nodiscard]] auto getAssignation() const -> AbstractExpression *;
 
         auto setAssignation(AbstractExpression *assignation) -> void;
 
@@ -156,7 +156,7 @@ namespace filc::ast {
 
     class AbstractType {
     public:
-        virtual auto dump() const -> std::string = 0;
+        [[nodiscard]] virtual auto dump() const -> std::string = 0;
 
     protected:
         AbstractType() = default;
@@ -176,9 +176,9 @@ namespace filc::ast {
     public:
         explicit Type(Identifier *name);
 
-        auto getName() const -> Identifier *;
+        [[nodiscard]] auto getName() const -> Identifier *;
 
-        auto dump() const -> std::string override;
+        [[nodiscard]] auto dump() const -> std::string override;
 
     private:
         Identifier *_name;
@@ -188,11 +188,11 @@ namespace filc::ast {
     public:
         ArrayType(AbstractType *inner_type, unsigned int size);
 
-        auto getInnerType() const -> AbstractType *;
+        [[nodiscard]] auto getInnerType() const -> AbstractType *;
 
-        auto getSize() const -> unsigned int;
+        [[nodiscard]] auto getSize() const -> unsigned int;
 
-        auto dump() const -> std::string override;
+        [[nodiscard]] auto dump() const -> std::string override;
 
     private:
         AbstractType *_inner_type;
@@ -203,9 +203,9 @@ namespace filc::ast {
     public:
         explicit PointerType(AbstractType *inner_type);
 
-        auto getInnerType() const -> AbstractType *;
+        [[nodiscard]] auto getInnerType() const -> AbstractType *;
 
-        auto dump() const -> std::string override;
+        [[nodiscard]] auto dump() const -> std::string override;
 
     private:
         AbstractType *_inner_type;
@@ -215,11 +215,11 @@ namespace filc::ast {
     public:
         LambdaType(const std::vector<AbstractType *> &argument_types, AbstractType *return_type);
 
-        auto getArgumentTypes() const -> const std::vector<AbstractType *> &;
+        [[nodiscard]] auto getArgumentTypes() const -> const std::vector<AbstractType *> &;
 
-        auto getReturnType() const -> AbstractType *;
+        [[nodiscard]] auto getReturnType() const -> AbstractType *;
 
-        auto dump() const -> std::string override;
+        [[nodiscard]] auto dump() const -> std::string override;
 
     private:
         std::vector<AbstractType *> _argument_types;
@@ -230,7 +230,7 @@ namespace filc::ast {
     public:
         explicit UnaryCalcul(Identifier *variable);
 
-        auto getVariable() const -> Identifier *;
+        [[nodiscard]] auto getVariable() const -> Identifier *;
 
     private:
         Identifier *_variable;

@@ -32,7 +32,7 @@ namespace filc::grammar {
     public:
         explicit Parser(const std::string &filename);
 
-        auto getProgram() const -> ast::Program *;
+        [[nodiscard]] auto getProgram() const -> ast::Program *;
 
     private:
         filc::ast::Program *_program;

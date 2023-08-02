@@ -63,7 +63,7 @@ namespace filc::message {
 
         virtual auto print(std::ostream &out) -> std::ostream &;
 
-        auto getLevel() const -> LEVEL;
+        [[nodiscard]] auto getLevel() const -> LEVEL;
 
     protected:
         LEVEL _level;

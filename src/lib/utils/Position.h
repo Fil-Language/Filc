@@ -32,17 +32,17 @@ namespace filc::utils {
     public:
         Position(std::string filename, unsigned int line, unsigned int column);
 
-        Position(const antlr4::Token *token);
+        explicit Position(const antlr4::Token *token);
 
-        auto getFilename() const -> const std::string &;
+        [[nodiscard]] auto getFilename() const -> const std::string &;
 
-        auto getLine() const -> unsigned int;
+        [[nodiscard]] auto getLine() const -> unsigned int;
 
-        auto getColumn() const -> unsigned int;
+        [[nodiscard]] auto getColumn() const -> unsigned int;
 
-        auto getContent() const -> std::string;
+        [[nodiscard]] auto getContent() const -> std::string;
 
-        auto dump(const std::string &color) const -> std::string;
+        [[nodiscard]] auto dump(const std::string &color) const -> std::string;
 
     private:
         std::string _filename;
