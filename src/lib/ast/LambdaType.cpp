@@ -41,7 +41,9 @@ namespace filc::ast {
             result += argument->dump() + ", ";
         }
         if (!_argument_types.empty()) {
-            result = result.substr(0, result.size() - 2);
+            // Remove last ", "
+            result.pop_back();
+            result.pop_back();
         }
         result += ") -> ";
 
