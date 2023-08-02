@@ -225,6 +225,16 @@ namespace filc::ast {
         std::vector<AbstractType *> _argument_types;
         AbstractType *_return_type;
     };
+
+    class UnaryCalcul : public AbstractExpression {
+    public:
+        explicit UnaryCalcul(Identifier *variable);
+
+        auto getVariable() const -> Identifier *;
+
+    private:
+        Identifier *_variable;
+    };
 }
 
 #endif //FILC_AST_H

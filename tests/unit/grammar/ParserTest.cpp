@@ -260,3 +260,12 @@ TEST(Parser, Identifier) {
     ASSERT_NE(nullptr, expression3);
     ASSERT_STREQ("is42", expression3->getName().c_str());
 }
+
+TEST(Parser, UnaryCalcul) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/unary_calcul1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::UnaryCalcul *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_STREQ("a", expression1->getVariable()->getName().c_str());
+}

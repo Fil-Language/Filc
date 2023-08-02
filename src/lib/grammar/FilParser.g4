@@ -82,7 +82,9 @@ expression returns[filc::ast::AbstractExpression *tree]
     | a=assignation {
         $tree = $a.tree;
     }
-    | unary_calcul
+    | u=unary_calcul {
+        $tree = $u.tree;
+    }
     | expression binary_operator expression
     | function
     | lambda
@@ -181,9 +183,13 @@ type returns[filc::ast::AbstractType *tree]
         previous = $l.tree;
     };
 
-unary_calcul
-    : IDENTIFIER post_operator
-    | pre_operator IDENTIFIER;
+unary_calcul returns[filc::ast::UnaryCalcul *tree]
+    : i=IDENTIFIER post_operator {
+        $tree = new filc::ast::UnaryCalcul(new filc::ast::Identifier($i));
+    }
+    | pre_operator i=IDENTIFIER {
+        $tree = new filc::ast::UnaryCalcul(new filc::ast::Identifier($i));
+    };
 
 post_operator
     : PLUSPLUS
