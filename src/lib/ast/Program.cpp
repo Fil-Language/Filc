@@ -23,6 +23,14 @@
  */
 #include "AST.h"
 #include <utility>
+#include <algorithm>
+
+auto getFileName(const std::string &filename) -> std::string {
+    auto slash = filename.find_last_of('/');
+    auto dot = filename.find_last_of('.');
+
+    return filename.substr(slash + 1, dot - slash - 1);
+}
 
 namespace filc::ast {
     Program::Program(std::string module, const std::vector<std::string> &imports,
@@ -47,5 +55,10 @@ namespace filc::ast {
 
     auto Program::setFilename(const std::string &filename) -> void {
         _filename = filename;
+
+        auto file = getFileName(_filename);
+        if (file != "index" || file != "main") {
+            _module += "." + file;
+        }
     }
 }

@@ -68,15 +68,15 @@ TEST(Parser, position) {
 TEST(Parser, module) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/module1.fil");
     auto *program1 = parser1.getProgram();
-    ASSERT_STREQ("a", program1->getModule().c_str());
+    ASSERT_STREQ("a.module1", program1->getModule().c_str());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/module2.fil");
     auto *program2 = parser2.getProgram();
-    ASSERT_STREQ("a.b", program2->getModule().c_str());
+    ASSERT_STREQ("a.b.module2", program2->getModule().c_str());
 
     filc::grammar::Parser parser3(FIXTURES_PATH "/module3.fil");
     auto *program3 = parser3.getProgram();
-    ASSERT_STREQ("an.example.with.many.dots", program3->getModule().c_str());
+    ASSERT_STREQ("an.example.with.many.dots.module3", program3->getModule().c_str());
 }
 
 TEST(Parser, use) {
