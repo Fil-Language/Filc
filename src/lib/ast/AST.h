@@ -228,12 +228,25 @@ namespace filc::ast {
 
     class UnaryCalcul : public AbstractExpression {
     public:
-        explicit UnaryCalcul(Identifier *variable);
+        explicit UnaryCalcul(Identifier *variable, Operator *p_operator);
 
         [[nodiscard]] auto getVariable() const -> Identifier *;
 
-    private:
+        [[nodiscard]] auto getOperator() const -> Operator *;
+
+    protected:
         Identifier *_variable;
+        Operator *_operator;
+    };
+
+    class PreUnaryCalcul : public UnaryCalcul {
+    public:
+        PreUnaryCalcul(Identifier *variable, Operator *p_operator);
+    };
+
+    class PostUnaryCalcul : public UnaryCalcul {
+    public:
+        PostUnaryCalcul(Identifier *variable, Operator *p_operator);
     };
 
     class Operator {

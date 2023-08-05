@@ -73,6 +73,8 @@ add_library(compiler_lib
         ast/ClassicOperator.cpp
         ast/ArrayOperator.cpp
         ast/FunctionOperator.cpp
+        ast/PreUnaryCalcul.cpp
+        ast/PostUnaryCalcul.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}

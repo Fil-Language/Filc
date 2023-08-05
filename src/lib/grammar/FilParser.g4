@@ -184,11 +184,11 @@ type returns[filc::ast::AbstractType *tree]
     };
 
 unary_calcul returns[filc::ast::UnaryCalcul *tree]
-    : i=IDENTIFIER post_operator {
-        $tree = new filc::ast::UnaryCalcul(new filc::ast::Identifier($i));
+    : i=IDENTIFIER po=post_operator {
+        $tree = new filc::ast::PostUnaryCalcul(new filc::ast::Identifier($i), $po.tree);
     }
-    | pre_operator i=IDENTIFIER {
-        $tree = new filc::ast::UnaryCalcul(new filc::ast::Identifier($i));
+    | pr=pre_operator i=IDENTIFIER {
+        $tree = new filc::ast::PreUnaryCalcul(new filc::ast::Identifier($i), $pr.tree);
     };
 
 post_operator returns[filc::ast::Operator *tree]

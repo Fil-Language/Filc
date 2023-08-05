@@ -24,10 +24,14 @@
 #include "AST.h"
 
 namespace filc::ast {
-    UnaryCalcul::UnaryCalcul(filc::ast::Identifier *variable)
-            : AbstractExpression(), _variable(variable) {}
+    UnaryCalcul::UnaryCalcul(filc::ast::Identifier *variable, Operator *p_operator)
+            : AbstractExpression(), _variable(variable), _operator(p_operator) {}
 
     auto UnaryCalcul::getVariable() const -> Identifier * {
         return _variable;
+    }
+
+    auto UnaryCalcul::getOperator() const -> Operator * {
+        return _operator;
     }
 }

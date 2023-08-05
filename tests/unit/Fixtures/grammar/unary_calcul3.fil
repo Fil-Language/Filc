@@ -1,0 +1,3 @@
+module test
+
+multiply(2, 3)

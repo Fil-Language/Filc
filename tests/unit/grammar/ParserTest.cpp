@@ -265,7 +265,42 @@ TEST(Parser, UnaryCalcul) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/unary_calcul1.fil");
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    auto *expression1 = static_cast<filc::ast::UnaryCalcul *>(program1->getExpressions()[0]);
+    auto *expression1 = static_cast<filc::ast::PostUnaryCalcul *>(program1->getExpressions()[0]);
     ASSERT_NE(nullptr, expression1);
     ASSERT_STREQ("a", expression1->getVariable()->getName().c_str());
+    ASSERT_EQ(
+            filc::ast::ClassicOperator::PLUSPLUS,
+            static_cast<filc::ast::ClassicOperator *>(expression1->getOperator())->getOperator()
+    );
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/unary_calcul2.fil");
+    auto *program2 = parser2.getProgram();
+    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
+    auto *expression2 = static_cast<filc::ast::PreUnaryCalcul *>(program2->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression2);
+    ASSERT_STREQ("b", expression2->getVariable()->getName().c_str());
+    ASSERT_EQ(
+            filc::ast::ClassicOperator::MINUSMINUS,
+            static_cast<filc::ast::ClassicOperator *>(expression2->getOperator())->getOperator()
+    );
+
+    filc::grammar::Parser parser3(FIXTURES_PATH "/unary_calcul3.fil");
+    auto *program3 = parser3.getProgram();
+    ASSERT_THAT(program3->getExpressions(), SizeIs(1));
+    auto *expression3 = static_cast<filc::ast::PostUnaryCalcul *>(program3->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression3);
+    ASSERT_STREQ("multiply", expression3->getVariable()->getName().c_str());
+    auto *operator3 = static_cast<filc::ast::FunctionOperator *>(expression3->getOperator());
+    ASSERT_THAT(operator3->getExpressions(), SizeIs(2));
+    ASSERT_EQ(2, static_cast<filc::ast::IntegerLiteral *>(operator3->getExpressions()[0])->getValue());
+    ASSERT_EQ(3, static_cast<filc::ast::IntegerLiteral *>(operator3->getExpressions()[1])->getValue());
+
+    filc::grammar::Parser parser4(FIXTURES_PATH "/unary_calcul4.fil");
+    auto *program4 = parser4.getProgram();
+    ASSERT_THAT(program4->getExpressions(), SizeIs(1));
+    auto *expression4 = static_cast<filc::ast::PostUnaryCalcul *>(program4->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression4);
+    ASSERT_STREQ("array", expression4->getVariable()->getName().c_str());
+    auto *operator4 = static_cast<filc::ast::ArrayOperator *>(expression4->getOperator());
+    ASSERT_EQ(4, static_cast<filc::ast::IntegerLiteral *>(operator4->getExpression())->getValue());
 }

@@ -21,54 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
+#include <gtest/gtest.h>
 
-namespace filc::ast {
-    class Program;
-
-    class AbstractExpression;
-
-    class Identifier;
-
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
-
-    class PointerType;
-
-    class LambdaType;
-
-    class UnaryCalcul;
-
-    class PreUnaryCalcul;
-
-    class PostUnaryCalcul;
-
-    class Operator;
-
-    class ClassicOperator;
-
-    class ArrayOperator;
-
-    class FunctionOperator;
+TEST(PreUnaryCalcul, constructor) {
+    filc::ast::PreUnaryCalcul puc1(
+            new filc::ast::Identifier("val1"),
+            new filc::ast::ClassicOperator(filc::ast::ClassicOperator::DIV)
+    );
+    ASSERT_STREQ("val1", puc1.getVariable()->getName().c_str());
+    ASSERT_EQ(
+            filc::ast::ClassicOperator::DIV,
+            static_cast<filc::ast::ClassicOperator *>(puc1.getOperator())->getOperator()
+    );
 }
-
-#endif //FILC_AST_DECL_H
