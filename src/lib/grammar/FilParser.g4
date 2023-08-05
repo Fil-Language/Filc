@@ -88,7 +88,9 @@ expression returns[filc::ast::AbstractExpression *tree]
     | el=expression bo=binary_operator er=expression {
         $tree = new filc::ast::BinaryCalcul($el.tree, $bo.tree, $er.tree);
     }
-    | function
+    | f=function {
+        $tree = $f.tree;
+    }
     | lambda
     | control
     | parenthesis_body
@@ -286,15 +288,23 @@ binary_operator returns[filc::ast::Operator *tree]
         $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::OR);
     };
 
-function
-    : function_declaration function_body;
+function returns[filc::ast::Function *tree]
+    : fd=function_declaration function_body {
+        $tree = new filc::ast::Function($fd.identifier);
+    };
 
-function_declaration
-    : FUN function_identifier LPAREN function_params? RPAREN function_type;
+function_declaration returns[filc::ast::Identifier *identifier]
+    : FUN fi=function_identifier {
+        $identifier = $fi.tree;
+    } LPAREN function_params? RPAREN function_type;
 
-function_identifier
-    : OPERATOR function_operator
-    | IDENTIFIER;
+function_identifier returns[filc::ast::Identifier *tree]
+    : OPERATOR fo=function_operator {
+        $tree = new filc::ast::Identifier("operator" + $fo.text);
+    }
+    | i=IDENTIFIER {
+        $tree = new filc::ast::Identifier($i);
+    };
 
 function_operator
     : (LBRACK RBRACK)

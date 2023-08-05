@@ -318,3 +318,19 @@ TEST(Parser, BinaryCalcul) {
             static_cast<filc::ast::ClassicOperator *>(expression1->getOperator())->getOperator()
     );
 }
+
+TEST(Parser, Function) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/function1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::Function *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_STREQ("minus", expression1->getName()->getName().c_str());
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/function2.fil");
+    auto *program2 = parser2.getProgram();
+    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
+    auto *expression2 = static_cast<filc::ast::Function *>(program2->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression2);
+    ASSERT_STREQ("operator==", expression2->getName()->getName().c_str());
+}

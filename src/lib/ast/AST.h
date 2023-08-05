@@ -88,7 +88,7 @@ namespace filc::ast {
 
         [[nodiscard]] auto getName() const -> const std::string &;
 
-    private:
+    protected:
         std::string _name;
     };
 
@@ -330,6 +330,16 @@ namespace filc::ast {
 
     private:
         std::vector<AbstractExpression *> _expressions;
+    };
+
+    class Function : public AbstractExpression {
+    public:
+        explicit Function(Identifier *name);
+
+        [[nodiscard]] auto getName() const -> Identifier *;
+
+    private:
+        Identifier *_name;
     };
 }
 
