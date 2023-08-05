@@ -304,3 +304,17 @@ TEST(Parser, UnaryCalcul) {
     auto *operator4 = static_cast<filc::ast::ArrayOperator *>(expression4->getOperator());
     ASSERT_EQ(4, static_cast<filc::ast::IntegerLiteral *>(operator4->getExpression())->getValue());
 }
+
+TEST(Parser, BinaryCalcul) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/binary_calcul1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::BinaryCalcul *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_EQ(3, static_cast<filc::ast::IntegerLiteral *>(expression1->getLeftExpression())->getValue());
+    ASSERT_EQ(2, static_cast<filc::ast::IntegerLiteral *>(expression1->getRightExpression())->getValue());
+    ASSERT_EQ(
+            filc::ast::ClassicOperator::STAR,
+            static_cast<filc::ast::ClassicOperator *>(expression1->getOperator())->getOperator()
+    );
+}

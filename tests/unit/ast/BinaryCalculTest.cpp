@@ -21,56 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
+#include <gtest/gtest.h>
 
-namespace filc::ast {
-    class Program;
-
-    class AbstractExpression;
-
-    class Identifier;
-
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
-
-    class PointerType;
-
-    class LambdaType;
-
-    class UnaryCalcul;
-
-    class PreUnaryCalcul;
-
-    class PostUnaryCalcul;
-
-    class BinaryCalcul;
-
-    class Operator;
-
-    class ClassicOperator;
-
-    class ArrayOperator;
-
-    class FunctionOperator;
+TEST(BinaryCalcul, constructor) {
+    filc::ast::BinaryCalcul bc1(
+            new filc::ast::Identifier("a"),
+            new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS),
+            new filc::ast::Identifier("b")
+    );
+    ASSERT_STREQ("a", static_cast<filc::ast::Identifier *>(bc1.getLeftExpression())->getName().c_str());
+    ASSERT_STREQ("b", static_cast<filc::ast::Identifier *>(bc1.getRightExpression())->getName().c_str());
+    ASSERT_EQ(
+            filc::ast::ClassicOperator::PLUS,
+            static_cast<filc::ast::ClassicOperator *>(bc1.getOperator())->getOperator()
+    );
 }
-
-#endif //FILC_AST_DECL_H

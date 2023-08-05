@@ -21,56 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
 
 namespace filc::ast {
-    class Program;
+    BinaryCalcul::BinaryCalcul(filc::ast::AbstractExpression *left_expression, filc::ast::Operator *p_operator,
+                               filc::ast::AbstractExpression *right_expression)
+            : AbstractExpression(), _left_expression(left_expression), _right_expression(right_expression),
+              _operator(p_operator) {}
 
-    class AbstractExpression;
+    auto BinaryCalcul::getLeftExpression() const -> AbstractExpression * {
+        return _left_expression;
+    }
 
-    class Identifier;
+    auto BinaryCalcul::getRightExpression() const -> AbstractExpression * {
+        return _right_expression;
+    }
 
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
-
-    class PointerType;
-
-    class LambdaType;
-
-    class UnaryCalcul;
-
-    class PreUnaryCalcul;
-
-    class PostUnaryCalcul;
-
-    class BinaryCalcul;
-
-    class Operator;
-
-    class ClassicOperator;
-
-    class ArrayOperator;
-
-    class FunctionOperator;
+    auto BinaryCalcul::getOperator() const -> Operator * {
+        return _operator;
+    }
 }
-
-#endif //FILC_AST_DECL_H

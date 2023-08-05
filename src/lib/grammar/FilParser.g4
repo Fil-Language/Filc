@@ -85,7 +85,9 @@ expression returns[filc::ast::AbstractExpression *tree]
     | u=unary_calcul {
         $tree = $u.tree;
     }
-    | expression binary_operator expression
+    | el=expression bo=binary_operator er=expression {
+        $tree = new filc::ast::BinaryCalcul($el.tree, $bo.tree, $er.tree);
+    }
     | function
     | lambda
     | control

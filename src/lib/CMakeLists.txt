@@ -75,6 +75,7 @@ add_library(compiler_lib
         ast/FunctionOperator.cpp
         ast/PreUnaryCalcul.cpp
         ast/PostUnaryCalcul.cpp
+        ast/BinaryCalcul.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}

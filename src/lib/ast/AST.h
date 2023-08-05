@@ -249,6 +249,22 @@ namespace filc::ast {
         PostUnaryCalcul(Identifier *variable, Operator *p_operator);
     };
 
+    class BinaryCalcul : public AbstractExpression {
+    public:
+        BinaryCalcul(AbstractExpression *left_expression, Operator *p_operator, AbstractExpression *right_expression);
+
+        [[nodiscard]] auto getLeftExpression() const -> AbstractExpression *;
+
+        [[nodiscard]] auto getRightExpression() const -> AbstractExpression *;
+
+        [[nodiscard]] auto getOperator() const -> Operator *;
+
+    private:
+        AbstractExpression *_left_expression;
+        AbstractExpression *_right_expression;
+        Operator *_operator;
+    };
+
     class Operator {
     protected:
         Operator() = default;

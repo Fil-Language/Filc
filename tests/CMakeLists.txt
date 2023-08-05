@@ -35,6 +35,7 @@ add_executable(tests
         unit/ast/FunctionOperatorTest.cpp
         unit/ast/PreUnaryCalculTest.cpp
         unit/ast/PostUnaryCalculTest.cpp
+        unit/ast/BinaryCalculTest.cpp
 )
 target_include_directories(tests PUBLIC unit)
 
