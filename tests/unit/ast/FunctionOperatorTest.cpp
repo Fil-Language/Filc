@@ -23,10 +23,14 @@
  */
 #include "AST.h"
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
+
+using namespace ::testing;
 
 TEST(FunctionOperator, constructor) {
     filc::ast::IntegerLiteral il1(12);
     filc::ast::FloatLiteral fl2(5.6);
     std::vector<filc::ast::AbstractExpression *> exprs1({&il1, &fl2});
     filc::ast::FunctionOperator fo1(exprs1);
+    ASSERT_THAT(fo1.getExpressions(), ContainerEq(exprs1));
 }
