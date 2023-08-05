@@ -191,41 +191,98 @@ unary_calcul returns[filc::ast::UnaryCalcul *tree]
         $tree = new filc::ast::UnaryCalcul(new filc::ast::Identifier($i));
     };
 
-post_operator
-    : PLUSPLUS
-    | MINUSMINUS
-    | LBRACK expression RBRACK
-    | LPAREN function_call_params RPAREN;
+post_operator returns[filc::ast::Operator *tree]
+@init {
+    std::vector<filc::ast::AbstractExpression *> params;
+}
+    : PLUSPLUS {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUSPLUS);
+    }
+    | MINUSMINUS {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUSMINUS);
+    }
+    | LBRACK e=expression RBRACK {
+        $tree = new filc::ast::ArrayOperator($e.tree);
+    }
+    | LPAREN (fcp=function_call_params {
+        params = $fcp.tree;
+    })? RPAREN {
+        $tree = new filc::ast::FunctionOperator(params);
+    };
 
-pre_operator
-    : PLUSPLUS
-    | MINUSMINUS
-    | PLUS
-    | MINUS
-    | REF
-    | STAR
-    | NOT;
+pre_operator returns[filc::ast::Operator *tree]
+    : PLUSPLUS {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUSPLUS);
+    }
+    | MINUSMINUS {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUSMINUS);
+    }
+    | PLUS {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS);
+    }
+    | MINUS {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUS);
+    }
+    | REF {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::REF);
+    }
+    | STAR {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::STAR);
+    }
+    | NOT {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::NOT);
+    };
 
-binary_operator
-    : STAR
-    | DIV
-    | MOD
+binary_operator returns[filc::ast::Operator *tree]
+    : STAR {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::STAR);
+    }
+    | DIV {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::DIV);
+    }
+    | MOD {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MOD);
+    }
 
-    | PLUS
-    | MINUS
+    | PLUS {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS);
+    }
+    | MINUS {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUS);
+    }
 
-    | FLEFT
-    | FRIGHT
+    | FLEFT {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FLEFT);
+    }
+    | FRIGHT {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FRIGHT);
+    }
 
-    | LESS
-    | GREATER
-    | EQEQ
-    | LEQ
-    | GEQ
-    | NEQ
+    | LESS {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LESS);
+    }
+    | GREATER {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::GREATER);
+    }
+    | EQEQ {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::EQEQ);
+    }
+    | LEQ {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LEQ);
+    }
+    | GEQ {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::GEQ);
+    }
+    | NEQ {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::NEQ);
+    }
 
-    | AND
-    | OR;
+    | AND {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::AND);
+    }
+    | OR {
+        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::OR);
+    };
 
 function
     : function_declaration function_body;
@@ -338,5 +395,12 @@ for_iter_condition
 while_
     : WHILE if_condition if_body;
 
-function_call_params
-    : expression (COMMA expression)*;
+function_call_params returns[std::vector<filc::ast::AbstractExpression *> tree]
+@init {
+    $tree = std::vector<filc::ast::AbstractExpression *>();
+}
+    : e1=expression {
+        $tree.push_back($e1.tree);
+    } (COMMA ei=expression {
+        $tree.push_back($ei.tree);
+    })*;

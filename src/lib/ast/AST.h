@@ -235,6 +235,73 @@ namespace filc::ast {
     private:
         Identifier *_variable;
     };
+
+    class Operator {
+    protected:
+        Operator() = default;
+
+        Operator(const Operator &other) = default;
+
+        Operator(Operator &&other) = default;
+
+        ~Operator() = default;
+
+        auto operator=(const Operator &other) -> Operator & = default;
+
+        auto operator=(Operator &&other) -> Operator & = default;
+    };
+
+    class ClassicOperator : public Operator {
+    public:
+        using OPERATOR = enum {
+            PLUSPLUS,
+            MINUSMINUS,
+            PLUS,
+            MINUS,
+            REF,
+            STAR,
+            NOT,
+            DIV,
+            MOD,
+            FLEFT,
+            FRIGHT,
+            LESS,
+            GREATER,
+            EQEQ,
+            LEQ,
+            GEQ,
+            NEQ,
+            AND,
+            OR
+        };
+
+        explicit ClassicOperator(OPERATOR p_operator);
+
+        [[nodiscard]] auto getOperator() const -> OPERATOR;
+
+    private:
+        OPERATOR _operator;
+    };
+
+    class ArrayOperator : public Operator {
+    public:
+        explicit ArrayOperator(AbstractExpression *expression);
+
+        [[nodiscard]] auto getExpression() const -> AbstractExpression *;
+
+    private:
+        AbstractExpression *_expression;
+    };
+
+    class FunctionOperator : public Operator {
+    public:
+        explicit FunctionOperator(const std::vector<AbstractExpression *> &expressions);
+
+        [[nodiscard]] auto getExpressions() const -> const std::vector<AbstractExpression *> &;
+
+    private:
+        std::vector<AbstractExpression *> _expressions;
+    };
 }
 
 #endif //FILC_AST_H

@@ -21,50 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
+#include <gtest/gtest.h>
 
-namespace filc::ast {
-    class Program;
-
-    class AbstractExpression;
-
-    class Identifier;
-
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
-
-    class PointerType;
-
-    class LambdaType;
-
-    class UnaryCalcul;
-
-    class Operator;
-
-    class ClassicOperator;
-
-    class ArrayOperator;
-
-    class FunctionOperator;
+TEST(ClassicOperator, constructor) {
+    filc::ast::ClassicOperator co1(filc::ast::ClassicOperator::PLUSPLUS);
+    ASSERT_EQ(filc::ast::ClassicOperator::PLUSPLUS, co1.getOperator());
 }
-
-#endif //FILC_AST_DECL_H

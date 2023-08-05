@@ -21,50 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
 
 namespace filc::ast {
-    class Program;
+    ClassicOperator::ClassicOperator(filc::ast::ClassicOperator::OPERATOR p_operator)
+            : Operator(), _operator(p_operator) {}
 
-    class AbstractExpression;
-
-    class Identifier;
-
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
-
-    class PointerType;
-
-    class LambdaType;
-
-    class UnaryCalcul;
-
-    class Operator;
-
-    class ClassicOperator;
-
-    class ArrayOperator;
-
-    class FunctionOperator;
+    auto ClassicOperator::getOperator() const -> OPERATOR {
+        return _operator;
+    }
 }
-
-#endif //FILC_AST_DECL_H

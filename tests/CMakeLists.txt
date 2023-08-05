@@ -19,6 +19,7 @@ add_executable(tests
         unit/ast/FloatLiteralTest.cpp unit/ast/CharacterLiteralTest.cpp unit/ast/StringLiteralTest.cpp
         unit/ast/VariableDeclarationTest.cpp unit/ast/IdentifierTest.cpp unit/ast/TypeTest.cpp
         unit/ast/ArrayTypeTest.cpp unit/ast/PointerTypeTest.cpp unit/ast/LambdaTypeTest.cpp unit/ast/UnaryCalculTest.cpp
+        unit/ast/ClassicOperatorTest.cpp unit/ast/ArrayOperatorTest.cpp unit/ast/FunctionOperatorTest.cpp
 )
 target_include_directories(tests PUBLIC unit)
 
