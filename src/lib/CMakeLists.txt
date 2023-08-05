@@ -42,21 +42,47 @@ add_library(compiler_lib
         # === Main ===
         FilCompiler.cpp
         # === Utils ===
-        utils/OptionsParser.cpp utils/Position.cpp utils/tools.cpp
+        utils/OptionsParser.cpp
+        utils/Position.cpp
+        utils/tools.cpp
         # === ANTLR ===
-        ${ANTLR_Lexer_CXX_OUTPUTS} ${ANTLR_Parser_CXX_OUTPUTS} grammar/Parser.cpp
+        ${ANTLR_Lexer_CXX_OUTPUTS}
+        ${ANTLR_Parser_CXX_OUTPUTS}
+        grammar/Parser.cpp
         # === Message ===
-        message/Message.cpp message/MessageCollector.cpp message/Warning.cpp message/Error.cpp message/DevWarning.cpp
+        message/Message.cpp
+        message/MessageCollector.cpp
+        message/Warning.cpp
+        message/Error.cpp
+        message/DevWarning.cpp
         # === AST ===
-        ast/Program.cpp ast/AbstractExpression.cpp ast/BooleanLiteral.cpp ast/IntegerLiteral.cpp ast/FloatLiteral.cpp
-        ast/CharacterLiteral.cpp ast/StringLiteral.cpp ast/VariableDeclaration.cpp ast/Identifier.cpp ast/Type.cpp
-        ast/ArrayType.cpp ast/PointerType.cpp ast/LambdaType.cpp ast/UnaryCalcul.cpp ast/ClassicOperator.cpp
-        ast/ArrayOperator.cpp ast/FunctionOperator.cpp
+        ast/Program.cpp
+        ast/AbstractExpression.cpp
+        ast/BooleanLiteral.cpp
+        ast/IntegerLiteral.cpp
+        ast/FloatLiteral.cpp
+        ast/CharacterLiteral.cpp
+        ast/StringLiteral.cpp
+        ast/VariableDeclaration.cpp
+        ast/Identifier.cpp
+        ast/Type.cpp
+        ast/ArrayType.cpp
+        ast/PointerType.cpp
+        ast/LambdaType.cpp
+        ast/UnaryCalcul.cpp
+        ast/ClassicOperator.cpp
+        ast/ArrayOperator.cpp
+        ast/FunctionOperator.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
-        utils message grammar ast
-        ${ANTLR4_INCLUDE_DIRS} ${ANTLR_Lexer_OUTPUT_DIR} ${ANTLR_Parser_OUTPUT_DIR}
+        utils
+        message
+        grammar
+        ast
+        ${ANTLR4_INCLUDE_DIRS}
+        ${ANTLR_Lexer_OUTPUT_DIR}
+        ${ANTLR_Parser_OUTPUT_DIR}
         ../../lib)
 target_link_libraries(compiler_lib PUBLIC additional_config antlr4_static)
 
