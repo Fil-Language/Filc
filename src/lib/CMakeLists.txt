@@ -78,6 +78,7 @@ add_library(compiler_lib
         ast/BinaryCalcul.cpp
         ast/Function.cpp
         ast/FunctionParameter.cpp
+        ast/Lambda.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}

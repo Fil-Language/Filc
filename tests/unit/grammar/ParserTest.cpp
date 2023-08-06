@@ -344,3 +344,20 @@ TEST(Parser, Function) {
     ASSERT_IDENTIFIER("b", body2->getRightExpression());
     ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::EQEQ, body2->getOperator());
 }
+
+TEST(Parser, Lambda) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/lambda1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::Lambda *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_THAT(expression1->getParameters(), SizeIs(1));
+    ASSERT_IDENTIFIER("a", expression1->getParameters()[0]->getName());
+    ASSERT_TYPE("int", expression1->getParameters()[0]->getType());
+    ASSERT_TYPE("bool", expression1->getReturnType());
+    ASSERT_THAT(expression1->getBody(), SizeIs(1));
+    auto *body1 = static_cast<filc::ast::BinaryCalcul *>(expression1->getBody()[0]);
+    ASSERT_IDENTIFIER("a", body1->getLeftExpression());
+    ASSERT_LITERAL(2, IntegerLiteral, body1->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::NEQ, body1->getOperator());
+}

@@ -364,6 +364,23 @@ namespace filc::ast {
         Identifier *_name;
         AbstractType *_type;
     };
+
+    class Lambda : public AbstractExpression {
+    public:
+        Lambda(const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
+               const std::vector<AbstractExpression *> &body);
+
+        [[nodiscard]] auto getParameters() const -> const std::vector<FunctionParameter *> &;
+
+        [[nodiscard]] auto getReturnType() const -> AbstractType *;
+
+        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+
+    private:
+        std::vector<FunctionParameter *> _parameters;
+        AbstractType *_return_type;
+        std::vector<AbstractExpression *> _body;
+    };
 }
 
 #endif //FILC_AST_H

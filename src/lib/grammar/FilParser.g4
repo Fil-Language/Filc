@@ -91,7 +91,9 @@ expression returns[filc::ast::AbstractExpression *tree]
     | f=function {
         $tree = $f.tree;
     }
-    | lambda
+    | lb=lambda {
+        $tree = $lb.tree;
+    }
     | control
     | parenthesis_body
     | i=IDENTIFIER {
@@ -377,8 +379,23 @@ block_body returns[std::vector<filc::ast::AbstractExpression *> tree]
         $tree.push_back($e.tree);
     })* RBRACE;
 
-lambda
-    : LPAREN function_parameters? RPAREN function_type ARROW (expression | parenthesis_body | block_body);
+lambda returns[filc::ast::Lambda *tree]
+@init {
+    std::vector<filc::ast::FunctionParameter *> parameters;
+    std::vector<filc::ast::AbstractExpression *> body;
+}
+@after {
+    $tree = new filc::ast::Lambda(parameters, $ft.tree, body);
+}
+    : LPAREN (fp=function_parameters {
+        parameters = $fp.tree;
+    })? RPAREN ft=function_type ARROW (e=expression {
+        body.push_back($e.tree);
+    } | pb=parenthesis_body {
+        body = $pb.tree;
+    } | bb=block_body {
+        body = $bb.tree;
+    });
 
 lambda_type returns[filc::ast::LambdaType *tree]
 @init {

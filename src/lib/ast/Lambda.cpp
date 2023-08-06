@@ -21,62 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
 
 namespace filc::ast {
-    class Program;
+    Lambda::Lambda(const std::vector<FunctionParameter *> &parameters, filc::ast::AbstractType *return_type,
+                   const std::vector<AbstractExpression *> &body)
+            : AbstractExpression(), _parameters(parameters), _return_type(return_type), _body(body) {}
 
-    class AbstractExpression;
+    auto Lambda::getParameters() const -> const std::vector<FunctionParameter *> & {
+        return _parameters;
+    }
 
-    class Identifier;
+    auto Lambda::getReturnType() const -> AbstractType * {
+        return _return_type;
+    }
 
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
-
-    class PointerType;
-
-    class LambdaType;
-
-    class UnaryCalcul;
-
-    class PreUnaryCalcul;
-
-    class PostUnaryCalcul;
-
-    class BinaryCalcul;
-
-    class Operator;
-
-    class ClassicOperator;
-
-    class ArrayOperator;
-
-    class FunctionOperator;
-
-    class Function;
-
-    class FunctionParameter;
-
-    class Lambda;
+    auto Lambda::getBody() const -> const std::vector<AbstractExpression *> & {
+        return _body;
+    }
 }
-
-#endif //FILC_AST_DECL_H
