@@ -290,10 +290,10 @@ binary_operator returns[filc::ast::Operator *tree]
 
 function returns[filc::ast::Function *tree]
     : fd=function_declaration function_body {
-        $tree = new filc::ast::Function($fd.identifier, $fd.parameters);
+        $tree = new filc::ast::Function($fd.identifier, $fd.parameters, $fd.return_type);
     };
 
-function_declaration returns[filc::ast::Identifier *identifier, std::vector<filc::ast::FunctionParameter *> parameters]
+function_declaration returns[filc::ast::Identifier *identifier, std::vector<filc::ast::FunctionParameter *> parameters, filc::ast::AbstractType *return_type]
 @init {
     $parameters = std::vector<filc::ast::FunctionParameter *>();
 }
@@ -301,7 +301,9 @@ function_declaration returns[filc::ast::Identifier *identifier, std::vector<filc
         $identifier = $fi.tree;
     } LPAREN (fp=function_parameters {
         $parameters = $fp.tree;
-    })? RPAREN function_type;
+    })? RPAREN ft=function_type {
+        $return_type = $ft.tree;
+    };
 
 function_identifier returns[filc::ast::Identifier *tree]
     : OPERATOR fo=function_operator {
@@ -348,8 +350,10 @@ function_parameter returns[filc::ast::FunctionParameter *tree]
         $tree = new filc::ast::FunctionParameter(new filc::ast::Identifier($i), $t.tree);
     };
 
-function_type
-    : COLON type;
+function_type returns[filc::ast::AbstractType *tree]
+    : COLON t=type {
+        $tree = $t.tree;
+    };
 
 function_body
     : assignation | parenthesis_body | block_body;

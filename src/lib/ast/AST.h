@@ -334,15 +334,18 @@ namespace filc::ast {
 
     class Function : public AbstractExpression {
     public:
-        Function(Identifier *name, const std::vector<FunctionParameter *> &parameters);
+        Function(Identifier *name, const std::vector<FunctionParameter *> &parameters, AbstractType *return_type);
 
         [[nodiscard]] auto getName() const -> Identifier *;
 
         [[nodiscard]] auto getParameters() const -> const std::vector<FunctionParameter *> &;
 
+        [[nodiscard]] auto getReturnType() const -> AbstractType *;
+
     private:
         Identifier *_name;
         std::vector<FunctionParameter *> _parameters;
+        AbstractType *_return_type;
     };
 
     class FunctionParameter {

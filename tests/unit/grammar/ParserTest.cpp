@@ -310,6 +310,7 @@ TEST(Parser, Function) {
     auto *expression1 = static_cast<filc::ast::Function *>(program1->getExpressions()[0]);
     ASSERT_NE(nullptr, expression1);
     ASSERT_IDENTIFIER("minus", expression1->getName());
+    ASSERT_TYPE("int", expression1->getReturnType());
     ASSERT_THAT(expression1->getParameters(), SizeIs(2));
     auto *parameter1_1 = expression1->getParameters()[0];
     auto *parameter1_2 = expression1->getParameters()[1];
@@ -324,6 +325,7 @@ TEST(Parser, Function) {
     auto *expression2 = static_cast<filc::ast::Function *>(program2->getExpressions()[0]);
     ASSERT_NE(nullptr, expression2);
     ASSERT_IDENTIFIER("operator==", expression2->getName());
+    ASSERT_TYPE("bool", expression2->getReturnType());
     ASSERT_THAT(expression1->getParameters(), SizeIs(2));
     auto *parameter2_1 = expression2->getParameters()[0];
     auto *parameter2_2 = expression2->getParameters()[1];
