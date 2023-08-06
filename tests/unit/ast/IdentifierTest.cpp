@@ -23,8 +23,9 @@
  */
 #include "AST.h"
 #include <gtest/gtest.h>
+#include "tools.h"
 
 TEST(Identifier, constructor) {
     filc::ast::Identifier id1("identifier 1");
-    ASSERT_STREQ("identifier 1", id1.getName().c_str());
+    ASSERT_IDENTIFIER("identifier 1", (&id1));
 }

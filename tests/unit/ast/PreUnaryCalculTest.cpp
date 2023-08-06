@@ -23,15 +23,13 @@
  */
 #include "AST.h"
 #include <gtest/gtest.h>
+#include "tools.h"
 
 TEST(PreUnaryCalcul, constructor) {
     filc::ast::PreUnaryCalcul puc1(
             new filc::ast::Identifier("val1"),
             new filc::ast::ClassicOperator(filc::ast::ClassicOperator::DIV)
     );
-    ASSERT_STREQ("val1", puc1.getVariable()->getName().c_str());
-    ASSERT_EQ(
-            filc::ast::ClassicOperator::DIV,
-            static_cast<filc::ast::ClassicOperator *>(puc1.getOperator())->getOperator()
-    );
+    ASSERT_IDENTIFIER("val1", puc1.getVariable());
+    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::DIV, puc1.getOperator());
 }

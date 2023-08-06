@@ -25,6 +25,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <string>
+#include "tools.h"
 
 using namespace ::testing;
 
@@ -107,158 +108,150 @@ TEST(Parser, BooleanLiteral) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/bool1.fil");
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    auto *expression1 = static_cast<filc::ast::BooleanLiteral *>(program1->getExpressions()[0]);
+    auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
-    ASSERT_TRUE(expression1->getValue());
+    ASSERT_LITERAL(true, BooleanLiteral, expression1);
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/bool2.fil");
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
-    auto *expression2 = static_cast<filc::ast::BooleanLiteral *>(program2->getExpressions()[0]);
+    auto *expression2 = program2->getExpressions()[0];
     ASSERT_NE(nullptr, expression2);
-    ASSERT_FALSE(expression2->getValue());
+    ASSERT_LITERAL(false, BooleanLiteral, expression2);
 }
 
 TEST(Parser, IntegerLiteral) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/int1.fil");
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    auto *expression1 = static_cast<filc::ast::IntegerLiteral *>(program1->getExpressions()[0]);
+    auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
-    ASSERT_EQ(42, expression1->getValue());
+    ASSERT_LITERAL(42, IntegerLiteral, expression1);
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/int2.fil");
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
-    auto *expression2 = static_cast<filc::ast::IntegerLiteral *>(program2->getExpressions()[0]);
+    auto *expression2 = program2->getExpressions()[0];
     ASSERT_NE(nullptr, expression2);
-    ASSERT_EQ(-5, expression2->getValue());
+    ASSERT_LITERAL(-5, IntegerLiteral, expression2);
 
     filc::grammar::Parser parser3(FIXTURES_PATH "/int3.fil");
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
-    auto *expression3 = static_cast<filc::ast::IntegerLiteral *>(program3->getExpressions()[0]);
+    auto *expression3 = program3->getExpressions()[0];
     ASSERT_NE(nullptr, expression3);
-    ASSERT_EQ(25, expression3->getValue());
+    ASSERT_LITERAL(25, IntegerLiteral, expression3);
 }
 
 TEST(Parser, FloatLiteral) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/float1.fil");
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    auto *expression1 = static_cast<filc::ast::FloatLiteral *>(program1->getExpressions()[0]);
+    auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
-    ASSERT_EQ(42.0, expression1->getValue());
+    ASSERT_LITERAL(42.0, FloatLiteral, expression1);
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/float2.fil");
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
-    auto *expression2 = static_cast<filc::ast::FloatLiteral *>(program2->getExpressions()[0]);
+    auto *expression2 = program2->getExpressions()[0];
     ASSERT_NE(nullptr, expression2);
-    ASSERT_EQ(-2.5, expression2->getValue());
+    ASSERT_LITERAL(-2.5, FloatLiteral, expression2);
 
     filc::grammar::Parser parser3(FIXTURES_PATH "/float3.fil");
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
-    auto *expression3 = static_cast<filc::ast::FloatLiteral *>(program3->getExpressions()[0]);
+    auto *expression3 = program3->getExpressions()[0];
     ASSERT_NE(nullptr, expression3);
-    ASSERT_EQ(4.45, expression3->getValue());
+    ASSERT_LITERAL(4.45, FloatLiteral, expression3);
 
     filc::grammar::Parser parser4(FIXTURES_PATH "/float4.fil");
     auto *program4 = parser4.getProgram();
     ASSERT_THAT(program4->getExpressions(), SizeIs(1));
-    auto *expression4 = static_cast<filc::ast::FloatLiteral *>(program4->getExpressions()[0]);
+    auto *expression4 = program4->getExpressions()[0];
     ASSERT_NE(nullptr, expression4);
-    ASSERT_EQ(3.14159265359, expression4->getValue());
+    ASSERT_LITERAL(3.14159265359, FloatLiteral, expression4);
 }
 
 TEST(Parser, CharacterLiteral) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/char1.fil");
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    auto *expression1 = static_cast<filc::ast::CharacterLiteral *>(program1->getExpressions()[0]);
+    auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
-    ASSERT_EQ('a', expression1->getValue());
+    ASSERT_LITERAL('a', CharacterLiteral, expression1);
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/char2.fil");
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
-    auto *expression2 = static_cast<filc::ast::CharacterLiteral *>(program2->getExpressions()[0]);
+    auto *expression2 = program2->getExpressions()[0];
     ASSERT_NE(nullptr, expression2);
-    ASSERT_EQ('2', expression2->getValue());
+    ASSERT_LITERAL('2', CharacterLiteral, expression2);
 
     filc::grammar::Parser parser3(FIXTURES_PATH "/char3.fil");
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
-    auto *expression3 = static_cast<filc::ast::CharacterLiteral *>(program3->getExpressions()[0]);
+    auto *expression3 = program3->getExpressions()[0];
     ASSERT_NE(nullptr, expression3);
-    ASSERT_EQ('\t', expression3->getValue());
+    ASSERT_LITERAL('\t', CharacterLiteral, expression3);
 }
 
 TEST(Parser, StringLiteral) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/string1.fil");
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    auto *expression1 = static_cast<filc::ast::StringLiteral *>(program1->getExpressions()[0]);
+    auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
-    ASSERT_STREQ("Hello World!", expression1->getValue().c_str());
+    ASSERT_LITERAL("Hello World!", StringLiteral, expression1);
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/string2.fil");
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
-    auto *expression2 = static_cast<filc::ast::StringLiteral *>(program2->getExpressions()[0]);
+    auto *expression2 = program2->getExpressions()[0];
     ASSERT_NE(nullptr, expression2);
-    ASSERT_STREQ("", expression2->getValue().c_str());
+    ASSERT_LITERAL("", StringLiteral, expression2);
 
     filc::grammar::Parser parser3(FIXTURES_PATH "/string3.fil");
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
-    auto *expression3 = static_cast<filc::ast::StringLiteral *>(program3->getExpressions()[0]);
+    auto *expression3 = program3->getExpressions()[0];
     ASSERT_NE(nullptr, expression3);
-    ASSERT_STREQ("\t\n\r\a\\\"", expression3->getValue().c_str());
+    ASSERT_LITERAL("\t\n\r\a\\\"", StringLiteral, expression3);
 }
 
 TEST(Parser, VariableDeclaration) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/variable_declaration1.fil");
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(2));
-    auto *expression1_1 = static_cast<filc::ast::VariableDeclaration *>(program1->getExpressions()[0]);
-    auto *expression1_2 = static_cast<filc::ast::VariableDeclaration *>(program1->getExpressions()[1]);
+    auto *expression1_1 = program1->getExpressions()[0];
+    auto *expression1_2 = program1->getExpressions()[1];
     ASSERT_NE(nullptr, expression1_1);
     ASSERT_NE(nullptr, expression1_2);
-    ASSERT_TRUE(expression1_1->isConstant());
-    ASSERT_STREQ("pi", expression1_1->getIdentifier()->getName().c_str());
-    ASSERT_STREQ("float", expression1_1->getType()->dump().c_str());
-    ASSERT_FALSE(expression1_2->isConstant());
-    ASSERT_STREQ("potatoes", expression1_2->getIdentifier()->getName().c_str());
-    ASSERT_STREQ("int", expression1_2->getType()->dump().c_str());
-    auto *assignation1_1 = static_cast<filc::ast::FloatLiteral *>(expression1_1->getAssignation());
-    ASSERT_EQ(3.14, assignation1_1->getValue());
-    auto *assignation1_2 = static_cast<filc::ast::IntegerLiteral *>(expression1_2->getAssignation());
-    ASSERT_EQ(2, assignation1_2->getValue());
+    ASSERT_VARIABLE_DECLARATION(true, "pi", "float", 3.14, FloatLiteral, expression1_1);
+    ASSERT_VARIABLE_DECLARATION(false, "potatoes", "int", 2, IntegerLiteral, expression1_2);
 }
 
 TEST(Parser, Identifier) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/identifier1.fil");
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    auto *expression1 = static_cast<filc::ast::Identifier *>(program1->getExpressions()[0]);
+    auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
-    ASSERT_STREQ("abcd", expression1->getName().c_str());
+    ASSERT_IDENTIFIER("abcd", expression1);
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/identifier2.fil");
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
-    auto *expression2 = static_cast<filc::ast::Identifier *>(program2->getExpressions()[0]);
+    auto *expression2 = program2->getExpressions()[0];
     ASSERT_NE(nullptr, expression2);
-    ASSERT_STREQ("_name", expression2->getName().c_str());
+    ASSERT_IDENTIFIER("_name", expression2);
 
     filc::grammar::Parser parser3(FIXTURES_PATH "/identifier3.fil");
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
-    auto *expression3 = static_cast<filc::ast::Identifier *>(program3->getExpressions()[0]);
+    auto *expression3 = program3->getExpressions()[0];
     ASSERT_NE(nullptr, expression3);
-    ASSERT_STREQ("is42", expression3->getName().c_str());
+    ASSERT_IDENTIFIER("is42", expression3);
 }
 
 TEST(Parser, UnaryCalcul) {
@@ -267,42 +260,36 @@ TEST(Parser, UnaryCalcul) {
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = static_cast<filc::ast::PostUnaryCalcul *>(program1->getExpressions()[0]);
     ASSERT_NE(nullptr, expression1);
-    ASSERT_STREQ("a", expression1->getVariable()->getName().c_str());
-    ASSERT_EQ(
-            filc::ast::ClassicOperator::PLUSPLUS,
-            static_cast<filc::ast::ClassicOperator *>(expression1->getOperator())->getOperator()
-    );
+    ASSERT_IDENTIFIER("a", expression1->getVariable());
+    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::PLUSPLUS, expression1->getOperator());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/unary_calcul2.fil");
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     auto *expression2 = static_cast<filc::ast::PreUnaryCalcul *>(program2->getExpressions()[0]);
     ASSERT_NE(nullptr, expression2);
-    ASSERT_STREQ("b", expression2->getVariable()->getName().c_str());
-    ASSERT_EQ(
-            filc::ast::ClassicOperator::MINUSMINUS,
-            static_cast<filc::ast::ClassicOperator *>(expression2->getOperator())->getOperator()
-    );
+    ASSERT_IDENTIFIER("b", expression2->getVariable());
+    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::MINUSMINUS, expression2->getOperator());
 
     filc::grammar::Parser parser3(FIXTURES_PATH "/unary_calcul3.fil");
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
     auto *expression3 = static_cast<filc::ast::PostUnaryCalcul *>(program3->getExpressions()[0]);
     ASSERT_NE(nullptr, expression3);
-    ASSERT_STREQ("multiply", expression3->getVariable()->getName().c_str());
+    ASSERT_IDENTIFIER("multiply", expression3->getVariable());
     auto *operator3 = static_cast<filc::ast::FunctionOperator *>(expression3->getOperator());
     ASSERT_THAT(operator3->getExpressions(), SizeIs(2));
-    ASSERT_EQ(2, static_cast<filc::ast::IntegerLiteral *>(operator3->getExpressions()[0])->getValue());
-    ASSERT_EQ(3, static_cast<filc::ast::IntegerLiteral *>(operator3->getExpressions()[1])->getValue());
+    ASSERT_LITERAL(2, IntegerLiteral, operator3->getExpressions()[0]);
+    ASSERT_LITERAL(3, IntegerLiteral, operator3->getExpressions()[1]);
 
     filc::grammar::Parser parser4(FIXTURES_PATH "/unary_calcul4.fil");
     auto *program4 = parser4.getProgram();
     ASSERT_THAT(program4->getExpressions(), SizeIs(1));
     auto *expression4 = static_cast<filc::ast::PostUnaryCalcul *>(program4->getExpressions()[0]);
     ASSERT_NE(nullptr, expression4);
-    ASSERT_STREQ("array", expression4->getVariable()->getName().c_str());
+    ASSERT_IDENTIFIER("array", expression4->getVariable());
     auto *operator4 = static_cast<filc::ast::ArrayOperator *>(expression4->getOperator());
-    ASSERT_EQ(4, static_cast<filc::ast::IntegerLiteral *>(operator4->getExpression())->getValue());
+    ASSERT_LITERAL(4, IntegerLiteral, operator4->getExpression());
 }
 
 TEST(Parser, BinaryCalcul) {
@@ -311,12 +298,9 @@ TEST(Parser, BinaryCalcul) {
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = static_cast<filc::ast::BinaryCalcul *>(program1->getExpressions()[0]);
     ASSERT_NE(nullptr, expression1);
-    ASSERT_EQ(3, static_cast<filc::ast::IntegerLiteral *>(expression1->getLeftExpression())->getValue());
-    ASSERT_EQ(2, static_cast<filc::ast::IntegerLiteral *>(expression1->getRightExpression())->getValue());
-    ASSERT_EQ(
-            filc::ast::ClassicOperator::STAR,
-            static_cast<filc::ast::ClassicOperator *>(expression1->getOperator())->getOperator()
-    );
+    ASSERT_LITERAL(3, IntegerLiteral, expression1->getLeftExpression());
+    ASSERT_LITERAL(2, IntegerLiteral, expression1->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::STAR, expression1->getOperator());
 }
 
 TEST(Parser, Function) {
@@ -325,26 +309,26 @@ TEST(Parser, Function) {
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = static_cast<filc::ast::Function *>(program1->getExpressions()[0]);
     ASSERT_NE(nullptr, expression1);
-    ASSERT_STREQ("minus", expression1->getName()->getName().c_str());
+    ASSERT_IDENTIFIER("minus", expression1->getName());
     ASSERT_THAT(expression1->getParameters(), SizeIs(2));
     auto *parameter1_1 = expression1->getParameters()[0];
     auto *parameter1_2 = expression1->getParameters()[1];
-    ASSERT_STREQ("a", parameter1_1->getName()->getName().c_str());
-    ASSERT_STREQ("b", parameter1_2->getName()->getName().c_str());
-    ASSERT_STREQ("int", static_cast<filc::ast::Type *>(parameter1_1->getType())->getName()->getName().c_str());
-    ASSERT_STREQ("int", static_cast<filc::ast::Type *>(parameter1_2->getType())->getName()->getName().c_str());
+    ASSERT_IDENTIFIER("a", parameter1_1->getName());
+    ASSERT_IDENTIFIER("b", parameter1_2->getName());
+    ASSERT_TYPE("int", parameter1_1->getType());
+    ASSERT_TYPE("int", parameter1_2->getType());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/function2.fil");
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     auto *expression2 = static_cast<filc::ast::Function *>(program2->getExpressions()[0]);
     ASSERT_NE(nullptr, expression2);
-    ASSERT_STREQ("operator==", expression2->getName()->getName().c_str());
+    ASSERT_IDENTIFIER("operator==", expression2->getName());
     ASSERT_THAT(expression1->getParameters(), SizeIs(2));
     auto *parameter2_1 = expression2->getParameters()[0];
     auto *parameter2_2 = expression2->getParameters()[1];
-    ASSERT_STREQ("a", parameter2_1->getName()->getName().c_str());
-    ASSERT_STREQ("b", parameter2_2->getName()->getName().c_str());
-    ASSERT_STREQ("float", static_cast<filc::ast::Type *>(parameter2_1->getType())->getName()->getName().c_str());
-    ASSERT_STREQ("float", static_cast<filc::ast::Type *>(parameter2_2->getType())->getName()->getName().c_str());
+    ASSERT_IDENTIFIER("a", parameter2_1->getName());
+    ASSERT_IDENTIFIER("b", parameter2_2->getName());
+    ASSERT_TYPE("float", parameter2_1->getType());
+    ASSERT_TYPE("float", parameter2_2->getType());
 }

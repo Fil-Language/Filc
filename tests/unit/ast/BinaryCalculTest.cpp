@@ -23,6 +23,7 @@
  */
 #include "AST.h"
 #include <gtest/gtest.h>
+#include "tools.h"
 
 TEST(BinaryCalcul, constructor) {
     filc::ast::BinaryCalcul bc1(
@@ -30,10 +31,7 @@ TEST(BinaryCalcul, constructor) {
             new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS),
             new filc::ast::Identifier("b")
     );
-    ASSERT_STREQ("a", static_cast<filc::ast::Identifier *>(bc1.getLeftExpression())->getName().c_str());
-    ASSERT_STREQ("b", static_cast<filc::ast::Identifier *>(bc1.getRightExpression())->getName().c_str());
-    ASSERT_EQ(
-            filc::ast::ClassicOperator::PLUS,
-            static_cast<filc::ast::ClassicOperator *>(bc1.getOperator())->getOperator()
-    );
+    ASSERT_IDENTIFIER("a", bc1.getLeftExpression());
+    ASSERT_IDENTIFIER("b", bc1.getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::PLUS, bc1.getOperator());
 }

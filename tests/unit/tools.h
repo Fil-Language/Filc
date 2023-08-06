@@ -21,28 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
 #include <gtest/gtest.h>
-#include "tools.h"
+#include <gmock/gmock.h>
 
-TEST(VariableDeclaration, constructor) {
-    auto *tp1 = new filc::ast::Type(new filc::ast::Identifier("int"));
-    filc::ast::VariableDeclaration vd1(false, new filc::ast::Identifier("my_var"), tp1);
-    ASSERT_FALSE(vd1.isConstant());
-    ASSERT_IDENTIFIER("my_var", vd1.getIdentifier());
-    ASSERT_TYPE("int", vd1.getType());
+using namespace ::testing;
 
-    auto *tp2 = new filc::ast::Type(new filc::ast::Identifier("float"));
-    filc::ast::VariableDeclaration vd2(true, new filc::ast::Identifier("my_val"), tp2);
-    ASSERT_TRUE(vd2.isConstant());
-    ASSERT_IDENTIFIER("my_val", vd2.getIdentifier());
-    ASSERT_TYPE("float", vd2.getType());
-}
+#define ASSERT_TYPE(expected, type) ASSERT_STREQ(expected, type->dump().c_str())
 
-TEST(VariableDeclaration, assignation) {
-    auto *tp1 = new filc::ast::Type(new filc::ast::Identifier("int"));
-    filc::ast::VariableDeclaration vd1(false, new filc::ast::Identifier("my_var"), tp1);
-    auto *exp1 = new filc::ast::IntegerLiteral(12);
-    vd1.setAssignation(exp1);
-    ASSERT_EQ(exp1, vd1.getAssignation());
-}
+#define ASSERT_IDENTIFIER(expected, identifier) ASSERT_STREQ(expected, static_cast<filc::ast::Identifier *>(identifier)->getName().c_str())
+
+#define ASSERT_CLASSIC_OPERATOR(expected, op) ASSERT_EQ(expected, static_cast<filc::ast::ClassicOperator *>(op)->getOperator())
+
+#define ASSERT_LITERAL(expected, type, literal) ASSERT_EQ(expected, static_cast<filc::ast::type *>(literal)->getValue())
+
+#define ASSERT_VARIABLE_DECLARATION(constant, name, type, value, literal, variable) \
+    auto *var_##variable = static_cast<filc::ast::VariableDeclaration *>(variable); \
+    ASSERT_EQ(constant, var_##variable->isConstant()); \
+    ASSERT_IDENTIFIER(name, var_##variable->getIdentifier()); \
+    ASSERT_TYPE(type, var_##variable->getType()); \
+    ASSERT_LITERAL(value, literal, var_##variable->getAssignation())

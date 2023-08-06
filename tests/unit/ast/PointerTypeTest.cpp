@@ -23,10 +23,11 @@
  */
 #include "AST.h"
 #include <gtest/gtest.h>
+#include "tools.h"
 
 TEST(PointerType, constructor) {
     auto *inner_type = new filc::ast::Type(new filc::ast::Identifier("abcd"));
     filc::ast::PointerType pt1(inner_type);
-    ASSERT_EQ(inner_type, pt1.getInnerType());
-    ASSERT_STREQ("abcd*", pt1.dump().c_str());
+    ASSERT_TYPE("abcd", pt1.getInnerType());
+    ASSERT_TYPE("abcd*", (&pt1));
 }

@@ -24,6 +24,7 @@
 #include "AST.h"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include "tools.h"
 
 using namespace ::testing;
 
@@ -33,7 +34,7 @@ TEST(LambdaType, constructor) {
     auto *arg3 = new filc::ast::Type(new filc::ast::Identifier("arg3"));
     auto *return_type = new filc::ast::Type(new filc::ast::Identifier("return_type"));
     filc::ast::LambdaType lt1({arg1, arg2, arg3}, return_type);
-    ASSERT_EQ(return_type, lt1.getReturnType());
+    ASSERT_TYPE("return_type", lt1.getReturnType());
     ASSERT_THAT(lt1.getArgumentTypes(), ElementsAre(arg1, arg2, arg3));
-    ASSERT_STREQ("(arg1, arg2, arg3) -> return_type", lt1.dump().c_str());
+    ASSERT_TYPE("(arg1, arg2, arg3) -> return_type", (&lt1));
 }

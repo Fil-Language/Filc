@@ -23,6 +23,7 @@
  */
 #include "AST.h"
 #include <gtest/gtest.h>
+#include "tools.h"
 
 TEST(ArrayType, constructor) {
     auto *inner_type = new filc::ast::Type(new filc::ast::Identifier("array"));
@@ -32,5 +33,5 @@ TEST(ArrayType, constructor) {
     );
     ASSERT_EQ(inner_type, at1.getInnerType());
     ASSERT_EQ(25, at1.getSize());
-    ASSERT_STREQ("array[25]", at1.dump().c_str());
+    ASSERT_TYPE("array[25]", (&at1));
 }
