@@ -30,7 +30,7 @@ using namespace ::testing;
 
 #define ASSERT_IDENTIFIER(expected, identifier) ASSERT_STREQ(expected, static_cast<filc::ast::Identifier *>(identifier)->getName().c_str())
 
-#define ASSERT_CLASSIC_OPERATOR(expected, op) ASSERT_EQ(expected, static_cast<filc::ast::ClassicOperator *>(op)->getOperator())
+#define ASSERT_CLASSIC_OPERATOR(expected, op) ASSERT_EQ(filc::ast::ClassicOperator::expected, static_cast<filc::ast::ClassicOperator *>(op)->getOperator())
 
 #define ASSERT_LITERAL(expected, type, literal) ASSERT_EQ(expected, static_cast<filc::ast::type *>(literal)->getValue())
 

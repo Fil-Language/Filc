@@ -31,5 +31,5 @@ TEST(PreUnaryCalcul, constructor) {
             new filc::ast::ClassicOperator(filc::ast::ClassicOperator::DIV)
     );
     ASSERT_IDENTIFIER("val1", puc1.getVariable());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::DIV, puc1.getOperator());
+    ASSERT_CLASSIC_OPERATOR(DIV, puc1.getOperator());
 }

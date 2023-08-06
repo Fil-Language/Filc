@@ -29,5 +29,5 @@ TEST(UnaryCalcul, constructor) {
     filc::ast::ClassicOperator co1(filc::ast::ClassicOperator::AND);
     filc::ast::UnaryCalcul uc1(new filc::ast::Identifier("var1"), &co1);
     ASSERT_IDENTIFIER("var1", uc1.getVariable());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::AND, uc1.getOperator());
+    ASSERT_CLASSIC_OPERATOR(AND, uc1.getOperator());
 }

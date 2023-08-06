@@ -261,7 +261,7 @@ TEST(Parser, UnaryCalcul) {
     auto *expression1 = static_cast<filc::ast::PostUnaryCalcul *>(program1->getExpressions()[0]);
     ASSERT_NE(nullptr, expression1);
     ASSERT_IDENTIFIER("a", expression1->getVariable());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::PLUSPLUS, expression1->getOperator());
+    ASSERT_CLASSIC_OPERATOR(PLUSPLUS, expression1->getOperator());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/unary_calcul2.fil");
     auto *program2 = parser2.getProgram();
@@ -269,7 +269,7 @@ TEST(Parser, UnaryCalcul) {
     auto *expression2 = static_cast<filc::ast::PreUnaryCalcul *>(program2->getExpressions()[0]);
     ASSERT_NE(nullptr, expression2);
     ASSERT_IDENTIFIER("b", expression2->getVariable());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::MINUSMINUS, expression2->getOperator());
+    ASSERT_CLASSIC_OPERATOR(MINUSMINUS, expression2->getOperator());
 
     filc::grammar::Parser parser3(FIXTURES_PATH "/unary_calcul3.fil");
     auto *program3 = parser3.getProgram();
@@ -300,7 +300,7 @@ TEST(Parser, BinaryCalcul) {
     ASSERT_NE(nullptr, expression1);
     ASSERT_LITERAL(3, IntegerLiteral, expression1->getLeftExpression());
     ASSERT_LITERAL(2, IntegerLiteral, expression1->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::STAR, expression1->getOperator());
+    ASSERT_CLASSIC_OPERATOR(STAR, expression1->getOperator());
 }
 
 TEST(Parser, Function) {
@@ -322,7 +322,7 @@ TEST(Parser, Function) {
     auto *body1 = static_cast<filc::ast::BinaryCalcul *>(expression1->getBody()[0]);
     ASSERT_IDENTIFIER("a", body1->getLeftExpression());
     ASSERT_IDENTIFIER("b", body1->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::MINUS, body1->getOperator());
+    ASSERT_CLASSIC_OPERATOR(MINUS, body1->getOperator());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/function2.fil");
     auto *program2 = parser2.getProgram();
@@ -342,7 +342,7 @@ TEST(Parser, Function) {
     auto *body2 = static_cast<filc::ast::BinaryCalcul *>(expression2->getBody()[0]);
     ASSERT_IDENTIFIER("a", body2->getLeftExpression());
     ASSERT_IDENTIFIER("b", body2->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::EQEQ, body2->getOperator());
+    ASSERT_CLASSIC_OPERATOR(EQEQ, body2->getOperator());
 }
 
 TEST(Parser, Lambda) {
@@ -359,7 +359,7 @@ TEST(Parser, Lambda) {
     auto *body1 = static_cast<filc::ast::BinaryCalcul *>(expression1->getBody()[0]);
     ASSERT_IDENTIFIER("a", body1->getLeftExpression());
     ASSERT_LITERAL(2, IntegerLiteral, body1->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::NEQ, body1->getOperator());
+    ASSERT_CLASSIC_OPERATOR(NEQ, body1->getOperator());
 }
 
 TEST(Parser, ParenthesisBody) {
@@ -370,7 +370,7 @@ TEST(Parser, ParenthesisBody) {
     ASSERT_NE(nullptr, expression1);
     ASSERT_LITERAL(1, IntegerLiteral, expression1->getLeftExpression());
     ASSERT_LITERAL(2, IntegerLiteral, expression1->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::LESS, expression1->getOperator());
+    ASSERT_CLASSIC_OPERATOR(LESS, expression1->getOperator());
 }
 
 TEST(Parser, If) {
@@ -391,10 +391,10 @@ TEST(Parser, If) {
     auto *condition2 = static_cast<filc::ast::BinaryCalcul *>(expression2->getCondition());
     ASSERT_LITERAL(3, IntegerLiteral, condition2->getLeftExpression());
     ASSERT_LITERAL(0, IntegerLiteral, condition2->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::GREATER, condition2->getOperator());
+    ASSERT_CLASSIC_OPERATOR(GREATER, condition2->getOperator());
     ASSERT_THAT(expression2->getBody(), SizeIs(1));
     auto *body2 = static_cast<filc::ast::BinaryCalcul *>(expression2->getBody()[0]);
     ASSERT_IDENTIFIER("cout", body2->getLeftExpression());
     ASSERT_LITERAL("Hello World!", StringLiteral, body2->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::FLEFT, body2->getOperator());
+    ASSERT_CLASSIC_OPERATOR(FLEFT, body2->getOperator());
 }

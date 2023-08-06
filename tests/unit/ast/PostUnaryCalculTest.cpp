@@ -31,5 +31,5 @@ TEST(PostUnaryCalcul, constructor) {
             new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MOD)
     );
     ASSERT_IDENTIFIER("abcd", puc1.getVariable());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::MOD, puc1.getOperator());
+    ASSERT_CLASSIC_OPERATOR(MOD, puc1.getOperator());
 }

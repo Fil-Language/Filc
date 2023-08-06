@@ -33,5 +33,5 @@ TEST(BinaryCalcul, constructor) {
     );
     ASSERT_IDENTIFIER("a", bc1.getLeftExpression());
     ASSERT_IDENTIFIER("b", bc1.getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::PLUS, bc1.getOperator());
+    ASSERT_CLASSIC_OPERATOR(PLUS, bc1.getOperator());
 }
