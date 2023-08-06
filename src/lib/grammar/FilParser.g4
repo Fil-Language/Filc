@@ -427,7 +427,11 @@ condition returns[filc::ast::AbstractExpression *tree]
 if_c returns[filc::ast::If *tree]
     : IF ic=if_condition ib=if_body {
         $tree = new filc::ast::If($ic.tree, $ib.tree);
-    } (ELSE (if_c | if_body))?;
+    } (ELSE (ic2=if_c {
+        $tree->setElse($ic2.tree);
+    } | ib2=if_body {
+        $tree->setElse(new filc::ast::If(new filc::ast::Identifier("true"), $ib2.tree));
+    }))?;
 
 if_condition returns[filc::ast::AbstractExpression *tree]
     : LPAREN e=expression {

@@ -382,6 +382,11 @@ TEST(Parser, If) {
     ASSERT_IDENTIFIER("a", expression1->getCondition());
     ASSERT_THAT(expression1->getBody(), SizeIs(1));
     ASSERT_IDENTIFIER("b", expression1->getBody()[0]);
+    auto *else1 = expression1->getElse();
+    ASSERT_NE(nullptr, else1);
+    ASSERT_IDENTIFIER("true", else1->getCondition());
+    ASSERT_THAT(else1->getBody(), SizeIs(1));
+    ASSERT_IDENTIFIER("c", else1->getBody()[0]);
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/if2.fil");
     auto *program2 = parser2.getProgram();
@@ -397,4 +402,5 @@ TEST(Parser, If) {
     ASSERT_IDENTIFIER("cout", body2->getLeftExpression());
     ASSERT_LITERAL("Hello World!", StringLiteral, body2->getRightExpression());
     ASSERT_CLASSIC_OPERATOR(FLEFT, body2->getOperator());
+    ASSERT_EQ(nullptr, expression2->getElse());
 }

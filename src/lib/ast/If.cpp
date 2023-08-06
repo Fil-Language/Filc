@@ -25,7 +25,7 @@
 
 namespace filc::ast {
     If::If(filc::ast::AbstractExpression *condition, const std::vector<AbstractExpression *> &body)
-            : AbstractExpression(), _condition(condition), _body(body) {}
+            : AbstractExpression(), _condition(condition), _body(body), _else(nullptr) {}
 
     auto If::getCondition() const -> AbstractExpression * {
         return _condition;
@@ -33,5 +33,13 @@ namespace filc::ast {
 
     auto If::getBody() const -> const std::vector<AbstractExpression *> & {
         return _body;
+    }
+
+    auto If::getElse() const -> If * {
+        return _else;
+    }
+
+    auto If::setElse(filc::ast::If *p_else) -> void {
+        _else = p_else;
     }
 }

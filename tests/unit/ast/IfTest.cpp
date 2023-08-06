@@ -29,3 +29,12 @@ TEST(If, constructor) {
     ASSERT_IDENTIFIER("isTrue", if1.getCondition());
     ASSERT_THAT(if1.getBody(), IsEmpty());
 }
+
+TEST(If, setElse) {
+    filc::ast::If if1(new filc::ast::Identifier("isFalse"), {});
+    if1.setElse(new filc::ast::If(new filc::ast::Identifier("isTrue"), {}));
+    auto ielse = if1.getElse();
+    ASSERT_NE(nullptr, ielse);
+    ASSERT_IDENTIFIER("isTrue", ielse->getCondition());
+    ASSERT_THAT(ielse->getBody(), IsEmpty());
+}

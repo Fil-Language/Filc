@@ -390,9 +390,14 @@ namespace filc::ast {
 
         [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
 
+        [[nodiscard]] auto getElse() const -> If *;
+
+        auto setElse(If *p_else) -> void;
+
     private:
         AbstractExpression *_condition;
         std::vector<AbstractExpression *> _body;
+        If* _else;
     };
 }
 
