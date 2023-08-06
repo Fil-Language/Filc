@@ -381,6 +381,19 @@ namespace filc::ast {
         AbstractType *_return_type;
         std::vector<AbstractExpression *> _body;
     };
+
+    class If : public AbstractExpression {
+    public:
+        If(AbstractExpression *condition, const std::vector<AbstractExpression *> &body);
+
+        [[nodiscard]] auto getCondition() const -> AbstractExpression *;
+
+        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+
+    private:
+        AbstractExpression *_condition;
+        std::vector<AbstractExpression *> _body;
+    };
 }
 
 #endif //FILC_AST_H

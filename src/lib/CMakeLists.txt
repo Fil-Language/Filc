@@ -79,6 +79,7 @@ add_library(compiler_lib
         ast/Function.cpp
         ast/FunctionParameter.cpp
         ast/Lambda.cpp
+        ast/If.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}

@@ -94,7 +94,9 @@ expression returns[filc::ast::AbstractExpression *tree]
     | lb=lambda {
         $tree = $lb.tree;
     }
-    | control
+    | c=control {
+        $tree = $c.tree;
+    }
     | p=parenthesis_body {
         $tree = $p.tree[0];
     }
@@ -412,22 +414,37 @@ lambda_type returns[filc::ast::LambdaType *tree]
         arguments.push_back($ti.tree);
     })*)? RPAREN ARROW t=type;
 
-control
-    : condition | loop;
+control returns[filc::ast::AbstractExpression *tree]
+    : c=condition {
+        $tree = $c.tree;
+    } | loop;
 
-condition
-    : if_ | switch_;
+condition returns[filc::ast::AbstractExpression *tree]
+    : i=if_c {
+        $tree = $i.tree;
+    } | switch_c;
 
-if_
-    : IF if_condition if_body (ELSE (if_ | if_body))?;
+if_c returns[filc::ast::If *tree]
+    : IF ic=if_condition ib=if_body {
+        $tree = new filc::ast::If($ic.tree, $ib.tree);
+    } (ELSE (if_c | if_body))?;
 
-if_condition
-    : LPAREN expression RPAREN;
+if_condition returns[filc::ast::AbstractExpression *tree]
+    : LPAREN e=expression {
+        $tree = $e.tree;
+    } RPAREN;
 
-if_body
-    : expression | block_body;
+if_body returns[std::vector<filc::ast::AbstractExpression *> tree]
+@init {
+    $tree = std::vector<filc::ast::AbstractExpression *>();
+}
+    : e=expression {
+        $tree.push_back($e.tree);
+    } | bb=block_body {
+        $tree = $bb.tree;
+    };
 
-switch_
+switch_c
     : SWITCH if_condition switch_body;
 
 switch_body
@@ -440,7 +457,7 @@ switch_pattern
     : DEFAULT | literal;
 
 loop
-    : for_i | for_iter | while_;
+    : for_i | for_iter | while_l;
 
 for_i
     : FOR for_i_condition if_body;
@@ -454,7 +471,7 @@ for_iter
 for_iter_condition
     : LPAREN (VAL | VAR) IDENTIFIER COLON expression RPAREN;
 
-while_
+while_l
     : WHILE if_condition if_body;
 
 function_call_params returns[std::vector<filc::ast::AbstractExpression *> tree]

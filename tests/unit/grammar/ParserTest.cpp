@@ -372,3 +372,29 @@ TEST(Parser, ParenthesisBody) {
     ASSERT_LITERAL(2, IntegerLiteral, expression1->getRightExpression());
     ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::LESS, expression1->getOperator());
 }
+
+TEST(Parser, If) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/if1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::If *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_IDENTIFIER("a", expression1->getCondition());
+    ASSERT_THAT(expression1->getBody(), SizeIs(1));
+    ASSERT_IDENTIFIER("b", expression1->getBody()[0]);
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/if2.fil");
+    auto *program2 = parser2.getProgram();
+    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
+    auto *expression2 = static_cast<filc::ast::If *>(program2->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression2);
+    auto *condition2 = static_cast<filc::ast::BinaryCalcul *>(expression2->getCondition());
+    ASSERT_LITERAL(3, IntegerLiteral, condition2->getLeftExpression());
+    ASSERT_LITERAL(0, IntegerLiteral, condition2->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::GREATER, condition2->getOperator());
+    ASSERT_THAT(expression2->getBody(), SizeIs(1));
+    auto *body2 = static_cast<filc::ast::BinaryCalcul *>(expression2->getBody()[0]);
+    ASSERT_IDENTIFIER("cout", body2->getLeftExpression());
+    ASSERT_LITERAL("Hello World!", StringLiteral, body2->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::FLEFT, body2->getOperator());
+}

@@ -40,6 +40,7 @@ add_executable(tests
         unit/ast/FunctionTest.cpp
         unit/ast/FunctionParameterTest.cpp
         unit/ast/LambdaTest.cpp
+        unit/ast/IfTest.cpp
 )
 target_include_directories(tests PUBLIC unit)
 

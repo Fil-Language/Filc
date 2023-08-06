@@ -21,64 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
 
 namespace filc::ast {
-    class Program;
+    If::If(filc::ast::AbstractExpression *condition, const std::vector<AbstractExpression *> &body)
+            : AbstractExpression(), _condition(condition), _body(body) {}
 
-    class AbstractExpression;
+    auto If::getCondition() const -> AbstractExpression * {
+        return _condition;
+    }
 
-    class Identifier;
-
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
-
-    class PointerType;
-
-    class LambdaType;
-
-    class UnaryCalcul;
-
-    class PreUnaryCalcul;
-
-    class PostUnaryCalcul;
-
-    class BinaryCalcul;
-
-    class Operator;
-
-    class ClassicOperator;
-
-    class ArrayOperator;
-
-    class FunctionOperator;
-
-    class Function;
-
-    class FunctionParameter;
-
-    class Lambda;
-
-    class If;
+    auto If::getBody() const -> const std::vector<AbstractExpression *> & {
+        return _body;
+    }
 }
-
-#endif //FILC_AST_DECL_H
