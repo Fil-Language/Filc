@@ -361,3 +361,14 @@ TEST(Parser, Lambda) {
     ASSERT_LITERAL(2, IntegerLiteral, body1->getRightExpression());
     ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::NEQ, body1->getOperator());
 }
+
+TEST(Parser, ParenthesisBody) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/parenthesis_body1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::BinaryCalcul *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_LITERAL(1, IntegerLiteral, expression1->getLeftExpression());
+    ASSERT_LITERAL(2, IntegerLiteral, expression1->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::LESS, expression1->getOperator());
+}

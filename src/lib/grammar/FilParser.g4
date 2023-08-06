@@ -95,7 +95,9 @@ expression returns[filc::ast::AbstractExpression *tree]
         $tree = $lb.tree;
     }
     | control
-    | parenthesis_body
+    | p=parenthesis_body {
+        $tree = $p.tree[0];
+    }
     | i=IDENTIFIER {
         $tree = new filc::ast::Identifier($i);
     };
