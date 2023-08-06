@@ -23,8 +23,12 @@
  */
 #include "AST.h"
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
+
+using namespace ::testing;
 
 TEST(Function, constructor) {
-    filc::ast::Function fun1(new filc::ast::Identifier("fact"));
+    filc::ast::Function fun1(new filc::ast::Identifier("fact"), {});
     ASSERT_STREQ("fact", fun1.getName()->getName().c_str());
+    ASSERT_THAT(fun1.getParameters(), IsEmpty());
 }

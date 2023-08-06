@@ -24,14 +24,14 @@
 #include "AST.h"
 
 namespace filc::ast {
-    Function::Function(Identifier *name, const std::vector<FunctionParameter *> &parameters)
-            : AbstractExpression(), _name(name), _parameters(parameters) {}
+    FunctionParameter::FunctionParameter(filc::ast::Identifier *name, filc::ast::AbstractType *type)
+            : _name(name), _type(type) {}
 
-    auto Function::getName() const -> Identifier * {
+    auto FunctionParameter::getName() const -> Identifier * {
         return _name;
     }
 
-    auto Function::getParameters() const -> const std::vector<FunctionParameter *> & {
-        return _parameters;
+    auto FunctionParameter::getType() const -> AbstractType * {
+        return _type;
     }
 }

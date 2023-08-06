@@ -326,6 +326,13 @@ TEST(Parser, Function) {
     auto *expression1 = static_cast<filc::ast::Function *>(program1->getExpressions()[0]);
     ASSERT_NE(nullptr, expression1);
     ASSERT_STREQ("minus", expression1->getName()->getName().c_str());
+    ASSERT_THAT(expression1->getParameters(), SizeIs(2));
+    auto *parameter1_1 = expression1->getParameters()[0];
+    auto *parameter1_2 = expression1->getParameters()[1];
+    ASSERT_STREQ("a", parameter1_1->getName()->getName().c_str());
+    ASSERT_STREQ("b", parameter1_2->getName()->getName().c_str());
+    ASSERT_STREQ("int", static_cast<filc::ast::Type *>(parameter1_1->getType())->getName()->getName().c_str());
+    ASSERT_STREQ("int", static_cast<filc::ast::Type *>(parameter1_2->getType())->getName()->getName().c_str());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/function2.fil");
     auto *program2 = parser2.getProgram();
@@ -333,4 +340,11 @@ TEST(Parser, Function) {
     auto *expression2 = static_cast<filc::ast::Function *>(program2->getExpressions()[0]);
     ASSERT_NE(nullptr, expression2);
     ASSERT_STREQ("operator==", expression2->getName()->getName().c_str());
+    ASSERT_THAT(expression1->getParameters(), SizeIs(2));
+    auto *parameter2_1 = expression2->getParameters()[0];
+    auto *parameter2_2 = expression2->getParameters()[1];
+    ASSERT_STREQ("a", parameter2_1->getName()->getName().c_str());
+    ASSERT_STREQ("b", parameter2_2->getName()->getName().c_str());
+    ASSERT_STREQ("float", static_cast<filc::ast::Type *>(parameter2_1->getType())->getName()->getName().c_str());
+    ASSERT_STREQ("float", static_cast<filc::ast::Type *>(parameter2_2->getType())->getName()->getName().c_str());
 }

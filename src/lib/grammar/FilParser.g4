@@ -290,13 +290,18 @@ binary_operator returns[filc::ast::Operator *tree]
 
 function returns[filc::ast::Function *tree]
     : fd=function_declaration function_body {
-        $tree = new filc::ast::Function($fd.identifier);
+        $tree = new filc::ast::Function($fd.identifier, $fd.parameters);
     };
 
-function_declaration returns[filc::ast::Identifier *identifier]
+function_declaration returns[filc::ast::Identifier *identifier, std::vector<filc::ast::FunctionParameter *> parameters]
+@init {
+    $parameters = std::vector<filc::ast::FunctionParameter *>();
+}
     : FUN fi=function_identifier {
         $identifier = $fi.tree;
-    } LPAREN function_params? RPAREN function_type;
+    } LPAREN (fp=function_parameters {
+        $parameters = $fp.tree;
+    })? RPAREN function_type;
 
 function_identifier returns[filc::ast::Identifier *tree]
     : OPERATOR fo=function_operator {
@@ -328,11 +333,20 @@ function_operator
     | MOD
     | (LPAREN RPAREN);
 
-function_params
-    : function_param (COMMA function_param)*;
+function_parameters returns[std::vector<filc::ast::FunctionParameter *> tree]
+@init {
+    $tree = std::vector<filc::ast::FunctionParameter *>();
+}
+    : fp1=function_parameter {
+        $tree.push_back($fp1.tree);
+    } (COMMA fpi=function_parameter {
+        $tree.push_back($fpi.tree);
+    })*;
 
-function_param
-    : IDENTIFIER COLON type;
+function_parameter returns[filc::ast::FunctionParameter *tree]
+    : i=IDENTIFIER COLON t=type {
+        $tree = new filc::ast::FunctionParameter(new filc::ast::Identifier($i), $t.tree);
+    };
 
 function_type
     : COLON type;
@@ -347,7 +361,7 @@ block_body
     : LBRACE expression* RBRACE;
 
 lambda
-    : LPAREN function_params? RPAREN function_type ARROW (expression | parenthesis_body | block_body);
+    : LPAREN function_parameters? RPAREN function_type ARROW (expression | parenthesis_body | block_body);
 
 lambda_type returns[filc::ast::LambdaType *tree]
 @init {

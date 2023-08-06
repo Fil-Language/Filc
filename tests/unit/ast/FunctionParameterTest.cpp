@@ -22,16 +22,13 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include <gtest/gtest.h>
 
-namespace filc::ast {
-    Function::Function(Identifier *name, const std::vector<FunctionParameter *> &parameters)
-            : AbstractExpression(), _name(name), _parameters(parameters) {}
-
-    auto Function::getName() const -> Identifier * {
-        return _name;
-    }
-
-    auto Function::getParameters() const -> const std::vector<FunctionParameter *> & {
-        return _parameters;
-    }
+TEST(FunctionParameter, constructor) {
+    filc::ast::FunctionParameter fp1(
+            new filc::ast::Identifier("n"),
+            new filc::ast::Type(new filc::ast::Identifier("int"))
+    );
+    ASSERT_STREQ("n", fp1.getName()->getName().c_str());
+    ASSERT_STREQ("int", static_cast<filc::ast::Type *>(fp1.getType())->getName()->getName().c_str());
 }

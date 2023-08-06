@@ -73,6 +73,8 @@ namespace filc::ast {
     class FunctionOperator;
 
     class Function;
+
+    class FunctionParameter;
 }
 
 #endif //FILC_AST_DECL_H
