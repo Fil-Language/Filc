@@ -399,6 +399,32 @@ namespace filc::ast {
         std::vector<AbstractExpression *> _body;
         If* _else;
     };
+
+    class Switch : public AbstractExpression {
+    public:
+        Switch(AbstractExpression *condition, const std::vector<SwitchCase *> &cases);
+
+        [[nodiscard]] auto getCondition() const -> AbstractExpression *;
+
+        [[nodiscard]] auto getCases() const -> const std::vector<SwitchCase *> &;
+
+    private:
+        AbstractExpression *_condition;
+        std::vector<SwitchCase *> _cases;
+    };
+
+    class SwitchCase {
+    public:
+        SwitchCase(AbstractExpression *pattern, const std::vector<AbstractExpression *> &body);
+
+        [[nodiscard]] auto getPattern() const -> AbstractExpression *;
+
+        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+
+    private:
+        AbstractExpression *_pattern;
+        std::vector<AbstractExpression *> _body;
+    };
 }
 
 #endif //FILC_AST_H

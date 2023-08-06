@@ -404,3 +404,25 @@ TEST(Parser, If) {
     ASSERT_CLASSIC_OPERATOR(FLEFT, body2->getOperator());
     ASSERT_EQ(nullptr, expression2->getElse());
 }
+
+TEST(Parser, Switch) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/switch1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::Switch *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_IDENTIFIER("value", expression1->getCondition());
+    ASSERT_THAT(expression1->getCases(), SizeIs(3));
+    auto *case1_1 = expression1->getCases()[0];
+    auto *case1_2 = expression1->getCases()[1];
+    auto *case1_3 = expression1->getCases()[2];
+    ASSERT_LITERAL("b", StringLiteral, case1_1->getPattern());
+    ASSERT_LITERAL("c", StringLiteral, case1_2->getPattern());
+    ASSERT_IDENTIFIER("default", case1_3->getPattern());
+    ASSERT_THAT(case1_1->getBody(), SizeIs(1));
+    ASSERT_THAT(case1_2->getBody(), SizeIs(1));
+    ASSERT_THAT(case1_3->getBody(), SizeIs(1));
+    ASSERT_IDENTIFIER("b", case1_1->getBody()[0]);
+    ASSERT_IDENTIFIER("c", case1_2->getBody()[0]);
+    ASSERT_IDENTIFIER("a", case1_3->getBody()[0]);
+}

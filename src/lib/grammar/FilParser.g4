@@ -422,7 +422,9 @@ control returns[filc::ast::AbstractExpression *tree]
 condition returns[filc::ast::AbstractExpression *tree]
     : i=if_c {
         $tree = $i.tree;
-    } | switch_c;
+    } | s=switch_c {
+        $tree = $s.tree;
+    };
 
 if_c returns[filc::ast::If *tree]
     : IF ic=if_condition ib=if_body {
@@ -448,17 +450,40 @@ if_body returns[std::vector<filc::ast::AbstractExpression *> tree]
         $tree = $bb.tree;
     };
 
-switch_c
-    : SWITCH if_condition switch_body;
+switch_c returns[filc::ast::Switch *tree]
+    : SWITCH ic=if_condition sb=switch_body {
+        $tree = new filc::ast::Switch($ic.tree, $sb.tree);
+    };
 
-switch_body
-    : LBRACE switch_case* RBRACE;
+switch_body returns[std::vector<filc::ast::SwitchCase *> tree]
+@init {
+    $tree = std::vector<filc::ast::SwitchCase *>();
+}
+    : LBRACE (sc=switch_case {
+        $tree.push_back($sc.tree);
+    })* RBRACE;
 
-switch_case
-    : switch_pattern ARROW (expression | parenthesis_body | block_body);
+switch_case returns[filc::ast::SwitchCase *tree]
+@init {
+    std::vector<filc::ast::AbstractExpression *> body;
+}
+@after {
+    $tree = new filc::ast::SwitchCase($sp.tree, body);
+}
+    : sp=switch_pattern ARROW (e=expression {
+        body.push_back($e.tree);
+    } | pb=parenthesis_body {
+        body = $pb.tree;
+    } | bb=block_body {
+        body = $bb.tree;
+    });
 
-switch_pattern
-    : DEFAULT | literal;
+switch_pattern returns[filc::ast::AbstractExpression *tree]
+    : DEFAULT {
+        $tree = new filc::ast::Identifier("default");
+    } | l=literal {
+        $tree = $l.tree;
+    };
 
 loop
     : for_i | for_iter | while_l;

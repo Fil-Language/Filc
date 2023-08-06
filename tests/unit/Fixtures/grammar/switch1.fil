@@ -1,0 +1,7 @@
+module test
+
+switch (value) {
+"b" -> b
+"c" -> (c)
+default -> {a}
+}

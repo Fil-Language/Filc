@@ -80,6 +80,8 @@ add_library(compiler_lib
         ast/FunctionParameter.cpp
         ast/Lambda.cpp
         ast/If.cpp
+        ast/Switch.cpp
+        ast/SwitchCase.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
