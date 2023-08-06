@@ -1,0 +1,8 @@
+comment:
+  require_changes: true
+  behavior: new
+  layout: "diff, files"
+codecov:
+  require_ci_to_pass: false
+  notify:
+    wait_for_ci: false
