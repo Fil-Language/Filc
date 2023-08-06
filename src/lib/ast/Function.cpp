@@ -24,8 +24,9 @@
 #include "AST.h"
 
 namespace filc::ast {
-    Function::Function(Identifier *name, const std::vector<FunctionParameter *> &parameters, AbstractType *return_type)
-            : AbstractExpression(), _name(name), _parameters(parameters), _return_type(return_type) {}
+    Function::Function(Identifier *name, const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
+                       const std::vector<AbstractExpression *> &body)
+            : AbstractExpression(), _name(name), _parameters(parameters), _return_type(return_type), _body(body) {}
 
     auto Function::getName() const -> Identifier * {
         return _name;
@@ -37,5 +38,9 @@ namespace filc::ast {
 
     auto Function::getReturnType() const -> AbstractType * {
         return _return_type;
+    }
+
+    auto Function::getBody() const -> const std::vector<AbstractExpression *> & {
+        return _body;
     }
 }

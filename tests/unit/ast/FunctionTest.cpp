@@ -32,9 +32,11 @@ TEST(Function, constructor) {
     filc::ast::Function fun1(
             new filc::ast::Identifier("fact"),
             {},
-            new filc::ast::Type(new filc::ast::Identifier("int"))
+            new filc::ast::Type(new filc::ast::Identifier("int")),
+            {}
     );
     ASSERT_IDENTIFIER("fact", fun1.getName());
     ASSERT_THAT(fun1.getParameters(), IsEmpty());
     ASSERT_TYPE("int", fun1.getReturnType());
+    ASSERT_THAT(fun1.getBody(), IsEmpty());
 }

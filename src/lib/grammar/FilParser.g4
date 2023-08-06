@@ -289,8 +289,8 @@ binary_operator returns[filc::ast::Operator *tree]
     };
 
 function returns[filc::ast::Function *tree]
-    : fd=function_declaration function_body {
-        $tree = new filc::ast::Function($fd.identifier, $fd.parameters, $fd.return_type);
+    : fd=function_declaration fb=function_body {
+        $tree = new filc::ast::Function($fd.identifier, $fd.parameters, $fd.return_type, $fb.tree);
     };
 
 function_declaration returns[filc::ast::Identifier *identifier, std::vector<filc::ast::FunctionParameter *> parameters, filc::ast::AbstractType *return_type]
@@ -355,14 +355,27 @@ function_type returns[filc::ast::AbstractType *tree]
         $tree = $t.tree;
     };
 
-function_body
-    : assignation | parenthesis_body | block_body;
+function_body returns[std::vector<filc::ast::AbstractExpression *> tree]
+    : a=assignation {
+        $tree = std::vector<filc::ast::AbstractExpression *>({$a.tree});
+    } | pb=parenthesis_body {
+        $tree = $pb.tree;
+    } | bb=block_body {
+        $tree = $bb.tree;
+    };
 
-parenthesis_body
-    : LPAREN expression RPAREN;
+parenthesis_body returns[std::vector<filc::ast::AbstractExpression *> tree]
+    : LPAREN e=expression {
+        $tree = std::vector<filc::ast::AbstractExpression *>({$e.tree});
+    } RPAREN;
 
-block_body
-    : LBRACE expression* RBRACE;
+block_body returns[std::vector<filc::ast::AbstractExpression *> tree]
+@init {
+    $tree = std::vector<filc::ast::AbstractExpression *>();
+}
+    : LBRACE (e=expression {
+        $tree.push_back($e.tree);
+    })* RBRACE;
 
 lambda
     : LPAREN function_parameters? RPAREN function_type ARROW (expression | parenthesis_body | block_body);

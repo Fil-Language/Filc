@@ -318,6 +318,11 @@ TEST(Parser, Function) {
     ASSERT_IDENTIFIER("b", parameter1_2->getName());
     ASSERT_TYPE("int", parameter1_1->getType());
     ASSERT_TYPE("int", parameter1_2->getType());
+    ASSERT_THAT(expression1->getBody(), SizeIs(1));
+    auto *body1 = static_cast<filc::ast::BinaryCalcul *>(expression1->getBody()[0]);
+    ASSERT_IDENTIFIER("a", body1->getLeftExpression());
+    ASSERT_IDENTIFIER("b", body1->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::MINUS, body1->getOperator());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/function2.fil");
     auto *program2 = parser2.getProgram();
@@ -333,4 +338,9 @@ TEST(Parser, Function) {
     ASSERT_IDENTIFIER("b", parameter2_2->getName());
     ASSERT_TYPE("float", parameter2_1->getType());
     ASSERT_TYPE("float", parameter2_2->getType());
+    ASSERT_THAT(expression2->getBody(), SizeIs(1));
+    auto *body2 = static_cast<filc::ast::BinaryCalcul *>(expression2->getBody()[0]);
+    ASSERT_IDENTIFIER("a", body2->getLeftExpression());
+    ASSERT_IDENTIFIER("b", body2->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(filc::ast::ClassicOperator::EQEQ, body2->getOperator());
 }
