@@ -72,11 +72,11 @@ namespace filc::ast {
 
     class FunctionOperator;
 
+    class Lambda;
+
     class Function;
 
     class FunctionParameter;
-
-    class Lambda;
 
     class If;
 
