@@ -33,6 +33,7 @@ grammar : [https://fil.ktraini.com/doc/advanced/grammar](https://fil.ktraini.com
 - [Checkout](https://github.com/marketplace/actions/checkout)
 - [Setup LCOV](https://github.com/marketplace/actions/setup-lcov)
 - [Codecov coverage report](https://github.com/marketplace/actions/codecov)
+- [Codacy coverage report](https://github.com/marketplace/actions/codacy-coverage-reporter)
 
 ### `version.sh`
 

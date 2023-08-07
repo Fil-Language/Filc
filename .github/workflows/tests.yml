@@ -43,12 +43,18 @@ jobs:
       - name: Generate coverage report
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: ${{github.workspace}}/bin/coverage.sh
-      - name: Upload coverage reports to Codecov
+      - name: Upload coverage report to Codecov
         if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ${{github.workspace}}/coverage.info
+      - name: Upload coverage report to Codacy
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: codacy/codacy-coverage-reporter-action@v1
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: ${{github.workspace}}/coverage.info
 
 #  clang-tidy:
 #    continue-on-error: true # It not really matter if this job failed
