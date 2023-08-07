@@ -82,6 +82,7 @@ add_library(compiler_lib
         ast/If.cpp
         ast/Switch.cpp
         ast/SwitchCase.cpp
+        ast/ForI.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}

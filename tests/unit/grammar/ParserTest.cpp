@@ -426,3 +426,28 @@ TEST(Parser, Switch) {
     ASSERT_IDENTIFIER("c", case1_2->getBody()[0]);
     ASSERT_IDENTIFIER("a", case1_3->getBody()[0]);
 }
+
+TEST(Parser, ForI) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/for_i1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(2));
+    auto *expression1_1 = static_cast<filc::ast::VariableDeclaration *>(program1->getExpressions()[0]);
+    auto *expression1_2 = static_cast<filc::ast::ForI *>(program1->getExpressions()[1]);
+    ASSERT_NE(nullptr, expression1_1);
+    ASSERT_NE(nullptr, expression1_2);
+    ASSERT_IDENTIFIER("i", expression1_1->getIdentifier());
+    ASSERT_TYPE("int", expression1_1->getType());
+    ASSERT_LITERAL(0, IntegerLiteral, expression1_1->getAssignation());
+    ASSERT_EQ(nullptr, expression1_2->getDeclaration());
+    ASSERT_NE(nullptr, expression1_2->getCondition());
+    ASSERT_NE(nullptr, expression1_2->getIteration());
+    auto *condition1 = static_cast<filc::ast::BinaryCalcul *>(expression1_2->getCondition());
+    auto *iteration1 = static_cast<filc::ast::PreUnaryCalcul *>(expression1_2->getIteration());
+    ASSERT_IDENTIFIER("i", condition1->getLeftExpression());
+    ASSERT_CLASSIC_OPERATOR(LEQ, condition1->getOperator());
+    ASSERT_LITERAL(10, IntegerLiteral, condition1->getRightExpression());
+    ASSERT_IDENTIFIER("i", iteration1->getVariable());
+    ASSERT_CLASSIC_OPERATOR(PLUSPLUS, iteration1->getOperator());
+    ASSERT_THAT(expression1_2->getBody(), SizeIs(1));
+    ASSERT_IDENTIFIER("i", expression1_2->getBody()[0]);
+}

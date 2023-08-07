@@ -416,6 +416,26 @@ namespace filc::ast {
         AbstractExpression *_pattern;
         std::vector<AbstractExpression *> _body;
     };
+
+    class ForI : public AbstractExpression {
+    public:
+        ForI(VariableDeclaration *declaration, AbstractExpression *condition, AbstractExpression *iteration,
+             const std::vector<AbstractExpression *> &body);
+
+        [[nodiscard]] auto getDeclaration() const -> VariableDeclaration *;
+
+        [[nodiscard]] auto getCondition() const -> AbstractExpression *;
+
+        [[nodiscard]] auto getIteration() const -> AbstractExpression *;
+
+        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+
+    private:
+        VariableDeclaration *_declaration;
+        AbstractExpression *_condition;
+        AbstractExpression *_iteration;
+        std::vector<AbstractExpression *> _body;
+    };
 }
 
 #endif //FILC_AST_H

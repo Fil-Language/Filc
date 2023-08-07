@@ -21,70 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
 
 namespace filc::ast {
-    class Program;
+    ForI::ForI(filc::ast::VariableDeclaration *declaration, filc::ast::AbstractExpression *condition,
+               filc::ast::AbstractExpression *iteration, const std::vector<AbstractExpression *> &body)
+            : AbstractExpression(), _declaration(declaration), _condition(condition), _iteration(iteration),
+              _body(body) {}
 
-    class AbstractExpression;
+    auto ForI::getDeclaration() const -> VariableDeclaration * {
+        return _declaration;
+    }
 
-    class Identifier;
+    auto ForI::getCondition() const -> AbstractExpression * {
+        return _condition;
+    }
 
-    template<typename T>
-    class AbstractLiteral;
+    auto ForI::getIteration() const -> AbstractExpression * {
+        return _iteration;
+    }
 
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
-
-    class PointerType;
-
-    class LambdaType;
-
-    class UnaryCalcul;
-
-    class PreUnaryCalcul;
-
-    class PostUnaryCalcul;
-
-    class BinaryCalcul;
-
-    class Operator;
-
-    class ClassicOperator;
-
-    class ArrayOperator;
-
-    class FunctionOperator;
-
-    class Lambda;
-
-    class Function;
-
-    class FunctionParameter;
-
-    class If;
-
-    class Switch;
-
-    class SwitchCase;
-
-    class ForI;
+    auto ForI::getBody() const -> const std::vector<AbstractExpression *> & {
+        return _body;
+    }
 }
-
-#endif //FILC_AST_DECL_H

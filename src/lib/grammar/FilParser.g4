@@ -417,7 +417,9 @@ lambda_type returns[filc::ast::LambdaType *tree]
 control returns[filc::ast::AbstractExpression *tree]
     : c=condition {
         $tree = $c.tree;
-    } | loop;
+    } | l=loop {
+        $tree = $l.tree;
+    };
 
 condition returns[filc::ast::AbstractExpression *tree]
     : i=if_c {
@@ -485,14 +487,29 @@ switch_pattern returns[filc::ast::AbstractExpression *tree]
         $tree = $l.tree;
     };
 
-loop
-    : for_i | for_iter | while_l;
+loop returns[filc::ast::AbstractExpression *tree]
+    : fi=for_i {
+        $tree = $fi.tree;
+    } | for_iter | while_l;
 
-for_i
-    : FOR for_i_condition if_body;
+for_i returns[filc::ast::ForI *tree]
+    : FOR fic=for_i_condition ib=if_body {
+        $tree = new filc::ast::ForI($fic.declaration, $fic.limit, $fic.iteration, $ib.tree);
+    };
 
-for_i_condition
-    : LPAREN variable_declaration? SEMI expression? SEMI expression? RPAREN;
+for_i_condition returns[filc::ast::VariableDeclaration *declaration, filc::ast::AbstractExpression *limit, filc::ast::AbstractExpression *iteration]
+@init {
+    $declaration = nullptr;
+    $limit = nullptr;
+    $iteration = nullptr;
+}
+    : LPAREN (vd=variable_declaration {
+        $declaration = $vd.tree;
+    })? SEMI (e1=expression {
+        $limit = $e1.tree;
+    })? SEMI (e2=expression {
+        $iteration = $e2.tree;
+    })? RPAREN;
 
 for_iter
     : FOR for_iter_condition if_body;
