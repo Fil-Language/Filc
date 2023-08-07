@@ -26,21 +26,9 @@
 namespace filc::ast {
     Function::Function(Identifier *name, const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
                        const std::vector<AbstractExpression *> &body)
-            : AbstractExpression(), _name(name), _parameters(parameters), _return_type(return_type), _body(body) {}
+            : Lambda(parameters, return_type, body), _name(name) {}
 
     auto Function::getName() const -> Identifier * {
         return _name;
-    }
-
-    auto Function::getParameters() const -> const std::vector<FunctionParameter *> & {
-        return _parameters;
-    }
-
-    auto Function::getReturnType() const -> AbstractType * {
-        return _return_type;
-    }
-
-    auto Function::getBody() const -> const std::vector<AbstractExpression *> & {
-        return _body;
     }
 }

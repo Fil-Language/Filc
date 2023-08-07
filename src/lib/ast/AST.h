@@ -332,12 +332,10 @@ namespace filc::ast {
         std::vector<AbstractExpression *> _expressions;
     };
 
-    class Function : public AbstractExpression {
+    class Lambda : public AbstractExpression {
     public:
-        Function(Identifier *name, const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
-                 const std::vector<AbstractExpression *> &body);
-
-        [[nodiscard]] auto getName() const -> Identifier *;
+        Lambda(const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
+               const std::vector<AbstractExpression *> &body);
 
         [[nodiscard]] auto getParameters() const -> const std::vector<FunctionParameter *> &;
 
@@ -345,11 +343,21 @@ namespace filc::ast {
 
         [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
 
-    private:
-        Identifier *_name;
+    protected:
         std::vector<FunctionParameter *> _parameters;
         AbstractType *_return_type;
         std::vector<AbstractExpression *> _body;
+    };
+
+    class Function : public Lambda {
+    public:
+        Function(Identifier *name, const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
+                 const std::vector<AbstractExpression *> &body);
+
+        [[nodiscard]] auto getName() const -> Identifier *;
+
+    private:
+        Identifier *_name;
     };
 
     class FunctionParameter {
@@ -363,23 +371,6 @@ namespace filc::ast {
     private:
         Identifier *_name;
         AbstractType *_type;
-    };
-
-    class Lambda : public AbstractExpression {
-    public:
-        Lambda(const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
-               const std::vector<AbstractExpression *> &body);
-
-        [[nodiscard]] auto getParameters() const -> const std::vector<FunctionParameter *> &;
-
-        [[nodiscard]] auto getReturnType() const -> AbstractType *;
-
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
-
-    private:
-        std::vector<FunctionParameter *> _parameters;
-        AbstractType *_return_type;
-        std::vector<AbstractExpression *> _body;
     };
 
     class If : public AbstractExpression {
