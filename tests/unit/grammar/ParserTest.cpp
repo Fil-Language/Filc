@@ -451,3 +451,19 @@ TEST(Parser, ForI) {
     ASSERT_THAT(expression1_2->getBody(), SizeIs(1));
     ASSERT_IDENTIFIER("i", expression1_2->getBody()[0]);
 }
+
+TEST(Parser, ForIter) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/for_iter1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::ForIter *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    ASSERT_TRUE(expression1->isConstant());
+    ASSERT_IDENTIFIER("item", expression1->getIdentifier());
+    ASSERT_IDENTIFIER("my_array", expression1->getArray());
+    ASSERT_THAT(expression1->getBody(), SizeIs(1));
+    auto *body1 = static_cast<filc::ast::PreUnaryCalcul *>(expression1->getBody()[0]);
+    ASSERT_NE(nullptr, body1);
+    ASSERT_IDENTIFIER("item", body1->getVariable());
+    ASSERT_CLASSIC_OPERATOR(REF, body1->getOperator());
+}

@@ -436,6 +436,26 @@ namespace filc::ast {
         AbstractExpression *_iteration;
         std::vector<AbstractExpression *> _body;
     };
+
+    class ForIter : public AbstractExpression {
+    public:
+        ForIter(bool constant, Identifier *identifier, AbstractExpression *array,
+                const std::vector<AbstractExpression *> &body);
+
+        [[nodiscard]] auto isConstant() const -> bool;
+
+        [[nodiscard]] auto getIdentifier() const -> Identifier *;
+
+        [[nodiscard]] auto getArray() const -> AbstractExpression *;
+
+        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+
+    private:
+        bool _constant;
+        Identifier *_identifier;
+        AbstractExpression *_array;
+        std::vector<AbstractExpression *> _body;
+    };
 }
 
 #endif //FILC_AST_H

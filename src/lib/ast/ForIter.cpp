@@ -21,72 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
 
 namespace filc::ast {
-    class Program;
+    ForIter::ForIter(bool constant, filc::ast::Identifier *identifier, filc::ast::AbstractExpression *array,
+                     const std::vector<AbstractExpression *> &body)
+            : AbstractExpression(), _constant(constant), _identifier(identifier), _array(array), _body(body) {}
 
-    class AbstractExpression;
+    auto ForIter::isConstant() const -> bool {
+        return _constant;
+    }
 
-    class Identifier;
+    auto ForIter::getIdentifier() const -> Identifier * {
+        return _identifier;
+    }
 
-    template<typename T>
-    class AbstractLiteral;
+    auto ForIter::getArray() const -> AbstractExpression * {
+        return _array;
+    }
 
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
-
-    class PointerType;
-
-    class LambdaType;
-
-    class UnaryCalcul;
-
-    class PreUnaryCalcul;
-
-    class PostUnaryCalcul;
-
-    class BinaryCalcul;
-
-    class Operator;
-
-    class ClassicOperator;
-
-    class ArrayOperator;
-
-    class FunctionOperator;
-
-    class Lambda;
-
-    class Function;
-
-    class FunctionParameter;
-
-    class If;
-
-    class Switch;
-
-    class SwitchCase;
-
-    class ForI;
-
-    class ForIter;
+    auto ForIter::getBody() const -> const std::vector<AbstractExpression *> & {
+        return _body;
+    }
 }
-
-#endif //FILC_AST_DECL_H

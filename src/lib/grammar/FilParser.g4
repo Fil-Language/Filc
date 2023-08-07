@@ -490,7 +490,9 @@ switch_pattern returns[filc::ast::AbstractExpression *tree]
 loop returns[filc::ast::AbstractExpression *tree]
     : fi=for_i {
         $tree = $fi.tree;
-    } | for_iter | while_l;
+    } | fit=for_iter {
+        $tree = $fit.tree;
+    } | while_l;
 
 for_i returns[filc::ast::ForI *tree]
     : FOR fic=for_i_condition ib=if_body {
@@ -511,11 +513,22 @@ for_i_condition returns[filc::ast::VariableDeclaration *declaration, filc::ast::
         $iteration = $e2.tree;
     })? RPAREN;
 
-for_iter
-    : FOR for_iter_condition if_body;
+for_iter returns[filc::ast::ForIter *tree]
+    : FOR fic=for_iter_condition ib=if_body {
+        $tree = new filc::ast::ForIter($fic.constant, $fic.identifier, $fic.array, $ib.tree);
+    };
 
-for_iter_condition
-    : LPAREN (VAL | VAR) IDENTIFIER COLON expression RPAREN;
+for_iter_condition returns[bool constant, filc::ast::Identifier *identifier, filc::ast::AbstractExpression *array]
+@init {
+    $constant = true;
+}
+    : LPAREN (VAL | VAR {
+        $constant = false;
+    }) i=IDENTIFIER {
+        $identifier = new filc::ast::Identifier($i);
+    } COLON e=expression {
+        $array = $e.tree;
+    } RPAREN;
 
 while_l
     : WHILE if_condition if_body;

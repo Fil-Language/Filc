@@ -44,6 +44,7 @@ add_executable(tests
         unit/ast/SwitchTest.cpp
         unit/ast/SwitchCaseTest.cpp
         unit/ast/ForITest.cpp
+        unit/ast/ForIterTest.cpp
 )
 target_include_directories(tests PUBLIC unit)
 

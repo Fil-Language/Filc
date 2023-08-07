@@ -21,72 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
+#include "tools.h"
 
-namespace filc::ast {
-    class Program;
-
-    class AbstractExpression;
-
-    class Identifier;
-
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
-
-    class PointerType;
-
-    class LambdaType;
-
-    class UnaryCalcul;
-
-    class PreUnaryCalcul;
-
-    class PostUnaryCalcul;
-
-    class BinaryCalcul;
-
-    class Operator;
-
-    class ClassicOperator;
-
-    class ArrayOperator;
-
-    class FunctionOperator;
-
-    class Lambda;
-
-    class Function;
-
-    class FunctionParameter;
-
-    class If;
-
-    class Switch;
-
-    class SwitchCase;
-
-    class ForI;
-
-    class ForIter;
+TEST(ForIter, constructor) {
+    filc::ast::ForIter fi1(
+            true,
+            new filc::ast::Identifier("item"),
+            new filc::ast::Identifier("my_array"),
+            {}
+    );
+    ASSERT_TRUE(fi1.isConstant());
+    ASSERT_IDENTIFIER("item", fi1.getIdentifier());
+    ASSERT_IDENTIFIER("my_array", fi1.getArray());
+    ASSERT_THAT(fi1.getBody(), IsEmpty());
 }
-
-#endif //FILC_AST_DECL_H
