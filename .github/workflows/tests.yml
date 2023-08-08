@@ -26,6 +26,10 @@ jobs:
       - name: Setup LCOV
         if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: hrishikesh-kadam/setup-lcov@v1
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
       - name: Configure CMake
         if: ${{ matrix.os == 'ubuntu-latest' }}
@@ -79,6 +83,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
