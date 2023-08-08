@@ -84,6 +84,7 @@ add_library(compiler_lib
         ast/SwitchCase.cpp
         ast/ForI.cpp
         ast/ForIter.cpp
+        ast/While.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}

@@ -492,7 +492,9 @@ loop returns[filc::ast::AbstractExpression *tree]
         $tree = $fi.tree;
     } | fit=for_iter {
         $tree = $fit.tree;
-    } | while_l;
+    } | w=while_l {
+        $tree = $w.tree;
+    };
 
 for_i returns[filc::ast::ForI *tree]
     : FOR fic=for_i_condition ib=if_body {
@@ -530,8 +532,10 @@ for_iter_condition returns[bool constant, filc::ast::Identifier *identifier, fil
         $array = $e.tree;
     } RPAREN;
 
-while_l
-    : WHILE if_condition if_body;
+while_l returns[filc::ast::While *tree]
+    : WHILE ic=if_condition ib=if_body {
+        $tree = new filc::ast::While($ic.tree, $ib.tree);
+    };
 
 function_call_params returns[std::vector<filc::ast::AbstractExpression *> tree]
 @init {

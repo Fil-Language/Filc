@@ -456,6 +456,19 @@ namespace filc::ast {
         AbstractExpression *_array;
         std::vector<AbstractExpression *> _body;
     };
+
+    class While : public AbstractExpression {
+    public:
+        While(AbstractExpression *condition, const std::vector<AbstractExpression *> &body);
+
+        [[nodiscard]] auto getCondition() const -> AbstractExpression *;
+
+        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+
+    private:
+        AbstractExpression *_condition;
+        std::vector<AbstractExpression *> _body;
+    };
 }
 
 #endif //FILC_AST_H

@@ -467,3 +467,19 @@ TEST(Parser, ForIter) {
     ASSERT_IDENTIFIER("item", body1->getVariable());
     ASSERT_CLASSIC_OPERATOR(REF, body1->getOperator());
 }
+
+TEST(Parser, While) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/while1.fil");
+    auto *program1 = parser1.getProgram();
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    auto *expression1 = static_cast<filc::ast::While *>(program1->getExpressions()[0]);
+    ASSERT_NE(nullptr, expression1);
+    auto *condition1 = static_cast<filc::ast::BinaryCalcul *>(expression1->getCondition());
+    ASSERT_IDENTIFIER("i", condition1->getLeftExpression());
+    ASSERT_CLASSIC_OPERATOR(LESS, condition1->getOperator());
+    ASSERT_LITERAL(10, IntegerLiteral, condition1->getRightExpression());
+    ASSERT_THAT(expression1->getBody(), SizeIs(1));
+    auto *body1 = static_cast<filc::ast::PostUnaryCalcul *>(expression1->getBody()[0]);
+    ASSERT_IDENTIFIER("i", body1->getVariable());
+    ASSERT_CLASSIC_OPERATOR(PLUSPLUS, body1->getOperator());
+}
