@@ -21,24 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_PARSER_H
-#define FILC_PARSER_H
+#ifndef FILC_ANTLR4ERRORLISTENER_H
+#define FILC_ANTLR4ERRORLISTENER_H
 
-#include <string>
-#include "AST.h"
+#include "antlr4-runtime.h"
 #include "MessageCollector.h"
 
-namespace filc::grammar {
-    class Parser {
+namespace filc::message {
+    class Antlr4ErrorListener : public antlr4::BaseErrorListener {
     public:
-        explicit Parser(const std::string &filename, filc::message::MessageCollector *collector);
+        explicit Antlr4ErrorListener(MessageCollector *collector);
 
-        [[nodiscard]] auto getProgram() const -> ast::Program *;
+        void syntaxError(antlr4::Recognizer *recognizer,
+                         antlr4::Token *offendingSymbol,
+                         size_t line,
+                         size_t charPositionInLine,
+                         const std::string &msg, std::exception_ptr e) override;
 
     private:
-        filc::ast::Program *_program;
-        filc::message::MessageCollector *_collector;
+        MessageCollector *_collector;
     };
 }
 
-#endif //FILC_PARSER_H
+#endif //FILC_ANTLR4ERRORLISTENER_H

@@ -55,6 +55,7 @@ add_library(compiler_lib
         message/Warning.cpp
         message/Error.cpp
         message/DevWarning.cpp
+        message/Antlr4ErrorListener.cpp
         # === AST ===
         ast/Program.cpp
         ast/AbstractExpression.cpp

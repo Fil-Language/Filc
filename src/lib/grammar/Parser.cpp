@@ -25,16 +25,24 @@
 #include "antlr4-runtime.h"
 #include "FilParser.h"
 #include "FilLexer.h"
+#include "Antlr4ErrorListener.h"
 
 namespace filc::grammar {
-    Parser::Parser(const std::string &filename) {
+    Parser::Parser(const std::string &filename, filc::message::MessageCollector *collector) :
+            _collector(collector) {
+        auto *error_listener = new filc::message::Antlr4ErrorListener(_collector);
+
         antlr4::ANTLRFileStream input;
         input.loadFromFile(filename);
         FilLexer lexer(&input);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(error_listener);
         antlr4::CommonTokenStream tokens(&lexer);
         tokens.fill();
 
         FilParser parser(&tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(error_listener);
 
         _program = parser.program()->tree;
         _program->setFilename(filename);

@@ -41,7 +41,7 @@ namespace filc {
         for (const auto &filename: _options.getFilenames()) {
             auto fut = std::async([collector](const std::string &filename) {
                 try {
-                    filc::grammar::Parser parser(filename);
+                    filc::grammar::Parser parser(filename, collector);
 
                     return parser.getProgram();
                 } catch (std::exception &e) {
