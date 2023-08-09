@@ -25,7 +25,7 @@
 #include <gtest/gtest.h>
 
 TEST(ArrayOperator, constructor) {
-    filc::ast::IntegerLiteral il1(12);
-    filc::ast::ArrayOperator ao1(&il1);
-    ASSERT_EQ(&il1, ao1.getExpression());
+    auto *il1 = new filc::ast::IntegerLiteral(12);
+    filc::ast::ArrayOperator ao1(il1);
+    ASSERT_EQ(il1, ao1.getExpression());
 }

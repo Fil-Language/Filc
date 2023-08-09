@@ -26,7 +26,7 @@
 namespace filc::ast {
     ForIter::ForIter(bool constant, filc::ast::Identifier *identifier, filc::ast::AbstractExpression *array,
                      const std::vector<AbstractExpression *> &body)
-            : AbstractExpression(), _constant(constant), _identifier(identifier), _array(array), _body(body) {}
+            : _constant(constant), _identifier(identifier), _array(array), _body(body) {}
 
     auto ForIter::isConstant() const -> bool {
         return _constant;
@@ -42,5 +42,13 @@ namespace filc::ast {
 
     auto ForIter::getBody() const -> const std::vector<AbstractExpression *> & {
         return _body;
+    }
+
+    ForIter::~ForIter() {
+        delete _identifier;
+        delete _array;
+        for (const auto &expression: _body) {
+            delete expression;
+        }
     }
 }

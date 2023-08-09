@@ -51,4 +51,11 @@ namespace filc::ast {
 
         return result;
     }
+
+    LambdaType::~LambdaType() {
+        for (const auto &argument_type: _argument_types) {
+            delete argument_type;
+        }
+        delete _return_type;
+    }
 }

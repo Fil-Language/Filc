@@ -34,4 +34,9 @@ namespace filc::ast {
     auto FunctionParameter::getType() const -> AbstractType * {
         return _type;
     }
+
+    FunctionParameter::~FunctionParameter() {
+        delete _name;
+        delete _type;
+    }
 }

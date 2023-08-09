@@ -25,9 +25,13 @@
 
 namespace filc::ast {
     ArrayOperator::ArrayOperator(filc::ast::AbstractExpression *expression)
-            : Operator(), _expression(expression) {}
+            : _expression(expression) {}
 
     auto ArrayOperator::getExpression() const -> AbstractExpression * {
         return _expression;
+    }
+
+    ArrayOperator::~ArrayOperator() {
+        delete _expression;
     }
 }

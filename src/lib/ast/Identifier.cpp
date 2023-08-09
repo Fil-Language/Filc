@@ -26,12 +26,12 @@
 
 namespace filc::ast {
     Identifier::Identifier(antlr4::Token *token)
-            : AbstractExpression(), _name(token->getText()) {
+            : _name(token->getText()) {
         setPosition(new filc::utils::Position(token));
     }
 
     Identifier::Identifier(std::string name)
-            : AbstractExpression(), _name(std::move(name)) {}
+            : _name(std::move(name)) {}
 
     auto Identifier::getName() const -> const std::string & {
         return _name;

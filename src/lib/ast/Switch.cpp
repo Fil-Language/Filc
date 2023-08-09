@@ -25,7 +25,7 @@
 
 namespace filc::ast {
     Switch::Switch(filc::ast::AbstractExpression *condition, const std::vector<SwitchCase *> &cases)
-            : AbstractExpression(), _condition(condition), _cases(cases) {}
+            : _condition(condition), _cases(cases) {}
 
     auto Switch::getCondition() const -> AbstractExpression * {
         return _condition;
@@ -33,5 +33,12 @@ namespace filc::ast {
 
     auto Switch::getCases() const -> const std::vector<SwitchCase *> & {
         return _cases;
+    }
+
+    Switch::~Switch() {
+        delete _condition;
+        for (const auto &item: _cases) {
+            delete item;
+        }
     }
 }

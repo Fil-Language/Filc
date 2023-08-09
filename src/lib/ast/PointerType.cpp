@@ -34,4 +34,8 @@ namespace filc::ast {
     auto PointerType::dump() const -> std::string {
         return _inner_type->dump() + "*";
     }
+
+    PointerType::~PointerType() {
+        delete _inner_type;
+    }
 }

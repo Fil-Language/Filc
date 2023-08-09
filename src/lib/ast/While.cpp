@@ -25,7 +25,7 @@
 
 namespace filc::ast {
     While::While(filc::ast::AbstractExpression *condition, const std::vector<AbstractExpression *> &body)
-            : AbstractExpression(), _condition(condition), _body(body) {}
+            : _condition(condition), _body(body) {}
 
     auto While::getCondition() const -> AbstractExpression * {
         return _condition;
@@ -33,5 +33,12 @@ namespace filc::ast {
 
     auto While::getBody() const -> const std::vector<AbstractExpression *> & {
         return _body;
+    }
+
+    While::~While() {
+        delete _condition;
+        for (const auto &expression: _body) {
+            delete expression;
+        }
     }
 }

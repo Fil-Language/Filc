@@ -25,7 +25,7 @@
 
 namespace filc::ast {
     UnaryCalcul::UnaryCalcul(filc::ast::Identifier *variable, Operator *p_operator)
-            : AbstractExpression(), _variable(variable), _operator(p_operator) {}
+            : _variable(variable), _operator(p_operator) {}
 
     auto UnaryCalcul::getVariable() const -> Identifier * {
         return _variable;
@@ -33,5 +33,10 @@ namespace filc::ast {
 
     auto UnaryCalcul::getOperator() const -> Operator * {
         return _operator;
+    }
+
+    UnaryCalcul::~UnaryCalcul() {
+        delete _variable;
+        delete _operator;
     }
 }

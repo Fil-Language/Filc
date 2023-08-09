@@ -27,6 +27,10 @@ namespace filc::ast {
     Type::Type(filc::ast::Identifier *name)
             : _name(name) {}
 
+    Type::~Type() {
+        delete _name;
+    }
+
     auto Type::getName() const -> Identifier * {
         return _name;
     }

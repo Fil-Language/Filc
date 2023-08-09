@@ -25,9 +25,15 @@
 
 namespace filc::ast {
     FunctionOperator::FunctionOperator(const std::vector<AbstractExpression *> &expressions)
-            : Operator(), _expressions(expressions) {}
+            : _expressions(expressions) {}
 
     auto FunctionOperator::getExpressions() const -> const std::vector<AbstractExpression *> & {
         return _expressions;
+    }
+
+    FunctionOperator::~FunctionOperator() {
+        for (const auto &expression: _expressions) {
+            delete expression;
+        }
     }
 }

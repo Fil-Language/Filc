@@ -28,9 +28,12 @@
 using namespace ::testing;
 
 TEST(FunctionOperator, constructor) {
-    filc::ast::IntegerLiteral il1(12);
-    filc::ast::FloatLiteral fl2(5.6);
-    std::vector<filc::ast::AbstractExpression *> exprs1({&il1, &fl2});
+    std::vector<filc::ast::AbstractExpression *> exprs1(
+            {
+                    new filc::ast::IntegerLiteral(12),
+                    new filc::ast::FloatLiteral(5.6)
+            }
+    );
     filc::ast::FunctionOperator fo1(exprs1);
     ASSERT_THAT(fo1.getExpressions(), ContainerEq(exprs1));
 }

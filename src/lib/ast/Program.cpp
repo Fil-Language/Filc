@@ -37,6 +37,12 @@ namespace filc::ast {
                      const std::vector<AbstractExpression *> &expressions)
             : _module(std::move(module)), _imports(imports), _expressions(expressions) {}
 
+    Program::~Program() {
+        for (const auto &expression: _expressions) {
+            delete expression;
+        }
+    }
+
     auto Program::getModule() const -> const std::string & {
         return _module;
     }

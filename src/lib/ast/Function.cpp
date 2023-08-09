@@ -31,4 +31,8 @@ namespace filc::ast {
     auto Function::getName() const -> Identifier * {
         return _name;
     }
+
+    Function::~Function() {
+        delete _name;
+    }
 }

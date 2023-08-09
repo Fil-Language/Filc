@@ -35,6 +35,8 @@ namespace filc::ast {
         explicit Program(std::string module, const std::vector<std::string> &imports,
                          const std::vector<AbstractExpression *> &expressions);
 
+        ~Program();
+
         [[nodiscard]] auto getModule() const -> const std::string &;
 
         [[nodiscard]] auto getImports() const -> const std::vector<std::string> &;
@@ -54,30 +56,30 @@ namespace filc::ast {
 
     class AbstractExpression {
     public:
+        virtual ~AbstractExpression();
+
+        auto setPosition(utils::Position *position) -> void;
+
+        AbstractExpression(const AbstractExpression &other) = default;
+
+        AbstractExpression(AbstractExpression &&other) = default;
+
+        auto operator=(const AbstractExpression &other) -> AbstractExpression & = default;
+
+        auto operator=(AbstractExpression &&other) -> AbstractExpression & = default;
+
         [[nodiscard]] auto isExported() const -> bool;
 
         auto setExported(bool exported) -> void;
 
         [[nodiscard]] auto getPosition() const -> utils::Position *;
 
-        auto setPosition(utils::Position *position) -> void;
-
     private:
-        bool _exported;
-        filc::utils::Position *_position;
+        bool _exported{false};
+        filc::utils::Position *_position{nullptr};
 
     protected:
         AbstractExpression() = default;
-
-        AbstractExpression(const AbstractExpression &other) = default;
-
-        AbstractExpression(AbstractExpression &&other) = default;
-
-        ~AbstractExpression() = default;
-
-        auto operator=(const AbstractExpression &other) -> AbstractExpression & = default;
-
-        auto operator=(AbstractExpression &&other) -> AbstractExpression & = default;
     };
 
     class Identifier : public AbstractExpression {
@@ -88,7 +90,7 @@ namespace filc::ast {
 
         [[nodiscard]] auto getName() const -> const std::string &;
 
-    protected:
+    private:
         std::string _name;
     };
 
@@ -137,6 +139,8 @@ namespace filc::ast {
     public:
         VariableDeclaration(bool is_constant, Identifier *identifier, AbstractType *type);
 
+        ~VariableDeclaration() override;
+
         [[nodiscard]] auto isConstant() const -> bool;
 
         [[nodiscard]] auto getIdentifier() const -> Identifier *;
@@ -156,25 +160,27 @@ namespace filc::ast {
 
     class AbstractType {
     public:
-        [[nodiscard]] virtual auto dump() const -> std::string = 0;
-
-    protected:
-        AbstractType() = default;
+        virtual ~AbstractType() = default;
 
         AbstractType(const AbstractType &other) = default;
 
         AbstractType(AbstractType &&other) = default;
 
-        ~AbstractType() = default;
-
         auto operator=(const AbstractType &other) -> AbstractType & = default;
 
         auto operator=(AbstractType &&other) -> AbstractType & = default;
+
+        [[nodiscard]] virtual auto dump() const -> std::string = 0;
+
+    protected:
+        AbstractType() = default;
     };
 
     class Type : public AbstractType {
     public:
         explicit Type(Identifier *name);
+
+        ~Type() override;
 
         [[nodiscard]] auto getName() const -> Identifier *;
 
@@ -187,6 +193,8 @@ namespace filc::ast {
     class ArrayType : public AbstractType {
     public:
         ArrayType(AbstractType *inner_type, unsigned int size);
+
+        ~ArrayType() override;
 
         [[nodiscard]] auto getInnerType() const -> AbstractType *;
 
@@ -203,6 +211,8 @@ namespace filc::ast {
     public:
         explicit PointerType(AbstractType *inner_type);
 
+        ~PointerType() override;
+
         [[nodiscard]] auto getInnerType() const -> AbstractType *;
 
         [[nodiscard]] auto dump() const -> std::string override;
@@ -214,6 +224,8 @@ namespace filc::ast {
     class LambdaType : public AbstractType {
     public:
         LambdaType(const std::vector<AbstractType *> &argument_types, AbstractType *return_type);
+
+        ~LambdaType() override;
 
         [[nodiscard]] auto getArgumentTypes() const -> const std::vector<AbstractType *> &;
 
@@ -229,6 +241,8 @@ namespace filc::ast {
     class UnaryCalcul : public AbstractExpression {
     public:
         explicit UnaryCalcul(Identifier *variable, Operator *p_operator);
+
+        ~UnaryCalcul() override;
 
         [[nodiscard]] auto getVariable() const -> Identifier *;
 
@@ -253,6 +267,8 @@ namespace filc::ast {
     public:
         BinaryCalcul(AbstractExpression *left_expression, Operator *p_operator, AbstractExpression *right_expression);
 
+        ~BinaryCalcul() override;
+
         [[nodiscard]] auto getLeftExpression() const -> AbstractExpression *;
 
         [[nodiscard]] auto getRightExpression() const -> AbstractExpression *;
@@ -266,18 +282,19 @@ namespace filc::ast {
     };
 
     class Operator {
-    protected:
-        Operator() = default;
-
+    public:
         Operator(const Operator &other) = default;
 
         Operator(Operator &&other) = default;
 
-        ~Operator() = default;
+        virtual ~Operator() = default;
 
         auto operator=(const Operator &other) -> Operator & = default;
 
         auto operator=(Operator &&other) -> Operator & = default;
+
+    protected:
+        Operator() = default;
     };
 
     class ClassicOperator : public Operator {
@@ -316,6 +333,8 @@ namespace filc::ast {
     public:
         explicit ArrayOperator(AbstractExpression *expression);
 
+        ~ArrayOperator() override;
+
         [[nodiscard]] auto getExpression() const -> AbstractExpression *;
 
     private:
@@ -325,6 +344,8 @@ namespace filc::ast {
     class FunctionOperator : public Operator {
     public:
         explicit FunctionOperator(const std::vector<AbstractExpression *> &expressions);
+
+        ~FunctionOperator() override;
 
         [[nodiscard]] auto getExpressions() const -> const std::vector<AbstractExpression *> &;
 
@@ -336,6 +357,8 @@ namespace filc::ast {
     public:
         Lambda(const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
                const std::vector<AbstractExpression *> &body);
+
+        ~Lambda() override;
 
         [[nodiscard]] auto getParameters() const -> const std::vector<FunctionParameter *> &;
 
@@ -354,6 +377,8 @@ namespace filc::ast {
         Function(Identifier *name, const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
                  const std::vector<AbstractExpression *> &body);
 
+        ~Function() override;
+
         [[nodiscard]] auto getName() const -> Identifier *;
 
     private:
@@ -363,6 +388,8 @@ namespace filc::ast {
     class FunctionParameter {
     public:
         FunctionParameter(Identifier *name, AbstractType *type);
+
+        ~FunctionParameter();
 
         [[nodiscard]] auto getName() const -> Identifier *;
 
@@ -376,6 +403,8 @@ namespace filc::ast {
     class If : public AbstractExpression {
     public:
         If(AbstractExpression *condition, const std::vector<AbstractExpression *> &body);
+
+        ~If() override;
 
         [[nodiscard]] auto getCondition() const -> AbstractExpression *;
 
@@ -395,6 +424,8 @@ namespace filc::ast {
     public:
         Switch(AbstractExpression *condition, const std::vector<SwitchCase *> &cases);
 
+        ~Switch() override;
+
         [[nodiscard]] auto getCondition() const -> AbstractExpression *;
 
         [[nodiscard]] auto getCases() const -> const std::vector<SwitchCase *> &;
@@ -407,6 +438,8 @@ namespace filc::ast {
     class SwitchCase {
     public:
         SwitchCase(AbstractExpression *pattern, const std::vector<AbstractExpression *> &body);
+
+        ~SwitchCase();
 
         [[nodiscard]] auto getPattern() const -> AbstractExpression *;
 
@@ -421,6 +454,8 @@ namespace filc::ast {
     public:
         ForI(VariableDeclaration *declaration, AbstractExpression *condition, AbstractExpression *iteration,
              const std::vector<AbstractExpression *> &body);
+
+        ~ForI() override;
 
         [[nodiscard]] auto getDeclaration() const -> VariableDeclaration *;
 
@@ -442,6 +477,8 @@ namespace filc::ast {
         ForIter(bool constant, Identifier *identifier, AbstractExpression *array,
                 const std::vector<AbstractExpression *> &body);
 
+        ~ForIter() override;
+
         [[nodiscard]] auto isConstant() const -> bool;
 
         [[nodiscard]] auto getIdentifier() const -> Identifier *;
@@ -460,6 +497,8 @@ namespace filc::ast {
     class While : public AbstractExpression {
     public:
         While(AbstractExpression *condition, const std::vector<AbstractExpression *> &body);
+
+        ~While() override;
 
         [[nodiscard]] auto getCondition() const -> AbstractExpression *;
 

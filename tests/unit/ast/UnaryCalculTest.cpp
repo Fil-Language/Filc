@@ -26,8 +26,10 @@
 #include "tools.h"
 
 TEST(UnaryCalcul, constructor) {
-    filc::ast::ClassicOperator co1(filc::ast::ClassicOperator::AND);
-    filc::ast::UnaryCalcul uc1(new filc::ast::Identifier("var1"), &co1);
+    filc::ast::UnaryCalcul uc1(
+            new filc::ast::Identifier("var1"),
+            new filc::ast::ClassicOperator(filc::ast::ClassicOperator::AND)
+    );
     ASSERT_IDENTIFIER("var1", uc1.getVariable());
     ASSERT_CLASSIC_OPERATOR(AND, uc1.getOperator());
 }

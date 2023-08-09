@@ -24,6 +24,10 @@
 #include "AST.h"
 
 namespace filc::ast {
+    AbstractExpression::~AbstractExpression() {
+        delete _position;
+    }
+
     auto AbstractExpression::isExported() const -> bool {
         return _exported;
     }

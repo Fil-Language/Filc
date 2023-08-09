@@ -26,8 +26,7 @@
 namespace filc::ast {
     ForI::ForI(filc::ast::VariableDeclaration *declaration, filc::ast::AbstractExpression *condition,
                filc::ast::AbstractExpression *iteration, const std::vector<AbstractExpression *> &body)
-            : AbstractExpression(), _declaration(declaration), _condition(condition), _iteration(iteration),
-              _body(body) {}
+            : _declaration(declaration), _condition(condition), _iteration(iteration), _body(body) {}
 
     auto ForI::getDeclaration() const -> VariableDeclaration * {
         return _declaration;
@@ -43,5 +42,14 @@ namespace filc::ast {
 
     auto ForI::getBody() const -> const std::vector<AbstractExpression *> & {
         return _body;
+    }
+
+    ForI::~ForI() {
+        delete _declaration;
+        delete _condition;
+        delete _iteration;
+        for (const auto &expression: _body) {
+            delete expression;
+        }
     }
 }

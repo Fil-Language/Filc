@@ -38,4 +38,8 @@ namespace filc::ast {
     auto ArrayType::dump() const -> std::string {
         return _inner_type->dump() + "[" + std::to_string(_size) + "]";
     }
+
+    ArrayType::~ArrayType() {
+        delete _inner_type;
+    }
 }

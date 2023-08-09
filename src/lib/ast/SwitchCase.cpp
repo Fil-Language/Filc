@@ -34,4 +34,11 @@ namespace filc::ast {
     auto SwitchCase::getBody() const -> const std::vector<AbstractExpression *> & {
         return _body;
     }
+
+    SwitchCase::~SwitchCase() {
+        delete _pattern;
+        for (const auto &expression: _body) {
+            delete expression;
+        }
+    }
 }

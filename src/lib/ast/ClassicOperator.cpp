@@ -25,7 +25,7 @@
 
 namespace filc::ast {
     ClassicOperator::ClassicOperator(filc::ast::ClassicOperator::OPERATOR p_operator)
-            : Operator(), _operator(p_operator) {}
+            : _operator(p_operator) {}
 
     auto ClassicOperator::getOperator() const -> OPERATOR {
         return _operator;

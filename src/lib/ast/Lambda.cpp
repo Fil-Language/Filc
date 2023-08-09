@@ -26,7 +26,7 @@
 namespace filc::ast {
     Lambda::Lambda(const std::vector<FunctionParameter *> &parameters, filc::ast::AbstractType *return_type,
                    const std::vector<AbstractExpression *> &body)
-            : AbstractExpression(), _parameters(parameters), _return_type(return_type), _body(body) {}
+            : _parameters(parameters), _return_type(return_type), _body(body) {}
 
     auto Lambda::getParameters() const -> const std::vector<FunctionParameter *> & {
         return _parameters;
@@ -38,5 +38,15 @@ namespace filc::ast {
 
     auto Lambda::getBody() const -> const std::vector<AbstractExpression *> & {
         return _body;
+    }
+
+    Lambda::~Lambda() {
+        for (const auto &parameter: _parameters) {
+            delete parameter;
+        }
+        delete _return_type;
+        for (const auto &expression: _body) {
+            delete expression;
+        }
     }
 }

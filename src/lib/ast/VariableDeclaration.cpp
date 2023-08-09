@@ -25,8 +25,13 @@
 
 namespace filc::ast {
     VariableDeclaration::VariableDeclaration(bool is_constant, Identifier *identifier, AbstractType *type)
-            : AbstractExpression(), _constant(is_constant), _identifier(identifier), _type(type),
-              _assignation(nullptr) {}
+            : _constant(is_constant), _identifier(identifier), _type(type), _assignation(nullptr) {}
+
+    VariableDeclaration::~VariableDeclaration() {
+        delete _identifier;
+        delete _type;
+        delete _assignation;
+    }
 
     auto VariableDeclaration::isConstant() const -> bool {
         return _constant;
