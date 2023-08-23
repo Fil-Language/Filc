@@ -38,50 +38,23 @@ namespace filc {
     auto FilCompiler::compile() -> int {
         auto *collector = filc::message::MessageCollector::getCollector();
 
-        std::vector<std::future<filc::ast::Program *>> futures;
-        // Parse all files
-        for (const auto &filename: _options.getFilenames()) {
-            auto fut = std::async([collector](const std::string &filename) {
-                try {
-                    filc::grammar::Parser parser(filename, collector);
-
-                    return parser.getProgram();
-                } catch (std::exception &e) {
-                    collector->addError(new filc::message::BasicError(filc::message::FATAL_ERROR, e.what()));
-
-                    return (filc::ast::Program *) nullptr;
-                }
-            }, filename);
-            futures.push_back(std::move(fut));
-        }
+        auto futures = parseFiles(collector);
 
         if (!checkCollector(collector)) {
             return 1;
         }
 
-        // Collect all programs by modules
-        for (auto &fut: futures) {
-            fut.wait();
-            filc::ast::Program *program = fut.get();
-            auto module_name = program->getModule();
-
-            if (_modules.find(module_name) != _modules.end()) {
-                collector->addError(
-                        new filc::message::BasicError(filc::message::ERROR, "Module " + module_name + " already exists")
-                );
-            } else {
-                _modules.emplace(module_name, program);
-                collector->addMessage(
-                        new filc::message::Message(filc::message::DEBUG, "Getting module: " + module_name)
-                );
-            }
-        }
+        collectModules(futures, collector);
 
         if (!checkCollector(collector)) {
             return 1;
         }
 
         checkModules(collector);
+
+        if (!checkCollector(collector)) {
+            return 1;
+        }
 
         // Resolve environment
         // TODO
@@ -107,6 +80,48 @@ namespace filc {
         collector->printAll();
 
         return true;
+    }
+
+    auto FilCompiler::parseFiles(
+            filc::message::MessageCollector *collector) -> std::vector<std::future<filc::ast::Program *>> {
+        std::vector<std::future<filc::ast::Program *>> futures;
+        // Parse all files
+        for (const auto &filename: _options.getFilenames()) {
+            auto fut = std::async([collector](const std::string &filename) {
+                try {
+                    filc::grammar::Parser parser(filename, collector);
+
+                    return parser.getProgram();
+                } catch (std::exception &e) {
+                    collector->addError(new filc::message::BasicError(filc::message::FATAL_ERROR, e.what()));
+
+                    return (filc::ast::Program *) nullptr;
+                }
+            }, filename);
+            futures.push_back(std::move(fut));
+        }
+
+        return futures;
+    }
+
+    auto FilCompiler::collectModules(std::vector<std::future<filc::ast::Program *>> &futures,
+                                     filc::message::MessageCollector *collector) -> void {
+        for (auto &fut: futures) {
+            fut.wait();
+            filc::ast::Program *program = fut.get();
+            auto module_name = program->getModule();
+
+            if (_modules.find(module_name) != _modules.end()) {
+                collector->addError(
+                        new filc::message::BasicError(filc::message::ERROR, "Module " + module_name + " already exists")
+                );
+            } else {
+                _modules.emplace(module_name, program);
+                collector->addMessage(
+                        new filc::message::Message(filc::message::DEBUG, "Getting module: " + module_name)
+                );
+            }
+        }
     }
 
     auto FilCompiler::checkModules(filc::message::MessageCollector *collector) -> void {

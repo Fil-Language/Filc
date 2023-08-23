@@ -28,6 +28,7 @@
 #include "AST.h"
 #include "MessageCollector.h"
 #include <map>
+#include <future>
 
 namespace filc {
     class FilCompiler final {
@@ -41,6 +42,11 @@ namespace filc {
         std::map<const std::string, filc::ast::Program *> _modules;
 
         static auto checkCollector(filc::message::MessageCollector *collector) -> bool;
+
+        auto parseFiles(filc::message::MessageCollector *collector) -> std::vector<std::future<filc::ast::Program *>>;
+
+        auto collectModules(std::vector<std::future<filc::ast::Program *>> &futures,
+                            filc::message::MessageCollector *collector) -> void;
 
         auto checkModules(filc::message::MessageCollector *collector) -> void;
 
