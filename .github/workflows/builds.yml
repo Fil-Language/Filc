@@ -38,6 +38,7 @@ jobs:
         with:
           name: filc-ubuntu20
           path: ${{github.workspace}}/build/src/filc
+          retention-days: 5
 
   build-macos:
     name: Build MacOS 12
@@ -60,6 +61,7 @@ jobs:
         with:
           name: filc-macos12
           path: ${{github.workspace}}/build/src/filc
+          retention-days: 5
 
   build-windows:
     name: Build Windows 2022
@@ -84,3 +86,4 @@ jobs:
 #        with:
 #          name: filc-windows2022
 #          path: ${{github.workspace}}/build/?
+#          retention-days: 5
