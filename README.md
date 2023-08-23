@@ -35,6 +35,8 @@ grammar : [https://fil.ktraini.com/doc/advanced/grammar](https://fil.ktraini.com
 - [Setup Java](https://github.com/marketplace/actions/setup-java-jdk)
 - [Codecov coverage report](https://github.com/marketplace/actions/codecov)
 - [Codacy coverage report](https://github.com/marketplace/actions/codacy-coverage-reporter)
+- [Zip action](https://github.com/montudor/action-zip)
+- [Upload to release](https://github.com/JasonEtco/upload-to-release)
 
 ### `version.sh`
 

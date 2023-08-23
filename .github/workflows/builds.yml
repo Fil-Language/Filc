@@ -1,13 +1,6 @@
 name: Building
 
-on:
-  push:
-    paths:
-      - "src/**"
-      - "lib/**"
-      - "tests/**"
-      - "cmake/**"
-      - ".github/workflows/builds.yml"
+on: release
 
 jobs:
   build-ubuntu:
@@ -26,12 +19,16 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build
 
-      - name: Save binary
-        uses: actions/upload-artifact@v3
+      - name: Save binary in zip
+        uses: montudor/action-zip@v1.0.0
         with:
-          name: filc-ubuntu22.04
-          path: ${{github.workspace}}/build/src/filc
-          retention-days: 5
+          args: zip filc-ubuntu22.04.zip ${{github.workspace}}/build/src/filc
+      - name: Upload to Release
+        uses: JasonEtco/upload-to-release@v0.1.1
+        with:
+          args: filc-ubuntu22.04.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-macos:
     name: Build MacOS 12
@@ -49,12 +46,16 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build
 
-      - name: Save binary
-        uses: actions/upload-artifact@v3
+      - name: Save binary in zip
+        uses: montudor/action-zip@v1.0.0
         with:
-          name: filc-macos12
-          path: ${{github.workspace}}/build/src/filc
-          retention-days: 5
+          args: zip filc-macos12.zip ${{github.workspace}}/build/src/filc
+      - name: Upload to Release
+        uses: JasonEtco/upload-to-release@v0.1.1
+        with:
+          args: filc-macos12.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows:
     name: Build Windows 2022
@@ -72,9 +73,13 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config Release
 
-      - name: Save binary
-        uses: actions/upload-artifact@v3
+      - name: Save binary in zip
+        uses: montudor/action-zip@v1.0.0
         with:
-          name: filc-windows2022
-          path: ${{github.workspace}}/build/src/Release/filc.exe
-          retention-days: 5
+          args: zip filc-windows2022.zip ${{github.workspace}}/build/src/Release/filc.exe
+      - name: Upload to Release
+        uses: JasonEtco/upload-to-release@v0.1.1
+        with:
+          args: filc-windows2022.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
