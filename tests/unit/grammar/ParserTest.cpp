@@ -304,6 +304,42 @@ TEST(Parser, BinaryCalcul) {
     ASSERT_LITERAL(3, IntegerLiteral, expression1->getLeftExpression());
     ASSERT_LITERAL(2, IntegerLiteral, expression1->getRightExpression());
     ASSERT_CLASSIC_OPERATOR(STAR, expression1->getOperator());
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/binary_calcul2.fil", COLLECTOR);
+    auto *program2 = parser2.getProgram();
+    ASSERT_THAT(program2->getExpressions(), SizeIs(4));
+    auto *expression2_1 = static_cast<filc::ast::BinaryCalcul *>(program2->getExpressions()[0]);
+    auto *expression2_2 = static_cast<filc::ast::BinaryCalcul *>(program2->getExpressions()[1]);
+    auto *expression2_3 = static_cast<filc::ast::BinaryCalcul *>(program2->getExpressions()[2]);
+    auto *expression2_4 = static_cast<filc::ast::BinaryCalcul *>(program2->getExpressions()[3]);
+    ASSERT_NE(nullptr, expression2_1);
+    ASSERT_NE(nullptr, expression2_2);
+    ASSERT_NE(nullptr, expression2_3);
+    ASSERT_NE(nullptr, expression2_4);
+    auto *expression2_1_l = static_cast<filc::ast::BinaryCalcul *>(expression2_1->getLeftExpression());
+    ASSERT_LITERAL(1, IntegerLiteral, expression2_1_l->getLeftExpression());
+    ASSERT_LITERAL(2, IntegerLiteral, expression2_1_l->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(STAR, expression2_1_l->getOperator());
+    ASSERT_LITERAL(3, IntegerLiteral, expression2_1->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(PLUS, expression2_1->getOperator());
+    auto *expression2_2_r = static_cast<filc::ast::BinaryCalcul *>(expression2_2->getRightExpression());
+    ASSERT_LITERAL(1, IntegerLiteral, expression2_2->getLeftExpression());
+    ASSERT_CLASSIC_OPERATOR(PLUS, expression2_2->getOperator());
+    ASSERT_LITERAL(2, IntegerLiteral, expression2_2_r->getLeftExpression());
+    ASSERT_LITERAL(3, IntegerLiteral, expression2_2_r->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(STAR, expression2_2_r->getOperator());
+    auto *expression2_3_r = static_cast<filc::ast::BinaryCalcul *>(expression2_3->getRightExpression());
+    ASSERT_LITERAL(1, IntegerLiteral, expression2_3->getLeftExpression());
+    ASSERT_CLASSIC_OPERATOR(STAR, expression2_3->getOperator());
+    ASSERT_LITERAL(2, IntegerLiteral, expression2_3_r->getLeftExpression());
+    ASSERT_LITERAL(3, IntegerLiteral, expression2_3_r->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(PLUS, expression2_3_r->getOperator());
+    auto *expression2_4_l = static_cast<filc::ast::BinaryCalcul *>(expression2_4->getLeftExpression());
+    ASSERT_LITERAL(1, IntegerLiteral, expression2_4_l->getLeftExpression());
+    ASSERT_LITERAL(2, IntegerLiteral, expression2_4_l->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(PLUS, expression2_4_l->getOperator());
+    ASSERT_LITERAL(3, IntegerLiteral, expression2_4->getRightExpression());
+    ASSERT_CLASSIC_OPERATOR(STAR, expression2_4->getOperator());
 }
 
 TEST(Parser, Function) {

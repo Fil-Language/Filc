@@ -73,6 +73,9 @@ module_identifier returns[std::string text]
     })*;
 
 expression returns[filc::ast::AbstractExpression *tree]
+@init {
+    filc::ast::ClassicOperator *op;
+}
     : l=literal {
         $tree = $l.tree;
     }
@@ -85,9 +88,70 @@ expression returns[filc::ast::AbstractExpression *tree]
     | u=unary_calcul {
         $tree = $u.tree;
     }
-    | el=expression bo=binary_operator er=expression {
-        $tree = new filc::ast::BinaryCalcul($el.tree, $bo.tree, $er.tree);
+
+    // ==== Binary calcul ====
+    | el1=expression STAR er1=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::STAR);
+        $tree = new filc::ast::BinaryCalcul($el1.tree, op, $er1.tree);
     }
+    | el2=expression DIV er2=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::DIV);
+        $tree = new filc::ast::BinaryCalcul($el2.tree, op, $er2.tree);
+    }
+    | el3=expression MOD er3=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MOD);
+        $tree = new filc::ast::BinaryCalcul($el3.tree, op, $er3.tree);
+    }
+    | el4=expression PLUS er4=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS);
+        $tree = new filc::ast::BinaryCalcul($el4.tree, op, $er4.tree);
+    }
+    | el5=expression MINUS er5=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUS);
+        $tree = new filc::ast::BinaryCalcul($el5.tree, op, $er5.tree);
+    }
+    | el6=expression FLEFT er6=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FLEFT);
+        $tree = new filc::ast::BinaryCalcul($el6.tree, op, $er6.tree);
+    }
+    | el7=expression FRIGHT er7=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FRIGHT);
+        $tree = new filc::ast::BinaryCalcul($el7.tree, op, $er7.tree);
+    }
+    | el8=expression LESS er8=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LESS);
+        $tree = new filc::ast::BinaryCalcul($el8.tree, op, $er8.tree);
+    }
+    | el9=expression GREATER er9=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::GREATER);
+        $tree = new filc::ast::BinaryCalcul($el9.tree, op, $er9.tree);
+    }
+    | el10=expression EQEQ er10=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::EQEQ);
+        $tree = new filc::ast::BinaryCalcul($el10.tree, op, $er10.tree);
+    }
+    | el11=expression LEQ er11=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LEQ);
+        $tree = new filc::ast::BinaryCalcul($el11.tree, op, $er11.tree);
+    }
+    | el12=expression GEQ er12=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::GEQ);
+        $tree = new filc::ast::BinaryCalcul($el12.tree, op, $er12.tree);
+    }
+    | el13=expression NEQ er13=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::NEQ);
+        $tree = new filc::ast::BinaryCalcul($el13.tree, op, $er13.tree);
+    }
+    | el14=expression AND er14=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::AND);
+        $tree = new filc::ast::BinaryCalcul($el14.tree, op, $er14.tree);
+    }
+    | el15=expression OR er15=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::OR);
+        $tree = new filc::ast::BinaryCalcul($el15.tree, op, $er15.tree);
+    }
+    // ==== Binary calcul ====
+
     | f=function {
         $tree = $f.tree;
     }
@@ -243,7 +307,7 @@ pre_operator returns[filc::ast::Operator *tree]
         $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::NOT);
     };
 
-binary_operator returns[filc::ast::Operator *tree]
+classic_binary_operator returns[filc::ast::Operator *tree]
     : STAR {
         $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::STAR);
     }
@@ -266,32 +330,6 @@ binary_operator returns[filc::ast::Operator *tree]
     }
     | FRIGHT {
         $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FRIGHT);
-    }
-
-    | LESS {
-        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LESS);
-    }
-    | GREATER {
-        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::GREATER);
-    }
-    | EQEQ {
-        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::EQEQ);
-    }
-    | LEQ {
-        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LEQ);
-    }
-    | GEQ {
-        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::GEQ);
-    }
-    | NEQ {
-        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::NEQ);
-    }
-
-    | AND {
-        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::AND);
-    }
-    | OR {
-        $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::OR);
     };
 
 function returns[filc::ast::Function *tree]
