@@ -23,7 +23,7 @@
  */
 #include "AST.h"
 #include <gtest/gtest.h>
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(FunctionParameter, constructor) {
     filc::ast::FunctionParameter fp1(

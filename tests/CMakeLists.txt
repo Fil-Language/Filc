@@ -8,10 +8,11 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_executable(tests
-        unit/tools.h
+        unit/test_tools.h
         # === Utils ===
         unit/utils/OptionsParserTest.cpp
         unit/utils/PositionTest.cpp
+        unit/utils/ToolsTest.cpp
         # === Message ===
         unit/message/MessageTest.cpp
         unit/message/MessageCollectorTest.cpp

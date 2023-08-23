@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(ForI, constructor) {
     auto *declaration = new filc::ast::VariableDeclaration(false, new filc::ast::Identifier("i"),

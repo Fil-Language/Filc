@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(AssignationOperator, constructor) {
     filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FRIGHT));

@@ -25,6 +25,7 @@
 #include "MessageCollector.h"
 #include "Error.h"
 #include "Parser.h"
+#include "tools.h"
 #include <utility>
 #include <future>
 
@@ -38,6 +39,7 @@ namespace filc {
         auto *collector = filc::message::MessageCollector::getCollector();
 
         std::vector<std::future<filc::ast::Program *>> futures;
+        // Parse all files
         for (const auto &filename: _options.getFilenames()) {
             auto fut = std::async([collector](const std::string &filename) {
                 try {
@@ -53,12 +55,11 @@ namespace filc {
             futures.push_back(std::move(fut));
         }
 
-        if (collector->hasErrors()) {
-            collector->printAll();
-
+        if (!checkCollector(collector)) {
             return 1;
         }
 
+        // Collect all programs by modules
         for (auto &fut: futures) {
             fut.wait();
             filc::ast::Program *program = fut.get();
@@ -76,12 +77,17 @@ namespace filc {
             }
         }
 
-        if (collector->hasErrors()) {
-            collector->printAll();
-
+        if (!checkCollector(collector)) {
             return 1;
         }
-        collector->printAll();
+
+        checkModules(collector);
+
+        // Resolve environment
+        // TODO
+
+        // LLVM
+        // TODO
 
         // Free memory
         for (const auto &module: _modules) {
@@ -90,5 +96,82 @@ namespace filc {
         _modules.clear();
 
         return 0;
+    }
+
+    auto FilCompiler::checkCollector(filc::message::MessageCollector *collector) -> bool {
+        if (collector->hasErrors()) {
+            collector->printAll();
+
+            return false;
+        }
+        collector->printAll();
+
+        return true;
+    }
+
+    auto FilCompiler::checkModules(filc::message::MessageCollector *collector) -> void {
+        auto has_change = true;
+        while (has_change) {
+            has_change = false;
+            for (const auto &module: _modules) {
+                auto *program = module.second;
+                for (const auto &module_name: program->getImports()) {
+                    if (_modules.find(module_name) == _modules.end()) {
+                        // Modules not found, check if standard module
+                        auto filename = getModuleFilename(module_name, _options.getStdPath());
+                        if (!filename.empty()) {
+                            // It's a standard module, add it
+                            filc::grammar::Parser parser(filename, collector);
+
+                            _modules.emplace(module_name, parser.getProgram());
+                            collector->addMessage(
+                                    new filc::message::Message(filc::message::DEBUG, "Getting module: " + module_name)
+                            );
+                            has_change = true;
+                        } else {
+                            collector->addError(
+                                    new filc::message::Error(filc::message::ERROR,
+                                                             "Module " + module_name + " not found",
+                                                             new filc::utils::Position(program->getFilename(), 0, 0))
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    auto FilCompiler::getModuleFilename(const std::string &module_name, const std::string &std_path) -> std::string {
+        if (!filc::utils::strStartsWith(module_name, "fil.")) {
+            return "";
+        }
+
+        auto paths = filc::utils::splitString(std_path, ';');
+        auto modules = filc::utils::splitString(module_name, '.');
+        modules.erase(modules.begin()); // Remove 'fil'
+
+        std::string short_filename;
+        for (const auto &module: modules) {
+            short_filename += "/" + module;
+        }
+
+        for (const auto &path: paths) {
+            // Try module
+            if (filc::utils::fileExists(path + short_filename + ".fil")) {
+                return path + short_filename + ".fil";
+            }
+
+            // Try module index
+            if (filc::utils::fileExists(path + short_filename + "/index.fil")) {
+                return path + short_filename + "/index.fil";
+            }
+
+            // Try module main
+            if (filc::utils::fileExists(path + short_filename + "/main.fil")) {
+                return path + short_filename + "/main.fil";
+            }
+        }
+
+        return "";
     }
 }

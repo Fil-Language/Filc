@@ -23,7 +23,7 @@
  */
 #include "AST.h"
 #include <gtest/gtest.h>
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(VariableDeclaration, constructor) {
     auto *tp1 = new filc::ast::Type(new filc::ast::Identifier("int"));

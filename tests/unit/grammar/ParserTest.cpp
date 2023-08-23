@@ -25,7 +25,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <string>
-#include "tools.h"
+#include "test_tools.h"
 #include "MessageCollector.h"
 
 using namespace ::testing;

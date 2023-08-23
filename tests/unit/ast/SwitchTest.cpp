@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(Switch, constructor) {
     filc::ast::Switch sw1(new filc::ast::Identifier("abcd"), {});

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(While, constructor) {
     filc::ast::While wh1(new filc::ast::Identifier("isTrue"), {});

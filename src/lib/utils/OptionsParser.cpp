@@ -39,6 +39,8 @@ namespace filc::utils {
         _options.add_options()("d,debug", "Compile with debug information");
         _options.add_options()("o,out", "Executable output filename",
                                cxxopts::value<std::string>()->default_value("a.out"));
+        _options.add_options()("stdlib", "Paths to standard library (separated by ;)",
+                               cxxopts::value<std::string>()->default_value(""));
         _options.parse_positional({"filenames"});
     }
 
@@ -89,6 +91,7 @@ namespace filc::utils {
         _verbose = verbose > MAX_VERBOSE ? MAX_VERBOSE : verbose;
         _debug = result.count("debug") != 0;
         _out = result["out"].as<std::string>();
+        _std_path = result["stdlib"].as<std::string>();
 
         return true;
     }
@@ -136,5 +139,9 @@ namespace filc::utils {
 
     auto OptionsParser::getOut() const -> const std::string & {
         return _out;
+    }
+
+    auto OptionsParser::getStdPath() const -> const std::string & {
+        return _std_path;
     }
 }

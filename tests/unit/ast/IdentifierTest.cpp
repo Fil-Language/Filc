@@ -23,7 +23,7 @@
  */
 #include "AST.h"
 #include <gtest/gtest.h>
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(Identifier, constructor) {
     filc::ast::Identifier id1("identifier 1");

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(ForIter, constructor) {
     filc::ast::ForIter fi1(

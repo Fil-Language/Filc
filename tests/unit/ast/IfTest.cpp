@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(If, constructor) {
     filc::ast::If if1(new filc::ast::Identifier("isTrue"), {});

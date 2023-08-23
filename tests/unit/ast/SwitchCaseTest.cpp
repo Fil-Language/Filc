@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(SwitchCase, constructor) {
     filc::ast::SwitchCase sc1(new filc::ast::Identifier("default"), {});

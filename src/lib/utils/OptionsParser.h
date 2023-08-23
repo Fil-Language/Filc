@@ -44,6 +44,8 @@ namespace filc::utils {
 
         auto getOut() const -> const std::string &;
 
+        auto getStdPath() const -> const std::string &;
+
         static auto extension(const std::string &filename) -> std::string;
 
     private:
@@ -52,6 +54,7 @@ namespace filc::utils {
         unsigned int _verbose;
         bool _debug;
         std::string _out;
+        std::string _std_path;
 
         auto help() -> void;
 

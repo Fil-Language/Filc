@@ -23,7 +23,7 @@
  */
 #include "AST.h"
 #include <gtest/gtest.h>
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(ArrayType, constructor) {
     auto *inner_type = new filc::ast::Type(new filc::ast::Identifier("array"));

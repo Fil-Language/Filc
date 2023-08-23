@@ -25,11 +25,18 @@
 #define FILC_TOOLS_H
 
 #include <string>
+#include <vector>
 
 namespace filc::utils {
     auto parseEscapedChar(const std::string &escaped_char) -> char;
 
     auto parseEscapedString(const std::string &escaped_string) -> std::string;
+
+    auto fileExists(const std::string &filename) -> bool;
+
+    auto strStartsWith(const std::string &source, const std::string &needle) -> bool;
+
+    auto splitString(const std::string &source, char delimiter) -> std::vector<std::string>;
 }
 
 #endif //FILC_TOOLS_H

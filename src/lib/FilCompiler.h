@@ -26,6 +26,7 @@
 
 #include "OptionsParser.h"
 #include "AST.h"
+#include "MessageCollector.h"
 #include <map>
 
 namespace filc {
@@ -38,6 +39,12 @@ namespace filc {
     private:
         utils::OptionsParser _options;
         std::map<const std::string, filc::ast::Program *> _modules;
+
+        static auto checkCollector(filc::message::MessageCollector *collector) -> bool;
+
+        auto checkModules(filc::message::MessageCollector *collector) -> void;
+
+        static auto getModuleFilename(const std::string &module_name, const std::string &std_path) -> std::string;
     };
 }
 

@@ -23,7 +23,7 @@
  */
 #include "AST.h"
 #include <gtest/gtest.h>
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(PreUnaryCalcul, constructor) {
     filc::ast::PreUnaryCalcul puc1(

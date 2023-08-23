@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "tools.h"
+#include <fstream>
 
 namespace filc::utils {
     auto parseEscapedChar(const std::string &escaped_char) -> char {
@@ -66,6 +67,35 @@ namespace filc::utils {
             } else {
                 result += escaped_string[i];
             }
+        }
+
+        return result;
+    }
+
+    auto fileExists(const std::string &filename) -> bool {
+        std::ifstream file(filename);
+        auto result = file.good() && file.is_open();
+        file.close();
+
+        return result;
+    }
+
+    auto strStartsWith(const std::string &source, const std::string &needle) -> bool {
+        return source.find(needle) == 0;
+    }
+
+    auto splitString(const std::string &source, char delimiter) -> std::vector<std::string> {
+        auto str = source;
+        std::vector<std::string> result;
+
+        while (!str.empty()) {
+            auto position = str.find(delimiter);
+            if (position == std::string::npos) {
+                result.push_back(str);
+                break;
+            }
+            result.push_back(str.substr(0, position));
+            str.erase(0, position + 1);
         }
 
         return result;

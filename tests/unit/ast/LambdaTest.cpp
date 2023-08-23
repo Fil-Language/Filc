@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "tools.h"
+#include "test_tools.h"
 
 TEST(Lambda, constructor) {
     filc::ast::Lambda lb1({}, new filc::ast::Type(new filc::ast::Identifier("int")), {});
