@@ -72,11 +72,9 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config Release
 
-      - name: Locate binary
-        run: dir ${{github.workspace}}/build/src/Release
-#      - name: Save binary
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: filc-windows2022
-#          path: ${{github.workspace}}/build/?
-#          retention-days: 5
+      - name: Save binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: filc-windows2022
+          path: ${{github.workspace}}/build/src/Release/filc.exe
+          retention-days: 5
