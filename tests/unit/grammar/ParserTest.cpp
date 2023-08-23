@@ -340,6 +340,20 @@ TEST(Parser, BinaryCalcul) {
     ASSERT_CLASSIC_OPERATOR(PLUS, expression2_4_l->getOperator());
     ASSERT_LITERAL(3, IntegerLiteral, expression2_4->getRightExpression());
     ASSERT_CLASSIC_OPERATOR(STAR, expression2_4->getOperator());
+
+    filc::grammar::Parser parser3(FIXTURES_PATH "/binary_calcul3.fil", COLLECTOR);
+    auto *program3 = parser3.getProgram();
+    ASSERT_THAT(program3->getExpressions(), SizeIs(2));
+    auto *expression3_1 = static_cast<filc::ast::BinaryCalcul *>(program3->getExpressions()[0]);
+    auto *expression3_2 = static_cast<filc::ast::BinaryCalcul *>(program3->getExpressions()[1]);
+    ASSERT_NE(nullptr, expression3_1);
+    ASSERT_NE(nullptr, expression3_2);
+    ASSERT_IDENTIFIER("a", expression3_1->getLeftExpression());
+    ASSERT_LITERAL(2, IntegerLiteral, expression3_1->getRightExpression());
+    ASSERT_EQ(nullptr, static_cast<filc::ast::AssignationOperator *>(expression3_1->getOperator())->getInnerOperator());
+    ASSERT_IDENTIFIER("b", expression3_2->getLeftExpression());
+    ASSERT_IDENTIFIER("a", expression3_2->getRightExpression());
+    ASSERT_ASSIGNATION_OPERATOR(PLUS, expression3_2->getOperator());
 }
 
 TEST(Parser, Function) {

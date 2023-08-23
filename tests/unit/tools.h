@@ -32,6 +32,8 @@ using namespace ::testing;
 
 #define ASSERT_CLASSIC_OPERATOR(expected, op) ASSERT_EQ(filc::ast::ClassicOperator::expected, static_cast<filc::ast::ClassicOperator *>(op)->getOperator())
 
+#define ASSERT_ASSIGNATION_OPERATOR(expected, op) ASSERT_CLASSIC_OPERATOR(expected, static_cast<filc::ast::AssignationOperator *>(op)->getInnerOperator())
+
 #define ASSERT_LITERAL(expected, type, literal) ASSERT_EQ(expected, static_cast<filc::ast::type *>(literal)->getValue())
 
 #define ASSERT_VARIABLE_DECLARATION(constant, name, type, value, literal, variable) \

@@ -86,6 +86,7 @@ add_library(compiler_lib
         ast/ForI.cpp
         ast/ForIter.cpp
         ast/While.cpp
+        ast/AssignationOperator.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}

@@ -46,6 +46,7 @@ add_executable(tests
         unit/ast/ForITest.cpp
         unit/ast/ForIterTest.cpp
         unit/ast/WhileTest.cpp
+        unit/ast/AssignationOperatorTest.cpp
 )
 target_include_directories(tests PUBLIC unit)
 

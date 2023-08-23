@@ -74,16 +74,13 @@ module_identifier returns[std::string text]
 
 expression returns[filc::ast::AbstractExpression *tree]
 @init {
-    filc::ast::ClassicOperator *op;
+    filc::ast::Operator *op;
 }
     : l=literal {
         $tree = $l.tree;
     }
     | v=variable_declaration {
         $tree = $v.tree;
-    }
-    | a=assignation {
-        $tree = $a.tree;
     }
     | u=unary_calcul {
         $tree = $u.tree;
@@ -149,6 +146,9 @@ expression returns[filc::ast::AbstractExpression *tree]
     | el15=expression OR er15=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::OR);
         $tree = new filc::ast::BinaryCalcul($el15.tree, op, $er15.tree);
+    }
+    | el16=expression op16=assignation_operator er16=expression {
+        $tree = new filc::ast::BinaryCalcul($el16.tree, $op16.tree, $er16.tree);
     }
     // ==== Binary calcul ====
 
@@ -305,6 +305,16 @@ pre_operator returns[filc::ast::Operator *tree]
     }
     | NOT {
         $tree = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::NOT);
+    };
+
+assignation_operator returns[filc::ast::AssignationOperator *tree]
+@init {
+    filc::ast::Operator *op = nullptr;
+}
+    : (cbo=classic_binary_operator {
+        op = $cbo.tree;
+    })? EQ {
+        $tree = new filc::ast::AssignationOperator(op);
     };
 
 classic_binary_operator returns[filc::ast::Operator *tree]

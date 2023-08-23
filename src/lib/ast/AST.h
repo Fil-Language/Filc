@@ -353,6 +353,18 @@ namespace filc::ast {
         std::vector<AbstractExpression *> _expressions;
     };
 
+    class AssignationOperator : public Operator {
+    public:
+        explicit AssignationOperator(Operator *inner_operator);
+
+        ~AssignationOperator() override;
+
+        [[nodiscard]] auto getInnerOperator() const -> Operator *;
+
+    private:
+        Operator *_inner_operator;
+    };
+
     class Lambda : public AbstractExpression {
     public:
         Lambda(const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
