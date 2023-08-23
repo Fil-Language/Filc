@@ -73,7 +73,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Release
 
       - name: Locate binary
-        run: dir ${{github.workspace}}/build/src
+        run: dir ${{github.workspace}}/build/src/Release
 #      - name: Save binary
 #        uses: actions/upload-artifact@v3
 #        with:
