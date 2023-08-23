@@ -8,13 +8,6 @@ on:
       - "tests/**"
       - "cmake/**"
       - ".github/workflows/builds.yml"
-  pull_request:
-    paths:
-      - "src/**"
-      - "lib/**"
-      - "tests/**"
-      - "cmake/**"
-      - ".github/workflows/builds.yml"
 
 jobs:
   build-ubuntu:
@@ -80,7 +73,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Release
 
       - name: Locate binary
-        run: dir ${{github.workspace}}/build
+        run: dir ${{github.workspace}}/build/x64
 #      - name: Save binary
 #        uses: actions/upload-artifact@v3
 #        with:
