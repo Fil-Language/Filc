@@ -48,6 +48,7 @@ add_executable(tests
         unit/ast/ForIterTest.cpp
         unit/ast/WhileTest.cpp
         unit/ast/AssignationOperatorTest.cpp
+        unit/ast/AbstractExpressionTest.cpp
         # === Environment ===
         unit/environment/EnvironmentTest.cpp
 )
