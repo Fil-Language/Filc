@@ -24,6 +24,7 @@
 
 #include "OptionsParser.h"
 #include "VERSION.h"
+#include "tools.h"
 
 namespace filc::utils {
     OptionsParser::OptionsParser()
@@ -78,8 +79,13 @@ namespace filc::utils {
         for (const auto &filename: filenames) {
             if (extension(filename) != "fil") {
                 std::cout << "\033[1;31mError: \033[00m"
-                          << "Invalid file extension" << std::endl;
+                          << "Invalid file extension: " << filename << std::endl;
 
+                return false;
+            }
+            if (!filc::utils::fileExists(filename)) {
+                std::cout << "\033[1;31mError: \033[00m"
+                          << "File " << filename << " not found" << std::endl;
                 return false;
             }
             if (std::find(_filenames.begin(), _filenames.end(), filename) == _filenames.end()) {
