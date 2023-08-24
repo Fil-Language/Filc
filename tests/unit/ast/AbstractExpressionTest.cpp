@@ -46,3 +46,37 @@ TEST(AbstractExpression, exported) {
     obj1.setExported(true);
     ASSERT_TRUE(obj1.isExported());
 }
+
+TEST(AbstractExpression, expression_type) {
+    class : public filc::ast::AbstractExpression {
+    public:
+        auto setExpressionTypeO(filc::ast::AbstractType *expression_type) -> void {
+            setExpressionType(expression_type);
+        }
+    } obj1;
+
+    ASSERT_EQ(nullptr, obj1.getExpressionType());
+
+    obj1.setExpressionTypeO(new filc::ast::Type(new filc::ast::Identifier("int")));
+    ASSERT_TYPE("int", obj1.getExpressionType());
+}
+
+// NOLINTBEGIN(readability-function-cognitive-complexity)
+TEST(AbstractExpression, resolveType) {
+    class : public filc::ast::AbstractExpression {
+    } obj1;
+
+    ASSERT_THROW(obj1.resolveType(nullptr), std::logic_error);
+    ASSERT_THROW(obj1.resolveType(new filc::environment::Environment), std::logic_error);
+
+    class : public filc::ast::AbstractExpression {
+    public:
+        auto resolveType(filc::environment::Environment *environment) -> void override {
+            // Nothing
+        }
+    } obj2;
+
+    ASSERT_NO_THROW(obj2.resolveType(nullptr));
+    ASSERT_NO_THROW(obj2.resolveType(new filc::environment::Environment));
+}
+// NOLINTEND(readability-function-cognitive-complexity)

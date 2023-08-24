@@ -100,4 +100,14 @@ namespace filc::utils {
 
         return result;
     }
+
+    auto joinString(std::vector<std::string> &source, const std::string &delimiter) -> std::string {
+        std::string result;
+
+        for (const auto &item: source) {
+            result += item + delimiter;
+        }
+
+        return result.substr(0, result.length() - delimiter.length());
+    }
 }

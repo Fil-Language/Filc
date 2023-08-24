@@ -50,6 +50,8 @@ namespace filc {
 
         auto checkModules(filc::message::MessageCollector *collector) -> void;
 
+        auto resolveEnvironment(filc::message::MessageCollector *collector) -> void;
+
         static auto getModuleFilename(const std::string &module_name, const std::string &std_path) -> std::string;
     };
 }

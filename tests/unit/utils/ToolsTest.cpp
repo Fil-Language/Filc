@@ -68,3 +68,29 @@ TEST(tools, fileExists) {
     result = filc::utils::fileExists("non-existing-file.a_file_extension");
     ASSERT_FALSE(result);
 }
+
+TEST(tools, joinString) {
+    std::vector<std::string> vect = {};
+    auto result = filc::utils::joinString(vect, ", ");
+    ASSERT_TRUE(result.empty());
+
+    vect = {"a", "b"};
+    result = filc::utils::joinString(vect, ".");
+    ASSERT_STREQ("a.b", result.c_str());
+
+    vect = {"hello"};
+    result = filc::utils::joinString(vect, " ");
+    ASSERT_STREQ("hello", result.c_str());
+
+    vect = {"hello", "world"};
+    result = filc::utils::joinString(vect, " ");
+    ASSERT_STREQ("hello world", result.c_str());
+
+    vect = {"hello ", "world"};
+    result = filc::utils::joinString(vect, "");
+    ASSERT_STREQ("hello world", result.c_str());
+
+    vect = {"a", "list", "of", "word"};
+    result = filc::utils::joinString(vect, ", ");
+    ASSERT_STREQ("a, list, of, word", result.c_str());
+}

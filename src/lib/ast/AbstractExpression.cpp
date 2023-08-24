@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include <stdexcept>
 
 namespace filc::ast {
     AbstractExpression::~AbstractExpression() {
@@ -36,11 +37,11 @@ namespace filc::ast {
         _exported = exported;
     }
 
-    auto AbstractExpression::getPosition() const -> utils::Position * {
+    auto AbstractExpression::getPosition() const -> filc::utils::Position * {
         return _position;
     }
 
-    auto AbstractExpression::setPosition(utils::Position *position) -> void {
+    auto AbstractExpression::setPosition(filc::utils::Position *position) -> void {
         _position = position;
     }
 
@@ -48,7 +49,11 @@ namespace filc::ast {
         return _expression_type;
     }
 
-    auto AbstractExpression::setExpressionType(filc::ast::AbstractType *expression_type) -> void {
+    auto AbstractExpression::setExpressionType(AbstractType *expression_type) -> void {
         _expression_type = expression_type;
+    }
+
+    auto AbstractExpression::resolveType(filc::environment::Environment *environment) -> void {
+        throw std::logic_error("Not implemented");
     }
 }

@@ -67,4 +67,8 @@ namespace filc::ast {
             _module += "." + file;
         }
     }
+
+    auto Program::resolveEnvironment() -> void {
+        // Nothing to do
+    }
 }

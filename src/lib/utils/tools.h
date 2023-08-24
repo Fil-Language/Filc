@@ -37,6 +37,8 @@ namespace filc::utils {
     auto strStartsWith(const std::string &source, const std::string &needle) -> bool;
 
     auto splitString(const std::string &source, char delimiter) -> std::vector<std::string>;
+
+    auto joinString(std::vector<std::string> &source, const std::string &delimiter) -> std::string;
 }
 
 #endif //FILC_TOOLS_H

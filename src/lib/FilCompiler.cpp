@@ -56,8 +56,11 @@ namespace filc {
             return 1;
         }
 
-        // Resolve environment
-        // TODO
+        resolveEnvironment(collector);
+
+        if (!checkCollector(collector)) {
+            return 1;
+        }
 
         // LLVM
         // TODO
@@ -153,6 +156,51 @@ namespace filc {
                     }
                 }
             }
+        }
+    }
+
+    auto FilCompiler::resolveEnvironment(filc::message::MessageCollector *collector) -> void {
+        auto has_change = true;
+        auto modules = _modules;
+        while (has_change) {
+            has_change = false;
+
+            for (const auto &module: modules) {
+                auto *program = module.second;
+
+                auto program_imports = program->getImports();
+                if (std::any_of(program_imports.begin(), program_imports.end(), [modules](auto &module) -> bool {
+                    return modules.find(module) != modules.end();
+                })) {
+                    break;
+                }
+
+                try {
+                    program->resolveEnvironment();
+                } catch (std::exception &e) {
+                    collector->addError(new filc::message::BasicError(filc::message::ERROR,
+                                                                      "Error when resolve module " + module.first +
+                                                                      ": " + std::string(e.what())));
+                }
+
+                modules.erase(module.first);
+                has_change = true;
+                collector->addMessage(
+                        new filc::message::Message(message::DEBUG, "Module " + module.first + " resolved"));
+            }
+        }
+
+        if (!modules.empty()) {
+            std::vector<std::string> non_resolved;
+            for (const auto &module: modules) {
+                non_resolved.push_back(module.first);
+            }
+
+            collector->addError(new filc::message::BasicError(filc::message::ERROR,
+                                                              "Some modules are cycle dependant: " +
+                                                              filc::utils::joinString(non_resolved, ", ")));
+        } else {
+            collector->addMessage(new filc::message::Message(filc::message::INFO, "All modules resolved"));
         }
     }
 

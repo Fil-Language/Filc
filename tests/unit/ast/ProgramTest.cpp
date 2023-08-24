@@ -42,3 +42,7 @@ TEST(Program, filename) {
     program.setFilename(filename);
     ASSERT_STREQ(filename, program.getFilename().c_str());
 }
+
+TEST(Program, resolveEnvironment) {
+    GTEST_SKIP() << "Nothing to test";
+}

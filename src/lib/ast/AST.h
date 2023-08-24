@@ -26,6 +26,7 @@
 
 #include "AST_decl.h"
 #include "Position.h"
+#include "Environment.h"
 #include <string>
 #include <vector>
 
@@ -47,6 +48,8 @@ namespace filc::ast {
 
         auto setFilename(const std::string &filename) -> void;
 
+        auto resolveEnvironment() -> void;
+
     private:
         std::string _module;
         std::vector<std::string> _imports;
@@ -58,7 +61,7 @@ namespace filc::ast {
     public:
         virtual ~AbstractExpression();
 
-        auto setPosition(utils::Position *position) -> void;
+        auto setPosition(filc::utils::Position *position) -> void;
 
         AbstractExpression(const AbstractExpression &other) = default;
 
@@ -72,9 +75,11 @@ namespace filc::ast {
 
         auto setExported(bool exported) -> void;
 
-        [[nodiscard]] auto getPosition() const -> utils::Position *;
+        [[nodiscard]] auto getPosition() const -> filc::utils::Position *;
 
         [[nodiscard]] auto getExpressionType() const -> AbstractType *;
+
+        virtual auto resolveType(filc::environment::Environment *environment) -> void;
 
     private:
         bool _exported{false};
