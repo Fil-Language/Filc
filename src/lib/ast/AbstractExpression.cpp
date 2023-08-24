@@ -43,4 +43,12 @@ namespace filc::ast {
     auto AbstractExpression::setPosition(utils::Position *position) -> void {
         _position = position;
     }
+
+    auto AbstractExpression::getExpressionType() const -> AbstractType * {
+        return _expression_type;
+    }
+
+    auto AbstractExpression::setExpressionType(filc::ast::AbstractType *expression_type) -> void {
+        _expression_type = expression_type;
+    }
 }

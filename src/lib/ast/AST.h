@@ -74,12 +74,17 @@ namespace filc::ast {
 
         [[nodiscard]] auto getPosition() const -> utils::Position *;
 
+        [[nodiscard]] auto getExpressionType() const -> AbstractType *;
+
     private:
         bool _exported{false};
         filc::utils::Position *_position{nullptr};
+        AbstractType *_expression_type{nullptr};
 
     protected:
         AbstractExpression() = default;
+
+        auto setExpressionType(AbstractType *expression_type) -> void;
     };
 
     class Identifier : public AbstractExpression {
