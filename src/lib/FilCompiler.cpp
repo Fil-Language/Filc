@@ -38,6 +38,8 @@ namespace filc {
     auto FilCompiler::compile() -> int {
         auto *collector = filc::message::MessageCollector::getCollector();
 
+        collector->addMessage(new filc::message::Message(filc::message::SYSTEM, "Begin compilation"));
+
         auto futures = parseFiles(collector);
 
         if (!checkCollector(collector)) {
@@ -66,15 +68,21 @@ namespace filc {
         // TODO
 
         // Free memory
+        collector->addMessage(new filc::message::Message(filc::message::SYSTEM, "Free memory"));
         for (const auto &module: _modules) {
+            collector->addMessage(new filc::message::Message(filc::message::SYSTEM, "Free module " + module.first));
             delete module.second;
         }
         _modules.clear();
+
+        collector->addMessage(new filc::message::Message(filc::message::SYSTEM, "Compilation finished"));
 
         return 0;
     }
 
     auto FilCompiler::checkCollector(filc::message::MessageCollector *collector) -> bool {
+        collector->addMessage(new filc::message::Message(filc::message::SYSTEM, "Check collector"));
+
         if (collector->hasErrors()) {
             collector->printAll();
 
@@ -87,6 +95,8 @@ namespace filc {
 
     auto FilCompiler::parseFiles(
             filc::message::MessageCollector *collector) -> std::vector<std::future<filc::ast::Program *>> {
+        collector->addMessage(new filc::message::Message(filc::message::INFO, "Begin parse of files"));
+
         std::vector<std::future<filc::ast::Program *>> futures;
         // Parse all files
         for (const auto &filename: _options.getFilenames()) {
@@ -104,11 +114,15 @@ namespace filc {
             futures.push_back(std::move(fut));
         }
 
+        collector->addMessage(new filc::message::Message(filc::message::INFO, "All files parsed"));
+
         return futures;
     }
 
     auto FilCompiler::collectModules(std::vector<std::future<filc::ast::Program *>> &futures,
                                      filc::message::MessageCollector *collector) -> void {
+        collector->addMessage(new filc::message::Message(filc::message::INFO, "Begin collect of modules"));
+
         for (auto &fut: futures) {
             fut.wait();
             filc::ast::Program *program = fut.get();
@@ -125,9 +139,13 @@ namespace filc {
                 );
             }
         }
+
+        collector->addMessage(new filc::message::Message(filc::message::INFO, "All modules collected"));
     }
 
     auto FilCompiler::checkModules(filc::message::MessageCollector *collector) -> void {
+        collector->addMessage(new filc::message::Message(filc::message::INFO, "Begin check of modules"));
+
         auto has_change = true;
         while (has_change) {
             has_change = false;
@@ -157,9 +175,13 @@ namespace filc {
                 }
             }
         }
+
+        collector->addMessage(new filc::message::Message(filc::message::INFO, "All modules checked"));
     }
 
     auto FilCompiler::resolveEnvironment(filc::message::MessageCollector *collector) -> void {
+        collector->addMessage(new filc::message::Message(filc::message::INFO, "Begin modules resolution"));
+
         auto has_change = true;
         auto modules = _modules;
         while (has_change) {
