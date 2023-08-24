@@ -158,6 +158,9 @@ namespace filc::ast {
     class StringLiteral : public AbstractLiteral<std::string> {
     public:
         explicit StringLiteral(const std::string &value);
+
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector) -> void override;
     };
 
     class VariableDeclaration : public AbstractExpression {

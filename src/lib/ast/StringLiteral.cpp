@@ -27,4 +27,24 @@
 namespace filc::ast {
     StringLiteral::StringLiteral(const std::string &value)
             : AbstractLiteral<std::string>(filc::utils::parseEscapedString(value.substr(1, value.length() - 2))) {}
+
+    auto StringLiteral::resolveType(filc::environment::Environment *environment,
+                                    filc::message::MessageCollector *collector) -> void {
+        if (!environment->hasType("char")) {
+            environment->addType(new filc::ast::Type(new filc::ast::Identifier("char")));
+        }
+        auto *char_type = environment->getType("char");
+
+        auto *type = new filc::ast::ArrayType(char_type, getValue().size());
+        if (!environment->hasType(type->dump())) {
+            environment->addType(type);
+        }
+
+        setExpressionType(environment->getType(type->dump()));
+
+        // Free memory if not same pointer
+        if (type != getExpressionType()) {
+            delete type;
+        }
+    }
 }

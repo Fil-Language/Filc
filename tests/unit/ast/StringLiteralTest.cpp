@@ -22,9 +22,34 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include <gtest/gtest.h>
+#include "test_tools.h"
+#include "Parser.h"
 
 TEST(StringLiteral, constructor) {
     filc::ast::StringLiteral sl1("\"Hello\"");
     ASSERT_STREQ("Hello", sl1.getValue().c_str());
+}
+
+#define FIXTURES_PATH "../../tests/unit/Fixtures"
+
+#define COLLECTOR filc::message::MessageCollector::getCollector()
+
+TEST(StringLiteral, resolveType) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/string1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    ASSERT_TYPE("char[12]", program1->getExpressions()[0]->getExpressionType());
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/string2.fil", COLLECTOR);
+    auto *program2 = parser2.getProgram();
+    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
+    ASSERT_TYPE("char[0]", program2->getExpressions()[0]->getExpressionType());
+
+    filc::grammar::Parser parser3(FIXTURES_PATH "/grammar/string3.fil", COLLECTOR);
+    auto *program3 = parser3.getProgram();
+    ASSERT_NO_THROW(program3->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program3->getExpressions(), SizeIs(1));
+    ASSERT_TYPE("char[6]", program3->getExpressions()[0]->getExpressionType());
 }
