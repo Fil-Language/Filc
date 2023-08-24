@@ -132,6 +132,9 @@ namespace filc::ast {
     class IntegerLiteral : public AbstractLiteral<int> {
     public:
         explicit IntegerLiteral(int value);
+
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector) -> void override;
     };
 
     class FloatLiteral : public AbstractLiteral<double> {

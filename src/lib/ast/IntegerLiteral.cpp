@@ -26,4 +26,13 @@
 namespace filc::ast {
     IntegerLiteral::IntegerLiteral(int value)
             : AbstractLiteral<int>(value) {}
+
+    auto IntegerLiteral::resolveType(filc::environment::Environment *environment,
+                                     filc::message::MessageCollector *collector) -> void {
+        if (!environment->hasType("int")) {
+            environment->addType(new filc::ast::Type(new filc::ast::Identifier("int")));
+        }
+
+        setExpressionType(environment->getType("int"));
+    }
 }

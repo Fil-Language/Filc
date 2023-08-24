@@ -38,13 +38,13 @@ TEST(BooleanLiteral, constructor) {
 #define COLLECTOR filc::message::MessageCollector::getCollector()
 
 TEST(BooleanLiteral, resolveType) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/bool1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/bool1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     ASSERT_TYPE("bool", program1->getExpressions()[0]->getExpressionType());
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/ast/bool2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/bool2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
