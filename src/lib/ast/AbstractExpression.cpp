@@ -53,7 +53,7 @@ namespace filc::ast {
         _expression_type = expression_type;
     }
 
-    auto AbstractExpression::resolveType(filc::environment::Environment *environment) -> void {
+    auto AbstractExpression::resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector) -> void {
         throw std::logic_error("Not implemented");
     }
 }

@@ -22,8 +22,16 @@
  * SOFTWARE.
  */
 #include "Environment.h"
+#include "AST.h"
 #include "test_tools.h"
 
-TEST(Environment, constructor) {
-    GTEST_SKIP() << "Nothing to test";
+TEST(Environment, names) {
+    filc::environment::Environment env1;
+    ASSERT_FALSE(env1.hasName("hello"));
+    ASSERT_TRUE(env1.addName("hello", new filc::ast::Type(new filc::ast::Identifier("int"))));
+    ASSERT_TRUE(env1.hasName("hello"));
+    ASSERT_FALSE(env1.addName("hello", nullptr));
+    ASSERT_TRUE(env1.hasName("hello"));
+    ASSERT_STREQ("hello", env1.getName("hello")->getName().c_str());
+    ASSERT_TYPE("int", env1.getName("hello")->getType());
 }

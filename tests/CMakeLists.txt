@@ -51,6 +51,7 @@ add_executable(tests
         unit/ast/AbstractExpressionTest.cpp
         # === Environment ===
         unit/environment/EnvironmentTest.cpp
+        unit/environment/NameTest.cpp
 )
 target_include_directories(tests PUBLIC unit)
 

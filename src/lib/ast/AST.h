@@ -27,6 +27,7 @@
 #include "AST_decl.h"
 #include "Position.h"
 #include "Environment.h"
+#include "MessageCollector.h"
 #include <string>
 #include <vector>
 
@@ -48,7 +49,7 @@ namespace filc::ast {
 
         auto setFilename(const std::string &filename) -> void;
 
-        auto resolveEnvironment() -> void;
+        auto resolveEnvironment(filc::message::MessageCollector *collector) -> void;
 
     private:
         std::string _module;
@@ -79,7 +80,7 @@ namespace filc::ast {
 
         [[nodiscard]] auto getExpressionType() const -> AbstractType *;
 
-        virtual auto resolveType(filc::environment::Environment *environment) -> void;
+        virtual auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector) -> void;
 
     private:
         bool _exported{false};
@@ -99,6 +100,8 @@ namespace filc::ast {
         explicit Identifier(std::string name);
 
         [[nodiscard]] auto getName() const -> const std::string &;
+
+        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector) -> void override;
 
     private:
         std::string _name;

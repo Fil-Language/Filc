@@ -24,9 +24,20 @@
 #ifndef FILC_ENVIRONMENT_H
 #define FILC_ENVIRONMENT_H
 
+#include "Name.h"
+#include <vector>
+
 namespace filc::environment {
     class Environment {
+    public:
+        [[nodiscard]] auto hasName(const std::string &name) const -> bool;
 
+        auto addName(const std::string &name, filc::ast::AbstractType *type) -> bool;
+
+        [[nodiscard]] auto getName(const std::string &name) const -> Name *;
+
+    private:
+        std::vector<Name *> _names;
     };
 }
 

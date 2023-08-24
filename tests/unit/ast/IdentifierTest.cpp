@@ -29,3 +29,18 @@ TEST(Identifier, constructor) {
     filc::ast::Identifier id1("identifier 1");
     ASSERT_IDENTIFIER("identifier 1", (&id1));
 }
+
+TEST(Identifier, resolveType) {
+    auto *collector = filc::message::MessageCollector::getCollector();
+    auto *environment = new filc::environment::Environment;
+
+    filc::ast::Identifier id1("hello");
+    id1.resolveType(environment, collector);
+    ASSERT_TRUE(collector->hasErrors());
+    collector->printAll();
+
+    environment->addName("hello", new filc::ast::Type(new filc::ast::Identifier("int")));
+    id1.resolveType(environment, collector);
+    ASSERT_FALSE(collector->hasErrors());
+    ASSERT_TYPE("int", id1.getExpressionType());
+}

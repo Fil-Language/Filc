@@ -89,6 +89,7 @@ add_library(compiler_lib
         ast/AssignationOperator.cpp
         # === Environment ===
         environment/Environment.cpp
+        environment/Name.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}

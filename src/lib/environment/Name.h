@@ -21,32 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
-#include "Error.h"
-#include <utility>
+#ifndef FILC_NAME_H
+#define FILC_NAME_H
 
-namespace filc::ast {
-    Identifier::Identifier(antlr4::Token *token)
-            : _name(token->getText()) {
-        setPosition(new filc::utils::Position(token));
-    }
+#include <string>
+#include "AST_decl.h"
 
-    Identifier::Identifier(std::string name)
-            : _name(std::move(name)) {}
+namespace filc::environment {
+    class Name {
+    public:
+        Name(std::string name, filc::ast::AbstractType *type);
 
-    auto Identifier::getName() const -> const std::string & {
-        return _name;
-    }
+        [[nodiscard]] auto getName() const -> const std::string &;
 
-    auto Identifier::resolveType(filc::environment::Environment *environment,
-                                 filc::message::MessageCollector *collector) -> void {
-        if (!environment->hasName(_name)) {
-            collector->addError(
-                    new filc::message::Error(filc::message::ERROR, _name + " is not defined", getPosition())
-            );
-        } else {
-            auto *name = environment->getName(_name);
-            setExpressionType(name->getType());
-        }
-    }
+        [[nodiscard]] auto getType() const -> filc::ast::AbstractType *;
+
+    private:
+        std::string _name;
+        filc::ast::AbstractType *_type;
+    };
 }
+
+#endif //FILC_NAME_H

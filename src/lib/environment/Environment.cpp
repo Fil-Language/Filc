@@ -22,7 +22,32 @@
  * SOFTWARE.
  */
 #include "Environment.h"
+#include <algorithm>
 
 namespace filc::environment {
+    auto Environment::hasName(const std::string &name) const -> bool {
+        return std::find_if(_names.begin(), _names.end(), [name](auto *item) -> bool {
+            return item->getName() == name;
+        }) != _names.end();
+    }
 
+    auto Environment::addName(const std::string &name, filc::ast::AbstractType *type) -> bool {
+        if (hasName(name)) {
+            return false;
+        }
+
+        _names.push_back(new Name(name, type));
+
+        return true;
+    }
+
+    auto Environment::getName(const std::string &name) const -> Name * {
+        if (hasName(name)) {
+            return *std::find_if(_names.begin(), _names.end(), [name](auto *item) -> bool {
+                return item->getName() == name;
+            });
+        }
+
+        return nullptr;
+    }
 }

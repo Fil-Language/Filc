@@ -66,17 +66,18 @@ TEST(AbstractExpression, resolveType) {
     class : public filc::ast::AbstractExpression {
     } obj1;
 
-    ASSERT_THROW(obj1.resolveType(nullptr), std::logic_error);
-    ASSERT_THROW(obj1.resolveType(new filc::environment::Environment), std::logic_error);
+    ASSERT_THROW(obj1.resolveType(nullptr, nullptr), std::logic_error);
+    ASSERT_THROW(obj1.resolveType(new filc::environment::Environment, nullptr), std::logic_error);
 
     class : public filc::ast::AbstractExpression {
     public:
-        auto resolveType(filc::environment::Environment *environment) -> void override {
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector) -> void override {
             // Nothing
         }
     } obj2;
 
-    ASSERT_NO_THROW(obj2.resolveType(nullptr));
-    ASSERT_NO_THROW(obj2.resolveType(new filc::environment::Environment));
+    ASSERT_NO_THROW(obj2.resolveType(nullptr, nullptr));
+    ASSERT_NO_THROW(obj2.resolveType(new filc::environment::Environment, nullptr));
 }
 // NOLINTEND(readability-function-cognitive-complexity)

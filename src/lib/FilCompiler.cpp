@@ -198,7 +198,7 @@ namespace filc {
                 }
 
                 try {
-                    program->resolveEnvironment();
+                    program->resolveEnvironment(collector);
                 } catch (std::exception &e) {
                     collector->addError(new filc::message::BasicError(filc::message::ERROR,
                                                                       "Error when resolve module " + module.first +

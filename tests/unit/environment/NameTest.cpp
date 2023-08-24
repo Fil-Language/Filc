@@ -21,32 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "Name.h"
 #include "AST.h"
-#include "Error.h"
-#include <utility>
+#include "test_tools.h"
 
-namespace filc::ast {
-    Identifier::Identifier(antlr4::Token *token)
-            : _name(token->getText()) {
-        setPosition(new filc::utils::Position(token));
-    }
-
-    Identifier::Identifier(std::string name)
-            : _name(std::move(name)) {}
-
-    auto Identifier::getName() const -> const std::string & {
-        return _name;
-    }
-
-    auto Identifier::resolveType(filc::environment::Environment *environment,
-                                 filc::message::MessageCollector *collector) -> void {
-        if (!environment->hasName(_name)) {
-            collector->addError(
-                    new filc::message::Error(filc::message::ERROR, _name + " is not defined", getPosition())
-            );
-        } else {
-            auto *name = environment->getName(_name);
-            setExpressionType(name->getType());
-        }
-    }
+TEST(Name, constructor) {
+    filc::environment::Name var1("my_var", new filc::ast::Type(new filc::ast::Identifier("int")));
+    ASSERT_STREQ("my_var", var1.getName().c_str());
+    ASSERT_TYPE("int", var1.getType());
 }
