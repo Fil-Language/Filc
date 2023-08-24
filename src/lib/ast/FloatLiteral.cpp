@@ -26,4 +26,13 @@
 namespace filc::ast {
     FloatLiteral::FloatLiteral(double value)
             : AbstractLiteral<double>(value) {}
+
+    auto FloatLiteral::resolveType(filc::environment::Environment *environment,
+                                   filc::message::MessageCollector *collector) -> void {
+        if (!environment->hasType("double")) {
+            environment->addType(new filc::ast::Type(new filc::ast::Identifier("double")));
+        }
+
+        setExpressionType(environment->getType("double"));
+    }
 }
