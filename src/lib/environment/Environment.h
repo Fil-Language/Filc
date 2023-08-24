@@ -36,8 +36,15 @@ namespace filc::environment {
 
         [[nodiscard]] auto getName(const std::string &name) const -> Name *;
 
+        [[nodiscard]] auto hasType(const std::string &type) const -> bool;
+
+        auto addType(filc::ast::AbstractType *type) -> bool;
+
+        [[nodiscard]] auto getType(const std::string &type) const -> filc::ast::AbstractType *;
+
     private:
         std::vector<Name *> _names;
+        std::vector<filc::ast::AbstractType *> _types;
     };
 }
 

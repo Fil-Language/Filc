@@ -53,7 +53,7 @@ TEST(Program, resolveEnvironment) {
     auto *program1 = parser1.getProgram();
     ASSERT_NO_THROW(program1->resolveEnvironment(nullptr));
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/bool1.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/while1.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THROW(program2->resolveEnvironment(nullptr), std::logic_error);
 }

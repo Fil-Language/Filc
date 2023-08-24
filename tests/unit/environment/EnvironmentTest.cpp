@@ -35,3 +35,13 @@ TEST(Environment, names) {
     ASSERT_STREQ("hello", env1.getName("hello")->getName().c_str());
     ASSERT_TYPE("int", env1.getName("hello")->getType());
 }
+
+TEST(Environment, types) {
+    filc::environment::Environment env1;
+    ASSERT_FALSE(env1.hasType("int"));
+    ASSERT_TRUE(env1.addType(new filc::ast::Type(new filc::ast::Identifier("int"))));
+    ASSERT_TRUE(env1.hasType("int"));
+    ASSERT_FALSE(env1.addType(new filc::ast::Type(new filc::ast::Identifier("int"))));
+    ASSERT_TRUE(env1.hasType("int"));
+    ASSERT_TYPE("int", env1.getType("int"));
+}

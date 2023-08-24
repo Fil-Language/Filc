@@ -124,6 +124,9 @@ namespace filc::ast {
     class BooleanLiteral : public AbstractLiteral<bool> {
     public:
         explicit BooleanLiteral(bool value);
+
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector) -> void override;
     };
 
     class IntegerLiteral : public AbstractLiteral<int> {
