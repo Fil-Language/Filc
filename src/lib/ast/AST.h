@@ -149,6 +149,9 @@ namespace filc::ast {
     public:
         explicit CharacterLiteral(char value);
 
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector) -> void override;
+
         static auto stringToChar(const std::string &snippet, antlr4::Token *token = nullptr) -> char;
     };
 

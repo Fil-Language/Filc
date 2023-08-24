@@ -54,4 +54,13 @@ namespace filc::ast {
 
         return '\0';
     }
+
+    auto CharacterLiteral::resolveType(filc::environment::Environment *environment,
+                                       filc::message::MessageCollector *collector) -> void {
+        if (!environment->hasType("char")) {
+            environment->addType(new filc::ast::Type(new filc::ast::Identifier("char")));
+        }
+
+        setExpressionType(environment->getType("char"));
+    }
 }
