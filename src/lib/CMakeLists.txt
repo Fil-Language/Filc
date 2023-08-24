@@ -87,6 +87,8 @@ add_library(compiler_lib
         ast/ForIter.cpp
         ast/While.cpp
         ast/AssignationOperator.cpp
+        # === Environment ===
+        environment/Environment.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
@@ -94,6 +96,7 @@ target_include_directories(compiler_lib PUBLIC
         message
         grammar
         ast
+        environment
         ${ANTLR4_INCLUDE_DIRS}
         ${ANTLR_Lexer_OUTPUT_DIR}
         ${ANTLR_Parser_OUTPUT_DIR}

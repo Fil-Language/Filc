@@ -48,6 +48,8 @@ add_executable(tests
         unit/ast/ForIterTest.cpp
         unit/ast/WhileTest.cpp
         unit/ast/AssignationOperatorTest.cpp
+        # === Environment ===
+        unit/environment/EnvironmentTest.cpp
 )
 target_include_directories(tests PUBLIC unit)
 
