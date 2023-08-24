@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "Parser.h"
 #include <gtest/gtest.h>
 
 TEST(Program, constructor) {
@@ -43,6 +44,16 @@ TEST(Program, filename) {
     ASSERT_STREQ(filename, program.getFilename().c_str());
 }
 
+#define FIXTURES_PATH "../../tests/unit/Fixtures"
+
+#define COLLECTOR filc::message::MessageCollector::getCollector()
+
 TEST(Program, resolveEnvironment) {
-    GTEST_SKIP() << "Nothing to test";
+    filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/module1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    ASSERT_NO_THROW(program1->resolveEnvironment());
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/bool1.fil", COLLECTOR);
+    auto *program2 = parser2.getProgram();
+    ASSERT_THROW(program2->resolveEnvironment(), std::logic_error);
 }

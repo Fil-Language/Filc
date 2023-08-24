@@ -69,6 +69,10 @@ namespace filc::ast {
     }
 
     auto Program::resolveEnvironment() -> void {
-        // Nothing to do
+        auto *environment = new filc::environment::Environment;
+
+        for (const auto &expression: _expressions) {
+            expression->resolveType(environment);
+        }
     }
 }
