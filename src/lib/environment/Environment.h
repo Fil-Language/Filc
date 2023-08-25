@@ -30,11 +30,15 @@
 namespace filc::environment {
     class Environment {
     public:
-        [[nodiscard]] auto hasName(const std::string &name) const -> bool;
+        explicit Environment(const Environment *parent = nullptr);
+
+        [[nodiscard]] auto getParent() const -> const Environment *;
+
+        [[nodiscard]] auto hasName(const std::string &name, filc::ast::AbstractType *type = nullptr) const -> bool;
 
         auto addName(const std::string &name, filc::ast::AbstractType *type) -> bool;
 
-        [[nodiscard]] auto getName(const std::string &name) const -> Name *;
+        [[nodiscard]] auto getName(const std::string &name, filc::ast::AbstractType *type = nullptr) const -> Name *;
 
         [[nodiscard]] auto hasType(const std::string &type) const -> bool;
 
@@ -42,7 +46,10 @@ namespace filc::environment {
 
         [[nodiscard]] auto getType(const std::string &type) const -> filc::ast::AbstractType *;
 
+        static auto getGlobalEnvironment() -> const Environment *;
+
     private:
+        const Environment *_parent;
         std::vector<Name *> _names;
         std::vector<filc::ast::AbstractType *> _types;
     };

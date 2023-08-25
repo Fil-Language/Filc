@@ -179,6 +179,9 @@ namespace filc::ast {
 
         auto setAssignation(AbstractExpression *assignation) -> void;
 
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector) -> void override;
+
     private:
         bool _constant;
         Identifier *_identifier;

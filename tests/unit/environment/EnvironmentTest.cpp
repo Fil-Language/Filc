@@ -25,6 +25,14 @@
 #include "AST.h"
 #include "test_tools.h"
 
+TEST(Environment, constructor) {
+    filc::environment::Environment env1;
+    ASSERT_EQ(nullptr, env1.getParent());
+
+    filc::environment::Environment env2(&env1);
+    ASSERT_EQ(&env1, env2.getParent());
+}
+
 TEST(Environment, names) {
     filc::environment::Environment env1;
     ASSERT_FALSE(env1.hasName("hello"));
@@ -34,6 +42,12 @@ TEST(Environment, names) {
     ASSERT_TRUE(env1.hasName("hello"));
     ASSERT_STREQ("hello", env1.getName("hello")->getName().c_str());
     ASSERT_TYPE("int", env1.getName("hello")->getType());
+
+    filc::environment::Environment parent;
+    parent.addName("a", nullptr);
+    filc::environment::Environment env2(&parent);
+    ASSERT_TRUE(env2.hasName("a"));
+    ASSERT_FALSE(env2.hasName("b"));
 }
 
 TEST(Environment, types) {
@@ -44,4 +58,20 @@ TEST(Environment, types) {
     ASSERT_FALSE(env1.addType(new filc::ast::Type(new filc::ast::Identifier("int"))));
     ASSERT_TRUE(env1.hasType("int"));
     ASSERT_TYPE("int", env1.getType("int"));
+
+    filc::environment::Environment parent;
+    parent.addType(new filc::ast::Type(new filc::ast::Identifier("float")));
+    filc::environment::Environment env2(&parent);
+    ASSERT_TRUE(env2.hasType("float"));
+    ASSERT_FALSE(env2.hasName("bool"));
+}
+
+TEST(Environment, getGlobalEnvironment) {
+    const filc::environment::Environment *env1 = nullptr;
+    const filc::environment::Environment *env2 = nullptr;
+    ASSERT_NO_THROW(env1 = filc::environment::Environment::getGlobalEnvironment());
+    ASSERT_NO_THROW(env2 = filc::environment::Environment::getGlobalEnvironment());
+    ASSERT_NE(nullptr, env1);
+    ASSERT_NE(nullptr, env2);
+    ASSERT_EQ(env1, env2);
 }

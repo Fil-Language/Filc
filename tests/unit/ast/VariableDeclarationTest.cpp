@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include <gtest/gtest.h>
+#include "Parser.h"
 #include "test_tools.h"
 
 TEST(VariableDeclaration, constructor) {
@@ -45,4 +45,17 @@ TEST(VariableDeclaration, assignation) {
     auto *exp1 = new filc::ast::IntegerLiteral(12);
     vd1.setAssignation(exp1);
     ASSERT_EQ(exp1, vd1.getAssignation());
+}
+
+#define FIXTURES_PATH "../../tests/unit/Fixtures"
+
+#define COLLECTOR filc::message::MessageCollector::getCollector()
+
+TEST(VariableDeclaration, resolveType) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/variable_declaration1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program1->getExpressions(), SizeIs(2));
+    ASSERT_TYPE("float", program1->getExpressions()[0]->getExpressionType());
+    ASSERT_TYPE("int", program1->getExpressions()[1]->getExpressionType());
 }

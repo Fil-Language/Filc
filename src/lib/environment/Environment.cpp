@@ -26,14 +26,21 @@
 #include <algorithm>
 
 namespace filc::environment {
-    auto Environment::hasName(const std::string &name) const -> bool {
-        return std::find_if(_names.begin(), _names.end(), [name](auto *item) -> bool {
-            return item->getName() == name;
-        }) != _names.end();
+    Environment::Environment(const Environment *parent)
+            : _parent(parent) {}
+
+    auto Environment::getParent() const -> const Environment * {
+        return _parent;
+    }
+
+    auto Environment::hasName(const std::string &name, filc::ast::AbstractType *type) const -> bool {
+        return std::any_of(_names.begin(), _names.end(), [name, type](auto *item) -> bool {
+            return item->getName() == name && (type == nullptr || item->getType()->dump() == type->dump());
+        }) || (_parent != nullptr && _parent->hasName(name));
     }
 
     auto Environment::addName(const std::string &name, filc::ast::AbstractType *type) -> bool {
-        if (hasName(name)) {
+        if (hasName(name, type)) {
             return false;
         }
 
@@ -42,20 +49,30 @@ namespace filc::environment {
         return true;
     }
 
-    auto Environment::getName(const std::string &name) const -> Name * {
-        if (hasName(name)) {
-            return *std::find_if(_names.begin(), _names.end(), [name](auto *item) -> bool {
-                return item->getName() == name;
+    auto Environment::getName(const std::string &name, filc::ast::AbstractType *type) const -> Name * {
+        if (hasName(name, type)) {
+            auto result = std::find_if(_names.begin(), _names.end(), [name, type](auto *item) -> bool {
+                return item->getName() == name && (type == nullptr || item->getType()->dump() == type->dump());
             });
+
+            if (result == _names.end()) {
+                if (_parent != nullptr) {
+                    return _parent->getName(name, type);
+                }
+
+                return nullptr;
+            }
+
+            return *result;
         }
 
         return nullptr;
     }
 
     auto Environment::hasType(const std::string &type) const -> bool {
-        return std::find_if(_types.begin(), _types.end(), [type](auto *item) -> bool {
+        return std::any_of(_types.begin(), _types.end(), [type](auto *item) -> bool {
             return item->dump() == type;
-        }) != _types.end();
+        }) || (_parent != nullptr && _parent->hasType(type));
     }
 
     auto Environment::addType(filc::ast::AbstractType *type) -> bool {
@@ -70,11 +87,77 @@ namespace filc::environment {
 
     auto Environment::getType(const std::string &type) const -> filc::ast::AbstractType * {
         if (hasType(type)) {
-            return *std::find_if(_types.begin(), _types.end(), [type](auto *item) -> bool {
+            auto result = std::find_if(_types.begin(), _types.end(), [type](auto *item) -> bool {
                 return item->dump() == type;
             });
+            if (result == _types.end()) {
+                if (_parent != nullptr) {
+                    return _parent->getType(type);
+                }
+
+                return nullptr;
+            }
+
+            return *result;
         }
 
         return nullptr;
+    }
+
+    auto Environment::getGlobalEnvironment() -> const Environment * {
+        static Environment *global = nullptr;
+        if (global != nullptr) {
+            return global;
+        }
+
+        global = new Environment;
+
+        // Types
+        auto *int_type = new filc::ast::Type(new filc::ast::Identifier("int"));
+        auto *double_type = new filc::ast::Type(new filc::ast::Identifier("double"));
+        auto *float_type = new filc::ast::Type(new filc::ast::Identifier("float"));
+        auto *char_type = new filc::ast::Type(new filc::ast::Identifier("char"));
+        auto *bool_type = new filc::ast::Type(new filc::ast::Identifier("bool"));
+        auto is_ok = global->addType(int_type)
+                     && global->addType(double_type)
+                     && global->addType(float_type)
+                     && global->addType(char_type)
+                     && global->addType(bool_type);
+        if (!is_ok) {
+            throw std::logic_error("Fail to add base types to global environment");
+        }
+
+        // Operators
+        // - Assignations
+        is_ok = global->addName("operator=", new filc::ast::LambdaType({int_type, int_type}, int_type))
+                && global->addName("operator=", new filc::ast::LambdaType({int_type, double_type}, int_type))
+                && global->addName("operator=", new filc::ast::LambdaType({int_type, float_type}, int_type))
+                && global->addName("operator=", new filc::ast::LambdaType({int_type, char_type}, int_type))
+                && global->addName("operator=", new filc::ast::LambdaType({int_type, bool_type}, int_type))
+                && global->addName("operator=", new filc::ast::LambdaType({double_type, int_type}, double_type))
+                && global->addName("operator=", new filc::ast::LambdaType({double_type, double_type}, double_type))
+                && global->addName("operator=", new filc::ast::LambdaType({double_type, float_type}, double_type))
+                && global->addName("operator=", new filc::ast::LambdaType({double_type, char_type}, double_type))
+                && global->addName("operator=", new filc::ast::LambdaType({double_type, bool_type}, double_type))
+                && global->addName("operator=", new filc::ast::LambdaType({float_type, int_type}, float_type))
+                && global->addName("operator=", new filc::ast::LambdaType({float_type, double_type}, float_type))
+                && global->addName("operator=", new filc::ast::LambdaType({float_type, float_type}, float_type))
+                && global->addName("operator=", new filc::ast::LambdaType({float_type, char_type}, float_type))
+                && global->addName("operator=", new filc::ast::LambdaType({float_type, bool_type}, float_type))
+                && global->addName("operator=", new filc::ast::LambdaType({char_type, int_type}, char_type))
+                && global->addName("operator=", new filc::ast::LambdaType({char_type, double_type}, char_type))
+                && global->addName("operator=", new filc::ast::LambdaType({char_type, float_type}, char_type))
+                && global->addName("operator=", new filc::ast::LambdaType({char_type, char_type}, char_type))
+                && global->addName("operator=", new filc::ast::LambdaType({char_type, bool_type}, char_type))
+                && global->addName("operator=", new filc::ast::LambdaType({bool_type, int_type}, bool_type))
+                && global->addName("operator=", new filc::ast::LambdaType({bool_type, double_type}, bool_type))
+                && global->addName("operator=", new filc::ast::LambdaType({bool_type, float_type}, bool_type))
+                && global->addName("operator=", new filc::ast::LambdaType({bool_type, char_type}, bool_type))
+                && global->addName("operator=", new filc::ast::LambdaType({bool_type, bool_type}, bool_type));
+        if (!is_ok) {
+            throw std::logic_error("Fail to add base assignations to global environment");
+        }
+
+        return global;
     }
 }

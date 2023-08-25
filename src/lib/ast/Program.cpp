@@ -69,7 +69,7 @@ namespace filc::ast {
     }
 
     auto Program::resolveEnvironment(filc::message::MessageCollector *collector) -> void {
-        auto *environment = new filc::environment::Environment;
+        auto *environment = new filc::environment::Environment(filc::environment::Environment::getGlobalEnvironment());
 
         for (const auto &expression: _expressions) {
             expression->resolveType(environment, collector);

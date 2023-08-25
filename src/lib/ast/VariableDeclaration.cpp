@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "Error.h"
 
 namespace filc::ast {
     VariableDeclaration::VariableDeclaration(bool is_constant, Identifier *identifier, AbstractType *type)
@@ -51,5 +52,31 @@ namespace filc::ast {
 
     auto VariableDeclaration::setAssignation(filc::ast::AbstractExpression *assignation) -> void {
         _assignation = assignation;
+    }
+
+    auto VariableDeclaration::resolveType(filc::environment::Environment *environment,
+                                          filc::message::MessageCollector *collector) -> void {
+        if (environment->hasName(_identifier->getName())) {
+            collector->addError(
+                    new filc::message::Error(filc::message::ERROR,
+                                             "Variable " + _identifier->getName() + " already defined",
+                                             _identifier->getPosition())
+            );
+            return;
+        }
+
+        _assignation->resolveType(environment, collector);
+        auto *assignation_type = _assignation->getExpressionType();
+
+        if (environment->getName("operator=", new filc::ast::LambdaType({_type, assignation_type}, _type)) == nullptr) {
+            collector->addError(
+                    new filc::message::Error(filc::message::ERROR,
+                                             "Cannot assign " + assignation_type->dump() + " to " + _type->dump(),
+                                             _assignation->getPosition())
+            );
+            return;
+        }
+
+        setExpressionType(_type);
     }
 }
