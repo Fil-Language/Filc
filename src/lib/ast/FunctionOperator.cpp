@@ -37,7 +37,25 @@ namespace filc::ast {
         }
     }
 
-    std::string FunctionOperator::dump() {
+    auto FunctionOperator::dump() -> std::string {
         return "()";
+    }
+
+    auto FunctionOperator::dumpLambdaType(filc::ast::AbstractType *return_type,
+                                          filc::environment::Environment *environment,
+                                          filc::message::MessageCollector *collector) -> LambdaType * {
+        std::vector<AbstractType *> args_types;
+        for (const auto &expression: _expressions) {
+            expression->resolveType(environment, collector);
+            auto *expression_type = expression->getExpressionType();
+            if (expression_type != nullptr) {
+                args_types.push_back(expression_type);
+            }
+        }
+        if (args_types.size() != _expressions.size()) {
+            return nullptr;
+        }
+
+        return new LambdaType(args_types, return_type);
     }
 }

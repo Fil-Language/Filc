@@ -282,6 +282,9 @@ namespace filc::ast {
 
         [[nodiscard]] auto getOperator() const -> Operator *;
 
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector) -> void override;
+
     protected:
         Identifier *_variable;
         Operator *_operator;
@@ -290,9 +293,6 @@ namespace filc::ast {
     class PreUnaryCalcul : public UnaryCalcul {
     public:
         PreUnaryCalcul(Identifier *variable, Operator *p_operator);
-
-        auto resolveType(filc::environment::Environment *environment,
-                         filc::message::MessageCollector *collector) -> void override;
     };
 
     class PostUnaryCalcul : public UnaryCalcul {
@@ -332,6 +332,9 @@ namespace filc::ast {
 
         virtual auto dump() -> std::string = 0;
 
+        virtual auto dumpLambdaType(filc::ast::AbstractType *return_type, filc::environment::Environment *environment,
+                                    filc::message::MessageCollector *collector) -> LambdaType * = 0;
+
     protected:
         Operator() = default;
     };
@@ -366,6 +369,9 @@ namespace filc::ast {
 
         auto dump() -> std::string override;
 
+        auto dumpLambdaType(filc::ast::AbstractType *return_type, filc::environment::Environment *environment,
+                            filc::message::MessageCollector *collector) -> LambdaType * override;
+
     private:
         OPERATOR _operator;
     };
@@ -379,6 +385,9 @@ namespace filc::ast {
         [[nodiscard]] auto getExpression() const -> AbstractExpression *;
 
         auto dump() -> std::string override;
+
+        auto dumpLambdaType(filc::ast::AbstractType *return_type, filc::environment::Environment *environment,
+                            filc::message::MessageCollector *collector) -> LambdaType * override;
 
     private:
         AbstractExpression *_expression;
@@ -394,6 +403,9 @@ namespace filc::ast {
 
         auto dump() -> std::string override;
 
+        auto dumpLambdaType(filc::ast::AbstractType *return_type, filc::environment::Environment *environment,
+                            filc::message::MessageCollector *collector) -> LambdaType * override;
+
     private:
         std::vector<AbstractExpression *> _expressions;
     };
@@ -407,6 +419,9 @@ namespace filc::ast {
         [[nodiscard]] auto getInnerOperator() const -> Operator *;
 
         auto dump() -> std::string override;
+
+        auto dumpLambdaType(filc::ast::AbstractType *return_type, filc::environment::Environment *environment,
+                            filc::message::MessageCollector *collector) -> LambdaType * override;
 
     private:
         Operator *_inner_operator;

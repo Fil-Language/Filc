@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include <gtest/gtest.h>
+#include "Parser.h"
 #include "test_tools.h"
 
 TEST(PostUnaryCalcul, constructor) {
@@ -32,4 +32,17 @@ TEST(PostUnaryCalcul, constructor) {
     );
     ASSERT_IDENTIFIER("abcd", puc1.getVariable());
     ASSERT_CLASSIC_OPERATOR(MOD, puc1.getOperator());
+}
+
+#define FIXTURES_PATH "../../tests/unit/Fixtures"
+
+#define COLLECTOR filc::message::MessageCollector::getCollector()
+
+TEST(PostUnaryCalcul, resolveType) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/post_unary_calcul1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program1->getExpressions(), SizeIs(2));
+    ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
+    ASSERT_TYPE("int", program1->getExpressions()[1]->getExpressionType());
 }

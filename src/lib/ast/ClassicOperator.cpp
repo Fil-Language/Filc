@@ -31,7 +31,7 @@ namespace filc::ast {
         return _operator;
     }
 
-    std::string ClassicOperator::dump() {
+    auto ClassicOperator::dump() -> std::string {
         switch (_operator) {
             case PLUSPLUS:
                 return "++";
@@ -72,5 +72,13 @@ namespace filc::ast {
             case OR:
                 return "||";
         }
+
+        throw std::logic_error("Should not come here");
+    }
+
+    auto ClassicOperator::dumpLambdaType(filc::ast::AbstractType *return_type,
+                                         filc::environment::Environment *environment,
+                                         filc::message::MessageCollector *collector) -> LambdaType * {
+        return new LambdaType({}, return_type);
     }
 }
