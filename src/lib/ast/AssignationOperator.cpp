@@ -34,4 +34,8 @@ namespace filc::ast {
     auto AssignationOperator::getInnerOperator() const -> Operator * {
         return _inner_operator;
     }
+
+    std::string AssignationOperator::dump() {
+        throw std::logic_error("Should not be called");
+    }
 }

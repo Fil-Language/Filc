@@ -30,4 +30,47 @@ namespace filc::ast {
     auto ClassicOperator::getOperator() const -> OPERATOR {
         return _operator;
     }
+
+    std::string ClassicOperator::dump() {
+        switch (_operator) {
+            case PLUSPLUS:
+                return "++";
+            case MINUSMINUS:
+                return "--";
+            case PLUS:
+                return "+";
+            case MINUS:
+                return "-";
+            case REF:
+                return "&";
+            case STAR:
+                return "*";
+            case NOT:
+                return "!";
+            case DIV:
+                return "/";
+            case MOD:
+                return "%";
+            case FLEFT:
+                return "<<";
+            case FRIGHT:
+                return ">>";
+            case LESS:
+                return "<";
+            case GREATER:
+                return ">";
+            case EQEQ:
+                return "==";
+            case LEQ:
+                return "<=";
+            case GEQ:
+                return ">=";
+            case NEQ:
+                return "!=";
+            case AND:
+                return "&&";
+            case OR:
+                return "||";
+        }
+    }
 }

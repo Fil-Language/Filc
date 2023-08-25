@@ -81,7 +81,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto getExpressionType() const -> AbstractType *;
 
-        virtual auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector) -> void;
+        virtual auto
+        resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector) -> void;
 
     private:
         bool _exported{false};
@@ -102,7 +103,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto getName() const -> const std::string &;
 
-        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector) -> void override;
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector) -> void override;
 
     private:
         std::string _name;
@@ -288,6 +290,9 @@ namespace filc::ast {
     class PreUnaryCalcul : public UnaryCalcul {
     public:
         PreUnaryCalcul(Identifier *variable, Operator *p_operator);
+
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector) -> void override;
     };
 
     class PostUnaryCalcul : public UnaryCalcul {
@@ -325,6 +330,8 @@ namespace filc::ast {
 
         auto operator=(Operator &&other) -> Operator & = default;
 
+        virtual auto dump() -> std::string = 0;
+
     protected:
         Operator() = default;
     };
@@ -357,6 +364,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto getOperator() const -> OPERATOR;
 
+        auto dump() -> std::string override;
+
     private:
         OPERATOR _operator;
     };
@@ -368,6 +377,8 @@ namespace filc::ast {
         ~ArrayOperator() override;
 
         [[nodiscard]] auto getExpression() const -> AbstractExpression *;
+
+        auto dump() -> std::string override;
 
     private:
         AbstractExpression *_expression;
@@ -381,6 +392,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto getExpressions() const -> const std::vector<AbstractExpression *> &;
 
+        auto dump() -> std::string override;
+
     private:
         std::vector<AbstractExpression *> _expressions;
     };
@@ -392,6 +405,8 @@ namespace filc::ast {
         ~AssignationOperator() override;
 
         [[nodiscard]] auto getInnerOperator() const -> Operator *;
+
+        auto dump() -> std::string override;
 
     private:
         Operator *_inner_operator;
@@ -461,7 +476,7 @@ namespace filc::ast {
     private:
         AbstractExpression *_condition;
         std::vector<AbstractExpression *> _body;
-        If* _else;
+        If *_else;
     };
 
     class Switch : public AbstractExpression {

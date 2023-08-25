@@ -118,11 +118,13 @@ namespace filc::environment {
         auto *float_type = new filc::ast::Type(new filc::ast::Identifier("float"));
         auto *char_type = new filc::ast::Type(new filc::ast::Identifier("char"));
         auto *bool_type = new filc::ast::Type(new filc::ast::Identifier("bool"));
+        auto *void_type = new filc::ast::Type(new filc::ast::Identifier("void"));
         auto is_ok = global->addType(int_type)
                      && global->addType(double_type)
                      && global->addType(float_type)
                      && global->addType(char_type)
-                     && global->addType(bool_type);
+                     && global->addType(bool_type)
+                     && global->addType(void_type);
         if (!is_ok) {
             throw std::logic_error("Fail to add base types to global environment");
         }
@@ -156,6 +158,23 @@ namespace filc::environment {
                 && global->addName("operator=", new filc::ast::LambdaType({bool_type, bool_type}, bool_type));
         if (!is_ok) {
             throw std::logic_error("Fail to add base assignations to global environment");
+        }
+        // - Prefix unary
+        is_ok = global->addName("operator++", new filc::ast::LambdaType({}, int_type))
+                && global->addName("operator--", new filc::ast::LambdaType({}, int_type))
+                && global->addName("operator+", new filc::ast::LambdaType({}, int_type))
+                && global->addName("operator-", new filc::ast::LambdaType({}, int_type))
+                && global->addName("operator++", new filc::ast::LambdaType({}, double_type))
+                && global->addName("operator--", new filc::ast::LambdaType({}, double_type))
+                && global->addName("operator+", new filc::ast::LambdaType({}, double_type))
+                && global->addName("operator-", new filc::ast::LambdaType({}, double_type))
+                && global->addName("operator++", new filc::ast::LambdaType({}, float_type))
+                && global->addName("operator--", new filc::ast::LambdaType({}, float_type))
+                && global->addName("operator+", new filc::ast::LambdaType({}, float_type))
+                && global->addName("operator-", new filc::ast::LambdaType({}, float_type))
+                && global->addName("operator!", new filc::ast::LambdaType({}, bool_type));
+        if (!is_ok) {
+            throw std::logic_error("Fail to add base prefix unary calcul to global environment");
         }
 
         return global;

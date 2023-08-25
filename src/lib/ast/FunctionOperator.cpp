@@ -36,4 +36,8 @@ namespace filc::ast {
             delete expression;
         }
     }
+
+    std::string FunctionOperator::dump() {
+        return "()";
+    }
 }

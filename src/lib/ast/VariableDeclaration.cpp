@@ -38,7 +38,7 @@ namespace filc::ast {
         return _constant;
     }
 
-    auto VariableDeclaration::getIdentifier() const -> Identifier* {
+    auto VariableDeclaration::getIdentifier() const -> Identifier * {
         return _identifier;
     }
 
@@ -80,6 +80,7 @@ namespace filc::ast {
             return;
         }
 
+        environment->addName(_identifier->getName(), _type);
         setExpressionType(_type);
     }
 }

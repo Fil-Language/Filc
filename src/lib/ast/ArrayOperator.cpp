@@ -34,4 +34,8 @@ namespace filc::ast {
     ArrayOperator::~ArrayOperator() {
         delete _expression;
     }
+
+    std::string ArrayOperator::dump() {
+        return "[]";
+    }
 }

@@ -22,8 +22,31 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "Error.h"
 
 namespace filc::ast {
     PreUnaryCalcul::PreUnaryCalcul(filc::ast::Identifier *variable, filc::ast::Operator *p_operator)
             : UnaryCalcul(variable, p_operator) {}
+
+    auto PreUnaryCalcul::resolveType(filc::environment::Environment *environment,
+                                     filc::message::MessageCollector *collector) -> void {
+        _variable->resolveType(environment, collector);
+        auto *variable_type = _variable->getExpressionType();
+        if (variable_type == nullptr) {
+            return;
+        }
+
+        auto operator_name = "operator" + _operator->dump();
+        if (environment->getName(operator_name, new LambdaType({}, variable_type)) == nullptr) {
+            collector->addError(
+                    new filc::message::Error(filc::message::ERROR,
+                                             "There is no operator " + _operator->dump() +
+                                             " for type " + variable_type->dump(),
+                                             getPosition())
+            );
+            return;
+        }
+
+        setExpressionType(variable_type);
+    }
 }
