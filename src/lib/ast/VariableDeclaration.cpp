@@ -67,6 +67,9 @@ namespace filc::ast {
 
         _assignation->resolveType(environment, collector);
         auto *assignation_type = _assignation->getExpressionType();
+        if (assignation_type == nullptr) {
+            return;
+        }
 
         if (environment->getName("operator=", new filc::ast::LambdaType({_type, assignation_type}, _type)) == nullptr) {
             collector->addError(
