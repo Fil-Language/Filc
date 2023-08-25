@@ -56,6 +56,7 @@ namespace filc::ast {
         std::vector<std::string> _imports;
         std::vector<AbstractExpression *> _expressions;
         std::string _filename;
+        filc::environment::Environment *_environment{nullptr};
     };
 
     class AbstractExpression {

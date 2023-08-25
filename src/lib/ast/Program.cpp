@@ -69,10 +69,12 @@ namespace filc::ast {
     }
 
     auto Program::resolveEnvironment(filc::message::MessageCollector *collector) -> void {
-        auto *environment = new filc::environment::Environment(filc::environment::Environment::getGlobalEnvironment());
+        _environment = new filc::environment::Environment(filc::environment::Environment::getGlobalEnvironment());
+
+        // TODO : add imports env to _environment
 
         for (const auto &expression: _expressions) {
-            expression->resolveType(environment, collector);
+            expression->resolveType(_environment, collector);
         }
     }
 }
