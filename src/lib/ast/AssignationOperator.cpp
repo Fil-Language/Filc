@@ -35,13 +35,21 @@ namespace filc::ast {
         return _inner_operator;
     }
 
-    auto AssignationOperator::dump() -> std::string {
+    auto AssignationOperator::dump() const -> std::string {
         return _inner_operator->dump() + "=";
     }
 
-    auto AssignationOperator::dumpLambdaType(filc::ast::AbstractType *return_type,
-                                             filc::environment::Environment *environment,
-                                             filc::message::MessageCollector *collector) -> LambdaType * {
+    auto AssignationOperator::dumpPreLambdaType(filc::ast::AbstractType *return_type,
+                                                filc::ast::AbstractType *called_on,
+                                                filc::environment::Environment *environment,
+                                                filc::message::MessageCollector *collector) const -> LambdaType * {
+        throw std::logic_error("Should not be called");
+    }
+
+    auto AssignationOperator::dumpPostLambdaType(filc::ast::AbstractType *return_type,
+                                                 filc::ast::AbstractType *called_on,
+                                                 filc::environment::Environment *environment,
+                                                 filc::message::MessageCollector *collector) const -> LambdaType * {
         throw std::logic_error("Should not be called");
     }
 }

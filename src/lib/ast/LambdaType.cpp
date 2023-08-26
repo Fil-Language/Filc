@@ -24,8 +24,9 @@
 #include "AST.h"
 
 namespace filc::ast {
-    LambdaType::LambdaType(const std::vector<AbstractType *> &argument_types, filc::ast::AbstractType *return_type)
-            : _argument_types(argument_types), _return_type(return_type) {}
+    LambdaType::LambdaType(const std::vector<AbstractType *> &argument_types, AbstractType *return_type,
+                           AbstractType *called_on)
+            : _argument_types(argument_types), _return_type(return_type), _called_on(called_on) {}
 
     auto LambdaType::getArgumentTypes() const -> const std::vector<AbstractType *> & {
         return _argument_types;
@@ -57,5 +58,13 @@ namespace filc::ast {
             delete argument_type;
         }
         delete _return_type;
+    }
+
+    auto LambdaType::getInnerType() const -> AbstractType * {
+        return (AbstractType *) this;
+    }
+
+    auto LambdaType::getCalledOn() const -> AbstractType * {
+        return _called_on;
     }
 }

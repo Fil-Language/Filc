@@ -35,19 +35,27 @@ namespace filc::ast {
         delete _expression;
     }
 
-    auto ArrayOperator::dump() -> std::string {
+    auto ArrayOperator::dump() const -> std::string {
         return "[]";
     }
 
-    auto ArrayOperator::dumpLambdaType(filc::ast::AbstractType *return_type,
-                                       filc::environment::Environment *environment,
-                                       filc::message::MessageCollector *collector) -> LambdaType * {
+    auto ArrayOperator::dumpPreLambdaType(filc::ast::AbstractType *return_type,
+                                          filc::ast::AbstractType *called_on,
+                                          filc::environment::Environment *environment,
+                                          filc::message::MessageCollector *collector) const -> LambdaType * {
+        throw std::logic_error("Should not be called");
+    }
+
+    auto ArrayOperator::dumpPostLambdaType(filc::ast::AbstractType *return_type,
+                                           filc::ast::AbstractType *called_on,
+                                           filc::environment::Environment *environment,
+                                           filc::message::MessageCollector *collector) const -> LambdaType * {
         _expression->resolveType(environment, collector);
         auto *expression_type = _expression->getExpressionType();
         if (expression_type == nullptr) {
             return nullptr;
         }
 
-        return new LambdaType({expression_type}, return_type);
+        return new LambdaType({expression_type}, return_type->getInnerType(), called_on);
     }
 }

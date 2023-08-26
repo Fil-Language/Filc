@@ -31,7 +31,7 @@ namespace filc::ast {
         return _operator;
     }
 
-    auto ClassicOperator::dump() -> std::string {
+    auto ClassicOperator::dump() const -> std::string {
         switch (_operator) {
             case PLUSPLUS:
                 return "++";
@@ -76,9 +76,21 @@ namespace filc::ast {
         throw std::logic_error("Should not come here");
     }
 
-    auto ClassicOperator::dumpLambdaType(filc::ast::AbstractType *return_type,
-                                         filc::environment::Environment *environment,
-                                         filc::message::MessageCollector *collector) -> LambdaType * {
+    auto ClassicOperator::dumpPreLambdaType(filc::ast::AbstractType *return_type,
+                                            filc::ast::AbstractType *called_on,
+                                            filc::environment::Environment *environment,
+                                            filc::message::MessageCollector *collector) const -> LambdaType * {
         return new LambdaType({}, return_type);
+    }
+
+    auto ClassicOperator::dumpPostLambdaType(filc::ast::AbstractType *return_type,
+                                             filc::ast::AbstractType *called_on,
+                                             filc::environment::Environment *environment,
+                                             filc::message::MessageCollector *collector) const -> LambdaType * {
+        if (!environment->hasType("void")) {
+            environment->addType(new filc::ast::Type(new filc::ast::Identifier("void")));
+        }
+
+        return new LambdaType({environment->getType("void")}, return_type, called_on);
     }
 }

@@ -39,17 +39,17 @@ TEST(StringLiteral, resolveType) {
     auto *program1 = parser1.getProgram();
     ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    ASSERT_TYPE("char[12]", program1->getExpressions()[0]->getExpressionType());
+    ASSERT_TYPE("char*", program1->getExpressions()[0]->getExpressionType());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/string2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
-    ASSERT_TYPE("char[0]", program2->getExpressions()[0]->getExpressionType());
+    ASSERT_TYPE("char*", program2->getExpressions()[0]->getExpressionType());
 
     filc::grammar::Parser parser3(FIXTURES_PATH "/grammar/string3.fil", COLLECTOR);
     auto *program3 = parser3.getProgram();
     ASSERT_NO_THROW(program3->resolveEnvironment(COLLECTOR));
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
-    ASSERT_TYPE("char[6]", program3->getExpressions()[0]->getExpressionType());
+    ASSERT_TYPE("char*", program3->getExpressions()[0]->getExpressionType());
 }

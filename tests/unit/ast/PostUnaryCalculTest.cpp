@@ -45,4 +45,11 @@ TEST(PostUnaryCalcul, resolveType) {
     ASSERT_THAT(program1->getExpressions(), SizeIs(2));
     ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
     ASSERT_TYPE("int", program1->getExpressions()[1]->getExpressionType());
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/ast/post_unary_calcul2.fil", COLLECTOR);
+    auto *program2 = parser2.getProgram();
+    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program2->getExpressions(), SizeIs(2));
+    ASSERT_TYPE("char*", program2->getExpressions()[0]->getExpressionType());
+    ASSERT_TYPE("char", program2->getExpressions()[1]->getExpressionType());
 }

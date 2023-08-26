@@ -37,13 +37,21 @@ namespace filc::ast {
         }
     }
 
-    auto FunctionOperator::dump() -> std::string {
+    auto FunctionOperator::dump() const -> std::string {
         return "()";
     }
 
-    auto FunctionOperator::dumpLambdaType(filc::ast::AbstractType *return_type,
-                                          filc::environment::Environment *environment,
-                                          filc::message::MessageCollector *collector) -> LambdaType * {
+    auto FunctionOperator::dumpPreLambdaType(filc::ast::AbstractType *return_type,
+                                             filc::ast::AbstractType *called_on,
+                                             filc::environment::Environment *environment,
+                                             filc::message::MessageCollector *collector) const -> LambdaType * {
+        throw std::logic_error("Should not be called");
+    }
+
+    auto FunctionOperator::dumpPostLambdaType(filc::ast::AbstractType *return_type,
+                                              filc::ast::AbstractType *called_on,
+                                              filc::environment::Environment *environment,
+                                              filc::message::MessageCollector *collector) const -> LambdaType * {
         std::vector<AbstractType *> args_types;
         for (const auto &expression: _expressions) {
             expression->resolveType(environment, collector);
@@ -56,6 +64,6 @@ namespace filc::ast {
             return nullptr;
         }
 
-        return new LambdaType(args_types, return_type);
+        return new LambdaType(args_types, return_type, called_on);
     }
 }

@@ -38,4 +38,8 @@ namespace filc::ast {
     auto Type::dump() const -> std::string {
         return _name->getName();
     }
+
+    auto Type::getInnerType() const -> AbstractType * {
+        return (AbstractType *) this;
+    }
 }
