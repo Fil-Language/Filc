@@ -28,7 +28,8 @@ namespace filc::ast {
             : AbstractLiteral<int>(value) {}
 
     auto IntegerLiteral::resolveType(filc::environment::Environment *environment,
-                                     filc::message::MessageCollector *collector) -> void {
+                                     filc::message::MessageCollector *collector,
+                                     AbstractType *preferred_type) -> void {
         if (!environment->hasType("int")) {
             environment->addType(new filc::ast::Type(new filc::ast::Identifier("int")));
         }

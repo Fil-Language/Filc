@@ -41,20 +41,20 @@ namespace filc::ast {
         return "()";
     }
 
-    auto FunctionOperator::dumpPreLambdaType(filc::ast::AbstractType *return_type,
-                                             filc::ast::AbstractType *called_on,
+    auto FunctionOperator::dumpPreLambdaType(AbstractType *return_type,
+                                             AbstractType *called_on,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector) const -> LambdaType * {
         throw std::logic_error("Should not be called");
     }
 
-    auto FunctionOperator::dumpPostLambdaType(filc::ast::AbstractType *return_type,
-                                              filc::ast::AbstractType *called_on,
+    auto FunctionOperator::dumpPostLambdaType(AbstractType *return_type,
+                                              AbstractType *called_on,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector) const -> LambdaType * {
         std::vector<AbstractType *> args_types;
         for (const auto &expression: _expressions) {
-            expression->resolveType(environment, collector);
+            expression->resolveType(environment, collector, nullptr);
             auto *expression_type = expression->getExpressionType();
             if (expression_type != nullptr) {
                 args_types.push_back(expression_type);

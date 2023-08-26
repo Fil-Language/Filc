@@ -81,8 +81,9 @@ namespace filc::ast {
 
         [[nodiscard]] auto getExpressionType() const -> AbstractType *;
 
-        virtual auto
-        resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector) -> void;
+        virtual auto resolveType(filc::environment::Environment *environment,
+                                 filc::message::MessageCollector *collector,
+                                 AbstractType *preferred_type = nullptr) -> void;
 
     private:
         bool _exported{false};
@@ -104,7 +105,8 @@ namespace filc::ast {
         [[nodiscard]] auto getName() const -> const std::string &;
 
         auto resolveType(filc::environment::Environment *environment,
-                         filc::message::MessageCollector *collector) -> void override;
+                         filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
 
     private:
         std::string _name;
@@ -128,32 +130,32 @@ namespace filc::ast {
     public:
         explicit BooleanLiteral(bool value);
 
-        auto resolveType(filc::environment::Environment *environment,
-                         filc::message::MessageCollector *collector) -> void override;
+        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
     };
 
     class IntegerLiteral : public AbstractLiteral<int> {
     public:
         explicit IntegerLiteral(int value);
 
-        auto resolveType(filc::environment::Environment *environment,
-                         filc::message::MessageCollector *collector) -> void override;
+        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
     };
 
     class FloatLiteral : public AbstractLiteral<double> {
     public:
         explicit FloatLiteral(double value);
 
-        auto resolveType(filc::environment::Environment *environment,
-                         filc::message::MessageCollector *collector) -> void override;
+        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
     };
 
     class CharacterLiteral : public AbstractLiteral<char> {
     public:
         explicit CharacterLiteral(char value);
 
-        auto resolveType(filc::environment::Environment *environment,
-                         filc::message::MessageCollector *collector) -> void override;
+        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
 
         static auto stringToChar(const std::string &snippet, antlr4::Token *token = nullptr) -> char;
     };
@@ -162,8 +164,8 @@ namespace filc::ast {
     public:
         explicit StringLiteral(const std::string &value);
 
-        auto resolveType(filc::environment::Environment *environment,
-                         filc::message::MessageCollector *collector) -> void override;
+        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
     };
 
     class VariableDeclaration : public AbstractExpression {
@@ -182,8 +184,8 @@ namespace filc::ast {
 
         auto setAssignation(AbstractExpression *assignation) -> void;
 
-        auto resolveType(filc::environment::Environment *environment,
-                         filc::message::MessageCollector *collector) -> void override;
+        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
 
     private:
         bool _constant;
@@ -244,7 +246,7 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        auto equals(const AbstractType &other) const -> bool override;
+        [[nodiscard]] auto equals(const AbstractType &other) const -> bool override;
 
     private:
         AbstractType *_inner_type;
@@ -261,7 +263,7 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        auto equals(const AbstractType &other) const -> bool override;
+        [[nodiscard]] auto equals(const AbstractType &other) const -> bool override;
 
     private:
         AbstractType *_inner_type;
@@ -284,7 +286,7 @@ namespace filc::ast {
 
         [[nodiscard]] auto getCalledOn() const -> AbstractType *;
 
-        auto equals(const AbstractType &other) const -> bool override;
+        [[nodiscard]] auto equals(const AbstractType &other) const -> bool override;
 
     private:
         std::vector<AbstractType *> _argument_types;
@@ -311,16 +313,16 @@ namespace filc::ast {
     public:
         PreUnaryCalcul(Identifier *variable, Operator *p_operator);
 
-        auto resolveType(filc::environment::Environment *environment,
-                         filc::message::MessageCollector *collector) -> void override;
+        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
     };
 
     class PostUnaryCalcul : public UnaryCalcul {
     public:
         PostUnaryCalcul(Identifier *variable, Operator *p_operator);
 
-        auto resolveType(filc::environment::Environment *environment,
-                         filc::message::MessageCollector *collector) -> void override;
+        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
     };
 
     class BinaryCalcul : public AbstractExpression {
@@ -334,6 +336,9 @@ namespace filc::ast {
         [[nodiscard]] auto getRightExpression() const -> AbstractExpression *;
 
         [[nodiscard]] auto getOperator() const -> Operator *;
+
+        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
 
     private:
         AbstractExpression *_left_expression;
@@ -355,13 +360,13 @@ namespace filc::ast {
 
         [[nodiscard]] virtual auto dump() const -> std::string = 0;
 
-        [[nodiscard]] virtual auto dumpPreLambdaType(filc::ast::AbstractType *return_type,
-                                                     filc::ast::AbstractType *called_on,
+        [[nodiscard]] virtual auto dumpPreLambdaType(AbstractType *return_type,
+                                                     AbstractType *called_on,
                                                      filc::environment::Environment *environment,
                                                      filc::message::MessageCollector *collector) const -> LambdaType * = 0;
 
-        [[nodiscard]] virtual auto dumpPostLambdaType(filc::ast::AbstractType *return_type,
-                                                      filc::ast::AbstractType *called_on,
+        [[nodiscard]] virtual auto dumpPostLambdaType(AbstractType *return_type,
+                                                      AbstractType *called_on,
                                                       filc::environment::Environment *environment,
                                                       filc::message::MessageCollector *collector) const -> LambdaType * = 0;
 
@@ -399,13 +404,13 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        [[nodiscard]] auto dumpPreLambdaType(filc::ast::AbstractType *return_type,
-                                             filc::ast::AbstractType *called_on,
+        [[nodiscard]] auto dumpPreLambdaType(AbstractType *return_type,
+                                             AbstractType *called_on,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector) const -> LambdaType * override;
 
-        [[nodiscard]] auto dumpPostLambdaType(filc::ast::AbstractType *return_type,
-                                              filc::ast::AbstractType *called_on,
+        [[nodiscard]] auto dumpPostLambdaType(AbstractType *return_type,
+                                              AbstractType *called_on,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector) const -> LambdaType * override;
 
@@ -423,13 +428,13 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        [[nodiscard]] auto dumpPreLambdaType(filc::ast::AbstractType *return_type,
-                                             filc::ast::AbstractType *called_on,
+        [[nodiscard]] auto dumpPreLambdaType(AbstractType *return_type,
+                                             AbstractType *called_on,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector) const -> LambdaType * override;
 
-        [[nodiscard]] auto dumpPostLambdaType(filc::ast::AbstractType *return_type,
-                                              filc::ast::AbstractType *called_on,
+        [[nodiscard]] auto dumpPostLambdaType(AbstractType *return_type,
+                                              AbstractType *called_on,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector) const -> LambdaType * override;
 
@@ -447,13 +452,13 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        [[nodiscard]] auto dumpPreLambdaType(filc::ast::AbstractType *return_type,
-                                             filc::ast::AbstractType *called_on,
+        [[nodiscard]] auto dumpPreLambdaType(AbstractType *return_type,
+                                             AbstractType *called_on,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector) const -> LambdaType * override;
 
-        [[nodiscard]] auto dumpPostLambdaType(filc::ast::AbstractType *return_type,
-                                              filc::ast::AbstractType *called_on,
+        [[nodiscard]] auto dumpPostLambdaType(AbstractType *return_type,
+                                              AbstractType *called_on,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector) const -> LambdaType * override;
 
@@ -471,13 +476,13 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        [[nodiscard]] auto dumpPreLambdaType(filc::ast::AbstractType *return_type,
-                                             filc::ast::AbstractType *called_on,
+        [[nodiscard]] auto dumpPreLambdaType(AbstractType *return_type,
+                                             AbstractType *called_on,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector) const -> LambdaType * override;
 
-        [[nodiscard]] auto dumpPostLambdaType(filc::ast::AbstractType *return_type,
-                                              filc::ast::AbstractType *called_on,
+        [[nodiscard]] auto dumpPostLambdaType(AbstractType *return_type,
+                                              AbstractType *called_on,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector) const -> LambdaType * override;
 

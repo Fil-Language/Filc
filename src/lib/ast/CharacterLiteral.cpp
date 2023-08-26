@@ -56,7 +56,8 @@ namespace filc::ast {
     }
 
     auto CharacterLiteral::resolveType(filc::environment::Environment *environment,
-                                       filc::message::MessageCollector *collector) -> void {
+                                       filc::message::MessageCollector *collector,
+                                       AbstractType *preferred_type) -> void {
         if (!environment->hasType("char")) {
             environment->addType(new filc::ast::Type(new filc::ast::Identifier("char")));
         }

@@ -39,8 +39,9 @@ namespace filc::ast {
     }
 
     auto Identifier::resolveType(filc::environment::Environment *environment,
-                                 filc::message::MessageCollector *collector) -> void {
-        if (!environment->hasName(_name)) {
+                                 filc::message::MessageCollector *collector,
+                                 AbstractType *preferred_type) -> void {
+        if (!environment->hasName(_name, preferred_type)) {
             collector->addError(
                     new filc::message::Error(filc::message::ERROR, _name + " is not defined", getPosition())
             );

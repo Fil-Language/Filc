@@ -29,7 +29,8 @@ namespace filc::ast {
             : AbstractLiteral<std::string>(filc::utils::parseEscapedString(value.substr(1, value.length() - 2))) {}
 
     auto StringLiteral::resolveType(filc::environment::Environment *environment,
-                                    filc::message::MessageCollector *collector) -> void {
+                                    filc::message::MessageCollector *collector,
+                                    AbstractType *preferred_type) -> void {
         if (!environment->hasType("char*")) {
             environment->addType(new filc::ast::Type(new filc::ast::Identifier("char*")));
         }

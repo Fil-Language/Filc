@@ -35,12 +35,12 @@ TEST(Identifier, resolveType) {
     auto *environment = new filc::environment::Environment;
 
     filc::ast::Identifier id1("hello");
-    id1.resolveType(environment, collector);
+    id1.resolveType(environment, collector, nullptr);
     ASSERT_TRUE(collector->hasErrors());
     collector->printAll();
 
     environment->addName("hello", new filc::ast::Type(new filc::ast::Identifier("int")));
-    id1.resolveType(environment, collector);
+    id1.resolveType(environment, collector, nullptr);
     ASSERT_FALSE(collector->hasErrors());
     ASSERT_TYPE("int", id1.getExpressionType());
 }

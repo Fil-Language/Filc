@@ -76,15 +76,15 @@ namespace filc::ast {
         throw std::logic_error("Should not come here");
     }
 
-    auto ClassicOperator::dumpPreLambdaType(filc::ast::AbstractType *return_type,
-                                            filc::ast::AbstractType *called_on,
+    auto ClassicOperator::dumpPreLambdaType(AbstractType *return_type,
+                                            AbstractType *called_on,
                                             filc::environment::Environment *environment,
                                             filc::message::MessageCollector *collector) const -> LambdaType * {
         return new LambdaType({}, return_type, called_on);
     }
 
-    auto ClassicOperator::dumpPostLambdaType(filc::ast::AbstractType *return_type,
-                                             filc::ast::AbstractType *called_on,
+    auto ClassicOperator::dumpPostLambdaType(AbstractType *return_type,
+                                             AbstractType *called_on,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector) const -> LambdaType * {
         if (!environment->hasType("void")) {

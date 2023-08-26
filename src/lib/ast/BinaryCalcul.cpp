@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "Error.h"
 
 namespace filc::ast {
     BinaryCalcul::BinaryCalcul(filc::ast::AbstractExpression *left_expression, filc::ast::Operator *p_operator,
@@ -44,5 +45,35 @@ namespace filc::ast {
         delete _left_expression;
         delete _operator;
         delete _right_expression;
+    }
+
+    auto BinaryCalcul::resolveType(filc::environment::Environment *environment,
+                                   filc::message::MessageCollector *collector,
+                                   AbstractType *preferred_type) -> void {
+        _left_expression->resolveType(environment, collector);
+        auto *left_type = _left_expression->getExpressionType();
+        _right_expression->resolveType(environment, collector);
+        auto *right_type = _right_expression->getExpressionType();
+        if (left_type == nullptr || right_type == nullptr) {
+            return;
+        }
+
+        auto operator_name = "operator" + _operator->dump();
+        auto has_found_preferred = preferred_type != nullptr &&
+                                   environment->hasName(operator_name, new LambdaType({left_type, right_type},
+                                                                                      preferred_type, left_type));
+        auto has_found_left = environment->hasName(operator_name, new LambdaType({left_type, right_type},
+                                                                                 left_type, left_type));
+        if ((preferred_type != nullptr && (!has_found_preferred || !has_found_left)) || !has_found_left) {
+            collector->addError(
+                    new filc::message::Error(filc::message::ERROR,
+                                             "There is no operator " + getOperator()->dump() +
+                                             " for types " + left_type->dump() + " and " + right_type->dump(),
+                                             getPosition())
+            );
+            return;
+        }
+
+        setExpressionType(has_found_preferred ? preferred_type : left_type);
     }
 }

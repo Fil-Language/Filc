@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include <gtest/gtest.h>
+#include "Parser.h"
 #include "test_tools.h"
 
 TEST(BinaryCalcul, constructor) {
@@ -34,4 +34,24 @@ TEST(BinaryCalcul, constructor) {
     ASSERT_IDENTIFIER("a", bc1.getLeftExpression());
     ASSERT_IDENTIFIER("b", bc1.getRightExpression());
     ASSERT_CLASSIC_OPERATOR(PLUS, bc1.getOperator());
+}
+
+#define FIXTURES_PATH "../../tests/unit/Fixtures"
+
+#define COLLECTOR filc::message::MessageCollector::getCollector()
+
+TEST(BinaryCalcul, resolveType) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/binary_calcul1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program1->getExpressions(), SizeIs(3));
+    ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
+    ASSERT_TYPE("int", program1->getExpressions()[1]->getExpressionType());
+    ASSERT_TYPE("int", program1->getExpressions()[2]->getExpressionType());
+
+    filc::grammar::Parser parser2(FIXTURES_PATH "/ast/binary_calcul2.fil", COLLECTOR);
+    auto *program2 = parser2.getProgram();
+    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
+    ASSERT_TYPE("bool", program2->getExpressions()[0]->getExpressionType());
 }

@@ -29,8 +29,9 @@ namespace filc::ast {
             : UnaryCalcul(variable, p_operator) {}
 
     auto PostUnaryCalcul::resolveType(filc::environment::Environment *environment,
-                                      filc::message::MessageCollector *collector) -> void {
-        getVariable()->resolveType(environment, collector);
+                                      filc::message::MessageCollector *collector,
+                                      AbstractType *preferred_type) -> void {
+        getVariable()->resolveType(environment, collector, nullptr);
         auto *variable_type = getVariable()->getExpressionType();
         if (variable_type == nullptr) {
             return;

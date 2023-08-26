@@ -55,7 +55,8 @@ namespace filc::ast {
     }
 
     auto VariableDeclaration::resolveType(filc::environment::Environment *environment,
-                                          filc::message::MessageCollector *collector) -> void {
+                                          filc::message::MessageCollector *collector,
+                                          AbstractType *preferred_type) -> void {
         if (environment->hasName(_identifier->getName())) {
             collector->addError(
                     new filc::message::Error(filc::message::ERROR,
@@ -65,7 +66,7 @@ namespace filc::ast {
             return;
         }
 
-        _assignation->resolveType(environment, collector);
+        _assignation->resolveType(environment, collector, _type);
         auto *assignation_type = _assignation->getExpressionType();
         if (assignation_type == nullptr) {
             return;

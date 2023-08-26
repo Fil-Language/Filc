@@ -28,7 +28,8 @@ namespace filc::ast {
             : AbstractLiteral<bool>(value) {}
 
     auto BooleanLiteral::resolveType(filc::environment::Environment *environment,
-                                     filc::message::MessageCollector *collector) -> void {
+                                     filc::message::MessageCollector *collector,
+                                     AbstractType *preferred_type) -> void {
         if (!environment->hasType("bool")) {
             environment->addType(new filc::ast::Type(new filc::ast::Identifier("bool")));
         }

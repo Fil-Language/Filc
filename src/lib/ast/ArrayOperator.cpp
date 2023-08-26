@@ -39,15 +39,15 @@ namespace filc::ast {
         return "[]";
     }
 
-    auto ArrayOperator::dumpPreLambdaType(filc::ast::AbstractType *return_type,
-                                          filc::ast::AbstractType *called_on,
+    auto ArrayOperator::dumpPreLambdaType(AbstractType *return_type,
+                                          AbstractType *called_on,
                                           filc::environment::Environment *environment,
                                           filc::message::MessageCollector *collector) const -> LambdaType * {
         throw std::logic_error("Should not be called");
     }
 
-    auto ArrayOperator::dumpPostLambdaType(filc::ast::AbstractType *return_type,
-                                           filc::ast::AbstractType *called_on,
+    auto ArrayOperator::dumpPostLambdaType(AbstractType *return_type,
+                                           AbstractType *called_on,
                                            filc::environment::Environment *environment,
                                            filc::message::MessageCollector *collector) const -> LambdaType * {
         _expression->resolveType(environment, collector);
