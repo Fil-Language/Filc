@@ -35,7 +35,7 @@ namespace filc::environment {
 
     auto Environment::hasName(const std::string &name, filc::ast::AbstractType *type) const -> bool {
         return std::any_of(_names.begin(), _names.end(), [name, type](auto *item) -> bool {
-            return item->getName() == name && (type == nullptr || item->getType()->dump() == type->dump());
+            return item->getName() == name && (type == nullptr || *item->getType() == *type);
         }) || (_parent != nullptr && _parent->hasName(name));
     }
 
@@ -52,7 +52,7 @@ namespace filc::environment {
     auto Environment::getName(const std::string &name, filc::ast::AbstractType *type) const -> Name * {
         if (hasName(name, type)) {
             auto result = std::find_if(_names.begin(), _names.end(), [name, type](auto *item) -> bool {
-                return item->getName() == name && (type == nullptr || item->getType()->dump() == type->dump());
+                return item->getName() == name && (type == nullptr || *item->getType() == *type);
             });
 
             if (result == _names.end()) {

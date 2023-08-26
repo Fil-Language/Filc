@@ -71,7 +71,8 @@ namespace filc::ast {
             return;
         }
 
-        if (environment->getName("operator=", new filc::ast::LambdaType({_type, assignation_type}, _type)) == nullptr) {
+        if (!environment->hasName("operator=", new filc::ast::LambdaType({_type, assignation_type},
+                                                                         environment->getType("void")))) {
             collector->addError(
                     new filc::message::Error(filc::message::ERROR,
                                              "Cannot assign " + assignation_type->dump() + " to " + _type->dump(),

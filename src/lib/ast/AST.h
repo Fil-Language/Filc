@@ -200,16 +200,18 @@ namespace filc::ast {
 
         AbstractType(AbstractType &&other) = default;
 
-        auto operator=(const AbstractType &other) -> AbstractType & = default;
+        auto operator=(const AbstractType &other) -> AbstractType & = delete;
 
-        auto operator=(AbstractType &&other) -> AbstractType & = default;
+        auto operator=(AbstractType &&other) -> AbstractType & = delete;
 
         [[nodiscard]] virtual auto dump() const -> std::string = 0;
 
         [[nodiscard]] virtual auto getInnerType() const -> AbstractType * = 0;
 
+        [[nodiscard]] virtual auto equals(const AbstractType &other) const -> bool = 0;
+
     protected:
-        AbstractType() = default;
+        explicit AbstractType() = default;
     };
 
     class Type : public AbstractType {
@@ -223,6 +225,8 @@ namespace filc::ast {
         [[nodiscard]] auto dump() const -> std::string override;
 
         [[nodiscard]] auto getInnerType() const -> AbstractType * override;
+
+        [[nodiscard]] auto equals(const AbstractType &other) const -> bool override;
 
     private:
         Identifier *_name;
@@ -240,6 +244,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
+        auto equals(const AbstractType &other) const -> bool override;
+
     private:
         AbstractType *_inner_type;
         unsigned int _size;
@@ -254,6 +260,8 @@ namespace filc::ast {
         [[nodiscard]] auto getInnerType() const -> AbstractType * override;
 
         [[nodiscard]] auto dump() const -> std::string override;
+
+        auto equals(const AbstractType &other) const -> bool override;
 
     private:
         AbstractType *_inner_type;
@@ -275,6 +283,8 @@ namespace filc::ast {
         [[nodiscard]] auto getInnerType() const -> AbstractType * override;
 
         [[nodiscard]] auto getCalledOn() const -> AbstractType *;
+
+        auto equals(const AbstractType &other) const -> bool override;
 
     private:
         std::vector<AbstractType *> _argument_types;
@@ -631,5 +641,9 @@ namespace filc::ast {
         std::vector<AbstractExpression *> _body;
     };
 }
+
+auto operator==(const filc::ast::AbstractType &type1, const filc::ast::AbstractType &type2) -> bool;
+
+auto operator!=(const filc::ast::AbstractType &type1, const filc::ast::AbstractType &type2) -> bool;
 
 #endif //FILC_AST_H

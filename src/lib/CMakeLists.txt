@@ -87,6 +87,7 @@ add_library(compiler_lib
         ast/ForIter.cpp
         ast/While.cpp
         ast/AssignationOperator.cpp
+        ast/AbstractType.cpp
         # === Environment ===
         environment/Environment.cpp
         environment/Name.cpp

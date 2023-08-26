@@ -80,7 +80,7 @@ namespace filc::ast {
                                             filc::ast::AbstractType *called_on,
                                             filc::environment::Environment *environment,
                                             filc::message::MessageCollector *collector) const -> LambdaType * {
-        return new LambdaType({}, return_type);
+        return new LambdaType({}, return_type, called_on);
     }
 
     auto ClassicOperator::dumpPostLambdaType(filc::ast::AbstractType *return_type,

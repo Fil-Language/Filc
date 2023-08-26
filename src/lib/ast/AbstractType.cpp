@@ -23,36 +23,10 @@
  */
 #include "AST.h"
 
-namespace filc::ast {
-    ArrayType::ArrayType(filc::ast::AbstractType *inner_type, unsigned int size)
-            : _inner_type(inner_type), _size(size) {}
+auto operator==(const filc::ast::AbstractType &type1, const filc::ast::AbstractType &type2) -> bool {
+    return type1.equals(type2);
+}
 
-    auto ArrayType::getInnerType() const -> AbstractType * {
-        return _inner_type;
-    }
-
-    auto ArrayType::getSize() const -> unsigned int {
-        return _size;
-    }
-
-    auto ArrayType::dump() const -> std::string {
-        return _inner_type->dump() + "[" + std::to_string(_size) + "]";
-    }
-
-    ArrayType::~ArrayType() {
-//        delete _inner_type;
-    }
-
-    auto ArrayType::equals(const AbstractType &other) const -> bool {
-        if (dynamic_cast<const ArrayType *>(&other) == nullptr) {
-            return false;
-        }
-        auto other_type = dynamic_cast<const ArrayType &>(other);
-
-        if (_size != other_type._size) {
-            return false;
-        }
-
-        return *_inner_type == *other_type._inner_type;
-    }
+auto operator!=(const filc::ast::AbstractType &type1, const filc::ast::AbstractType &type2) -> bool {
+    return !(type1 == type2);
 }
