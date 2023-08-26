@@ -488,7 +488,7 @@ namespace filc::ast {
 
         [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
 
-    protected:
+    private:
         std::vector<FunctionParameter *> _parameters;
         AbstractType *_return_type;
         std::vector<AbstractExpression *> _body;
