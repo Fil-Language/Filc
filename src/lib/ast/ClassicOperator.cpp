@@ -79,14 +79,16 @@ namespace filc::ast {
     auto ClassicOperator::dumpPreLambdaType(AbstractType *return_type,
                                             AbstractType *called_on,
                                             filc::environment::Environment *environment,
-                                            filc::message::MessageCollector *collector) const -> LambdaType * {
+                                            filc::message::MessageCollector *collector,
+                                            filc::utils::Position *position) const -> LambdaType * {
         return new LambdaType({}, return_type, called_on);
     }
 
     auto ClassicOperator::dumpPostLambdaType(AbstractType *return_type,
                                              AbstractType *called_on,
                                              filc::environment::Environment *environment,
-                                             filc::message::MessageCollector *collector) const -> LambdaType * {
+                                             filc::message::MessageCollector *collector,
+                                             filc::utils::Position *position) const -> LambdaType * {
         if (!environment->hasType("void")) {
             environment->addType(new filc::ast::Type(new filc::ast::Identifier("void")));
         }

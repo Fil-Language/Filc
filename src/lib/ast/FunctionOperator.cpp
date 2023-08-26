@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "DevWarning.h"
 
 namespace filc::ast {
     FunctionOperator::FunctionOperator(const std::vector<AbstractExpression *> &expressions)
@@ -44,14 +45,22 @@ namespace filc::ast {
     auto FunctionOperator::dumpPreLambdaType(AbstractType *return_type,
                                              AbstractType *called_on,
                                              filc::environment::Environment *environment,
-                                             filc::message::MessageCollector *collector) const -> LambdaType * {
-        throw std::logic_error("Should not be called");
+                                             filc::message::MessageCollector *collector,
+                                             filc::utils::Position *position) const -> LambdaType * {
+        collector->addError(new filc::message::DevWarning(
+                3,
+                position,
+                "FunctionOperator::dumpPreLambdaType should not be called but has been called"
+        ));
+
+        return nullptr;
     }
 
     auto FunctionOperator::dumpPostLambdaType(AbstractType *return_type,
                                               AbstractType *called_on,
                                               filc::environment::Environment *environment,
-                                              filc::message::MessageCollector *collector) const -> LambdaType * {
+                                              filc::message::MessageCollector *collector,
+                                              filc::utils::Position *position) const -> LambdaType * {
         std::vector<AbstractType *> args_types;
         for (const auto &expression: _expressions) {
             expression->resolveType(environment, collector, nullptr);

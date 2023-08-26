@@ -90,4 +90,9 @@ namespace filc::message {
 
         return collector;
     }
+
+    auto MessageCollector::flush() -> void {
+        _errors.clear();
+        _messages.clear();
+    }
 }

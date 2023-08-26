@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "DevWarning.h"
 
 namespace filc::ast {
     AssignationOperator::AssignationOperator(filc::ast::Operator *inner_operator)
@@ -42,14 +43,28 @@ namespace filc::ast {
     auto AssignationOperator::dumpPreLambdaType(AbstractType *return_type,
                                                 AbstractType *called_on,
                                                 filc::environment::Environment *environment,
-                                                filc::message::MessageCollector *collector) const -> LambdaType * {
-        throw std::logic_error("Should not be called");
+                                                filc::message::MessageCollector *collector,
+                                                filc::utils::Position *position) const -> LambdaType * {
+        collector->addError(new filc::message::DevWarning(
+                3,
+                position,
+                "AssignationOperator::dumpPreLambdaType should not be called but has been called"
+        ));
+
+        return nullptr;
     }
 
     auto AssignationOperator::dumpPostLambdaType(AbstractType *return_type,
                                                  AbstractType *called_on,
                                                  filc::environment::Environment *environment,
-                                                 filc::message::MessageCollector *collector) const -> LambdaType * {
-        throw std::logic_error("Should not be called");
+                                                 filc::message::MessageCollector *collector,
+                                                 filc::utils::Position *position) const -> LambdaType * {
+        collector->addError(new filc::message::DevWarning(
+                3,
+                position,
+                "AssignationOperator::dumpPostLambdaType should not be called but has been called"
+        ));
+
+        return nullptr;
     }
 }

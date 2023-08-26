@@ -38,7 +38,8 @@ namespace filc::ast {
         }
 
         auto operator_name = "operator" + getOperator()->dump();
-        auto *operator_type = getOperator()->dumpPostLambdaType(variable_type, variable_type, environment, collector);
+        auto *operator_type = getOperator()->dumpPostLambdaType(variable_type, variable_type, environment, collector,
+                                                                getPosition());
         if (environment->getName(operator_name, operator_type) == nullptr) {
             collector->addError(
                     new filc::message::Error(filc::message::ERROR,

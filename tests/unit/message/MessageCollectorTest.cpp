@@ -24,7 +24,14 @@
 #include "MessageCollector.h"
 #include <gtest/gtest.h>
 
-TEST(MessageCollector, getCollector) {
+class MessageCollector : public testing::Test {
+protected:
+    auto SetUp() -> void override {
+        filc::message::MessageCollector::getCollector()->flush();
+    }
+};
+
+TEST_F(MessageCollector, getCollector) {
     auto *collector1 = filc::message::MessageCollector::getCollector();
     auto *collector2 = filc::message::MessageCollector::getCollector();
     ASSERT_EQ(collector1, collector2);
@@ -35,7 +42,7 @@ TEST(MessageCollector, getCollector) {
     ASSERT_TRUE(collector2->hasMessages());
 }
 
-TEST(MessageCollector, hasMessages) {
+TEST_F(MessageCollector, hasMessages) {
     auto *collector = filc::message::MessageCollector::getCollector();
 
     ASSERT_FALSE(collector->hasMessages());
@@ -45,7 +52,7 @@ TEST(MessageCollector, hasMessages) {
     ASSERT_FALSE(collector->hasErrors());
 }
 
-TEST(MessageCollector, hasErrors) {
+TEST_F(MessageCollector, hasErrors) {
     auto *collector = filc::message::MessageCollector::getCollector();
 
     ASSERT_FALSE(collector->hasMessages());
@@ -55,7 +62,7 @@ TEST(MessageCollector, hasErrors) {
     ASSERT_TRUE(collector->hasErrors());
 }
 
-TEST(MessageCollector, printMessages) {
+TEST_F(MessageCollector, printMessages) {
     auto *collector = filc::message::MessageCollector::getCollector();
     collector->addMessage(new filc::message::Message(filc::message::INFO, "Hello"));
     collector->printMessages();
@@ -63,7 +70,7 @@ TEST(MessageCollector, printMessages) {
     ASSERT_FALSE(collector->hasMessages());
 }
 
-TEST(MessageCollector, printErrors) {
+TEST_F(MessageCollector, printErrors) {
     auto *collector = filc::message::MessageCollector::getCollector();
     collector->addError(new filc::message::Message(filc::message::INFO, "Hello"));
     collector->printErrors();
@@ -71,12 +78,23 @@ TEST(MessageCollector, printErrors) {
     ASSERT_FALSE(collector->hasErrors());
 }
 
-TEST(MessageCollector, printAll) {
+TEST_F(MessageCollector, printAll) {
     auto *collector = filc::message::MessageCollector::getCollector();
     collector->addMessage(new filc::message::Message(filc::message::INFO, "Hello"));
     collector->addError(new filc::message::Message(filc::message::INFO, "Hello"));
     collector->printAll();
 
+    ASSERT_FALSE(collector->hasMessages());
+    ASSERT_FALSE(collector->hasErrors());
+}
+
+TEST_F(MessageCollector, flush) {
+    auto *collector = filc::message::MessageCollector::getCollector();
+    collector->addMessage(new filc::message::Message(filc::message::INFO, "Hello"));
+    collector->addError(new filc::message::Message(filc::message::INFO, "Hello"));
+    ASSERT_TRUE(collector->hasMessages());
+    ASSERT_TRUE(collector->hasErrors());
+    collector->flush();
     ASSERT_FALSE(collector->hasMessages());
     ASSERT_FALSE(collector->hasErrors());
 }

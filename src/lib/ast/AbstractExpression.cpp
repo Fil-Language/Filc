@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include <stdexcept>
+#include "Error.h"
 
 namespace filc::ast {
     AbstractExpression::~AbstractExpression() {
@@ -56,6 +56,10 @@ namespace filc::ast {
     auto AbstractExpression::resolveType(filc::environment::Environment *environment,
                                          filc::message::MessageCollector *collector,
                                          AbstractType *preferred_type) -> void {
-        throw std::logic_error("Not implemented");
+        collector->addError(
+                new filc::message::Error(filc::message::FATAL_ERROR,
+                                         "resolveType not implemented",
+                                         getPosition())
+        );
     }
 }

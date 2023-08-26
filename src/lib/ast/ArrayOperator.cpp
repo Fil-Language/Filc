@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "DevWarning.h"
 
 namespace filc::ast {
     ArrayOperator::ArrayOperator(filc::ast::AbstractExpression *expression)
@@ -42,14 +43,22 @@ namespace filc::ast {
     auto ArrayOperator::dumpPreLambdaType(AbstractType *return_type,
                                           AbstractType *called_on,
                                           filc::environment::Environment *environment,
-                                          filc::message::MessageCollector *collector) const -> LambdaType * {
-        throw std::logic_error("Should not be called");
+                                          filc::message::MessageCollector *collector,
+                                          filc::utils::Position *position) const -> LambdaType * {
+        collector->addError(new filc::message::DevWarning(
+                3,
+                position,
+                "ArrayOperator::dumpPreLambdaType should not be called but has been called"
+        ));
+
+        return nullptr;
     }
 
     auto ArrayOperator::dumpPostLambdaType(AbstractType *return_type,
                                            AbstractType *called_on,
                                            filc::environment::Environment *environment,
-                                           filc::message::MessageCollector *collector) const -> LambdaType * {
+                                           filc::message::MessageCollector *collector,
+                                           filc::utils::Position *position) const -> LambdaType * {
         _expression->resolveType(environment, collector);
         auto *expression_type = _expression->getExpressionType();
         if (expression_type == nullptr) {

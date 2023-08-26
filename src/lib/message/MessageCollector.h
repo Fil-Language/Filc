@@ -50,6 +50,8 @@ namespace filc::message {
 
         static auto getCollector(LEVEL level = FATAL_ERROR) -> MessageCollector *;
 
+        auto flush() -> void;
+
     private:
         LEVEL _level;
         std::vector<Message *> _messages;

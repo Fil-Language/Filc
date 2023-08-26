@@ -37,7 +37,7 @@ TEST(Identifier, resolveType) {
     filc::ast::Identifier id1("hello");
     id1.resolveType(environment, collector, nullptr);
     ASSERT_TRUE(collector->hasErrors());
-    collector->printAll();
+    collector->flush();
 
     environment->addName("hello", new filc::ast::Type(new filc::ast::Identifier("int")));
     id1.resolveType(environment, collector, nullptr);

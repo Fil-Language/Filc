@@ -61,13 +61,19 @@ TEST(AbstractExpression, expression_type) {
     ASSERT_TYPE("int", obj1.getExpressionType());
 }
 
+#define COLLECTOR filc::message::MessageCollector::getCollector()
+
 // NOLINTBEGIN(readability-function-cognitive-complexity)
 TEST(AbstractExpression, resolveType) {
     class : public filc::ast::AbstractExpression {
     } obj1;
 
-    ASSERT_THROW(obj1.resolveType(nullptr, nullptr, nullptr), std::logic_error);
-    ASSERT_THROW(obj1.resolveType(new filc::environment::Environment, nullptr, nullptr), std::logic_error);
+    obj1.resolveType(nullptr, COLLECTOR, nullptr);
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
+    obj1.resolveType(new filc::environment::Environment, COLLECTOR, nullptr);
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
 
     class : public filc::ast::AbstractExpression {
     public:
@@ -78,7 +84,9 @@ TEST(AbstractExpression, resolveType) {
         }
     } obj2;
 
-    ASSERT_NO_THROW(obj2.resolveType(nullptr, nullptr, nullptr));
-    ASSERT_NO_THROW(obj2.resolveType(new filc::environment::Environment, nullptr, nullptr));
+    obj2.resolveType(nullptr, COLLECTOR, nullptr);
+    ASSERT_FALSE(COLLECTOR->hasErrors());
+    obj2.resolveType(new filc::environment::Environment, COLLECTOR, nullptr);
+    ASSERT_FALSE(COLLECTOR->hasErrors());
 }
 // NOLINTEND(readability-function-cognitive-complexity)
