@@ -505,10 +505,15 @@ namespace filc::ast {
 
         [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
 
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
+
     private:
         std::vector<FunctionParameter *> _parameters;
         AbstractType *_return_type;
         std::vector<AbstractExpression *> _body;
+        filc::environment::Environment *_body_environment;
     };
 
     class Function : public Lambda {

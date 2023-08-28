@@ -23,10 +23,23 @@
  */
 #include "AST.h"
 #include "test_tools.h"
+#include "Parser.h"
 
 TEST(Lambda, constructor) {
     filc::ast::Lambda lb1({}, new filc::ast::Type(new filc::ast::Identifier("int")), {});
     ASSERT_THAT(lb1.getParameters(), IsEmpty());
     ASSERT_TYPE("int", lb1.getReturnType());
     ASSERT_THAT(lb1.getBody(), IsEmpty());
+}
+
+#define FIXTURES_PATH "../../tests/unit/Fixtures"
+
+#define COLLECTOR filc::message::MessageCollector::getCollector()
+
+TEST(Lambda, resolveType) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/lambda1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    ASSERT_TYPE("(int) -> bool", program1->getExpressions()[0]->getExpressionType());
 }
