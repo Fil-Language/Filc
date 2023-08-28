@@ -525,6 +525,10 @@ namespace filc::ast {
 
         [[nodiscard]] auto getName() const -> Identifier *;
 
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
+
     private:
         Identifier *_name;
     };

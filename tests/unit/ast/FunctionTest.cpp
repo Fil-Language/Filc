@@ -22,9 +22,8 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
 #include "test_tools.h"
+#include "Parser.h"
 
 using namespace ::testing;
 
@@ -39,4 +38,24 @@ TEST(Function, constructor) {
     ASSERT_THAT(fun1.getParameters(), IsEmpty());
     ASSERT_TYPE("int", fun1.getReturnType());
     ASSERT_THAT(fun1.getBody(), IsEmpty());
+}
+
+#define FIXTURES_PATH "../../tests/unit/Fixtures"
+
+#define COLLECTOR filc::message::MessageCollector::getCollector()
+
+TEST(Function, resolveType) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/function1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    ASSERT_TYPE("(int, int) -> int", program1->getExpressions()[0]->getExpressionType());
+
+    COLLECTOR->flush();
+    filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/function2.fil", COLLECTOR);
+    auto *program2 = parser2.getProgram();
+    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    ASSERT_EQ(nullptr, program2->getExpressions()[0]->getExpressionType());
 }

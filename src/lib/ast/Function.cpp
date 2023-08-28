@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "Error.h"
 
 namespace filc::ast {
     Function::Function(Identifier *name, const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
@@ -34,5 +35,24 @@ namespace filc::ast {
 
     Function::~Function() {
         delete _name;
+    }
+
+    auto Function::resolveType(filc::environment::Environment *environment,
+                               filc::message::MessageCollector *collector,
+                               AbstractType *preferred_type) -> void {
+        Lambda::resolveType(environment, collector, preferred_type);
+
+        if (environment->hasName(_name->getName(), getExpressionType())) {
+            collector->addError(new filc::message::Error(
+                    filc::message::ERROR,
+                    "Function " + _name->getName()
+                    + " is already defined with signature " + getExpressionType()->dump(),
+                    getPosition()
+            ));
+            setExpressionType(nullptr);
+            return;
+        }
+
+        environment->addName(_name->getName(), getExpressionType());
     }
 }
