@@ -28,16 +28,16 @@ using namespace ::testing;
 
 #define ASSERT_TYPE(expected, type) ASSERT_STREQ(expected, type->dump().c_str())
 
-#define ASSERT_IDENTIFIER(expected, identifier) ASSERT_STREQ(expected, static_cast<filc::ast::Identifier *>(identifier)->getName().c_str())
+#define ASSERT_IDENTIFIER(expected, identifier) ASSERT_STREQ(expected, dynamic_cast<filc::ast::Identifier *>(identifier)->getName().c_str())
 
-#define ASSERT_CLASSIC_OPERATOR(expected, op) ASSERT_EQ(filc::ast::ClassicOperator::expected, static_cast<filc::ast::ClassicOperator *>(op)->getOperator())
+#define ASSERT_CLASSIC_OPERATOR(expected, op) ASSERT_EQ(filc::ast::ClassicOperator::expected, dynamic_cast<filc::ast::ClassicOperator *>(op)->getOperator())
 
-#define ASSERT_ASSIGNATION_OPERATOR(expected, op) ASSERT_CLASSIC_OPERATOR(expected, static_cast<filc::ast::AssignationOperator *>(op)->getInnerOperator())
+#define ASSERT_ASSIGNATION_OPERATOR(expected, op) ASSERT_CLASSIC_OPERATOR(expected, dynamic_cast<filc::ast::AssignationOperator *>(op)->getInnerOperator())
 
-#define ASSERT_LITERAL(expected, type, literal) ASSERT_EQ(expected, static_cast<filc::ast::type *>(literal)->getValue())
+#define ASSERT_LITERAL(expected, type, literal) ASSERT_EQ(expected, dynamic_cast<filc::ast::type *>(literal)->getValue())
 
 #define ASSERT_VARIABLE_DECLARATION(constant, name, type, value, literal, variable) \
-    auto *var_##variable = static_cast<filc::ast::VariableDeclaration *>(variable); \
+    auto *var_##variable = dynamic_cast<filc::ast::VariableDeclaration *>(variable); \
     ASSERT_EQ(constant, var_##variable->isConstant()); \
     ASSERT_IDENTIFIER(name, var_##variable->getIdentifier()); \
     ASSERT_TYPE(type, var_##variable->getType()); \
