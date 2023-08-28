@@ -34,12 +34,12 @@ TEST(PreUnaryCalcul, constructor) {
     ASSERT_CLASSIC_OPERATOR(DIV, puc1.getOperator());
 }
 
-#define FIXTURES_PATH "../../tests/unit/Fixtures"
+#define FIXTURES_PATH_GRAMMAR "../../tests/unit/Fixtures"
 
 #define COLLECTOR filc::message::MessageCollector::getCollector()
 
 TEST(PreUnaryCalcul, resolveType) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/pre_unary_calcul1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/ast/pre_unary_calcul1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
     ASSERT_THAT(program1->getExpressions(), SizeIs(2));

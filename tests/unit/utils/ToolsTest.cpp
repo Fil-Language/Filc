@@ -59,10 +59,10 @@ TEST(tools, strStartsWith) {
     ASSERT_FALSE(result);
 }
 
-#define FIXTURES_PATH "../../tests/unit/Fixtures"
+#define FIXTURES_PATH_GRAMMAR "../../tests/unit/Fixtures"
 
 TEST(tools, fileExists) {
-    auto result = filc::utils::fileExists(FIXTURES_PATH "/position.txt");
+    auto result = filc::utils::fileExists(FIXTURES_PATH_GRAMMAR "/position.txt");
     ASSERT_TRUE(result);
 
     result = filc::utils::fileExists("non-existing-file.a_file_extension");

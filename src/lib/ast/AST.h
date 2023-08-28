@@ -562,6 +562,10 @@ namespace filc::ast {
 
         auto setElse(If *p_else) -> void;
 
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
+
     private:
         AbstractExpression *_condition;
         std::vector<AbstractExpression *> _body;

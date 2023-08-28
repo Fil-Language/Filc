@@ -131,6 +131,13 @@ namespace filc::environment {
             throw std::logic_error("Fail to add base types to global environment");
         }
 
+        // Names
+        iok = global->addName("true", bool_type)
+              && global->addName("false", bool_type);
+        if (!iok) {
+            throw std::logic_error("Fail to add base names to global environment");
+        }
+
         // NOLINTBEGIN
         // Operators
         // - Assignations

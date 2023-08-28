@@ -23,8 +23,13 @@
  */
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include "MessageCollector.h"
 
 using namespace ::testing;
+
+#define FIXTURES_PATH "../../tests/unit/Fixtures"
+
+#define COLLECTOR filc::message::MessageCollector::getCollector()
 
 #define ASSERT_TYPE(expected, type) ASSERT_STREQ(expected, type->dump().c_str())
 

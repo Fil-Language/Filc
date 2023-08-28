@@ -22,33 +22,28 @@
  * SOFTWARE.
  */
 #include "Parser.h"
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
 #include <string>
 #include "test_tools.h"
-#include "MessageCollector.h"
 
 using namespace ::testing;
 
-#define FIXTURES_PATH "../../tests/unit/Fixtures/grammar"
-
-#define COLLECTOR filc::message::MessageCollector::getCollector()
+#define FIXTURES_PATH_GRAMMAR FIXTURES_PATH "/grammar"
 
 TEST(Parser, filename) {
-    filc::grammar::Parser parser(FIXTURES_PATH "/module1.fil", COLLECTOR);
+    filc::grammar::Parser parser(FIXTURES_PATH_GRAMMAR "/module1.fil", COLLECTOR);
     auto *program = parser.getProgram();
-    ASSERT_STREQ(FIXTURES_PATH "/module1.fil", program->getFilename().c_str());
+    ASSERT_STREQ(FIXTURES_PATH_GRAMMAR "/module1.fil", program->getFilename().c_str());
 }
 
 TEST(Parser, exported) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/not-exported.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/not-exported.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
     ASSERT_FALSE(expression1->isExported());
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/exported.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/exported.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     auto *expression2 = program2->getExpressions()[0];
@@ -57,49 +52,49 @@ TEST(Parser, exported) {
 }
 
 TEST(Parser, position) {
-    filc::grammar::Parser parser(FIXTURES_PATH "/int1.fil", COLLECTOR);
+    filc::grammar::Parser parser(FIXTURES_PATH_GRAMMAR "/int1.fil", COLLECTOR);
     auto *program = parser.getProgram();
     ASSERT_THAT(program->getExpressions(), SizeIs(1));
     auto *expression = program->getExpressions()[0];
     ASSERT_NE(nullptr, expression);
     auto *position = expression->getPosition();
-    ASSERT_STREQ(FIXTURES_PATH "/int1.fil", position->getFilename().c_str());
+    ASSERT_STREQ(FIXTURES_PATH_GRAMMAR "/int1.fil", position->getFilename().c_str());
     ASSERT_EQ(3, position->getLine());
     ASSERT_EQ(0, position->getColumn());
     ASSERT_STREQ("42", position->getContent().c_str());
 }
 
 TEST(Parser, module) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/module1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/module1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_STREQ("a.module1", program1->getModule().c_str());
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/module2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/module2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_STREQ("a.b.module2", program2->getModule().c_str());
 
-    filc::grammar::Parser parser3(FIXTURES_PATH "/module3.fil", COLLECTOR);
+    filc::grammar::Parser parser3(FIXTURES_PATH_GRAMMAR "/module3.fil", COLLECTOR);
     auto *program3 = parser3.getProgram();
     ASSERT_STREQ("an.example.with.many.dots.module3", program3->getModule().c_str());
 }
 
 TEST(Parser, use) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/use1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/use1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getImports(), SizeIs(1));
     ASSERT_THAT(program1->getImports(), Contains("a"));
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/use2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/use2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getImports(), SizeIs(1));
     ASSERT_THAT(program2->getImports(), Contains("a.b"));
 
-    filc::grammar::Parser parser3(FIXTURES_PATH "/use3.fil", COLLECTOR);
+    filc::grammar::Parser parser3(FIXTURES_PATH_GRAMMAR "/use3.fil", COLLECTOR);
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getImports(), SizeIs(1));
     ASSERT_THAT(program3->getImports(), Contains("an.example.with.many.dots"));
 
-    filc::grammar::Parser parser4(FIXTURES_PATH "/use4.fil", COLLECTOR);
+    filc::grammar::Parser parser4(FIXTURES_PATH_GRAMMAR "/use4.fil", COLLECTOR);
     auto *program4 = parser4.getProgram();
     ASSERT_THAT(program4->getImports(), SizeIs(3));
     ASSERT_THAT(program4->getImports(), Contains("a.b"));
@@ -108,14 +103,14 @@ TEST(Parser, use) {
 }
 
 TEST(Parser, BooleanLiteral) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/bool1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/bool1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
     ASSERT_LITERAL(true, BooleanLiteral, expression1);
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/bool2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/bool2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     auto *expression2 = program2->getExpressions()[0];
@@ -124,21 +119,21 @@ TEST(Parser, BooleanLiteral) {
 }
 
 TEST(Parser, IntegerLiteral) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/int1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/int1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
     ASSERT_LITERAL(42, IntegerLiteral, expression1);
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/int2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/int2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     auto *expression2 = program2->getExpressions()[0];
     ASSERT_NE(nullptr, expression2);
     ASSERT_LITERAL(-5, IntegerLiteral, expression2);
 
-    filc::grammar::Parser parser3(FIXTURES_PATH "/int3.fil", COLLECTOR);
+    filc::grammar::Parser parser3(FIXTURES_PATH_GRAMMAR "/int3.fil", COLLECTOR);
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
     auto *expression3 = program3->getExpressions()[0];
@@ -147,28 +142,28 @@ TEST(Parser, IntegerLiteral) {
 }
 
 TEST(Parser, FloatLiteral) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/float1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/float1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
     ASSERT_LITERAL(42.0, FloatLiteral, expression1);
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/float2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/float2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     auto *expression2 = program2->getExpressions()[0];
     ASSERT_NE(nullptr, expression2);
     ASSERT_LITERAL(-2.5, FloatLiteral, expression2);
 
-    filc::grammar::Parser parser3(FIXTURES_PATH "/float3.fil", COLLECTOR);
+    filc::grammar::Parser parser3(FIXTURES_PATH_GRAMMAR "/float3.fil", COLLECTOR);
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
     auto *expression3 = program3->getExpressions()[0];
     ASSERT_NE(nullptr, expression3);
     ASSERT_LITERAL(4.45, FloatLiteral, expression3);
 
-    filc::grammar::Parser parser4(FIXTURES_PATH "/float4.fil", COLLECTOR);
+    filc::grammar::Parser parser4(FIXTURES_PATH_GRAMMAR "/float4.fil", COLLECTOR);
     auto *program4 = parser4.getProgram();
     ASSERT_THAT(program4->getExpressions(), SizeIs(1));
     auto *expression4 = program4->getExpressions()[0];
@@ -177,21 +172,21 @@ TEST(Parser, FloatLiteral) {
 }
 
 TEST(Parser, CharacterLiteral) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/char1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/char1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
     ASSERT_LITERAL('a', CharacterLiteral, expression1);
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/char2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/char2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     auto *expression2 = program2->getExpressions()[0];
     ASSERT_NE(nullptr, expression2);
     ASSERT_LITERAL('2', CharacterLiteral, expression2);
 
-    filc::grammar::Parser parser3(FIXTURES_PATH "/char3.fil", COLLECTOR);
+    filc::grammar::Parser parser3(FIXTURES_PATH_GRAMMAR "/char3.fil", COLLECTOR);
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
     auto *expression3 = program3->getExpressions()[0];
@@ -200,21 +195,21 @@ TEST(Parser, CharacterLiteral) {
 }
 
 TEST(Parser, StringLiteral) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/string1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/string1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
     ASSERT_LITERAL("Hello World!", StringLiteral, expression1);
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/string2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/string2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     auto *expression2 = program2->getExpressions()[0];
     ASSERT_NE(nullptr, expression2);
     ASSERT_LITERAL("", StringLiteral, expression2);
 
-    filc::grammar::Parser parser3(FIXTURES_PATH "/string3.fil", COLLECTOR);
+    filc::grammar::Parser parser3(FIXTURES_PATH_GRAMMAR "/string3.fil", COLLECTOR);
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
     auto *expression3 = program3->getExpressions()[0];
@@ -223,7 +218,7 @@ TEST(Parser, StringLiteral) {
 }
 
 TEST(Parser, VariableDeclaration) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/variable_declaration1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/variable_declaration1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(2));
     auto *expression1_1 = program1->getExpressions()[0];
@@ -235,21 +230,21 @@ TEST(Parser, VariableDeclaration) {
 }
 
 TEST(Parser, Identifier) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/identifier1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/identifier1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
     ASSERT_IDENTIFIER("abcd", expression1);
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/identifier2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/identifier2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     auto *expression2 = program2->getExpressions()[0];
     ASSERT_NE(nullptr, expression2);
     ASSERT_IDENTIFIER("_name", expression2);
 
-    filc::grammar::Parser parser3(FIXTURES_PATH "/identifier3.fil", COLLECTOR);
+    filc::grammar::Parser parser3(FIXTURES_PATH_GRAMMAR "/identifier3.fil", COLLECTOR);
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
     auto *expression3 = program3->getExpressions()[0];
@@ -258,7 +253,7 @@ TEST(Parser, Identifier) {
 }
 
 TEST(Parser, UnaryCalcul) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/unary_calcul1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/unary_calcul1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = dynamic_cast<filc::ast::PostUnaryCalcul *>(program1->getExpressions()[0]);
@@ -266,7 +261,7 @@ TEST(Parser, UnaryCalcul) {
     ASSERT_IDENTIFIER("a", expression1->getVariable());
     ASSERT_CLASSIC_OPERATOR(PLUSPLUS, expression1->getOperator());
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/unary_calcul2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/unary_calcul2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     auto *expression2 = dynamic_cast<filc::ast::PreUnaryCalcul *>(program2->getExpressions()[0]);
@@ -274,7 +269,7 @@ TEST(Parser, UnaryCalcul) {
     ASSERT_IDENTIFIER("b", expression2->getVariable());
     ASSERT_CLASSIC_OPERATOR(MINUSMINUS, expression2->getOperator());
 
-    filc::grammar::Parser parser3(FIXTURES_PATH "/unary_calcul3.fil", COLLECTOR);
+    filc::grammar::Parser parser3(FIXTURES_PATH_GRAMMAR "/unary_calcul3.fil", COLLECTOR);
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
     auto *expression3 = dynamic_cast<filc::ast::PostUnaryCalcul *>(program3->getExpressions()[0]);
@@ -285,7 +280,7 @@ TEST(Parser, UnaryCalcul) {
     ASSERT_LITERAL(2, IntegerLiteral, operator3->getExpressions()[0]);
     ASSERT_LITERAL(3, IntegerLiteral, operator3->getExpressions()[1]);
 
-    filc::grammar::Parser parser4(FIXTURES_PATH "/unary_calcul4.fil", COLLECTOR);
+    filc::grammar::Parser parser4(FIXTURES_PATH_GRAMMAR "/unary_calcul4.fil", COLLECTOR);
     auto *program4 = parser4.getProgram();
     ASSERT_THAT(program4->getExpressions(), SizeIs(1));
     auto *expression4 = dynamic_cast<filc::ast::PostUnaryCalcul *>(program4->getExpressions()[0]);
@@ -296,7 +291,7 @@ TEST(Parser, UnaryCalcul) {
 }
 
 TEST(Parser, BinaryCalcul) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/binary_calcul1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/binary_calcul1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = dynamic_cast<filc::ast::BinaryCalcul *>(program1->getExpressions()[0]);
@@ -305,7 +300,7 @@ TEST(Parser, BinaryCalcul) {
     ASSERT_LITERAL(2, IntegerLiteral, expression1->getRightExpression());
     ASSERT_CLASSIC_OPERATOR(STAR, expression1->getOperator());
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/binary_calcul2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/binary_calcul2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(4));
     auto *expression2_1 = dynamic_cast<filc::ast::BinaryCalcul *>(program2->getExpressions()[0]);
@@ -341,7 +336,7 @@ TEST(Parser, BinaryCalcul) {
     ASSERT_LITERAL(3, IntegerLiteral, expression2_4->getRightExpression());
     ASSERT_CLASSIC_OPERATOR(STAR, expression2_4->getOperator());
 
-    filc::grammar::Parser parser3(FIXTURES_PATH "/binary_calcul3.fil", COLLECTOR);
+    filc::grammar::Parser parser3(FIXTURES_PATH_GRAMMAR "/binary_calcul3.fil", COLLECTOR);
     auto *program3 = parser3.getProgram();
     ASSERT_THAT(program3->getExpressions(), SizeIs(2));
     auto *expression3_1 = dynamic_cast<filc::ast::BinaryCalcul *>(program3->getExpressions()[0]);
@@ -358,7 +353,7 @@ TEST(Parser, BinaryCalcul) {
 }
 
 TEST(Parser, Function) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/function1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/function1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = dynamic_cast<filc::ast::Function *>(program1->getExpressions()[0]);
@@ -378,7 +373,7 @@ TEST(Parser, Function) {
     ASSERT_IDENTIFIER("b", body1->getRightExpression());
     ASSERT_CLASSIC_OPERATOR(MINUS, body1->getOperator());
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/function2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/function2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     auto *expression2 = dynamic_cast<filc::ast::Function *>(program2->getExpressions()[0]);
@@ -400,7 +395,7 @@ TEST(Parser, Function) {
 }
 
 TEST(Parser, Lambda) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/lambda1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/lambda1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = dynamic_cast<filc::ast::Lambda *>(program1->getExpressions()[0]);
@@ -417,7 +412,7 @@ TEST(Parser, Lambda) {
 }
 
 TEST(Parser, ParenthesisBody) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/parenthesis_body1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/parenthesis_body1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = dynamic_cast<filc::ast::BinaryCalcul *>(program1->getExpressions()[0]);
@@ -428,7 +423,7 @@ TEST(Parser, ParenthesisBody) {
 }
 
 TEST(Parser, If) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/if1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/if1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = dynamic_cast<filc::ast::If *>(program1->getExpressions()[0]);
@@ -442,7 +437,7 @@ TEST(Parser, If) {
     ASSERT_THAT(else1->getBody(), SizeIs(1));
     ASSERT_IDENTIFIER("c", else1->getBody()[0]);
 
-    filc::grammar::Parser parser2(FIXTURES_PATH "/if2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/if2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     auto *expression2 = dynamic_cast<filc::ast::If *>(program2->getExpressions()[0]);
@@ -460,7 +455,7 @@ TEST(Parser, If) {
 }
 
 TEST(Parser, Switch) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/switch1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/switch1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = dynamic_cast<filc::ast::Switch *>(program1->getExpressions()[0]);
@@ -482,7 +477,7 @@ TEST(Parser, Switch) {
 }
 
 TEST(Parser, ForI) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/for_i1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/for_i1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(2));
     auto *expression1_1 = dynamic_cast<filc::ast::VariableDeclaration *>(program1->getExpressions()[0]);
@@ -507,7 +502,7 @@ TEST(Parser, ForI) {
 }
 
 TEST(Parser, ForIter) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/for_iter1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/for_iter1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = dynamic_cast<filc::ast::ForIter *>(program1->getExpressions()[0]);
@@ -523,7 +518,7 @@ TEST(Parser, ForIter) {
 }
 
 TEST(Parser, While) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/while1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/while1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = dynamic_cast<filc::ast::While *>(program1->getExpressions()[0]);

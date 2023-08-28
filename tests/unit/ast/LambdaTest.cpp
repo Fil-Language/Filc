@@ -32,12 +32,12 @@ TEST(Lambda, constructor) {
     ASSERT_THAT(lb1.getBody(), IsEmpty());
 }
 
-#define FIXTURES_PATH "../../tests/unit/Fixtures"
+#define FIXTURES_PATH_GRAMMAR "../../tests/unit/Fixtures"
 
 #define COLLECTOR filc::message::MessageCollector::getCollector()
 
 TEST(Lambda, resolveType) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/lambda1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/grammar/lambda1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));

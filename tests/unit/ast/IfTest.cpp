@@ -23,6 +23,7 @@
  */
 #include "AST.h"
 #include "test_tools.h"
+#include "Parser.h"
 
 TEST(If, constructor) {
     filc::ast::If if1(new filc::ast::Identifier("isTrue"), {});
@@ -33,8 +34,16 @@ TEST(If, constructor) {
 TEST(If, setElse) {
     filc::ast::If if1(new filc::ast::Identifier("isFalse"), {});
     if1.setElse(new filc::ast::If(new filc::ast::Identifier("isTrue"), {}));
-    auto ielse = if1.getElse();
+    auto *ielse = if1.getElse();
     ASSERT_NE(nullptr, ielse);
     ASSERT_IDENTIFIER("isTrue", ielse->getCondition());
     ASSERT_THAT(ielse->getBody(), IsEmpty());
+}
+
+TEST(If, resolveType) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/if1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
 }
