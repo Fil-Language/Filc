@@ -23,6 +23,7 @@
  */
 #include "AST.h"
 #include "test_tools.h"
+#include "Parser.h"
 
 TEST(ForIter, constructor) {
     filc::ast::ForIter fi1(
@@ -35,4 +36,12 @@ TEST(ForIter, constructor) {
     ASSERT_IDENTIFIER("item", fi1.getIdentifier());
     ASSERT_IDENTIFIER("my_array", fi1.getArray());
     ASSERT_THAT(fi1.getBody(), IsEmpty());
+}
+
+TEST(ForIter, resolveType) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/for_iter1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    ASSERT_TYPE("char*", program1->getExpressions()[0]->getExpressionType());
 }
