@@ -1,0 +1,5 @@
+module test
+
+if (3 > 0) {
+    cout << "Hello World!"
+}

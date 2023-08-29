@@ -1,8 +1,0 @@
-module while1
-
-var i = 1
-var res = 0
-
-while (i <= 10) {
-    res += i++
-}

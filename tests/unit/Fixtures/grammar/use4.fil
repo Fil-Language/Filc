@@ -1,0 +1,5 @@
+module test
+
+use a.b
+use c.d
+use e.f

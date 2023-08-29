@@ -1,0 +1,7 @@
+module test
+
+switch (true) {
+    true -> "true is true"
+    false -> ("false is true")
+    default -> {"I don't know"}
+}

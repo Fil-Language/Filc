@@ -1,0 +1,3 @@
+module test
+
+fun minus(a: int, b: int): int = a - b

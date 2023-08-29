@@ -1,3 +1,0 @@
-module cast1
-
-val x = (int) 1.0

@@ -1,0 +1,5 @@
+module test
+
+for (val item : "my_array") {
+    item + 1
+}

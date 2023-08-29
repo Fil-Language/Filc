@@ -1,8 +1,0 @@
-[Program] <module:lambda>
-	[VariableDeclaration] <val> <name:l> <type:() -> int>
-		[Assignation] <type:() -> int>
-			[Lambda] <type:() -> int>
-				[BlockBody] <type:int>
-					[Return] <type:int>
-						[IntegerLiteral] <value:42>
-

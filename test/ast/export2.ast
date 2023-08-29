@@ -1,6 +1,0 @@
-[Program] <module:export2>
-	[Function] <exported> <name:myFun>  <type:() -> int>
-		[FunctionDeclaration] <name:myFun> <type:() -> int>
-		[Assignation] <type:int>
-			[IntegerLiteral] <value:1>
-

@@ -1,3 +1,0 @@
-module var3
-
-var truth : bool = true

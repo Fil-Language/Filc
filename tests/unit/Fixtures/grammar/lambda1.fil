@@ -1,0 +1,3 @@
+module test
+
+(a: int): bool -> a != 2
