@@ -67,7 +67,10 @@ namespace filc::ast {
         if (_condition != nullptr) {
             _condition->resolveType(_body_environment, collector, environment->getType("bool"));
             auto *condition_type = _condition->getExpressionType();
-            if (condition_type == nullptr || *condition_type != *environment->getType("bool")) {
+            if (condition_type == nullptr) {
+                return;
+            }
+            if (*condition_type != *environment->getType("bool")) {
                 collector->addError(new filc::message::Error(
                         filc::message::ERROR,
                         "Condition of for must return bool, found: " + condition_type->dump(),
