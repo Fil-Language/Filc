@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include <gtest/gtest.h>
 #include "test_tools.h"
 
 TEST(UnaryCalcul, constructor) {

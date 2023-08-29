@@ -23,9 +23,18 @@
  */
 #include "AST.h"
 #include "test_tools.h"
+#include "Parser.h"
 
 TEST(Switch, constructor) {
     filc::ast::Switch sw1(new filc::ast::Identifier("abcd"), {});
     ASSERT_IDENTIFIER("abcd", sw1.getCondition());
     ASSERT_THAT(sw1.getCases(), IsEmpty());
+}
+
+TEST(Switch, resolveType) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/switch1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
+    ASSERT_TYPE("char*", program1->getExpressions()[0]->getExpressionType());
 }

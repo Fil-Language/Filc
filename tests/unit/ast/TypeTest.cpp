@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include <gtest/gtest.h>
+#include "test_tools.h"
 
 TEST(Type, constructor) {
     filc::ast::Type tp1(new filc::ast::Identifier("int"));

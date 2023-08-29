@@ -61,8 +61,6 @@ TEST(AbstractExpression, expression_type) {
     ASSERT_TYPE("int", obj1.getExpressionType());
 }
 
-#define COLLECTOR filc::message::MessageCollector::getCollector()
-
 // NOLINTBEGIN(readability-function-cognitive-complexity)
 TEST(AbstractExpression, resolveType) {
     class : public filc::ast::AbstractExpression {

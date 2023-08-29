@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "Message.h"
-#include <gtest/gtest.h>
+#include "test_tools.h"
 #include <sstream>
 
 auto getMessageContent(filc::message::Message &message) -> std::string {

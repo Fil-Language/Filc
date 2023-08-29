@@ -40,19 +40,15 @@ TEST(Function, constructor) {
     ASSERT_THAT(fun1.getBody(), IsEmpty());
 }
 
-#define FIXTURES_PATH_GRAMMAR "../../tests/unit/Fixtures"
-
-#define COLLECTOR filc::message::MessageCollector::getCollector()
-
 TEST(Function, resolveType) {
-    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/grammar/function1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/function1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     ASSERT_TYPE("(int, int) -> int", program1->getExpressions()[0]->getExpressionType());
 
     COLLECTOR->flush();
-    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/grammar/function2.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/function2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));

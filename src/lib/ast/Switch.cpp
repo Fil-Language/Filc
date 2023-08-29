@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "Error.h"
+#include <algorithm>
 
 namespace filc::ast {
     Switch::Switch(filc::ast::AbstractExpression *condition, const std::vector<SwitchCase *> &cases)
@@ -40,5 +42,65 @@ namespace filc::ast {
         for (const auto &item: _cases) {
             delete item;
         }
+    }
+
+    auto Switch::resolveType(filc::environment::Environment *environment,
+                             filc::message::MessageCollector *collector,
+                             AbstractType *preferred_type) -> void {
+        _condition->resolveType(environment, collector);
+        auto *condition_type = _condition->getExpressionType();
+        if (condition_type == nullptr) {
+            return;
+        }
+
+        auto count = std::count_if(_cases.begin(), _cases.end(), [](const auto *item) -> bool {
+            return item->isDefault();
+        });
+        if (count > 1) {
+            collector->addError(new filc::message::Error(
+                    filc::message::ERROR,
+                    "Switch can have only 1 default case, " + std::to_string(count) + " found",
+                    getPosition()
+            ));
+            return;
+        }
+
+        AbstractType *return_type = preferred_type;
+        for (auto *item: _cases) {
+            item->resolveType(environment, collector, return_type);
+            auto *item_type = item->getExpressionType();
+            auto *pattern_type = item->getPattern()->getExpressionType();
+            if (item_type == nullptr) {
+                return;
+            }
+
+            if (!item->isDefault() && *pattern_type != *condition_type) {
+                collector->addError(new filc::message::Error(
+                        filc::message::ERROR,
+                        "Pattern type is not the same as condition type. Expected " + condition_type->dump()
+                        + ", found " + pattern_type->dump(),
+                        item->getPosition()
+                ));
+                return;
+            }
+
+            if (return_type == nullptr) {
+                return_type = item_type;
+            } else {
+                if (*return_type != *item_type &&
+                    !environment->hasName("operator=", new filc::ast::LambdaType({return_type, item_type}, return_type,
+                                                                                 return_type))) {
+                    collector->addError(new filc::message::Error(
+                            filc::message::ERROR,
+                            "Switch case return wrong type. Expected " + return_type->dump()
+                            + ", found " + item_type->dump(),
+                            item->getPosition()
+                    ));
+                    return;
+                }
+            }
+        }
+
+        setExpressionType(return_type);
     }
 }

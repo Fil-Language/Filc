@@ -23,7 +23,7 @@
  */
 #include "AST.h"
 #include "Parser.h"
-#include <gtest/gtest.h>
+#include "test_tools.h"
 
 TEST(Program, constructor) {
     filc::ast::Program program("module.name", {"a", "b"}, {});
@@ -44,18 +44,14 @@ TEST(Program, filename) {
     ASSERT_STREQ(filename, program.getFilename().c_str());
 }
 
-#define FIXTURES_PATH_GRAMMAR "../../tests/unit/Fixtures"
-
-#define COLLECTOR filc::message::MessageCollector::getCollector()
-
 TEST(Program, resolveEnvironment) {
-    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/grammar/module1.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/module1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     program1->resolveEnvironment(COLLECTOR);
     ASSERT_FALSE(COLLECTOR->hasErrors());
 
     COLLECTOR->flush();
-    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/grammar/while1.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/while1.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     program2->resolveEnvironment(COLLECTOR);
     ASSERT_TRUE(COLLECTOR->hasErrors());

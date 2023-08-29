@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
 #include "test_tools.h"
 
 using namespace ::testing;

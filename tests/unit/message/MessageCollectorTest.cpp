@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "MessageCollector.h"
-#include <gtest/gtest.h>
+#include "test_tools.h"
 
 class MessageCollector : public testing::Test {
 protected:

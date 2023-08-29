@@ -582,20 +582,30 @@ namespace filc::ast {
 
         [[nodiscard]] auto getCases() const -> const std::vector<SwitchCase *> &;
 
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
+
     private:
         AbstractExpression *_condition;
         std::vector<SwitchCase *> _cases;
     };
 
-    class SwitchCase {
+    class SwitchCase : public AbstractExpression {
     public:
         SwitchCase(AbstractExpression *pattern, const std::vector<AbstractExpression *> &body);
 
-        ~SwitchCase();
+        ~SwitchCase() override;
 
         [[nodiscard]] auto getPattern() const -> AbstractExpression *;
 
+        [[nodiscard]] auto isDefault() const -> bool;
+
         [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
 
     private:
         AbstractExpression *_pattern;

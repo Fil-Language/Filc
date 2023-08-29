@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "OptionsParser.h"
-#include <gtest/gtest.h>
+#include "test_tools.h"
 
 TEST(OptionParser, constructor) {
     auto parser = filc::utils::OptionsParser();
@@ -32,8 +32,6 @@ TEST(OptionParser, constructor) {
     ASSERT_FALSE(parser.isDebug());
     ASSERT_STREQ("a.out", parser.getOut().c_str());
 }
-
-#define FIXTURES_PATH_GRAMMAR "../../tests/unit/Fixtures"
 
 TEST(OptionParser, parse) {
     auto parser = filc::utils::OptionsParser();
@@ -53,19 +51,19 @@ TEST(OptionParser, parse) {
     argv = {"filc", "non-existing.fil"};
     ASSERT_FALSE(parser.parse(2, argv.data()));
 
-    argv = {"filc", FIXTURES_PATH_GRAMMAR "/utils/file1.fil"};
+    argv = {"filc", FIXTURES_PATH "/utils/file1.fil"};
     ASSERT_TRUE(parser.parse(2, argv.data()));
 
-    argv = {"filc", FIXTURES_PATH_GRAMMAR "/utils/file1.fil", FIXTURES_PATH_GRAMMAR "/utils/file2.fil"};
+    argv = {"filc", FIXTURES_PATH "/utils/file1.fil", FIXTURES_PATH "/utils/file2.fil"};
     ASSERT_TRUE(parser.parse(3, argv.data()));
 
-    argv = {"filc", "-d", FIXTURES_PATH_GRAMMAR "/utils/file1.fil"};
+    argv = {"filc", "-d", FIXTURES_PATH "/utils/file1.fil"};
     ASSERT_TRUE(parser.parse(3, argv.data()));
 
-    argv = {"filc", "--verbose", FIXTURES_PATH_GRAMMAR "/utils/file1.fil"};
+    argv = {"filc", "--verbose", FIXTURES_PATH "/utils/file1.fil"};
     ASSERT_TRUE(parser.parse(3, argv.data()));
 
-    argv = {"filc", "-o", "executable", FIXTURES_PATH_GRAMMAR "/utils/file1.fil"};
+    argv = {"filc", "-o", "executable", FIXTURES_PATH "/utils/file1.fil"};
     ASSERT_TRUE(parser.parse(4, argv.data()));
 }
 
@@ -78,50 +76,50 @@ TEST(OptionParser, getOptions) {
 TEST(OptionParser, getFilenames) {
     auto parser = filc::utils::OptionsParser();
 
-    std::vector<const char *> argv = {"filc", FIXTURES_PATH_GRAMMAR "/utils/file1.fil", FIXTURES_PATH_GRAMMAR "/utils/file2.fil",
-                                      FIXTURES_PATH_GRAMMAR "/utils/file2.fil"};
+    std::vector<const char *> argv = {"filc", FIXTURES_PATH "/utils/file1.fil", FIXTURES_PATH "/utils/file2.fil",
+                                      FIXTURES_PATH "/utils/file2.fil"};
     parser.parse(4, argv.data());
 
     auto filenames = parser.getFilenames();
 
     ASSERT_EQ(2, parser.getFilenames().size());
-    const auto *filename1 = FIXTURES_PATH_GRAMMAR "/utils/file1.fil";
+    const auto *filename1 = FIXTURES_PATH "/utils/file1.fil";
     ASSERT_STREQ(filename1, filenames[0].c_str());
-    const auto *filename2 = FIXTURES_PATH_GRAMMAR "/utils/file2.fil";
+    const auto *filename2 = FIXTURES_PATH "/utils/file2.fil";
     ASSERT_STREQ(filename2, filenames[1].c_str());
 }
 
 TEST(OptionParser, getVerbose) {
     auto parser = filc::utils::OptionsParser();
 
-    std::vector<const char *> argv = {"filc", "--verbose=2", FIXTURES_PATH_GRAMMAR "/utils/file2.fil"};
+    std::vector<const char *> argv = {"filc", "--verbose=2", FIXTURES_PATH "/utils/file2.fil"};
     parser.parse(3, argv.data());
     ASSERT_EQ(2, parser.getVerbose());
 
-    argv = {"filc", "--verbose=0", FIXTURES_PATH_GRAMMAR "/utils/file2.fil"};
+    argv = {"filc", "--verbose=0", FIXTURES_PATH "/utils/file2.fil"};
     parser.parse(3, argv.data());
     ASSERT_EQ(0, parser.getVerbose());
 
-    argv = {"filc", "--verbose=10", FIXTURES_PATH_GRAMMAR "/utils/file2.fil"};
+    argv = {"filc", "--verbose=10", FIXTURES_PATH "/utils/file2.fil"};
     parser.parse(3, argv.data());
     ASSERT_EQ(5, parser.getVerbose());
 
-    argv = {"filc", "--verbose=-2", FIXTURES_PATH_GRAMMAR "/utils/file2.fil"};
+    argv = {"filc", "--verbose=-2", FIXTURES_PATH "/utils/file2.fil"};
     ASSERT_FALSE(parser.parse(3, argv.data()));
 }
 
 TEST(OptionParser, isDebug) {
     auto parser = filc::utils::OptionsParser();
 
-    std::vector<const char *> argv = {"filc", FIXTURES_PATH_GRAMMAR "/utils/file2.fil"};
+    std::vector<const char *> argv = {"filc", FIXTURES_PATH "/utils/file2.fil"};
     parser.parse(2, argv.data());
     ASSERT_FALSE(parser.isDebug());
 
-    argv = {"filc", "--debug", FIXTURES_PATH_GRAMMAR "/utils/file2.fil"};
+    argv = {"filc", "--debug", FIXTURES_PATH "/utils/file2.fil"};
     parser.parse(3, argv.data());
     ASSERT_TRUE(parser.isDebug());
 
-    argv = {"filc", "-d", FIXTURES_PATH_GRAMMAR "/utils/file2.fil"};
+    argv = {"filc", "-d", FIXTURES_PATH "/utils/file2.fil"};
     parser.parse(3, argv.data());
     ASSERT_TRUE(parser.isDebug());
 }
@@ -129,17 +127,17 @@ TEST(OptionParser, isDebug) {
 TEST(OptionParser, getOut) {
     auto parser = filc::utils::OptionsParser();
 
-    std::vector<const char *> argv = {"filc", FIXTURES_PATH_GRAMMAR "/utils/file2.fil"};
+    std::vector<const char *> argv = {"filc", FIXTURES_PATH "/utils/file2.fil"};
     parser.parse(2, argv.data());
     const auto *expected = "a.out";
     ASSERT_STREQ(expected, parser.getOut().c_str());
 
-    argv = {"filc", "--out=myExec", FIXTURES_PATH_GRAMMAR "/utils/file2.fil"};
+    argv = {"filc", "--out=myExec", FIXTURES_PATH "/utils/file2.fil"};
     parser.parse(3, argv.data());
     expected = "myExec";
     ASSERT_STREQ(expected, parser.getOut().c_str());
 
-    argv = {"filc", "-o", "myExec2", FIXTURES_PATH_GRAMMAR "/utils/file2.fil"};
+    argv = {"filc", "-o", "myExec2", FIXTURES_PATH "/utils/file2.fil"};
     parser.parse(4, argv.data());
     expected = "myExec2";
     ASSERT_STREQ(expected, parser.getOut().c_str());

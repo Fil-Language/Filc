@@ -29,3 +29,14 @@ TEST(SwitchCase, constructor) {
     ASSERT_IDENTIFIER("default", sc1.getPattern());
     ASSERT_THAT(sc1.getBody(), IsEmpty());
 }
+
+TEST(SwitchCase, isDefault) {
+    filc::ast::SwitchCase sc1(new filc::ast::Identifier("default"), {});
+    ASSERT_TRUE(sc1.isDefault());
+
+    filc::ast::SwitchCase sc2(new filc::ast::Identifier("abcd"), {});
+    ASSERT_FALSE(sc2.isDefault());
+
+    filc::ast::SwitchCase sc3(new filc::ast::IntegerLiteral(2), {});
+    ASSERT_FALSE(sc3.isDefault());
+}

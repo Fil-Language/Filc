@@ -29,9 +29,9 @@ TEST(ArrayType, constructor) {
     auto *inner_type = new filc::ast::Type(new filc::ast::Identifier("array"));
     filc::ast::ArrayType at1(
             inner_type,
-            25
+            4
     );
     ASSERT_EQ(inner_type, at1.getInnerType());
-    ASSERT_EQ(25, at1.getSize());
-    ASSERT_TYPE("array[25]", (&at1));
+    ASSERT_EQ(4, at1.getSize());
+    ASSERT_TYPE("array[4]", (&at1));
 }

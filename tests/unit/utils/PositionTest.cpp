@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 #include "Position.h"
-#include <gtest/gtest.h>
+#include "test_tools.h"
 #include <fstream>
 
 TEST(Position, constructor) {

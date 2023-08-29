@@ -31,6 +31,15 @@ namespace filc::ast {
         return _pattern;
     }
 
+    auto SwitchCase::isDefault() const -> bool {
+        auto *identifier = dynamic_cast<Identifier *>(_pattern);
+        if (identifier == nullptr) {
+            return false;
+        }
+
+        return identifier->getName() == "default";
+    }
+
     auto SwitchCase::getBody() const -> const std::vector<AbstractExpression *> & {
         return _body;
     }
@@ -40,5 +49,28 @@ namespace filc::ast {
         for (const auto &expression: _body) {
             delete expression;
         }
+    }
+
+    auto SwitchCase::resolveType(filc::environment::Environment *environment,
+                                 filc::message::MessageCollector *collector,
+                                 AbstractType *preferred_type) -> void {
+        if (!isDefault()) {
+            _pattern->resolveType(environment, collector);
+            if (_pattern->getExpressionType() == nullptr) {
+                return;
+            }
+        }
+
+        AbstractType *body_type = nullptr;
+        for (auto iter = _body.begin(); iter != _body.end(); iter++) {
+            if (iter + 1 != _body.end()) {
+                (*iter)->resolveType(environment, collector);
+            } else {
+                (*iter)->resolveType(environment, collector, preferred_type);
+                body_type = (*iter)->getExpressionType();
+            }
+        }
+
+        setExpressionType(body_type);
     }
 }
