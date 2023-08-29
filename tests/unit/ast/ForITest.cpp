@@ -23,6 +23,7 @@
  */
 #include "AST.h"
 #include "test_tools.h"
+#include "Parser.h"
 
 TEST(ForI, constructor) {
     auto *declaration = new filc::ast::VariableDeclaration(false, new filc::ast::Identifier("i"),
@@ -52,4 +53,13 @@ TEST(ForI, constructor) {
     ASSERT_IDENTIFIER("i", iteration->getVariable());
     ASSERT_CLASSIC_OPERATOR(PLUSPLUS, iteration->getOperator());
     ASSERT_THAT(fi1.getBody(), IsEmpty());
+}
+
+TEST(ForI, resolveType) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/for_i1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_THAT(program1->getExpressions(), SizeIs(2));
+    ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
+    ASSERT_TYPE("int*", program1->getExpressions()[1]->getExpressionType());
 }

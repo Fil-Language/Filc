@@ -627,11 +627,16 @@ namespace filc::ast {
 
         [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
 
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
+
     private:
         VariableDeclaration *_declaration;
         AbstractExpression *_condition;
         AbstractExpression *_iteration;
         std::vector<AbstractExpression *> _body;
+        filc::environment::Environment *_body_environment;
     };
 
     class ForIter : public AbstractExpression {
