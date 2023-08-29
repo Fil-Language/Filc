@@ -676,6 +676,10 @@ namespace filc::ast {
 
         [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
 
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         AbstractType *preferred_type) -> void override;
+
     private:
         AbstractExpression *_condition;
         std::vector<AbstractExpression *> _body;

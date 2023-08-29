@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "Error.h"
 
 namespace filc::ast {
     While::While(filc::ast::AbstractExpression *condition, const std::vector<AbstractExpression *> &body)
@@ -40,5 +41,36 @@ namespace filc::ast {
         for (const auto &expression: _body) {
             delete expression;
         }
+    }
+
+    auto While::resolveType(filc::environment::Environment *environment,
+                            filc::message::MessageCollector *collector,
+                            AbstractType *preferred_type) -> void {
+        _condition->resolveType(environment, collector, environment->getType("bool"));
+        auto *condition_type = _condition->getExpressionType();
+        if (condition_type == nullptr) {
+            return;
+        }
+        if (*condition_type != *environment->getType("bool")) {
+            collector->addError(new filc::message::Error(
+                    filc::message::ERROR,
+                    "Condition must return bool, found: " + condition_type->dump(),
+                    _condition->getPosition()
+            ));
+            return;
+        }
+
+        AbstractType *body_type = nullptr;
+        for (auto iter = _body.begin(); iter != _body.end(); iter++) {
+            (*iter)->resolveType(environment, collector);
+            if (iter + 1 == _body.end()) {
+                body_type = (*iter)->getExpressionType();
+            }
+        }
+        if (body_type == nullptr) {
+            return;
+        }
+
+        setExpressionType(new PointerType(body_type));
     }
 }
