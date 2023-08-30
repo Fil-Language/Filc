@@ -27,8 +27,8 @@
 #include <string>
 
 #define FILC_VERSION_MAJOR 0
-#define FILC_VERSION_MINOR 2
-#define FILC_VERSION_PATCH 1
+#define FILC_VERSION_MINOR 3
+#define FILC_VERSION_PATCH 0
 #define FILC_VERSION_PRE std::string("")
 
 #define MAKE_VERSION(major, minor, patch) ((major) * 1000000 + (minor) * 1000 + (patch))
