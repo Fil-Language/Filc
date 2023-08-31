@@ -15,7 +15,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 project(
         Filc
         VERSION 0.2.1
-        LANGUAGES CXX
+        LANGUAGES CXX C
 )
 
 # _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.

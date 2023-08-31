@@ -23,17 +23,16 @@ antlr_target(Parser ${PROJECT_SOURCE_DIR}/src/lib/grammar/FilParser.g4 PARSER
 
 ## _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 ## LLVM section
-#
-#find_package(LLVM REQUIRED CONFIG)
-#
-#message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
-#message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
-#
-#include_directories(${LLVM_INCLUDE_DIRS})
-#separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
-#add_definitions(${LLVM_DEFINITIONS})
-#
-#llvm_map_components_to_libnames(llvm_libs support core irreader)
+
+find_package(LLVM 15 REQUIRED)
+
+message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
+
+separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
+add_definitions(${LLVM_DEFINITIONS})
+
+llvm_map_components_to_libnames(llvm_libs support core irreader)
 
 # _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 # Lib section
@@ -102,6 +101,7 @@ target_include_directories(compiler_lib PUBLIC
         ${ANTLR4_INCLUDE_DIRS}
         ${ANTLR_Lexer_OUTPUT_DIR}
         ${ANTLR_Parser_OUTPUT_DIR}
+        ${LLVM_INCLUDE_DIRS}
         ../../lib)
 target_link_libraries(compiler_lib PUBLIC additional_config antlr4_static)
 

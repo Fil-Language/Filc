@@ -34,6 +34,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Install LLVM
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "15"
 
       - name: Configure CMake
         if: ${{ matrix.os == 'ubuntu-latest' }}
