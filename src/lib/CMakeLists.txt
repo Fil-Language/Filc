@@ -24,11 +24,12 @@ antlr_target(Parser ${PROJECT_SOURCE_DIR}/src/lib/grammar/FilParser.g4 PARSER
 ## _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 ## LLVM section
 
-find_package(LLVM 15 REQUIRED)
+find_package(LLVM 15 REQUIRED CONFIG)
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 
+include_directories(${LLVM_INCLUDE_DIRS})
 separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 add_definitions(${LLVM_DEFINITIONS})
 
@@ -103,6 +104,6 @@ target_include_directories(compiler_lib PUBLIC
         ${ANTLR_Parser_OUTPUT_DIR}
         ${LLVM_INCLUDE_DIRS}
         ../../lib)
-target_link_libraries(compiler_lib PUBLIC additional_config antlr4_static)
+target_link_libraries(compiler_lib PUBLIC additional_config antlr4_static ${llvm_libs})
 
 target_compile_options(compiler_lib PUBLIC -Wall)
