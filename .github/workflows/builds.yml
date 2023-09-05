@@ -27,7 +27,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build
 
       - name: Locate binary
-        run: ls ${{github.workspace}}/build/src
+        run: ls -l ${{github.workspace}}/build/src
       - name: Save binary in zip
         uses: TonyBogdanov/zip@1.0
         with:
@@ -60,7 +60,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build
 
       - name: Locate binary
-        run: ls ${{github.workspace}}/build/src
+        run: ls -l ${{github.workspace}}/build/src
       - name: Save binary in zip
         uses: TonyBogdanov/zip@1.0
         with:
