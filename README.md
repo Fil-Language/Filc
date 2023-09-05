@@ -13,8 +13,7 @@ Have used `figlet -f slant "Filc"` for the version message.
 
 ## Grammar
 
-Refer to documentation for used
-grammar : [https://fil.ktraini.com/doc/advanced/grammar](https://fil.ktraini.com/doc/advanced/grammar).
+Refer to the [diagram](src/lib/grammar/diagram.html) for used grammar.
 
 ## External dependencies
 
