@@ -35,7 +35,16 @@ TEST(Lambda, constructor) {
 TEST(Lambda, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/lambda1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     ASSERT_TYPE("(int) -> bool", program1->getExpressions()[0]->getExpressionType());
+}
+
+TEST(Lambda, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/lambda1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_TRUE(env1->hasName("test_lambda1_3"));
+    ASSERT_TYPE("() -> char*", env1->getName("test_lambda1_3")->getType());
 }

@@ -39,18 +39,22 @@ program returns[filc::ast::Program *tree]
 @init {
     std::vector<std::string> imports;
     std::vector<filc::ast::AbstractExpression *> expressions;
+    bool exported = false;
 }
 @after {
     $tree = new filc::ast::Program($m.text, imports, expressions);
 }
     : m=module (u=use {
         imports.push_back($u.text);
-    })* (exp=EXPORT? e=expression {
+    })* ((EXPORT {
+        exported = true;
+    })? e=expression {
         auto e = $e.tree;
         if (e != nullptr) {
-            e->setExported($exp ? true : false);
+            e->setExported(exported);
             expressions.push_back(e);
         }
+        exported = false;
     })*;
 
 module returns[std::string text]

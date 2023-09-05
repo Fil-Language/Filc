@@ -68,13 +68,35 @@ namespace filc::ast {
         }
     }
 
-    auto Program::resolveEnvironment(filc::message::MessageCollector *collector) -> void {
-        _environment = new filc::environment::Environment(filc::environment::Environment::getGlobalEnvironment());
+    auto Program::resolveEnvironment(filc::message::MessageCollector *collector,
+                                     const std::map<const std::string, Program *> &modules) -> void {
+        const auto *parent = filc::environment::Environment::getGlobalEnvironment();
+        for (const auto &item: _imports) {
+            auto module = modules.find(item);
+            if (module == modules.end()) {
+                throw std::logic_error("Module " + item + " not found");
+            }
 
-        // TODO : add imports env to _environment
+            parent = module->second->getPublicEnvironment(parent);
+        }
+
+        _environment = new filc::environment::Environment(_module, parent);
 
         for (const auto &expression: _expressions) {
             expression->resolveType(_environment, collector);
         }
+    }
+
+    auto Program::getPublicEnvironment(const filc::environment::Environment *parent) const
+    -> filc::environment::Environment * {
+        auto *environment = new filc::environment::Environment(_module, parent);
+
+        for (const auto &expression: _expressions) {
+            if (expression->isExported()) {
+                expression->addNameToEnvironment(environment);
+            }
+        }
+
+        return environment;
     }
 }

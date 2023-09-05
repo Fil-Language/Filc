@@ -30,6 +30,7 @@
 #include "MessageCollector.h"
 #include <string>
 #include <vector>
+#include <map>
 
 namespace filc::ast {
     class Program {
@@ -49,7 +50,11 @@ namespace filc::ast {
 
         auto setFilename(const std::string &filename) -> void;
 
-        auto resolveEnvironment(filc::message::MessageCollector *collector) -> void;
+        auto resolveEnvironment(filc::message::MessageCollector *collector,
+                                const std::map<const std::string, Program *> &modules) -> void;
+
+        [[nodiscard]] auto getPublicEnvironment(const filc::environment::Environment *parent) const
+        -> filc::environment::Environment *;
 
     private:
         std::string _module;
@@ -85,6 +90,8 @@ namespace filc::ast {
                                  filc::message::MessageCollector *collector,
                                  AbstractType *preferred_type = nullptr) -> void;
 
+        virtual auto addNameToEnvironment(filc::environment::Environment *environment) const -> void;
+
     private:
         bool _exported{false};
         filc::utils::Position *_position{nullptr};
@@ -107,6 +114,8 @@ namespace filc::ast {
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
                          AbstractType *preferred_type) -> void override;
+
+        auto addNameToEnvironment(filc::environment::Environment *environment) const -> void override;
 
     private:
         std::string _name;
@@ -186,6 +195,8 @@ namespace filc::ast {
 
         auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
                          AbstractType *preferred_type) -> void override;
+
+        auto addNameToEnvironment(filc::environment::Environment *environment) const -> void override;
 
     private:
         bool _constant;
@@ -528,6 +539,8 @@ namespace filc::ast {
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
                          AbstractType *preferred_type) -> void override;
+
+        auto addNameToEnvironment(filc::environment::Environment *environment) const -> void override;
 
     private:
         Identifier *_name;

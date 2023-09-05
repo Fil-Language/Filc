@@ -43,3 +43,16 @@ TEST(Identifier, resolveType) {
     ASSERT_FALSE(collector->hasErrors());
     ASSERT_TYPE("int", id1.getExpressionType());
 }
+
+TEST(Identifier, addNameToEnvironment) {
+    auto *collector = filc::message::MessageCollector::getCollector();
+    auto *env1 = new filc::environment::Environment;
+    env1->addName("hello", new filc::ast::Type(new filc::ast::Identifier("int")));
+    filc::ast::Identifier id1("hello");
+    id1.resolveType(env1, collector, nullptr);
+
+    auto *env2 = new filc::environment::Environment;
+    ASSERT_FALSE(env2->hasName("hello"));
+    id1.addNameToEnvironment(env2);
+    ASSERT_TRUE(env2->hasName("hello", new filc::ast::Type(new filc::ast::Identifier("int"))));
+}

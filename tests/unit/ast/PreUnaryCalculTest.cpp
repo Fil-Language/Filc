@@ -37,8 +37,17 @@ TEST(PreUnaryCalcul, constructor) {
 TEST(PreUnaryCalcul, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/ast/pre_unary_calcul1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(2));
     ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
     ASSERT_TYPE("int", program1->getExpressions()[1]->getExpressionType());
+}
+
+TEST(PreUnaryCalcul, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/pre_unary_calcul1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_TRUE(env1->hasName("test_pre_unary_calcul1_4"));
+    ASSERT_TYPE("int", env1->getName("test_pre_unary_calcul1_4")->getType());
 }

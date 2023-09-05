@@ -56,7 +56,7 @@ namespace filc::ast {
     auto ForIter::resolveType(filc::environment::Environment *environment,
                               filc::message::MessageCollector *collector,
                               AbstractType *preferred_type) -> void {
-        _body_environment = new filc::environment::Environment(environment);
+        _body_environment = new filc::environment::Environment("", environment);
 
         _array->resolveType(environment, collector);
         auto *array_type = _array->getExpressionType();

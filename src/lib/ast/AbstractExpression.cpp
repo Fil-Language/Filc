@@ -23,6 +23,7 @@
  */
 #include "AST.h"
 #include "Error.h"
+#include "tools.h"
 
 namespace filc::ast {
     AbstractExpression::~AbstractExpression() {
@@ -61,5 +62,11 @@ namespace filc::ast {
                                          "resolveType not implemented",
                                          getPosition())
         );
+    }
+
+    auto AbstractExpression::addNameToEnvironment(filc::environment::Environment *environment) const -> void {
+        auto name = filc::utils::joinString(filc::utils::splitString(environment->getModule(), '.'), "_")
+                    + "_" + std::to_string(getPosition()->getLine());
+        environment->addName(name, getExpressionType());
     }
 }

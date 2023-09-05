@@ -30,7 +30,9 @@
 namespace filc::environment {
     class Environment {
     public:
-        explicit Environment(const Environment *parent = nullptr);
+        Environment(const std::string &module = "", const Environment *parent = nullptr);
+
+        [[nodiscard]] auto getModule() const -> const std::string &;
 
         [[nodiscard]] auto getParent() const -> const Environment *;
 
@@ -49,6 +51,7 @@ namespace filc::environment {
         static auto getGlobalEnvironment() -> const Environment *;
 
     private:
+        std::string _module;
         const Environment *_parent;
         std::vector<Name *> _names;
         std::vector<filc::ast::AbstractType *> _types;

@@ -36,19 +36,22 @@ TEST(Parser, filename) {
 }
 
 TEST(Parser, exported) {
-    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/not-exported.fil", COLLECTOR);
+    filc::grammar::Parser parser1(FIXTURES_PATH_GRAMMAR "/not-exported1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     auto *expression1 = program1->getExpressions()[0];
     ASSERT_NE(nullptr, expression1);
     ASSERT_FALSE(expression1->isExported());
 
-    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/exported.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH_GRAMMAR "/exported1.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
-    ASSERT_THAT(program2->getExpressions(), SizeIs(1));
-    auto *expression2 = program2->getExpressions()[0];
-    ASSERT_NE(nullptr, expression2);
-    ASSERT_TRUE(expression2->isExported());
+    ASSERT_THAT(program2->getExpressions(), SizeIs(2));
+    auto *expression2_1 = program2->getExpressions()[0];
+    auto *expression2_2 = program2->getExpressions()[1];
+    ASSERT_NE(nullptr, expression2_1);
+    ASSERT_NE(nullptr, expression2_2);
+    ASSERT_TRUE(expression2_1->isExported());
+    ASSERT_FALSE(expression2_2->isExported());
 }
 
 TEST(Parser, position) {

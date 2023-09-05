@@ -55,4 +55,8 @@ namespace filc::ast {
 
         environment->addName(_name->getName(), getExpressionType());
     }
+
+    auto Function::addNameToEnvironment(filc::environment::Environment *environment) const -> void {
+        environment->addName(_name->getName(), getExpressionType());
+    }
 }

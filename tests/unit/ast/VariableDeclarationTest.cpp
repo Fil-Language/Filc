@@ -50,8 +50,17 @@ TEST(VariableDeclaration, assignation) {
 TEST(VariableDeclaration, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/variable_declaration1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(2));
     ASSERT_TYPE("float", program1->getExpressions()[0]->getExpressionType());
     ASSERT_TYPE("int", program1->getExpressions()[1]->getExpressionType());
+}
+
+TEST(VariableDeclaration, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/variable_declaration1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_TRUE(env1->hasName("pi"));
+    ASSERT_TYPE("double", env1->getName("pi")->getType());
 }

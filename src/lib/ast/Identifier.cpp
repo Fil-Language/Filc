@@ -50,4 +50,8 @@ namespace filc::ast {
             setExpressionType(name->getType());
         }
     }
+
+    auto Identifier::addNameToEnvironment(filc::environment::Environment *environment) const -> void {
+        environment->addName(_name, getExpressionType());
+    }
 }

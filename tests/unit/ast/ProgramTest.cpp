@@ -47,12 +47,23 @@ TEST(Program, filename) {
 TEST(Program, resolveEnvironment) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/module1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    program1->resolveEnvironment(COLLECTOR);
+    program1->resolveEnvironment(COLLECTOR, {});
     ASSERT_FALSE(COLLECTOR->hasErrors());
 
     COLLECTOR->flush();
     filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/while1.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
-    program2->resolveEnvironment(COLLECTOR);
+    program2->resolveEnvironment(COLLECTOR, {});
     ASSERT_TRUE(COLLECTOR->hasErrors());
+}
+
+TEST(Program, getPublicEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/exported1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(new filc::environment::Environment);
+    ASSERT_STREQ("test.exported1", env1->getModule().c_str());
+    ASSERT_TRUE(env1->hasName("f1"));
+    ASSERT_TYPE("() -> bool", env1->getName("f1")->getType());
+    ASSERT_FALSE(env1->hasName("f2"));
 }

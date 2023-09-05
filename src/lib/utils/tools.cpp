@@ -101,7 +101,7 @@ namespace filc::utils {
         return result;
     }
 
-    auto joinString(std::vector<std::string> &source, const std::string &delimiter) -> std::string {
+    auto joinString(const std::vector<std::string> &source, const std::string &delimiter) -> std::string {
         std::string result;
 
         for (const auto &item: source) {

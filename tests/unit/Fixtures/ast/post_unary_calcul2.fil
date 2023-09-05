@@ -1,4 +1,4 @@
 module test
 
 var array: char* = "Hello"
-array[4]
+export array[4]

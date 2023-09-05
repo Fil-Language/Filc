@@ -39,7 +39,7 @@ TEST(BinaryCalcul, constructor) {
 TEST(BinaryCalcul, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/ast/binary_calcul1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(3));
     ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
     ASSERT_TYPE("int", program1->getExpressions()[1]->getExpressionType());
@@ -47,7 +47,16 @@ TEST(BinaryCalcul, resolveType) {
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/ast/binary_calcul2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
-    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     ASSERT_TYPE("bool", program2->getExpressions()[0]->getExpressionType());
+}
+
+TEST(BinaryCalcul, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/binary_calcul3.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_TRUE(env1->hasName("test_binary_calcul3_3"));
+    ASSERT_TYPE("int", env1->getName("test_binary_calcul3_3")->getType());
 }

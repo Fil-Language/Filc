@@ -26,11 +26,13 @@
 #include "test_tools.h"
 
 TEST(Environment, constructor) {
-    filc::environment::Environment env1;
+    filc::environment::Environment env1("parent");
     ASSERT_EQ(nullptr, env1.getParent());
+    ASSERT_STREQ("parent", env1.getModule().c_str());
 
-    filc::environment::Environment env2(&env1);
+    filc::environment::Environment env2("children", &env1);
     ASSERT_EQ(&env1, env2.getParent());
+    ASSERT_STREQ("children", env2.getModule().c_str());
 }
 
 TEST(Environment, names) {
@@ -45,7 +47,7 @@ TEST(Environment, names) {
 
     filc::environment::Environment parent;
     parent.addName("a", nullptr);
-    filc::environment::Environment env2(&parent);
+    filc::environment::Environment env2("", &parent);
     ASSERT_TRUE(env2.hasName("a"));
     ASSERT_FALSE(env2.hasName("b"));
 }
@@ -61,7 +63,7 @@ TEST(Environment, types) {
 
     filc::environment::Environment parent;
     parent.addType(new filc::ast::Type(new filc::ast::Identifier("float")));
-    filc::environment::Environment env2(&parent);
+    filc::environment::Environment env2("", &parent);
     ASSERT_TRUE(env2.hasType("float"));
     ASSERT_FALSE(env2.hasName("bool"));
 }

@@ -58,8 +58,18 @@ TEST(ForI, constructor) {
 TEST(ForI, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/for_i1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(2));
     ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
     ASSERT_TYPE("int*", program1->getExpressions()[1]->getExpressionType());
+}
+
+TEST(ForI, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/for_i1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_FALSE(env1->hasName("test_for_i1_3"));
+    ASSERT_TRUE(env1->hasName("test_for_i1_4"));
+    ASSERT_TYPE("int*", env1->getName("test_for_i1_4")->getType());
 }

@@ -54,7 +54,7 @@ namespace filc::ast {
     auto Lambda::resolveType(filc::environment::Environment *environment,
                              filc::message::MessageCollector *collector,
                              AbstractType *preferred_type) -> void {
-        _body_environment = new filc::environment::Environment(environment);
+        _body_environment = new filc::environment::Environment("", environment);
 
         std::vector<AbstractType *> parameters_types;
         for (const auto &parameter: _parameters) {

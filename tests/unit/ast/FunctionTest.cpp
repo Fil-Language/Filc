@@ -43,15 +43,24 @@ TEST(Function, constructor) {
 TEST(Function, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/function1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     ASSERT_TYPE("(int, int) -> int", program1->getExpressions()[0]->getExpressionType());
 
     COLLECTOR->flush();
     filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/function2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
-    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     ASSERT_TRUE(COLLECTOR->hasErrors());
     ASSERT_EQ(nullptr, program2->getExpressions()[0]->getExpressionType());
+}
+
+TEST(Function, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/function1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_TRUE(env1->hasName("pi"));
+    ASSERT_TYPE("() -> double", env1->getName("pi")->getType());
 }

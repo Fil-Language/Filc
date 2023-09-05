@@ -58,7 +58,7 @@ namespace filc::ast {
     auto ForI::resolveType(filc::environment::Environment *environment,
                            filc::message::MessageCollector *collector,
                            AbstractType *preferred_type) -> void {
-        _body_environment = new filc::environment::Environment(environment);
+        _body_environment = new filc::environment::Environment("", environment);
 
         if (_declaration != nullptr) {
             _declaration->resolveType(_body_environment, collector, nullptr);

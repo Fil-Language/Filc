@@ -1,0 +1,3 @@
+module test
+
+export (): char* -> "Hello World!"

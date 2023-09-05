@@ -37,15 +37,24 @@ TEST(PostUnaryCalcul, constructor) {
 TEST(PostUnaryCalcul, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/ast/post_unary_calcul1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(2));
     ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
     ASSERT_TYPE("int", program1->getExpressions()[1]->getExpressionType());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/ast/post_unary_calcul2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
-    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program2->getExpressions(), SizeIs(2));
     ASSERT_TYPE("char*", program2->getExpressions()[0]->getExpressionType());
     ASSERT_TYPE("char", program2->getExpressions()[1]->getExpressionType());
+}
+
+TEST(PostUnaryCalcul, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/post_unary_calcul2.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_TRUE(env1->hasName("test_post_unary_calcul2_4"));
+    ASSERT_TYPE("char", env1->getName("test_post_unary_calcul2_4")->getType());
 }
