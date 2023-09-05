@@ -3,7 +3,6 @@ name: Building
 on:
   release:
     types: [ published ]
-  push:
 
 jobs:
   build-ubuntu:
@@ -34,13 +33,13 @@ jobs:
           command: c
           files: |
             ${{github.workspace}}/build/src/filc
-          outPath: zip filc-ubuntu22.04.tar.gz
-  #      - name: Upload to Release
-  #        uses: JasonEtco/upload-to-release@v0.1.1
-  #        with:
-  #          args: filc-ubuntu22.04.zip
-  #        env:
-  #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          outPath: filc-ubuntu22.04.tar.gz
+      - name: Upload to Release
+        uses: JasonEtco/upload-to-release@v0.1.1
+        with:
+          args: filc-ubuntu22.04.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-macos:
     name: Build MacOS 12
@@ -71,12 +70,12 @@ jobs:
           files: |
             ${{github.workspace}}/build/src/filc
           outPath: filc-macos12.tar.gz
-#      - name: Upload to Release
-#        uses: JasonEtco/upload-to-release@v0.1.1
-#        with:
-#          args: filc-macos12.zip
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload to Release
+        uses: JasonEtco/upload-to-release@v0.1.1
+        with:
+          args: filc-macos12.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #  build-windows:
 #    name: Build Windows 2022
