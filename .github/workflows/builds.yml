@@ -26,8 +26,10 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build
 
+      - name: Locate binary
+        run: ls ${{github.workspace}}/build/src
       - name: Save binary in zip
-        uses: montudor/action-zip@v1.0.0
+        uses: TonyBogdanov/zip@1.0
         with:
           args: zip filc-ubuntu22.04.zip ${{github.workspace}}/build/src/filc
   #      - name: Upload to Release
@@ -57,8 +59,10 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build
 
+      - name: Locate binary
+        run: ls ${{github.workspace}}/build/src
       - name: Save binary in zip
-        uses: montudor/action-zip@v1.0.0
+        uses: TonyBogdanov/zip@1.0
         with:
           args: zip filc-macos12.zip ${{github.workspace}}/build/src/filc
 #      - name: Upload to Release
