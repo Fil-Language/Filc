@@ -51,10 +51,10 @@ TEST(Program, resolveEnvironment) {
     ASSERT_FALSE(COLLECTOR->hasErrors());
 
     COLLECTOR->flush();
-    filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/while1.fil", COLLECTOR);
+    filc::grammar::Parser parser2(FIXTURES_PATH "/ast/while1.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     program2->resolveEnvironment(COLLECTOR, {});
-    ASSERT_TRUE(COLLECTOR->hasErrors());
+    ASSERT_FALSE(COLLECTOR->hasErrors());
 }
 
 TEST(Program, getPublicEnvironment) {
@@ -66,4 +66,9 @@ TEST(Program, getPublicEnvironment) {
     ASSERT_TRUE(env1->hasName("f1"));
     ASSERT_TYPE("() -> bool", env1->getName("f1")->getType());
     ASSERT_FALSE(env1->hasName("f2"));
+}
+
+TEST(Program, generateIR) {
+    filc::ast::Program program1("", {}, {});
+    ASSERT_NO_THROW(program1.generateIR(COLLECTOR));
 }

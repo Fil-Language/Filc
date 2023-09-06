@@ -52,6 +52,8 @@ namespace filc {
 
         auto resolveEnvironment(filc::message::MessageCollector *collector) -> void;
 
+        auto generateLLVMIR(filc::message::MessageCollector *collector) -> void;
+
         static auto getModuleFilename(const std::string &module_name, const std::string &std_path) -> std::string;
     };
 }

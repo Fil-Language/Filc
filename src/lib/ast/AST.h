@@ -31,6 +31,17 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "llvm/ADT/APFloat.h"
+#include "llvm/ADT/STLExtras.h"
+#include "llvm/IR/BasicBlock.h"
+#include "llvm/IR/Constants.h"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Type.h"
+#include "llvm/IR/Verifier.h"
 
 namespace filc::ast {
     class Program {
@@ -53,15 +64,17 @@ namespace filc::ast {
         auto resolveEnvironment(filc::message::MessageCollector *collector,
                                 const std::map<const std::string, Program *> &modules) -> void;
 
-        [[nodiscard]] auto getPublicEnvironment(const filc::environment::Environment *parent) const
-        -> filc::environment::Environment *;
+        [[nodiscard]] auto getPublicEnvironment(
+                const filc::environment::Environment *parent) const -> filc::environment::Environment *;
+
+        auto generateIR(filc::message::MessageCollector *collector) -> void;
 
     private:
         std::string _module;
         std::vector<std::string> _imports;
         std::vector<AbstractExpression *> _expressions;
         std::string _filename;
-        filc::environment::Environment *_environment{nullptr};
+        filc::environment::Environment *_environment;
     };
 
     class AbstractExpression {
@@ -91,6 +104,11 @@ namespace filc::ast {
                                  AbstractType *preferred_type = nullptr) -> void;
 
         virtual auto addNameToEnvironment(filc::environment::Environment *environment) const -> void;
+
+        virtual auto generateIR(filc::message::MessageCollector *collector,
+                                llvm::LLVMContext *context,
+                                llvm::Module *module,
+                                llvm::IRBuilder<> *builder) const -> llvm::Value *;
 
     private:
         bool _exported{false};

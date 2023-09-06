@@ -64,8 +64,11 @@ namespace filc {
             return 1;
         }
 
-        // LLVM
-        // TODO
+        generateLLVMIR(collector);
+
+        if (!checkCollector(collector)) {
+            return 1;
+        }
 
         // Free memory
         collector->addMessage(new filc::message::Message(filc::message::SYSTEM, "Free memory"));
@@ -223,6 +226,12 @@ namespace filc {
                                                               filc::utils::joinString(non_resolved, ", ")));
         } else {
             collector->addMessage(new filc::message::Message(filc::message::INFO, "All modules resolved"));
+        }
+    }
+
+    auto FilCompiler::generateLLVMIR(filc::message::MessageCollector *collector) -> void {
+        for (const auto &module: _modules) {
+            module.second->generateIR(collector);
         }
     }
 

@@ -88,3 +88,12 @@ TEST(AbstractExpression, resolveType) {
     ASSERT_FALSE(COLLECTOR->hasErrors());
 }
 // NOLINTEND(readability-function-cognitive-complexity)
+
+TEST(AbstractExpression, generateIR) {
+    class : public filc::ast::AbstractExpression {
+    } obj1;
+
+    ASSERT_EQ(nullptr, obj1.generateIR(COLLECTOR, nullptr, nullptr, nullptr));
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
+}

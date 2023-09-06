@@ -69,4 +69,17 @@ namespace filc::ast {
                     + "_" + std::to_string(getPosition()->getLine());
         environment->addName(name, getExpressionType());
     }
+
+    auto AbstractExpression::generateIR(filc::message::MessageCollector *collector,
+                                        llvm::LLVMContext *context,
+                                        llvm::Module *module,
+                                        llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        collector->addError(
+                new filc::message::Error(filc::message::FATAL_ERROR,
+                                         "generateIR not implemented",
+                                         getPosition())
+        );
+
+        return nullptr;
+    }
 }
