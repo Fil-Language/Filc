@@ -631,3 +631,5 @@ function_call_params returns[std::vector<filc::ast::AbstractExpression *> tree]
     } (COMMA ei=expression {
         $tree.push_back($ei.tree);
     })*;
+
+test: 'TEST';
