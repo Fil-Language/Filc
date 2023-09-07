@@ -30,29 +30,39 @@ TEST(Identifier, constructor) {
 }
 
 TEST(Identifier, resolveType) {
-    auto *collector = filc::message::MessageCollector::getCollector();
     auto *environment = new filc::environment::Environment;
 
     filc::ast::Identifier id1("hello");
-    id1.resolveType(environment, collector, nullptr);
-    ASSERT_TRUE(collector->hasErrors());
-    collector->flush();
+    id1.resolveType(environment, COLLECTOR, nullptr);
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
 
     environment->addName("hello", new filc::ast::Type(new filc::ast::Identifier("int")));
-    id1.resolveType(environment, collector, nullptr);
-    ASSERT_FALSE(collector->hasErrors());
+    id1.resolveType(environment, COLLECTOR, nullptr);
+    ASSERT_FALSE(COLLECTOR->hasErrors());
     ASSERT_TYPE("int", id1.getExpressionType());
 }
 
 TEST(Identifier, addNameToEnvironment) {
-    auto *collector = filc::message::MessageCollector::getCollector();
     auto *env1 = new filc::environment::Environment;
     env1->addName("hello", new filc::ast::Type(new filc::ast::Identifier("int")));
     filc::ast::Identifier id1("hello");
-    id1.resolveType(env1, collector, nullptr);
+    id1.resolveType(env1, COLLECTOR, nullptr);
 
     auto *env2 = new filc::environment::Environment;
     ASSERT_FALSE(env2->hasName("hello"));
     id1.addNameToEnvironment(env2);
     ASSERT_TRUE(env2->hasName("hello", new filc::ast::Type(new filc::ast::Identifier("int"))));
+}
+
+TEST(Identifier, generateIR) {
+    filc::ast::Identifier id1("var1");
+    auto *environment = new filc::environment::Environment;
+    environment->addName("var1", new filc::ast::Type(new filc::ast::Identifier("int")));
+    auto *context = new llvm::LLVMContext();
+    auto *value = llvm::ConstantFP::get(*context, llvm::APFloat(3.6));
+    environment->getName("var1")->setValue(value);
+    id1.resolveType(environment, COLLECTOR, nullptr);
+    ASSERT_EQ(value, id1.generateIR(COLLECTOR, environment, nullptr, nullptr, nullptr));
+    ASSERT_FALSE(COLLECTOR->hasErrors());
 }

@@ -30,3 +30,11 @@ TEST(Name, constructor) {
     ASSERT_STREQ("my_var", var1.getName().c_str());
     ASSERT_TYPE("int", var1.getType());
 }
+
+TEST(Name, value) {
+    filc::environment::Name var1("my_var", new filc::ast::Type(new filc::ast::Identifier("int")));
+    auto *context = new llvm::LLVMContext();
+    ASSERT_EQ(nullptr, var1.getValue());
+    var1.setValue(llvm::ConstantFP::get(*context, llvm::APFloat(3.6)));
+    ASSERT_NE(nullptr, var1.getValue());
+}

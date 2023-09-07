@@ -26,6 +26,7 @@
 
 #include <string>
 #include "AST_decl.h"
+#include "llvm/IR/Value.h"
 
 namespace filc::environment {
     class Name {
@@ -36,9 +37,14 @@ namespace filc::environment {
 
         [[nodiscard]] auto getType() const -> filc::ast::AbstractType *;
 
+        [[nodiscard]] auto getValue() const -> llvm::Value *;
+
+        auto setValue(llvm::Value *value) -> void;
+
     private:
         std::string _name;
         filc::ast::AbstractType *_type;
+        llvm::Value *_value;
     };
 }
 

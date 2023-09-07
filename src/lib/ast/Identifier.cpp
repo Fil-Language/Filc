@@ -54,4 +54,27 @@ namespace filc::ast {
     auto Identifier::addNameToEnvironment(filc::environment::Environment *environment) const -> void {
         environment->addName(_name, getExpressionType());
     }
+
+    auto Identifier::generateIR(filc::message::MessageCollector *collector,
+                                filc::environment::Environment *environment,
+                                llvm::LLVMContext *context,
+                                llvm::Module *module,
+                                llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        auto *name = environment->getName(_name, getExpressionType());
+        if (name == nullptr) {
+            collector->addError(
+                    new filc::message::Error(filc::message::ERROR, _name + " is not defined", getPosition())
+            );
+
+            return nullptr;
+        }
+        auto *value = name->getValue();
+        if (value == nullptr) {
+            collector->addError(
+                    new filc::message::Error(filc::message::ERROR, _name + " is not defined", getPosition())
+            );
+        }
+
+        return value;
+    }
 }

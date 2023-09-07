@@ -93,7 +93,7 @@ TEST(AbstractExpression, generateIR) {
     class : public filc::ast::AbstractExpression {
     } obj1;
 
-    ASSERT_EQ(nullptr, obj1.generateIR(COLLECTOR, nullptr, nullptr, nullptr));
+    ASSERT_EQ(nullptr, obj1.generateIR(COLLECTOR, nullptr, nullptr, nullptr, nullptr));
     ASSERT_TRUE(COLLECTOR->hasErrors());
     COLLECTOR->flush();
 }

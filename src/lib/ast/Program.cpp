@@ -106,7 +106,7 @@ namespace filc::ast {
         auto *ir_builder = new llvm::IRBuilder<>(*context);
 
         for (const auto &expression: _expressions) {
-            expression->generateIR(collector, context, module, ir_builder);
+            expression->generateIR(collector, _environment, context, module, ir_builder);
         }
     }
 }

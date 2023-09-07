@@ -71,8 +71,8 @@ namespace filc::ast {
     }
 
     auto AbstractExpression::generateIR(filc::message::MessageCollector *collector,
-                                        llvm::LLVMContext *context,
-                                        llvm::Module *module,
+                                        filc::environment::Environment *environment,
+                                        llvm::LLVMContext *context, llvm::Module *module,
                                         llvm::IRBuilder<> *builder) const -> llvm::Value * {
         collector->addError(
                 new filc::message::Error(filc::message::FATAL_ERROR,
