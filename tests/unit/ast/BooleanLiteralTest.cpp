@@ -55,3 +55,11 @@ TEST(BooleanLiteral, addNameToEnvironment) {
     ASSERT_TRUE(env1->hasName("test_bool1_3"));
     ASSERT_TYPE("bool", env1->getName("test_bool1_3")->getType());
 }
+
+TEST(BooleanLiteral, generateIR) {
+    filc::ast::BooleanLiteral bl1(true);
+    bl1.resolveType(new filc::environment::Environment, COLLECTOR, nullptr);
+    auto *value = bl1.generateIR(COLLECTOR, new filc::environment::Environment,
+                                 new llvm::LLVMContext, nullptr, nullptr);
+    ASSERT_TRUE(value->getType()->isIntegerTy());
+}
