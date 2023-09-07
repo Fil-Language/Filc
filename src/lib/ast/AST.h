@@ -98,11 +98,11 @@ namespace filc::ast {
 
         virtual auto addNameToEnvironment(filc::environment::Environment *environment) const -> void;
 
-        virtual auto generateIR(filc::message::MessageCollector *collector,
-                                filc::environment::Environment *environment,
-                                llvm::LLVMContext *context,
-                                llvm::Module *module,
-                                llvm::IRBuilder<> *builder) const -> llvm::Value *;
+        [[nodiscard]] virtual auto generateIR(filc::message::MessageCollector *collector,
+                                              filc::environment::Environment *environment,
+                                              llvm::LLVMContext *context,
+                                              llvm::Module *module,
+                                              llvm::IRBuilder<> *builder) const -> llvm::Value *;
 
     private:
         bool _exported{false};
@@ -129,11 +129,11 @@ namespace filc::ast {
 
         auto addNameToEnvironment(filc::environment::Environment *environment) const -> void override;
 
-        auto generateIR(filc::message::MessageCollector *collector,
-                        filc::environment::Environment *environment,
-                        llvm::LLVMContext *context,
-                        llvm::Module *module,
-                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
+        [[nodiscard]] auto generateIR(filc::message::MessageCollector *collector,
+                                      filc::environment::Environment *environment,
+                                      llvm::LLVMContext *context,
+                                      llvm::Module *module,
+                                      llvm::IRBuilder<> *builder) const -> llvm::Value * override;
 
     private:
         std::string _name;
@@ -160,11 +160,11 @@ namespace filc::ast {
         auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
                          AbstractType *preferred_type) -> void override;
 
-        auto generateIR(filc::message::MessageCollector *collector,
-                        filc::environment::Environment *environment,
-                        llvm::LLVMContext *context,
-                        llvm::Module *module,
-                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
+        [[nodiscard]] auto generateIR(filc::message::MessageCollector *collector,
+                                      filc::environment::Environment *environment,
+                                      llvm::LLVMContext *context,
+                                      llvm::Module *module,
+                                      llvm::IRBuilder<> *builder) const -> llvm::Value * override;
     };
 
     class IntegerLiteral : public AbstractLiteral<int> {

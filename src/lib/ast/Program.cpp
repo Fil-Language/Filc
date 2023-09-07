@@ -105,8 +105,9 @@ namespace filc::ast {
         auto *module = new llvm::Module(getModule(), *context);
         auto *ir_builder = new llvm::IRBuilder<>(*context);
 
+        std::vector<llvm::Value *> values;
         for (const auto &expression: _expressions) {
-            expression->generateIR(collector, _environment, context, module, ir_builder);
+            values.push_back(expression->generateIR(collector, _environment, context, module, ir_builder));
         }
     }
 }
