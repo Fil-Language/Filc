@@ -64,3 +64,16 @@ TEST(VariableDeclaration, addNameToEnvironment) {
     ASSERT_TRUE(env1->hasName("pi"));
     ASSERT_TYPE("double", env1->getName("pi")->getType());
 }
+
+TEST(VariableDeclaration, generateIR) {
+    filc::ast::VariableDeclaration vd1(true, new filc::ast::Identifier("my_var"),
+                                       new filc::ast::Type(new filc::ast::Identifier("int")));
+    vd1.setAssignation(new filc::ast::IntegerLiteral(2));
+    auto *env = new filc::environment::Environment("", filc::environment::Environment::getGlobalEnvironment());
+    vd1.resolveType(env, COLLECTOR, nullptr);
+    ASSERT_FALSE(COLLECTOR->hasErrors());
+    auto *context = new llvm::LLVMContext;
+    auto *value = vd1.generateIR(COLLECTOR, env, context, nullptr, nullptr);
+    ASSERT_NE(nullptr, value);
+    ASSERT_TRUE(value->getType()->isIntegerTy());
+}

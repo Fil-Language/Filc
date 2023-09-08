@@ -246,6 +246,12 @@ namespace filc::ast {
 
         auto addNameToEnvironment(filc::environment::Environment *environment) const -> void override;
 
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
+
     private:
         bool _constant;
         Identifier *_identifier;

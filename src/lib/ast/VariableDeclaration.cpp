@@ -89,4 +89,16 @@ namespace filc::ast {
     auto VariableDeclaration::addNameToEnvironment(filc::environment::Environment *environment) const -> void {
         environment->addName(_identifier->getName(), getExpressionType());
     }
+
+    auto VariableDeclaration::generateIR(filc::message::MessageCollector *collector,
+                                         filc::environment::Environment *environment,
+                                         llvm::LLVMContext *context,
+                                         llvm::Module *module,
+                                         llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        auto *name = environment->getName(_identifier->getName(), getExpressionType());
+        auto *value = _assignation->generateIR(collector, environment, context, module, builder);
+        name->setValue(value);
+
+        return value;
+    }
 }
