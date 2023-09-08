@@ -217,6 +217,12 @@ namespace filc::ast {
 
         auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
                          AbstractType *preferred_type) -> void override;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
     };
 
     class VariableDeclaration : public AbstractExpression {

@@ -58,3 +58,11 @@ TEST(StringLiteral, addNameToEnvironment) {
     ASSERT_TRUE(env1->hasName("test_string1_3"));
     ASSERT_TYPE("char*", env1->getName("test_string1_3")->getType());
 }
+
+TEST(StringLiteral, generateIR) {
+    filc::ast::StringLiteral sl1("hello");
+    sl1.resolveType(new filc::environment::Environment, COLLECTOR, nullptr);
+    auto *value = sl1.generateIR(COLLECTOR, new filc::environment::Environment,
+                                 new llvm::LLVMContext, nullptr, nullptr);
+    ASSERT_TRUE(value->getType()->isArrayTy());
+}

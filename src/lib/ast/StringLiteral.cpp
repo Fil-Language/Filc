@@ -23,6 +23,7 @@
  */
 #include "AST.h"
 #include "tools.h"
+#include "llvm/IR/Constants.h"
 
 namespace filc::ast {
     StringLiteral::StringLiteral(const std::string &value)
@@ -37,5 +38,13 @@ namespace filc::ast {
         auto *char_type = environment->getType("char*");
 
         setExpressionType(char_type);
+    }
+
+    auto StringLiteral::generateIR(filc::message::MessageCollector *collector,
+                                   filc::environment::Environment *environment,
+                                   llvm::LLVMContext *context,
+                                   llvm::Module *module,
+                                   llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        return llvm::ConstantDataArray::getString(*context, getValue());
     }
 }
