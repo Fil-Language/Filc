@@ -203,6 +203,12 @@ namespace filc::ast {
                          AbstractType *preferred_type) -> void override;
 
         static auto stringToChar(const std::string &snippet, antlr4::Token *token = nullptr) -> char;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
     };
 
     class StringLiteral : public AbstractLiteral<std::string> {

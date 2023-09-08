@@ -25,6 +25,7 @@
 #include "MessageCollector.h"
 #include "DevWarning.h"
 #include "tools.h"
+#include "llvm/IR/Constants.h"
 
 namespace filc::ast {
     CharacterLiteral::CharacterLiteral(char value)
@@ -63,5 +64,13 @@ namespace filc::ast {
         }
 
         setExpressionType(environment->getType("char"));
+    }
+
+    auto CharacterLiteral::generateIR(filc::message::MessageCollector *collector,
+                                      filc::environment::Environment *environment,
+                                      llvm::LLVMContext *context,
+                                      llvm::Module *module,
+                                      llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        return llvm::ConstantInt::get(*context, llvm::APInt(8, getValue()));
     }
 }
