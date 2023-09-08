@@ -61,3 +61,11 @@ TEST(IntegerLiteral, addNameToEnvironment) {
     ASSERT_TRUE(env1->hasName("test_int1_3"));
     ASSERT_TYPE("int", env1->getName("test_int1_3")->getType());
 }
+
+TEST(IntegerLiteral, generateIR) {
+    filc::ast::IntegerLiteral il1(2);
+    il1.resolveType(new filc::environment::Environment, COLLECTOR, nullptr);
+    auto *value = il1.generateIR(COLLECTOR, new filc::environment::Environment,
+                                 new llvm::LLVMContext, nullptr, nullptr);
+    ASSERT_TRUE(value->getType()->isIntegerTy());
+}
