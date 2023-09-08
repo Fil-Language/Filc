@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "llvm/IR/Constants.h"
 
 namespace filc::ast {
     FloatLiteral::FloatLiteral(double value)
@@ -35,5 +36,13 @@ namespace filc::ast {
         }
 
         setExpressionType(environment->getType("double"));
+    }
+
+    auto FloatLiteral::generateIR(filc::message::MessageCollector *collector,
+                                  filc::environment::Environment *environment,
+                                  llvm::LLVMContext *context,
+                                  llvm::Module *module,
+                                  llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        return llvm::ConstantFP::get(*context, llvm::APFloat(getValue()));
     }
 }

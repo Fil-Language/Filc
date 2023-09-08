@@ -70,3 +70,11 @@ TEST(FloatLiteral, addNameToEnvironment) {
     ASSERT_TRUE(env1->hasName("test_float1_3"));
     ASSERT_TYPE("double", env1->getName("test_float1_3")->getType());
 }
+
+TEST(FloatLiteral, generateIR) {
+    filc::ast::FloatLiteral fl1(3.6);
+    fl1.resolveType(new filc::environment::Environment, COLLECTOR, nullptr);
+    auto *value = fl1.generateIR(COLLECTOR, new filc::environment::Environment,
+                                 new llvm::LLVMContext, nullptr, nullptr);
+    ASSERT_TRUE(value->getType()->isDoubleTy());
+}
