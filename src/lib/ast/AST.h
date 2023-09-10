@@ -183,7 +183,7 @@ namespace filc::ast {
 
     class FloatLiteral : public AbstractLiteral<double> {
     public:
-        explicit FloatLiteral(double value);
+        explicit FloatLiteral(double value, bool is_double = false);
 
         auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
                          AbstractType *preferred_type) -> void override;
@@ -193,6 +193,11 @@ namespace filc::ast {
                         llvm::LLVMContext *context,
                         llvm::Module *module,
                         llvm::IRBuilder<> *builder) const -> llvm::Value * override;
+
+        auto isDouble() const -> bool;
+
+    private:
+        bool _double;
     };
 
     class CharacterLiteral : public AbstractLiteral<char> {

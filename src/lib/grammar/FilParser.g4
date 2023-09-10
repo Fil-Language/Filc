@@ -223,8 +223,12 @@ number returns[filc::ast::AbstractExpression *tree]
         $tree->setPosition(new filc::utils::Position($i));
     }
     | f=FLOAT {
-        $tree = new filc::ast::FloatLiteral(stod($f.text));
+        $tree = new filc::ast::FloatLiteral(stod($f.text), false);
         $tree->setPosition(new filc::utils::Position($f));
+    }
+    | d=DOUBLE {
+        $tree = new filc::ast::FloatLiteral(stod($d.text), true);
+        $tree->setPosition(new filc::utils::Position($d));
     };
 
 variable_declaration returns[filc::ast::VariableDeclaration *tree]

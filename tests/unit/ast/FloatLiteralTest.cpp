@@ -28,12 +28,15 @@
 TEST(FloatLiteral, constructor) {
     filc::ast::FloatLiteral fl1(42);
     ASSERT_EQ(42, fl1.getValue());
+    ASSERT_FALSE(fl1.isDouble());
 
     filc::ast::FloatLiteral fl2(2.3);
     ASSERT_EQ(2.3, fl2.getValue());
+    ASSERT_FALSE(fl2.isDouble());
 
-    filc::ast::FloatLiteral fl3(-4.5);
+    filc::ast::FloatLiteral fl3(-4.5, true);
     ASSERT_EQ(-4.5, fl3.getValue());
+    ASSERT_TRUE(fl3.isDouble());
 }
 
 TEST(FloatLiteral, resolveType) {
@@ -41,19 +44,19 @@ TEST(FloatLiteral, resolveType) {
     auto *program1 = parser1.getProgram();
     ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    ASSERT_TYPE("double", program1->getExpressions()[0]->getExpressionType());
+    ASSERT_TYPE("float", program1->getExpressions()[0]->getExpressionType());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/float2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
     ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
-    ASSERT_TYPE("double", program2->getExpressions()[0]->getExpressionType());
+    ASSERT_TYPE("float", program2->getExpressions()[0]->getExpressionType());
 
     filc::grammar::Parser parser3(FIXTURES_PATH "/grammar/float3.fil", COLLECTOR);
     auto *program3 = parser3.getProgram();
     ASSERT_NO_THROW(program3->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
-    ASSERT_TYPE("double", program3->getExpressions()[0]->getExpressionType());
+    ASSERT_TYPE("float", program3->getExpressions()[0]->getExpressionType());
 
     filc::grammar::Parser parser4(FIXTURES_PATH "/grammar/float4.fil", COLLECTOR);
     auto *program4 = parser4.getProgram();
@@ -68,7 +71,7 @@ TEST(FloatLiteral, addNameToEnvironment) {
     program1->resolveEnvironment(COLLECTOR, {});
     auto *env1 = program1->getPublicEnvironment(nullptr);
     ASSERT_TRUE(env1->hasName("test_float1_3"));
-    ASSERT_TYPE("double", env1->getName("test_float1_3")->getType());
+    ASSERT_TYPE("float", env1->getName("test_float1_3")->getType());
 }
 
 TEST(FloatLiteral, generateIR) {

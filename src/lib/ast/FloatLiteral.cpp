@@ -25,17 +25,19 @@
 #include "llvm/IR/Constants.h"
 
 namespace filc::ast {
-    FloatLiteral::FloatLiteral(double value)
-            : AbstractLiteral<double>(value) {}
+    FloatLiteral::FloatLiteral(double value, bool is_double)
+            : AbstractLiteral<double>(value), _double(is_double) {}
 
     auto FloatLiteral::resolveType(filc::environment::Environment *environment,
                                    filc::message::MessageCollector *collector,
                                    AbstractType *preferred_type) -> void {
-        if (!environment->hasType("double")) {
-            environment->addType(new filc::ast::Type(new filc::ast::Identifier("double")));
+        auto looking_type = _double ? "double" : "float";
+
+        if (!environment->hasType(looking_type)) {
+            environment->addType(new filc::ast::Type(new filc::ast::Identifier(looking_type)));
         }
 
-        setExpressionType(environment->getType("double"));
+        setExpressionType(environment->getType(looking_type));
     }
 
     auto FloatLiteral::generateIR(filc::message::MessageCollector *collector,
@@ -44,5 +46,9 @@ namespace filc::ast {
                                   llvm::Module *module,
                                   llvm::IRBuilder<> *builder) const -> llvm::Value * {
         return llvm::ConstantFP::get(*context, llvm::APFloat(getValue()));
+    }
+
+    auto FloatLiteral::isDouble() const -> bool {
+        return _double;
     }
 }
