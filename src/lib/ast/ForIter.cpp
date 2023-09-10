@@ -60,17 +60,19 @@ namespace filc::ast {
 
         _array->resolveType(environment, collector);
         auto *array_type = _array->getExpressionType();
-        auto *array_operator = environment->getName(
-                "operator[]",
-                new filc::ast::LambdaType({environment->getType("int")}, array_type->getInnerType(), array_type)
-        );
-        if (array_operator == nullptr) {
-            collector->addError(new filc::message::Error(
-                    filc::message::ERROR,
-                    "Value is not iterable",
-                    _array->getPosition()
-            ));
-            return;
+        if (dynamic_cast<PointerType *>(array_type) == nullptr) {
+            auto *array_operator = environment->getName(
+                    "operator[]",
+                    new filc::ast::LambdaType({environment->getType("int")}, array_type->getInnerType())
+            );
+            if (array_operator == nullptr) {
+                collector->addError(new filc::message::Error(
+                        filc::message::ERROR,
+                        "Value is not iterable",
+                        _array->getPosition()
+                ));
+                return;
+            }
         }
 
         if (environment->hasName(_identifier->getName())) {

@@ -37,8 +37,21 @@ namespace filc::ast {
             return;
         }
 
+        auto *cl_op = dynamic_cast<ClassicOperator *>(getOperator());
+        if (cl_op != nullptr) {
+            if (cl_op->getOperator() == ClassicOperator::REF) {
+                setExpressionType(new PointerType(variable_type));
+                return;
+            }
+            if (cl_op->getOperator() == ClassicOperator::STAR
+                && dynamic_cast<PointerType *>(variable_type) != nullptr) {
+                setExpressionType(variable_type->getInnerType());
+                return;
+            }
+        }
+
         auto operator_name = "operator" + getOperator()->dump();
-        auto *operator_type = getOperator()->dumpPreLambdaType(variable_type, variable_type, environment, collector,
+        auto *operator_type = getOperator()->dumpPreLambdaType(variable_type, environment, collector,
                                                                getPosition());
         if (environment->getName(operator_name, operator_type) == nullptr) {
             collector->addError(

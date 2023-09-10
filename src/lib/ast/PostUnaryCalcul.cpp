@@ -37,8 +37,14 @@ namespace filc::ast {
             return;
         }
 
+        if (dynamic_cast<PointerType *>(variable_type) != nullptr
+            && dynamic_cast<ArrayOperator *>(getOperator()) != nullptr) {
+            setExpressionType(variable_type->getInnerType());
+            return;
+        }
+
         auto operator_name = "operator" + getOperator()->dump();
-        auto *operator_type = getOperator()->dumpPostLambdaType(variable_type, variable_type, environment, collector,
+        auto *operator_type = getOperator()->dumpPostLambdaType(variable_type, environment, collector,
                                                                 getPosition());
         if (environment->getName(operator_name, operator_type) == nullptr) {
             collector->addError(

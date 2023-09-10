@@ -24,7 +24,7 @@
 #include "AST.h"
 
 auto operator==(const filc::ast::AbstractType &type1, const filc::ast::AbstractType &type2) -> bool {
-    return type1.equals(type2);
+    return type1.dump() == type2.dump();
 }
 
 auto operator!=(const filc::ast::AbstractType &type1, const filc::ast::AbstractType &type2) -> bool {

@@ -88,8 +88,8 @@ namespace filc::ast {
                 return_type = item_type;
             } else {
                 if (*return_type != *item_type &&
-                    !environment->hasName("operator=", new filc::ast::LambdaType({return_type, item_type}, return_type,
-                                                                                 return_type))) {
+                    !environment->hasName("operator=",
+                                          new filc::ast::LambdaType({return_type, item_type}, return_type))) {
                     collector->addError(new filc::message::Error(
                             filc::message::ERROR,
                             "Switch case return wrong type. Expected " + return_type->dump()

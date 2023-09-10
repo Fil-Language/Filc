@@ -24,9 +24,8 @@
 #include "AST.h"
 
 namespace filc::ast {
-    LambdaType::LambdaType(const std::vector<AbstractType *> &argument_types, AbstractType *return_type,
-                           AbstractType *called_on)
-            : _argument_types(argument_types), _return_type(return_type), _called_on(called_on) {}
+    LambdaType::LambdaType(const std::vector<AbstractType *> &argument_types, AbstractType *return_type)
+            : _argument_types(argument_types), _return_type(return_type) {}
 
     auto LambdaType::getArgumentTypes() const -> const std::vector<AbstractType *> & {
         return _argument_types;
@@ -62,28 +61,5 @@ namespace filc::ast {
 
     auto LambdaType::getInnerType() const -> AbstractType * {
         return (AbstractType *) this;
-    }
-
-    auto LambdaType::getCalledOn() const -> AbstractType * {
-        return _called_on;
-    }
-
-    auto LambdaType::equals(const AbstractType &other) const -> bool {
-        if (dynamic_cast<const LambdaType *>(&other) == nullptr) {
-            return false;
-        }
-        auto other_type = dynamic_cast<const LambdaType &>(other);
-
-        if (_argument_types.size() != other_type._argument_types.size()) {
-            return false;
-        }
-
-        for (unsigned int i = 0; i < _argument_types.size(); i++) {
-            if (*_argument_types[i] != *other_type._argument_types[i]) {
-                return false;
-            }
-        }
-
-        return *_return_type == *other_type._return_type && *_called_on == *other_type._called_on;
     }
 }

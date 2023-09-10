@@ -60,10 +60,9 @@ namespace filc::ast {
 
         auto operator_name = "operator" + _operator->dump();
         auto has_found_preferred = preferred_type != nullptr &&
-                                   environment->hasName(operator_name, new LambdaType({left_type, right_type},
-                                                                                      preferred_type, left_type));
-        auto has_found_left = environment->hasName(operator_name, new LambdaType({left_type, right_type},
-                                                                                 left_type, left_type));
+                                   environment->hasName(operator_name,
+                                                        new LambdaType({left_type, right_type}, preferred_type));
+        auto has_found_left = environment->hasName(operator_name, new LambdaType({left_type, right_type}, left_type));
         if ((preferred_type != nullptr && (!has_found_preferred || !has_found_left)) || !has_found_left) {
             collector->addError(
                     new filc::message::Error(filc::message::ERROR,

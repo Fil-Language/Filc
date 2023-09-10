@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "DevWarning.h"
 
 namespace filc::ast {
     ClassicOperator::ClassicOperator(filc::ast::ClassicOperator::OPERATOR p_operator)
@@ -76,23 +77,76 @@ namespace filc::ast {
         throw std::logic_error("Should not come here");
     }
 
-    auto ClassicOperator::dumpPreLambdaType(AbstractType *return_type,
-                                            AbstractType *called_on,
+    auto ClassicOperator::dumpPreLambdaType(AbstractType *type,
                                             filc::environment::Environment *environment,
                                             filc::message::MessageCollector *collector,
                                             filc::utils::Position *position) const -> LambdaType * {
-        return new LambdaType({}, return_type, called_on);
+        switch (_operator) {
+            case PLUSPLUS:
+            case MINUSMINUS:
+                return new LambdaType({type}, new PointerType(type));
+            case PLUS:
+            case MINUS:
+            case REF:
+            case STAR:
+            case NOT:
+                return new LambdaType({type}, type);
+            case DIV:
+            case MOD:
+            case FLEFT:
+            case FRIGHT:
+            case LESS:
+            case GREATER:
+            case EQEQ:
+            case LEQ:
+            case GEQ:
+            case NEQ:
+            case AND:
+            case OR:
+                collector->addError(new filc::message::DevWarning(
+                        3,
+                        position,
+                        "ClassicOperator::dumpPreLambdaType should not be called but has been called"
+                ));
+                return nullptr;
+        }
+
+        return nullptr;
     }
 
-    auto ClassicOperator::dumpPostLambdaType(AbstractType *return_type,
-                                             AbstractType *called_on,
+    auto ClassicOperator::dumpPostLambdaType(AbstractType *type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
                                              filc::utils::Position *position) const -> LambdaType * {
-        if (!environment->hasType("void")) {
-            environment->addType(new filc::ast::Type(new filc::ast::Identifier("void")));
+        switch (_operator) {
+            case PLUSPLUS:
+            case MINUSMINUS:
+                return new LambdaType({type}, type);
+            case PLUS:
+            case MINUS:
+            case REF:
+            case STAR:
+            case NOT:
+            case DIV:
+            case MOD:
+            case FLEFT:
+            case FRIGHT:
+            case LESS:
+            case GREATER:
+            case EQEQ:
+            case LEQ:
+            case GEQ:
+            case NEQ:
+            case AND:
+            case OR:
+                collector->addError(new filc::message::DevWarning(
+                        3,
+                        position,
+                        "ClassicOperator::dumpPostLambdaType should not be called but has been called"
+                ));
+                return nullptr;
         }
 
-        return new LambdaType({environment->getType("void")}, return_type, called_on);
+        return nullptr;
     }
 }

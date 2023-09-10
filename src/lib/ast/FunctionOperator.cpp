@@ -42,8 +42,7 @@ namespace filc::ast {
         return "()";
     }
 
-    auto FunctionOperator::dumpPreLambdaType(AbstractType *return_type,
-                                             AbstractType *called_on,
+    auto FunctionOperator::dumpPreLambdaType(AbstractType *type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
                                              filc::utils::Position *position) const -> LambdaType * {
@@ -56,8 +55,7 @@ namespace filc::ast {
         return nullptr;
     }
 
-    auto FunctionOperator::dumpPostLambdaType(AbstractType *return_type,
-                                              AbstractType *called_on,
+    auto FunctionOperator::dumpPostLambdaType(AbstractType *type,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector,
                                               filc::utils::Position *position) const -> LambdaType * {
@@ -73,6 +71,6 @@ namespace filc::ast {
             return nullptr;
         }
 
-        return new LambdaType(args_types, return_type, called_on);
+        return new LambdaType(args_types, type);
     }
 }

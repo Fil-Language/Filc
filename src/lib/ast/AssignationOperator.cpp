@@ -40,8 +40,7 @@ namespace filc::ast {
         return _inner_operator->dump() + "=";
     }
 
-    auto AssignationOperator::dumpPreLambdaType(AbstractType *return_type,
-                                                AbstractType *called_on,
+    auto AssignationOperator::dumpPreLambdaType(AbstractType *type,
                                                 filc::environment::Environment *environment,
                                                 filc::message::MessageCollector *collector,
                                                 filc::utils::Position *position) const -> LambdaType * {
@@ -54,8 +53,7 @@ namespace filc::ast {
         return nullptr;
     }
 
-    auto AssignationOperator::dumpPostLambdaType(AbstractType *return_type,
-                                                 AbstractType *called_on,
+    auto AssignationOperator::dumpPostLambdaType(AbstractType *type,
                                                  filc::environment::Environment *environment,
                                                  filc::message::MessageCollector *collector,
                                                  filc::utils::Position *position) const -> LambdaType * {

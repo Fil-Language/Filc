@@ -28,9 +28,17 @@
 #include <vector>
 
 namespace filc::environment {
+    using BasicTypes = struct {
+        filc::ast::AbstractType *_int_type;
+        filc::ast::AbstractType *_double_type;
+        filc::ast::AbstractType *_float_type;
+        filc::ast::AbstractType *_char_type;
+        filc::ast::AbstractType *_bool_type;
+    };
+
     class Environment {
     public:
-        Environment(const std::string &module = "", const Environment *parent = nullptr);
+        explicit Environment(const std::string &module = "", const Environment *parent = nullptr);
 
         [[nodiscard]] auto getModule() const -> const std::string &;
 
@@ -55,6 +63,18 @@ namespace filc::environment {
         const Environment *_parent;
         std::vector<Name *> _names;
         std::vector<filc::ast::AbstractType *> _types;
+
+        static auto addBasicTypes(Environment *global) -> BasicTypes;
+
+        static auto addConstants(Environment *global, BasicTypes &basic_types) -> void;
+
+        static auto addAssignations(Environment *global, BasicTypes &basic_types) -> void;
+
+        static auto addPrefixUnary(Environment *global, BasicTypes &basic_types) -> void;
+
+        static auto addPostfixUnary(Environment *global, BasicTypes &basic_types) -> void;
+
+        static auto addBinary(Environment *global, BasicTypes &basic_types) -> void;
     };
 }
 

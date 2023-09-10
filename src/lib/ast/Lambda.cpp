@@ -94,6 +94,6 @@ namespace filc::ast {
             return;
         }
 
-        setExpressionType(new filc::ast::LambdaType(parameters_types, _return_type, environment->getType("void")));
+        setExpressionType(new filc::ast::LambdaType(parameters_types, _return_type));
     }
 }

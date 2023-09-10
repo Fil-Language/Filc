@@ -38,13 +38,4 @@ namespace filc::ast {
     PointerType::~PointerType() {
 //        delete _inner_type;
     }
-
-    auto PointerType::equals(const AbstractType &other) const -> bool {
-        if (dynamic_cast<const PointerType *>(&other) == nullptr) {
-            return false;
-        }
-        auto other_type = dynamic_cast<const PointerType &>(other);
-
-        return *_inner_type == *other_type._inner_type;
-    }
 }

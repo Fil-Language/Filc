@@ -33,7 +33,10 @@ namespace filc::ast {
                                     filc::message::MessageCollector *collector,
                                     AbstractType *preferred_type) -> void {
         if (!environment->hasType("char*")) {
-            environment->addType(new filc::ast::Type(new filc::ast::Identifier("char*")));
+            if (!environment->hasType("char")) {
+                environment->addType(new filc::ast::Type(new filc::ast::Identifier("char")));
+            }
+            environment->addType(new filc::ast::PointerType(environment->getType("char")));
         }
         auto *char_type = environment->getType("char*");
 

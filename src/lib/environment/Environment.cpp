@@ -116,543 +116,1070 @@ namespace filc::environment {
 
         global = new Environment("__global__");
 
-        // Types
-        auto *int_type = new filc::ast::Type(new filc::ast::Identifier("int"));
-        auto *double_type = new filc::ast::Type(new filc::ast::Identifier("double"));
-        auto *float_type = new filc::ast::Type(new filc::ast::Identifier("float"));
-        auto *char_type = new filc::ast::Type(new filc::ast::Identifier("char"));
-        auto *char_pointer_type = new filc::ast::PointerType(new filc::ast::Type(new filc::ast::Identifier("char")));
-        auto *bool_type = new filc::ast::Type(new filc::ast::Identifier("bool"));
-        auto *void_type = new filc::ast::Type(new filc::ast::Identifier("void"));
-        auto iok = global->addType(int_type)
-                   && global->addType(double_type)
-                   && global->addType(float_type)
-                   && global->addType(char_type)
-                   && global->addType(char_pointer_type)
-                   && global->addType(bool_type)
-                   && global->addType(void_type);
-        if (!iok) {
+        auto basic_types = addBasicTypes(global);
+        addConstants(global, basic_types);
+        addAssignations(global, basic_types);
+        addPrefixUnary(global, basic_types);
+        addPostfixUnary(global, basic_types);
+        addBinary(global, basic_types);
+
+        return global;
+    }
+
+    auto Environment::addBasicTypes(Environment *global) -> BasicTypes {
+        BasicTypes basic_types;
+        basic_types._int_type = new ast::Type(new ast::Identifier("int"));
+        basic_types._double_type = new ast::Type(new ast::Identifier("double"));
+        basic_types._float_type = new ast::Type(new ast::Identifier("float"));
+        basic_types._char_type = new ast::Type(new ast::Identifier("char"));
+        basic_types._bool_type = new ast::Type(new ast::Identifier("bool"));
+
+        auto is_ok = global->addType(basic_types._int_type)
+                     && global->addType(basic_types._double_type)
+                     && global->addType(basic_types._float_type)
+                     && global->addType(basic_types._char_type)
+                     && global->addType(basic_types._bool_type);
+        if (!is_ok) {
             throw std::logic_error("Fail to add base types to global environment");
         }
 
-        // Names
-        iok = global->addName("true", bool_type)
-              && global->addName("false", bool_type);
-        if (!iok) {
+        return basic_types;
+    }
+
+    auto Environment::addConstants(Environment *global, BasicTypes &basic_types) -> void {
+        auto is_ok = global->addName("true", basic_types._bool_type)
+                     && global->addName("false", basic_types._bool_type);
+        if (!is_ok) {
             throw std::logic_error("Fail to add base names to global environment");
         }
+    }
 
-        // NOLINTBEGIN
-        // Operators
-        // - Assignations
-        iok = global->addName("operator=", new filc::ast::LambdaType({int_type, int_type}, int_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({int_type, double_type}, int_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({int_type, float_type}, int_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({int_type, char_type}, int_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({int_type, bool_type}, int_type, void_type))
-              &&
-              global->addName("operator=", new filc::ast::LambdaType({double_type, int_type}, double_type, void_type))
-              && global->addName("operator=",
-                                 new filc::ast::LambdaType({double_type, double_type}, double_type, void_type))
-              &&
-              global->addName("operator=", new filc::ast::LambdaType({double_type, float_type}, double_type, void_type))
-              &&
-              global->addName("operator=", new filc::ast::LambdaType({double_type, char_type}, double_type, void_type))
-              &&
-              global->addName("operator=", new filc::ast::LambdaType({double_type, bool_type}, double_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({float_type, int_type}, float_type, void_type))
-              &&
-              global->addName("operator=", new filc::ast::LambdaType({float_type, double_type}, float_type, void_type))
-              &&
-              global->addName("operator=", new filc::ast::LambdaType({float_type, float_type}, float_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({float_type, char_type}, float_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({float_type, bool_type}, float_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({char_type, int_type}, char_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({char_type, double_type}, char_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({char_type, float_type}, char_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({char_type, char_type}, char_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({char_type, bool_type}, char_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({bool_type, int_type}, bool_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({bool_type, double_type}, bool_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({bool_type, float_type}, bool_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({bool_type, char_type}, bool_type, void_type))
-              && global->addName("operator=", new filc::ast::LambdaType({bool_type, bool_type}, bool_type, void_type))
-              && global->addName("operator=",
-                                 new filc::ast::LambdaType({char_pointer_type, char_pointer_type}, char_pointer_type,
-                                                           void_type));
+    auto Environment::addAssignations(Environment *global, BasicTypes &basic_types) -> void {
+        auto iok = global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._int_type, basic_types._bool_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._double_type, basic_types._bool_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._float_type, basic_types._bool_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._char_type, basic_types._bool_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._bool_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._bool_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._bool_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._bool_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator=",
+                new ast::LambdaType({basic_types._bool_type, basic_types._bool_type}, basic_types._bool_type)
+        );
         if (!iok) {
             throw std::logic_error("Fail to add base assignations to global environment");
         }
-        // - Prefix unary
-        iok = global->addName("operator++", new filc::ast::LambdaType({}, int_type, int_type))
-              && global->addName("operator--", new filc::ast::LambdaType({}, int_type, int_type))
-              && global->addName("operator+", new filc::ast::LambdaType({}, int_type, int_type))
-              && global->addName("operator-", new filc::ast::LambdaType({}, int_type, int_type))
-              && global->addName("operator&",
-                                 new filc::ast::LambdaType({}, new filc::ast::PointerType(int_type), int_type))
-              && global->addName("operator++", new filc::ast::LambdaType({}, double_type, double_type))
-              && global->addName("operator--", new filc::ast::LambdaType({}, double_type, double_type))
-              && global->addName("operator+", new filc::ast::LambdaType({}, double_type, double_type))
-              && global->addName("operator-", new filc::ast::LambdaType({}, double_type, double_type))
-              && global->addName("operator&",
-                                 new filc::ast::LambdaType({}, new filc::ast::PointerType(double_type), double_type))
-              && global->addName("operator++", new filc::ast::LambdaType({}, float_type, float_type))
-              && global->addName("operator--", new filc::ast::LambdaType({}, float_type, float_type))
-              && global->addName("operator+", new filc::ast::LambdaType({}, float_type, float_type))
-              && global->addName("operator-", new filc::ast::LambdaType({}, float_type, float_type))
-              && global->addName("operator&",
-                                 new filc::ast::LambdaType({}, new filc::ast::PointerType(float_type), float_type))
-              && global->addName("operator++", new filc::ast::LambdaType({}, char_type, char_type))
-              && global->addName("operator--", new filc::ast::LambdaType({}, char_type, char_type))
-              && global->addName("operator&", new filc::ast::LambdaType({}, char_pointer_type, char_type))
-              && global->addName("operator!", new filc::ast::LambdaType({}, bool_type, bool_type))
-              && global->addName("operator&",
-                                 new filc::ast::LambdaType({}, new filc::ast::PointerType(bool_type), bool_type))
-              && global->addName("operator++", new filc::ast::LambdaType({}, char_pointer_type, char_pointer_type))
-              && global->addName("operator--", new filc::ast::LambdaType({}, char_pointer_type, char_pointer_type))
-              && global->addName("operator&",
-                                 new filc::ast::LambdaType({}, new filc::ast::PointerType(char_pointer_type),
-                                                           char_pointer_type))
-              && global->addName("operator*", new filc::ast::LambdaType({}, char_type, char_pointer_type));
-        if (!iok) {
+    }
+
+    auto Environment::addPrefixUnary(Environment *global, BasicTypes &basic_types) -> void {
+        auto *ptr_int = new filc::ast::PointerType(basic_types._int_type);
+        auto *ptr_double = new filc::ast::PointerType(basic_types._double_type);
+        auto *ptr_float = new filc::ast::PointerType(basic_types._float_type);
+        auto *ptr_char = new filc::ast::PointerType(basic_types._char_type);
+        auto is_ok = global->addName(
+                "operator++",
+                new ast::LambdaType({basic_types._int_type}, ptr_int)
+        ) && global->addName(
+                "operator--",
+                new ast::LambdaType({basic_types._int_type}, ptr_int)
+        ) && global->addName(
+                "operator+",
+                new ast::LambdaType({basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-",
+                new ast::LambdaType({basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator!",
+                new ast::LambdaType({basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator++",
+                new ast::LambdaType({basic_types._double_type}, ptr_double)
+        ) && global->addName(
+                "operator--",
+                new ast::LambdaType({basic_types._double_type}, ptr_double)
+        ) && global->addName(
+                "operator+",
+                new ast::LambdaType({basic_types._double_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator-",
+                new ast::LambdaType({basic_types._double_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator!",
+                new ast::LambdaType({basic_types._double_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator++",
+                new ast::LambdaType({basic_types._float_type}, ptr_float)
+        ) && global->addName(
+                "operator--",
+                new ast::LambdaType({basic_types._float_type}, ptr_float)
+        ) && global->addName(
+                "operator+",
+                new ast::LambdaType({basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator-",
+                new ast::LambdaType({basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator!",
+                new ast::LambdaType({basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator++",
+                new ast::LambdaType({basic_types._char_type}, ptr_char)
+        ) && global->addName(
+                "operator--",
+                new ast::LambdaType({basic_types._char_type}, ptr_char)
+        ) && global->addName(
+                "operator!",
+                new ast::LambdaType({basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator!",
+                new ast::LambdaType({basic_types._bool_type}, basic_types._bool_type)
+        );
+        if (!is_ok) {
             throw std::logic_error("Fail to add base prefix unary calcul to global environment");
         }
-        // - Postfix unary
-        iok = global->addName("operator++", new filc::ast::LambdaType({void_type}, int_type, int_type))
-              && global->addName("operator--", new filc::ast::LambdaType({void_type}, int_type, int_type))
-              && global->addName("operator++", new filc::ast::LambdaType({void_type}, double_type, double_type))
-              && global->addName("operator--", new filc::ast::LambdaType({void_type}, double_type, double_type))
-              && global->addName("operator++", new filc::ast::LambdaType({void_type}, float_type, float_type))
-              && global->addName("operator--", new filc::ast::LambdaType({void_type}, float_type, float_type))
-              && global->addName("operator++", new filc::ast::LambdaType({void_type}, char_type, char_type))
-              && global->addName("operator--", new filc::ast::LambdaType({void_type}, char_type, char_type))
-              && global->addName("operator++",
-                                 new filc::ast::LambdaType({void_type}, char_pointer_type, char_pointer_type))
-              && global->addName("operator--",
-                                 new filc::ast::LambdaType({void_type}, char_pointer_type, char_pointer_type))
-              && global->addName("operator[]", new filc::ast::LambdaType({int_type}, char_type, char_pointer_type));
-        if (!iok) {
+    }
+
+    auto Environment::addPostfixUnary(Environment *global, BasicTypes &basic_types) -> void {
+        auto is_ok = global->addName(
+                "operator++",
+                new ast::LambdaType({basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator--",
+                new ast::LambdaType({basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator++",
+                new ast::LambdaType({basic_types._double_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator--",
+                new ast::LambdaType({basic_types._double_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator++",
+                new ast::LambdaType({basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator--",
+                new ast::LambdaType({basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator++",
+                new ast::LambdaType({basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator--",
+                new ast::LambdaType({basic_types._char_type}, basic_types._char_type)
+        );
+        if (!is_ok) {
             throw std::logic_error("Fail to add base postfix unary calcul to global environment");
         }
-        // - Binary
-        iok = global->addName("operator*", new filc::ast::LambdaType({int_type, int_type}, int_type, int_type))
-              && global->addName("operator*", new filc::ast::LambdaType({int_type, double_type}, int_type, int_type))
-              && global->addName("operator*", new filc::ast::LambdaType({int_type, float_type}, int_type, int_type))
-              && global->addName("operator*", new filc::ast::LambdaType({int_type, char_type}, int_type, int_type))
-              && global->addName("operator/", new filc::ast::LambdaType({int_type, int_type}, int_type, int_type))
-              && global->addName("operator/", new filc::ast::LambdaType({int_type, double_type}, int_type, int_type))
-              && global->addName("operator/", new filc::ast::LambdaType({int_type, float_type}, int_type, int_type))
-              && global->addName("operator/", new filc::ast::LambdaType({int_type, char_type}, int_type, int_type))
-              && global->addName("operator%", new filc::ast::LambdaType({int_type, int_type}, int_type, int_type))
-              && global->addName("operator%", new filc::ast::LambdaType({int_type, double_type}, int_type, int_type))
-              && global->addName("operator%", new filc::ast::LambdaType({int_type, float_type}, int_type, int_type))
-              && global->addName("operator%", new filc::ast::LambdaType({int_type, char_type}, int_type, int_type))
-              && global->addName("operator+", new filc::ast::LambdaType({int_type, int_type}, int_type, int_type))
-              && global->addName("operator+", new filc::ast::LambdaType({int_type, double_type}, int_type, int_type))
-              && global->addName("operator+", new filc::ast::LambdaType({int_type, float_type}, int_type, int_type))
-              && global->addName("operator+", new filc::ast::LambdaType({int_type, char_type}, int_type, int_type))
-              && global->addName("operator-", new filc::ast::LambdaType({int_type, int_type}, int_type, int_type))
-              && global->addName("operator-", new filc::ast::LambdaType({int_type, double_type}, int_type, int_type))
-              && global->addName("operator-", new filc::ast::LambdaType({int_type, float_type}, int_type, int_type))
-              && global->addName("operator-", new filc::ast::LambdaType({int_type, char_type}, int_type, int_type))
-              && global->addName("operator<", new filc::ast::LambdaType({int_type, int_type}, bool_type, int_type))
-              && global->addName("operator<", new filc::ast::LambdaType({int_type, double_type}, bool_type, int_type))
-              && global->addName("operator<", new filc::ast::LambdaType({int_type, float_type}, bool_type, int_type))
-              && global->addName("operator<", new filc::ast::LambdaType({int_type, char_type}, bool_type, int_type))
-              && global->addName("operator>", new filc::ast::LambdaType({int_type, int_type}, bool_type, int_type))
-              && global->addName("operator>", new filc::ast::LambdaType({int_type, double_type}, bool_type, int_type))
-              && global->addName("operator>", new filc::ast::LambdaType({int_type, float_type}, bool_type, int_type))
-              && global->addName("operator>", new filc::ast::LambdaType({int_type, char_type}, bool_type, int_type))
-              && global->addName("operator==", new filc::ast::LambdaType({int_type, int_type}, bool_type, int_type))
-              && global->addName("operator==", new filc::ast::LambdaType({int_type, double_type}, bool_type, int_type))
-              && global->addName("operator==", new filc::ast::LambdaType({int_type, float_type}, bool_type, int_type))
-              && global->addName("operator==", new filc::ast::LambdaType({int_type, char_type}, bool_type, int_type))
-              && global->addName("operator<=", new filc::ast::LambdaType({int_type, int_type}, bool_type, int_type))
-              && global->addName("operator<=", new filc::ast::LambdaType({int_type, double_type}, bool_type, int_type))
-              && global->addName("operator<=", new filc::ast::LambdaType({int_type, float_type}, bool_type, int_type))
-              && global->addName("operator<=", new filc::ast::LambdaType({int_type, char_type}, bool_type, int_type))
-              && global->addName("operator>=", new filc::ast::LambdaType({int_type, int_type}, bool_type, int_type))
-              && global->addName("operator>=", new filc::ast::LambdaType({int_type, double_type}, bool_type, int_type))
-              && global->addName("operator>=", new filc::ast::LambdaType({int_type, float_type}, bool_type, int_type))
-              && global->addName("operator>=", new filc::ast::LambdaType({int_type, char_type}, bool_type, int_type))
-              && global->addName("operator!=", new filc::ast::LambdaType({int_type, int_type}, bool_type, int_type))
-              && global->addName("operator!=", new filc::ast::LambdaType({int_type, double_type}, bool_type, int_type))
-              && global->addName("operator!=", new filc::ast::LambdaType({int_type, float_type}, bool_type, int_type))
-              && global->addName("operator!=", new filc::ast::LambdaType({int_type, char_type}, bool_type, int_type))
-              && global->addName("operator*=", new filc::ast::LambdaType({int_type, int_type}, int_type, int_type))
-              && global->addName("operator*=", new filc::ast::LambdaType({int_type, double_type}, int_type, int_type))
-              && global->addName("operator*=", new filc::ast::LambdaType({int_type, float_type}, int_type, int_type))
-              && global->addName("operator*=", new filc::ast::LambdaType({int_type, char_type}, int_type, int_type))
-              && global->addName("operator/=", new filc::ast::LambdaType({int_type, int_type}, int_type, int_type))
-              && global->addName("operator/=", new filc::ast::LambdaType({int_type, double_type}, int_type, int_type))
-              && global->addName("operator/=", new filc::ast::LambdaType({int_type, float_type}, int_type, int_type))
-              && global->addName("operator/=", new filc::ast::LambdaType({int_type, char_type}, int_type, int_type))
-              && global->addName("operator%=", new filc::ast::LambdaType({int_type, int_type}, int_type, int_type))
-              && global->addName("operator%=", new filc::ast::LambdaType({int_type, double_type}, int_type, int_type))
-              && global->addName("operator%=", new filc::ast::LambdaType({int_type, float_type}, int_type, int_type))
-              && global->addName("operator%=", new filc::ast::LambdaType({int_type, char_type}, int_type, int_type))
-              && global->addName("operator+=", new filc::ast::LambdaType({int_type, int_type}, int_type, int_type))
-              && global->addName("operator+=", new filc::ast::LambdaType({int_type, double_type}, int_type, int_type))
-              && global->addName("operator+=", new filc::ast::LambdaType({int_type, float_type}, int_type, int_type))
-              && global->addName("operator+=", new filc::ast::LambdaType({int_type, char_type}, int_type, int_type))
-              && global->addName("operator-=", new filc::ast::LambdaType({int_type, int_type}, int_type, int_type))
-              && global->addName("operator-=", new filc::ast::LambdaType({int_type, double_type}, int_type, int_type))
-              && global->addName("operator-=", new filc::ast::LambdaType({int_type, float_type}, int_type, int_type))
-              && global->addName("operator-=", new filc::ast::LambdaType({int_type, char_type}, int_type, int_type))
+    }
 
-              &&
-              global->addName("operator*", new filc::ast::LambdaType({double_type, int_type}, double_type, double_type))
-              && global->addName("operator*",
-                                 new filc::ast::LambdaType({double_type, double_type}, double_type, double_type))
-              && global->addName("operator*",
-                                 new filc::ast::LambdaType({double_type, float_type}, double_type, double_type))
-              && global->addName("operator*",
-                                 new filc::ast::LambdaType({double_type, char_type}, double_type, double_type))
-              &&
-              global->addName("operator/", new filc::ast::LambdaType({double_type, int_type}, double_type, double_type))
-              && global->addName("operator/",
-                                 new filc::ast::LambdaType({double_type, double_type}, double_type, double_type))
-              && global->addName("operator/",
-                                 new filc::ast::LambdaType({double_type, float_type}, double_type, double_type))
-              && global->addName("operator/",
-                                 new filc::ast::LambdaType({double_type, char_type}, double_type, double_type))
-              &&
-              global->addName("operator%", new filc::ast::LambdaType({double_type, int_type}, double_type, double_type))
-              && global->addName("operator%",
-                                 new filc::ast::LambdaType({double_type, double_type}, double_type, double_type))
-              && global->addName("operator%",
-                                 new filc::ast::LambdaType({double_type, float_type}, double_type, double_type))
-              && global->addName("operator%",
-                                 new filc::ast::LambdaType({double_type, char_type}, double_type, double_type))
-              &&
-              global->addName("operator+", new filc::ast::LambdaType({double_type, int_type}, double_type, double_type))
-              && global->addName("operator+",
-                                 new filc::ast::LambdaType({double_type, double_type}, double_type, double_type))
-              && global->addName("operator+",
-                                 new filc::ast::LambdaType({double_type, float_type}, double_type, double_type))
-              && global->addName("operator+",
-                                 new filc::ast::LambdaType({double_type, char_type}, double_type, double_type))
-              &&
-              global->addName("operator-", new filc::ast::LambdaType({double_type, int_type}, double_type, double_type))
-              && global->addName("operator-",
-                                 new filc::ast::LambdaType({double_type, double_type}, double_type, double_type))
-              && global->addName("operator-",
-                                 new filc::ast::LambdaType({double_type, float_type}, double_type, double_type))
-              && global->addName("operator-",
-                                 new filc::ast::LambdaType({double_type, char_type}, double_type, double_type))
-              &&
-              global->addName("operator<", new filc::ast::LambdaType({double_type, int_type}, bool_type, double_type))
-              && global->addName("operator<",
-                                 new filc::ast::LambdaType({double_type, double_type}, bool_type, double_type))
-              &&
-              global->addName("operator<", new filc::ast::LambdaType({double_type, float_type}, bool_type, double_type))
-              &&
-              global->addName("operator<", new filc::ast::LambdaType({double_type, char_type}, bool_type, double_type))
-              &&
-              global->addName("operator>", new filc::ast::LambdaType({double_type, int_type}, bool_type, double_type))
-              && global->addName("operator>",
-                                 new filc::ast::LambdaType({double_type, double_type}, bool_type, double_type))
-              &&
-              global->addName("operator>", new filc::ast::LambdaType({double_type, float_type}, bool_type, double_type))
-              &&
-              global->addName("operator>", new filc::ast::LambdaType({double_type, char_type}, bool_type, double_type))
-              &&
-              global->addName("operator==", new filc::ast::LambdaType({double_type, int_type}, bool_type, double_type))
-              && global->addName("operator==",
-                                 new filc::ast::LambdaType({double_type, double_type}, bool_type, double_type))
-              && global->addName("operator==",
-                                 new filc::ast::LambdaType({double_type, float_type}, bool_type, double_type))
-              &&
-              global->addName("operator==", new filc::ast::LambdaType({double_type, char_type}, bool_type, double_type))
-              &&
-              global->addName("operator<=", new filc::ast::LambdaType({double_type, int_type}, bool_type, double_type))
-              && global->addName("operator<=",
-                                 new filc::ast::LambdaType({double_type, double_type}, bool_type, double_type))
-              && global->addName("operator<=",
-                                 new filc::ast::LambdaType({double_type, float_type}, bool_type, double_type))
-              &&
-              global->addName("operator<=", new filc::ast::LambdaType({double_type, char_type}, bool_type, double_type))
-              &&
-              global->addName("operator>=", new filc::ast::LambdaType({double_type, int_type}, bool_type, double_type))
-              && global->addName("operator>=",
-                                 new filc::ast::LambdaType({double_type, double_type}, bool_type, double_type))
-              && global->addName("operator>=",
-                                 new filc::ast::LambdaType({double_type, float_type}, bool_type, double_type))
-              &&
-              global->addName("operator>=", new filc::ast::LambdaType({double_type, char_type}, bool_type, double_type))
-              &&
-              global->addName("operator!=", new filc::ast::LambdaType({double_type, int_type}, bool_type, double_type))
-              && global->addName("operator!=",
-                                 new filc::ast::LambdaType({double_type, double_type}, bool_type, double_type))
-              && global->addName("operator!=",
-                                 new filc::ast::LambdaType({double_type, float_type}, bool_type, double_type))
-              &&
-              global->addName("operator!=", new filc::ast::LambdaType({double_type, char_type}, bool_type, double_type))
-              &&
-              global->addName("operator*=", new filc::ast::LambdaType({double_type, int_type}, int_type, double_type))
-              && global->addName("operator*=",
-                                 new filc::ast::LambdaType({double_type, double_type}, int_type, double_type))
-              &&
-              global->addName("operator*=", new filc::ast::LambdaType({double_type, float_type}, int_type, double_type))
-              &&
-              global->addName("operator*=", new filc::ast::LambdaType({double_type, char_type}, int_type, double_type))
-              &&
-              global->addName("operator/=", new filc::ast::LambdaType({double_type, int_type}, int_type, double_type))
-              && global->addName("operator/=",
-                                 new filc::ast::LambdaType({double_type, double_type}, int_type, double_type))
-              &&
-              global->addName("operator/=", new filc::ast::LambdaType({double_type, float_type}, int_type, double_type))
-              &&
-              global->addName("operator/=", new filc::ast::LambdaType({double_type, char_type}, int_type, double_type))
-              &&
-              global->addName("operator%=", new filc::ast::LambdaType({double_type, int_type}, int_type, double_type))
-              && global->addName("operator%=",
-                                 new filc::ast::LambdaType({double_type, double_type}, int_type, double_type))
-              &&
-              global->addName("operator%=", new filc::ast::LambdaType({double_type, float_type}, int_type, double_type))
-              &&
-              global->addName("operator%=", new filc::ast::LambdaType({double_type, char_type}, int_type, double_type))
-              &&
-              global->addName("operator+=", new filc::ast::LambdaType({double_type, int_type}, int_type, double_type))
-              && global->addName("operator+=",
-                                 new filc::ast::LambdaType({double_type, double_type}, int_type, double_type))
-              &&
-              global->addName("operator+=", new filc::ast::LambdaType({double_type, float_type}, int_type, double_type))
-              &&
-              global->addName("operator+=", new filc::ast::LambdaType({double_type, char_type}, int_type, double_type))
-              &&
-              global->addName("operator-=", new filc::ast::LambdaType({double_type, int_type}, int_type, double_type))
-              && global->addName("operator-=",
-                                 new filc::ast::LambdaType({double_type, double_type}, int_type, double_type))
-              &&
-              global->addName("operator-=", new filc::ast::LambdaType({double_type, float_type}, int_type, double_type))
-              &&
-              global->addName("operator-=", new filc::ast::LambdaType({double_type, char_type}, int_type, double_type))
+    auto Environment::addBinary(Environment *global, BasicTypes &basic_types) -> void {
+        auto is_ok = global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._int_type, basic_types._char_type}, basic_types._int_type)
+        )
 
-              && global->addName("operator*", new filc::ast::LambdaType({float_type, int_type}, float_type, float_type))
-              &&
-              global->addName("operator*", new filc::ast::LambdaType({float_type, double_type}, float_type, float_type))
-              &&
-              global->addName("operator*", new filc::ast::LambdaType({float_type, float_type}, float_type, float_type))
-              &&
-              global->addName("operator*", new filc::ast::LambdaType({float_type, char_type}, float_type, float_type))
-              && global->addName("operator/", new filc::ast::LambdaType({float_type, int_type}, float_type, float_type))
-              &&
-              global->addName("operator/", new filc::ast::LambdaType({float_type, double_type}, float_type, float_type))
-              &&
-              global->addName("operator/", new filc::ast::LambdaType({float_type, float_type}, float_type, float_type))
-              &&
-              global->addName("operator/", new filc::ast::LambdaType({float_type, char_type}, float_type, float_type))
-              && global->addName("operator%", new filc::ast::LambdaType({float_type, int_type}, float_type, float_type))
-              &&
-              global->addName("operator%", new filc::ast::LambdaType({float_type, double_type}, float_type, float_type))
-              &&
-              global->addName("operator%", new filc::ast::LambdaType({float_type, float_type}, float_type, float_type))
-              &&
-              global->addName("operator%", new filc::ast::LambdaType({float_type, char_type}, float_type, float_type))
-              && global->addName("operator+", new filc::ast::LambdaType({float_type, int_type}, float_type, float_type))
-              &&
-              global->addName("operator+", new filc::ast::LambdaType({float_type, double_type}, float_type, float_type))
-              &&
-              global->addName("operator+", new filc::ast::LambdaType({float_type, float_type}, float_type, float_type))
-              &&
-              global->addName("operator+", new filc::ast::LambdaType({float_type, char_type}, float_type, float_type))
-              && global->addName("operator-", new filc::ast::LambdaType({float_type, int_type}, float_type, float_type))
-              &&
-              global->addName("operator-", new filc::ast::LambdaType({float_type, double_type}, float_type, float_type))
-              &&
-              global->addName("operator-", new filc::ast::LambdaType({float_type, float_type}, float_type, float_type))
-              &&
-              global->addName("operator-", new filc::ast::LambdaType({float_type, char_type}, float_type, float_type))
-              && global->addName("operator<", new filc::ast::LambdaType({float_type, int_type}, bool_type, float_type))
-              &&
-              global->addName("operator<", new filc::ast::LambdaType({float_type, double_type}, bool_type, float_type))
-              &&
-              global->addName("operator<", new filc::ast::LambdaType({float_type, float_type}, bool_type, float_type))
-              && global->addName("operator<", new filc::ast::LambdaType({float_type, char_type}, bool_type, float_type))
-              && global->addName("operator>", new filc::ast::LambdaType({float_type, int_type}, bool_type, float_type))
-              &&
-              global->addName("operator>", new filc::ast::LambdaType({float_type, double_type}, bool_type, float_type))
-              &&
-              global->addName("operator>", new filc::ast::LambdaType({float_type, float_type}, bool_type, float_type))
-              && global->addName("operator>", new filc::ast::LambdaType({float_type, char_type}, bool_type, float_type))
-              && global->addName("operator==", new filc::ast::LambdaType({float_type, int_type}, bool_type, float_type))
-              &&
-              global->addName("operator==", new filc::ast::LambdaType({float_type, double_type}, bool_type, float_type))
-              &&
-              global->addName("operator==", new filc::ast::LambdaType({float_type, float_type}, bool_type, float_type))
-              &&
-              global->addName("operator==", new filc::ast::LambdaType({float_type, char_type}, bool_type, float_type))
-              && global->addName("operator<=", new filc::ast::LambdaType({float_type, int_type}, bool_type, float_type))
-              &&
-              global->addName("operator<=", new filc::ast::LambdaType({float_type, double_type}, bool_type, float_type))
-              &&
-              global->addName("operator<=", new filc::ast::LambdaType({float_type, float_type}, bool_type, float_type))
-              &&
-              global->addName("operator<=", new filc::ast::LambdaType({float_type, char_type}, bool_type, float_type))
-              && global->addName("operator>=", new filc::ast::LambdaType({float_type, int_type}, bool_type, float_type))
-              &&
-              global->addName("operator>=", new filc::ast::LambdaType({float_type, double_type}, bool_type, float_type))
-              &&
-              global->addName("operator>=", new filc::ast::LambdaType({float_type, float_type}, bool_type, float_type))
-              &&
-              global->addName("operator>=", new filc::ast::LambdaType({float_type, char_type}, bool_type, float_type))
-              && global->addName("operator!=", new filc::ast::LambdaType({float_type, int_type}, bool_type, float_type))
-              &&
-              global->addName("operator!=", new filc::ast::LambdaType({float_type, double_type}, bool_type, float_type))
-              &&
-              global->addName("operator!=", new filc::ast::LambdaType({float_type, float_type}, bool_type, float_type))
-              &&
-              global->addName("operator!=", new filc::ast::LambdaType({float_type, char_type}, bool_type, float_type))
-              && global->addName("operator&&", new filc::ast::LambdaType({float_type, int_type}, bool_type, float_type))
-              && global->addName("operator&&",
-                                 new filc::ast::LambdaType({float_type, double_type}, float_type, float_type))
-              &&
-              global->addName("operator&&", new filc::ast::LambdaType({float_type, float_type}, float_type, float_type))
-              &&
-              global->addName("operator&&", new filc::ast::LambdaType({float_type, char_type}, float_type, float_type))
-              &&
-              global->addName("operator||", new filc::ast::LambdaType({float_type, int_type}, float_type, float_type))
-              && global->addName("operator||",
-                                 new filc::ast::LambdaType({float_type, double_type}, float_type, float_type))
-              &&
-              global->addName("operator||", new filc::ast::LambdaType({float_type, float_type}, float_type, float_type))
-              &&
-              global->addName("operator||", new filc::ast::LambdaType({float_type, char_type}, float_type, float_type))
-              &&
-              global->addName("operator*=", new filc::ast::LambdaType({float_type, int_type}, float_type, float_type))
-              && global->addName("operator*=",
-                                 new filc::ast::LambdaType({float_type, double_type}, float_type, float_type))
-              &&
-              global->addName("operator*=", new filc::ast::LambdaType({float_type, float_type}, float_type, float_type))
-              &&
-              global->addName("operator*=", new filc::ast::LambdaType({float_type, char_type}, float_type, float_type))
-              &&
-              global->addName("operator/=", new filc::ast::LambdaType({float_type, int_type}, float_type, float_type))
-              && global->addName("operator/=",
-                                 new filc::ast::LambdaType({float_type, double_type}, float_type, float_type))
-              &&
-              global->addName("operator/=", new filc::ast::LambdaType({float_type, float_type}, float_type, float_type))
-              &&
-              global->addName("operator/=", new filc::ast::LambdaType({float_type, char_type}, float_type, float_type))
-              &&
-              global->addName("operator%=", new filc::ast::LambdaType({float_type, int_type}, float_type, float_type))
-              && global->addName("operator%=",
-                                 new filc::ast::LambdaType({float_type, double_type}, float_type, float_type))
-              &&
-              global->addName("operator%=", new filc::ast::LambdaType({float_type, float_type}, float_type, float_type))
-              &&
-              global->addName("operator%=", new filc::ast::LambdaType({float_type, char_type}, float_type, float_type))
-              &&
-              global->addName("operator+=", new filc::ast::LambdaType({float_type, int_type}, float_type, float_type))
-              && global->addName("operator+=",
-                                 new filc::ast::LambdaType({float_type, double_type}, float_type, float_type))
-              &&
-              global->addName("operator+=", new filc::ast::LambdaType({float_type, float_type}, float_type, float_type))
-              &&
-              global->addName("operator+=", new filc::ast::LambdaType({float_type, char_type}, float_type, float_type))
-              &&
-              global->addName("operator-=", new filc::ast::LambdaType({float_type, int_type}, float_type, float_type))
-              && global->addName("operator-=",
-                                 new filc::ast::LambdaType({float_type, double_type}, float_type, float_type))
-              &&
-              global->addName("operator-=", new filc::ast::LambdaType({float_type, float_type}, float_type, float_type))
-              &&
-              global->addName("operator-=", new filc::ast::LambdaType({float_type, char_type}, float_type, float_type))
+                     && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type},
+                                          basic_types._double_type)
+        ) && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type},
+                                          basic_types._double_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type},
+                                          basic_types._double_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type},
+                                          basic_types._double_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type},
+                                          basic_types._double_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._double_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._int_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._float_type}, basic_types._int_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._double_type, basic_types._char_type}, basic_types._int_type)
+        )
 
-              && global->addName("operator*", new filc::ast::LambdaType({char_type, int_type}, char_type, char_type))
-              && global->addName("operator*", new filc::ast::LambdaType({char_type, double_type}, char_type, char_type))
-              && global->addName("operator*", new filc::ast::LambdaType({char_type, float_type}, char_type, char_type))
-              && global->addName("operator*", new filc::ast::LambdaType({char_type, char_type}, char_type, char_type))
-              && global->addName("operator/", new filc::ast::LambdaType({char_type, int_type}, char_type, char_type))
-              && global->addName("operator/", new filc::ast::LambdaType({char_type, double_type}, char_type, char_type))
-              && global->addName("operator/", new filc::ast::LambdaType({char_type, float_type}, char_type, char_type))
-              && global->addName("operator/", new filc::ast::LambdaType({char_type, char_type}, char_type, char_type))
-              && global->addName("operator%", new filc::ast::LambdaType({char_type, int_type}, char_type, char_type))
-              && global->addName("operator%", new filc::ast::LambdaType({char_type, double_type}, char_type, char_type))
-              && global->addName("operator%", new filc::ast::LambdaType({char_type, float_type}, char_type, char_type))
-              && global->addName("operator%", new filc::ast::LambdaType({char_type, char_type}, char_type, char_type))
-              && global->addName("operator+", new filc::ast::LambdaType({char_type, int_type}, char_type, char_type))
-              && global->addName("operator+", new filc::ast::LambdaType({char_type, double_type}, char_type, char_type))
-              && global->addName("operator+", new filc::ast::LambdaType({char_type, float_type}, char_type, char_type))
-              && global->addName("operator+", new filc::ast::LambdaType({char_type, char_type}, char_type, char_type))
-              && global->addName("operator-", new filc::ast::LambdaType({char_type, int_type}, char_type, char_type))
-              && global->addName("operator-", new filc::ast::LambdaType({char_type, double_type}, char_type, char_type))
-              && global->addName("operator-", new filc::ast::LambdaType({char_type, float_type}, char_type, char_type))
-              && global->addName("operator-", new filc::ast::LambdaType({char_type, char_type}, char_type, char_type))
-              && global->addName("operator<", new filc::ast::LambdaType({char_type, int_type}, bool_type, char_type))
-              && global->addName("operator<", new filc::ast::LambdaType({char_type, double_type}, bool_type, char_type))
-              && global->addName("operator<", new filc::ast::LambdaType({char_type, float_type}, bool_type, char_type))
-              && global->addName("operator<", new filc::ast::LambdaType({char_type, char_type}, bool_type, char_type))
-              && global->addName("operator>", new filc::ast::LambdaType({char_type, int_type}, bool_type, char_type))
-              && global->addName("operator>", new filc::ast::LambdaType({char_type, double_type}, bool_type, char_type))
-              && global->addName("operator>", new filc::ast::LambdaType({char_type, float_type}, bool_type, char_type))
-              && global->addName("operator>", new filc::ast::LambdaType({char_type, char_type}, bool_type, char_type))
-              && global->addName("operator==", new filc::ast::LambdaType({char_type, int_type}, bool_type, char_type))
-              &&
-              global->addName("operator==", new filc::ast::LambdaType({char_type, double_type}, bool_type, char_type))
-              && global->addName("operator==", new filc::ast::LambdaType({char_type, float_type}, bool_type, char_type))
-              && global->addName("operator==", new filc::ast::LambdaType({char_type, char_type}, bool_type, char_type))
-              && global->addName("operator<=", new filc::ast::LambdaType({char_type, int_type}, bool_type, char_type))
-              &&
-              global->addName("operator<=", new filc::ast::LambdaType({char_type, double_type}, bool_type, char_type))
-              && global->addName("operator<=", new filc::ast::LambdaType({char_type, float_type}, bool_type, char_type))
-              && global->addName("operator<=", new filc::ast::LambdaType({char_type, char_type}, bool_type, char_type))
-              && global->addName("operator>=", new filc::ast::LambdaType({char_type, int_type}, bool_type, char_type))
-              &&
-              global->addName("operator>=", new filc::ast::LambdaType({char_type, double_type}, bool_type, char_type))
-              && global->addName("operator>=", new filc::ast::LambdaType({char_type, float_type}, bool_type, char_type))
-              && global->addName("operator>=", new filc::ast::LambdaType({char_type, char_type}, bool_type, char_type))
-              && global->addName("operator!=", new filc::ast::LambdaType({char_type, int_type}, bool_type, char_type))
-              &&
-              global->addName("operator!=", new filc::ast::LambdaType({char_type, double_type}, bool_type, char_type))
-              && global->addName("operator!=", new filc::ast::LambdaType({char_type, float_type}, bool_type, char_type))
-              && global->addName("operator!=", new filc::ast::LambdaType({char_type, char_type}, bool_type, char_type))
-              && global->addName("operator&&", new filc::ast::LambdaType({char_type, int_type}, bool_type, char_type))
-              &&
-              global->addName("operator&&", new filc::ast::LambdaType({char_type, double_type}, char_type, char_type))
-              && global->addName("operator&&", new filc::ast::LambdaType({char_type, float_type}, char_type, char_type))
-              && global->addName("operator&&", new filc::ast::LambdaType({char_type, char_type}, char_type, char_type))
-              && global->addName("operator||", new filc::ast::LambdaType({char_type, int_type}, char_type, char_type))
-              &&
-              global->addName("operator||", new filc::ast::LambdaType({char_type, double_type}, char_type, char_type))
-              && global->addName("operator||", new filc::ast::LambdaType({char_type, float_type}, char_type, char_type))
-              && global->addName("operator||", new filc::ast::LambdaType({char_type, char_type}, char_type, char_type))
-              && global->addName("operator*=", new filc::ast::LambdaType({char_type, int_type}, char_type, char_type))
-              &&
-              global->addName("operator*=", new filc::ast::LambdaType({char_type, double_type}, char_type, char_type))
-              && global->addName("operator*=", new filc::ast::LambdaType({char_type, float_type}, char_type, char_type))
-              && global->addName("operator*=", new filc::ast::LambdaType({char_type, char_type}, char_type, char_type))
-              && global->addName("operator/=", new filc::ast::LambdaType({char_type, int_type}, char_type, char_type))
-              &&
-              global->addName("operator/=", new filc::ast::LambdaType({char_type, double_type}, char_type, char_type))
-              && global->addName("operator/=", new filc::ast::LambdaType({char_type, float_type}, char_type, char_type))
-              && global->addName("operator/=", new filc::ast::LambdaType({char_type, char_type}, char_type, char_type))
-              && global->addName("operator%=", new filc::ast::LambdaType({char_type, int_type}, char_type, char_type))
-              &&
-              global->addName("operator%=", new filc::ast::LambdaType({char_type, double_type}, char_type, char_type))
-              && global->addName("operator%=", new filc::ast::LambdaType({char_type, float_type}, char_type, char_type))
-              && global->addName("operator%=", new filc::ast::LambdaType({char_type, char_type}, char_type, char_type))
-              && global->addName("operator+=", new filc::ast::LambdaType({char_type, int_type}, char_type, char_type))
-              &&
-              global->addName("operator+=", new filc::ast::LambdaType({char_type, double_type}, char_type, char_type))
-              && global->addName("operator+=", new filc::ast::LambdaType({char_type, float_type}, char_type, char_type))
-              && global->addName("operator+=", new filc::ast::LambdaType({char_type, char_type}, char_type, char_type))
-              && global->addName("operator-=", new filc::ast::LambdaType({char_type, int_type}, char_type, char_type))
-              &&
-              global->addName("operator-=", new filc::ast::LambdaType({char_type, double_type}, char_type, char_type))
-              && global->addName("operator-=", new filc::ast::LambdaType({char_type, float_type}, char_type, char_type))
-              && global->addName("operator-=", new filc::ast::LambdaType({char_type, char_type}, char_type, char_type))
+                     && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator&&",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator&&",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator&&",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator&&",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator||",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator||",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator||",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator||",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._int_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._double_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._float_type, basic_types._char_type}, basic_types._float_type)
+        )
 
-              && global->addName("operator==", new filc::ast::LambdaType({bool_type, bool_type}, bool_type, bool_type))
-              && global->addName("operator!=", new filc::ast::LambdaType({bool_type, bool_type}, bool_type, bool_type))
-              && global->addName("operator&&", new filc::ast::LambdaType({bool_type, bool_type}, bool_type, bool_type))
-              && global->addName("operator||", new filc::ast::LambdaType({bool_type, bool_type}, bool_type, bool_type));
-        if (!iok) {
+                     && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator*",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator/",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator%",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator+",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator-",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator<=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator>=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator&&",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator&&",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator&&",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator&&",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator||",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator||",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator||",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator||",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator*=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator/=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator%=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator+=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._int_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._double_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._float_type}, basic_types._char_type)
+        ) && global->addName(
+                "operator-=",
+                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+        )
+
+                     && global->addName(
+                "operator==",
+                new filc::ast::LambdaType({basic_types._bool_type, basic_types._bool_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator!=",
+                new filc::ast::LambdaType({basic_types._bool_type, basic_types._bool_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator&&",
+                new filc::ast::LambdaType({basic_types._bool_type, basic_types._bool_type}, basic_types._bool_type)
+        ) && global->addName(
+                "operator||",
+                new filc::ast::LambdaType({basic_types._bool_type, basic_types._bool_type}, basic_types._bool_type)
+        );
+        if (!is_ok) {
             throw std::logic_error("Fail to add base binary calcul to global environment");
         }
-        // NOLINTEND
-
-        return global;
     }
 }

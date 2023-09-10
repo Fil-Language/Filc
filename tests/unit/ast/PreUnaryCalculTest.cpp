@@ -40,7 +40,7 @@ TEST(PreUnaryCalcul, resolveType) {
     ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(2));
     ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
-    ASSERT_TYPE("int", program1->getExpressions()[1]->getExpressionType());
+    ASSERT_TYPE("int*", program1->getExpressions()[1]->getExpressionType());
 }
 
 TEST(PreUnaryCalcul, addNameToEnvironment) {
@@ -49,5 +49,5 @@ TEST(PreUnaryCalcul, addNameToEnvironment) {
     program1->resolveEnvironment(COLLECTOR, {});
     auto *env1 = program1->getPublicEnvironment(nullptr);
     ASSERT_TRUE(env1->hasName("test_pre_unary_calcul1_4"));
-    ASSERT_TYPE("int", env1->getName("test_pre_unary_calcul1_4")->getType());
+    ASSERT_TYPE("int*", env1->getName("test_pre_unary_calcul1_4")->getType());
 }

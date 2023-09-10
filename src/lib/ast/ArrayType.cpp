@@ -42,17 +42,4 @@ namespace filc::ast {
     ArrayType::~ArrayType() {
 //        delete _inner_type;
     }
-
-    auto ArrayType::equals(const AbstractType &other) const -> bool {
-        if (dynamic_cast<const ArrayType *>(&other) == nullptr) {
-            return false;
-        }
-        auto other_type = dynamic_cast<const ArrayType &>(other);
-
-        if (_size != other_type._size) {
-            return false;
-        }
-
-        return *_inner_type == *other_type._inner_type;
-    }
 }
