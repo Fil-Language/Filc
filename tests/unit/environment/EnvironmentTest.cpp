@@ -77,3 +77,12 @@ TEST(Environment, getGlobalEnvironment) {
     ASSERT_NE(nullptr, env2);
     ASSERT_EQ(env1, env2);
 }
+
+TEST(Environment, generateIR) {
+    filc::environment::Environment env1("env1", filc::environment::Environment::getGlobalEnvironment());
+    auto *context = new llvm::LLVMContext;
+    auto *module = new llvm::Module("module", *context);
+    auto *ir_builder = new llvm::IRBuilder<>(*context);
+    env1.generateIR(COLLECTOR, context, module, ir_builder);
+    ASSERT_FALSE(COLLECTOR->hasErrors());
+}

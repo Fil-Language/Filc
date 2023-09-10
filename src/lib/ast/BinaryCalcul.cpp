@@ -59,10 +59,27 @@ namespace filc::ast {
         }
 
         auto operator_name = "operator" + _operator->dump();
-        auto has_found_preferred = preferred_type != nullptr &&
-                                   environment->hasName(operator_name,
-                                                        new LambdaType({left_type, right_type}, preferred_type));
-        auto has_found_left = environment->hasName(operator_name, new LambdaType({left_type, right_type}, left_type));
+        bool has_found_preferred, has_found_left;
+        if (dynamic_cast<AssignationOperator *>(_operator) != nullptr) {
+            auto *ptr_left = new PointerType(left_type);
+            has_found_preferred = preferred_type != nullptr && environment->hasName(
+                    operator_name,
+                    new LambdaType({ptr_left, right_type}, preferred_type)
+            );
+            has_found_left = environment->hasName(
+                    operator_name,
+                    new LambdaType({ptr_left, right_type}, left_type)
+            );
+        } else {
+            has_found_preferred = preferred_type != nullptr && environment->hasName(
+                    operator_name,
+                    new LambdaType({left_type, right_type}, preferred_type)
+            );
+            has_found_left = environment->hasName(
+                    operator_name,
+                    new LambdaType({left_type, right_type}, left_type)
+            );
+        }
         if ((preferred_type != nullptr && (!has_found_preferred || !has_found_left)) || !has_found_left) {
             collector->addError(
                     new filc::message::Error(filc::message::ERROR,

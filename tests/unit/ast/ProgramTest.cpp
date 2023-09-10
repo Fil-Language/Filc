@@ -70,5 +70,6 @@ TEST(Program, getPublicEnvironment) {
 
 TEST(Program, generateIR) {
     filc::ast::Program program1("", {}, {});
+    program1.resolveEnvironment(COLLECTOR, {});
     ASSERT_NO_THROW(program1.generateIR(COLLECTOR));
 }

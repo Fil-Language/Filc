@@ -23,7 +23,9 @@
  */
 #include "Environment.h"
 #include "AST.h"
+#include "Error.h"
 #include <algorithm>
+#include "llvm/IR/Verifier.h"
 
 namespace filc::environment {
     Environment::Environment(const std::string &module, const Environment *parent)
@@ -155,21 +157,26 @@ namespace filc::environment {
     }
 
     auto Environment::addAssignations(Environment *global, BasicTypes &basic_types) -> void {
+        auto *ptr_int = new filc::ast::PointerType(basic_types._int_type);
+        auto *ptr_double = new filc::ast::PointerType(basic_types._double_type);
+        auto *ptr_float = new filc::ast::PointerType(basic_types._float_type);
+        auto *ptr_char = new filc::ast::PointerType(basic_types._char_type);
+        auto *ptr_bool = new filc::ast::PointerType(basic_types._bool_type);
         auto iok = global->addName(
                 "operator=",
-                new ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+                new ast::LambdaType({ptr_int, basic_types._int_type}, basic_types._int_type)
         ) && global->addName(
                 "operator=",
-                new ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._double_type)
+                new ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._double_type)
         ) && global->addName(
                 "operator=",
-                new ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+                new ast::LambdaType({ptr_float, basic_types._float_type}, basic_types._float_type)
         ) && global->addName(
                 "operator=",
-                new ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+                new ast::LambdaType({ptr_char, basic_types._char_type}, basic_types._char_type)
         ) && global->addName(
                 "operator=",
-                new ast::LambdaType({basic_types._bool_type, basic_types._bool_type}, basic_types._bool_type)
+                new ast::LambdaType({ptr_bool, basic_types._bool_type}, basic_types._bool_type)
         );
         if (!iok) {
             throw std::logic_error("Fail to add base assignations to global environment");
@@ -276,6 +283,10 @@ namespace filc::environment {
     }
 
     auto Environment::addBinary(Environment *global, BasicTypes &basic_types) -> void {
+        auto *ptr_int = new filc::ast::PointerType(basic_types._int_type);
+        auto *ptr_double = new filc::ast::PointerType(basic_types._double_type);
+        auto *ptr_float = new filc::ast::PointerType(basic_types._float_type);
+        auto *ptr_char = new filc::ast::PointerType(basic_types._char_type);
         auto is_ok = global->addName(
                 "operator*",
                 new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
@@ -311,19 +322,19 @@ namespace filc::environment {
                 new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._bool_type)
         ) && global->addName(
                 "operator*=",
-                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_int, basic_types._int_type}, basic_types._int_type)
         ) && global->addName(
                 "operator/=",
-                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_int, basic_types._int_type}, basic_types._int_type)
         ) && global->addName(
                 "operator%=",
-                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_int, basic_types._int_type}, basic_types._int_type)
         ) && global->addName(
                 "operator+=",
-                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_int, basic_types._int_type}, basic_types._int_type)
         ) && global->addName(
                 "operator-=",
-                new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_int, basic_types._int_type}, basic_types._int_type)
         )
 
                      && global->addName(
@@ -366,19 +377,19 @@ namespace filc::environment {
                 new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._bool_type)
         ) && global->addName(
                 "operator*=",
-                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._int_type)
         ) && global->addName(
                 "operator/=",
-                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._int_type)
         ) && global->addName(
                 "operator%=",
-                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._int_type)
         ) && global->addName(
                 "operator+=",
-                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._int_type)
         ) && global->addName(
                 "operator-=",
-                new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._int_type)
         )
 
                      && global->addName(
@@ -422,19 +433,19 @@ namespace filc::environment {
                 new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
         ) && global->addName(
                 "operator*=",
-                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+                new filc::ast::LambdaType({ptr_float, basic_types._float_type}, basic_types._float_type)
         ) && global->addName(
                 "operator/=",
-                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+                new filc::ast::LambdaType({ptr_float, basic_types._float_type}, basic_types._float_type)
         ) && global->addName(
                 "operator%=",
-                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+                new filc::ast::LambdaType({ptr_float, basic_types._float_type}, basic_types._float_type)
         ) && global->addName(
                 "operator+=",
-                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+                new filc::ast::LambdaType({ptr_float, basic_types._float_type}, basic_types._float_type)
         ) && global->addName(
                 "operator-=",
-                new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
+                new filc::ast::LambdaType({ptr_float, basic_types._float_type}, basic_types._float_type)
         )
 
                      && global->addName(
@@ -478,19 +489,19 @@ namespace filc::environment {
                 new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
         ) && global->addName(
                 "operator*=",
-                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+                new filc::ast::LambdaType({ptr_char, basic_types._char_type}, basic_types._char_type)
         ) && global->addName(
                 "operator/=",
-                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+                new filc::ast::LambdaType({ptr_char, basic_types._char_type}, basic_types._char_type)
         ) && global->addName(
                 "operator%=",
-                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+                new filc::ast::LambdaType({ptr_char, basic_types._char_type}, basic_types._char_type)
         ) && global->addName(
                 "operator+=",
-                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+                new filc::ast::LambdaType({ptr_char, basic_types._char_type}, basic_types._char_type)
         ) && global->addName(
                 "operator-=",
-                new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
+                new filc::ast::LambdaType({ptr_char, basic_types._char_type}, basic_types._char_type)
         )
 
                      && global->addName(
@@ -509,5 +520,81 @@ namespace filc::environment {
         if (!is_ok) {
             throw std::logic_error("Fail to add base binary calcul to global environment");
         }
+    }
+
+    auto Environment::generateIR(filc::message::MessageCollector *collector,
+                                 llvm::LLVMContext *context,
+                                 llvm::Module *module,
+                                 llvm::IRBuilder<> *builder) const -> void {
+        if (_parent != nullptr) {
+            // Generate only for global environment
+            _parent->generateIR(collector, context, module, builder);
+            return;
+        }
+
+        static auto generated = false;
+        if (generated) {
+            // Generate only once
+            return;
+        }
+
+        generateAssignations(collector, context, module, builder);
+        generatePrefixUnary(collector, context, module, builder);
+        generatePostFixUnary(collector, context, module, builder);
+        generateBinary(collector, context, module, builder);
+
+        generated = true;
+    }
+
+#define ASSIGNATION_FUNCTION(var, name, type) \
+    std::vector<llvm::Type *> types_##var = {llvm::PointerType::getUnqual(type), type}; \
+    auto *type_##var = llvm::FunctionType::get(type, types_##var, false); \
+    auto *function_##var = llvm::Function::Create(type_##var, llvm::Function::ExternalLinkage, name, *module); \
+    function_##var->getArg(0)->setName("a"); \
+    function_##var->getArg(1)->setName("b"); \
+    if (!function_##var->empty()) { \
+        collector->addError(new filc::message::BasicError( \
+            filc::message::ERROR, \
+            "Tried to redefine " name \
+        )); \
+        return; \
+    } \
+    llvm::BasicBlock *basic_block_##var = llvm::BasicBlock::Create(*context, "entry", function_##var); \
+    builder->SetInsertPoint(basic_block_##var); \
+    auto *variable_##var = builder->CreateLoad(function_##var->getArg(0)->getType(), function_##var); \
+    builder->CreateStore(function_##var->getArg(1), variable_##var); \
+    builder->CreateRet(variable_##var); \
+    llvm::verifyFunction(*function_##var);
+
+    auto Environment::generateAssignations(filc::message::MessageCollector *collector,
+                                           llvm::LLVMContext *context,
+                                           llvm::Module *module,
+                                           llvm::IRBuilder<> *builder) const -> void {
+        ASSIGNATION_FUNCTION(int_int, "operator=(int*, int) -> int", llvm::Type::getInt64Ty(*context))
+        ASSIGNATION_FUNCTION(double_double, "operator=(double*, double) -> double", llvm::Type::getDoubleTy(*context))
+        ASSIGNATION_FUNCTION(float_float, "operator=(float*, float) -> float", llvm::Type::getFloatTy(*context))
+        ASSIGNATION_FUNCTION(char_char, "operator(char*, char) -> char", llvm::Type::getInt8Ty(*context))
+        ASSIGNATION_FUNCTION(bool_bool, "operator(bool*, bool) -> bool", llvm::Type::getInt1Ty(*context))
+    }
+
+    auto Environment::generatePrefixUnary(filc::message::MessageCollector *collector,
+                                          llvm::LLVMContext *context,
+                                          llvm::Module *module,
+                                          llvm::IRBuilder<> *builder) const -> void {
+        // TODO
+    }
+
+    auto Environment::generatePostFixUnary(filc::message::MessageCollector *collector,
+                                           llvm::LLVMContext *context,
+                                           llvm::Module *module,
+                                           llvm::IRBuilder<> *builder) const -> void {
+        // TODO
+    }
+
+    auto Environment::generateBinary(filc::message::MessageCollector *collector,
+                                     llvm::LLVMContext *context,
+                                     llvm::Module *module,
+                                     llvm::IRBuilder<> *builder) const -> void {
+        // TODO
     }
 }

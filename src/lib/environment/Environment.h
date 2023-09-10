@@ -25,7 +25,9 @@
 #define FILC_ENVIRONMENT_H
 
 #include "Name.h"
+#include "MessageCollector.h"
 #include <vector>
+#include "llvm/IR/IRBuilder.h"
 
 namespace filc::environment {
     using BasicTypes = struct {
@@ -58,6 +60,11 @@ namespace filc::environment {
 
         static auto getGlobalEnvironment() -> const Environment *;
 
+        auto generateIR(filc::message::MessageCollector *collector,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> void;
+
     private:
         std::string _module;
         const Environment *_parent;
@@ -75,6 +82,26 @@ namespace filc::environment {
         static auto addPostfixUnary(Environment *global, BasicTypes &basic_types) -> void;
 
         static auto addBinary(Environment *global, BasicTypes &basic_types) -> void;
+
+        auto generateAssignations(filc::message::MessageCollector *collector,
+                                  llvm::LLVMContext *context,
+                                  llvm::Module *module,
+                                  llvm::IRBuilder<> *builder) const -> void;
+
+        auto generatePrefixUnary(filc::message::MessageCollector *collector,
+                                 llvm::LLVMContext *context,
+                                 llvm::Module *module,
+                                 llvm::IRBuilder<> *builder) const -> void;
+
+        auto generatePostFixUnary(filc::message::MessageCollector *collector,
+                                  llvm::LLVMContext *context,
+                                  llvm::Module *module,
+                                  llvm::IRBuilder<> *builder) const -> void;
+
+        auto generateBinary(filc::message::MessageCollector *collector,
+                            llvm::LLVMContext *context,
+                            llvm::Module *module,
+                            llvm::IRBuilder<> *builder) const -> void;
     };
 }
 
