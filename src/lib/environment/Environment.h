@@ -40,7 +40,7 @@ namespace filc::environment {
 
     class Environment {
     public:
-        explicit Environment(const std::string &module = "", const Environment *parent = nullptr);
+        explicit Environment(std::string module = "", const Environment *parent = nullptr);
 
         [[nodiscard]] auto getModule() const -> const std::string &;
 
@@ -83,15 +83,15 @@ namespace filc::environment {
 
         static auto addBinary(Environment *global, BasicTypes &basic_types) -> void;
 
-        auto generateAssignations(filc::message::MessageCollector *collector,
-                                  llvm::LLVMContext *context,
-                                  llvm::Module *module,
-                                  llvm::IRBuilder<> *builder) const -> void;
+        static auto generateAssignations(filc::message::MessageCollector *collector,
+                                         llvm::LLVMContext *context,
+                                         llvm::Module *module,
+                                         llvm::IRBuilder<> *builder) -> void;
 
-        auto generatePrefixUnary(filc::message::MessageCollector *collector,
-                                 llvm::LLVMContext *context,
-                                 llvm::Module *module,
-                                 llvm::IRBuilder<> *builder) const -> void;
+        static auto generatePrefixUnary(filc::message::MessageCollector *collector,
+                                        llvm::LLVMContext *context,
+                                        llvm::Module *module,
+                                        llvm::IRBuilder<> *builder) -> void;
 
         auto generatePostFixUnary(filc::message::MessageCollector *collector,
                                   llvm::LLVMContext *context,

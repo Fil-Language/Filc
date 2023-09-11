@@ -25,11 +25,12 @@
 #include "AST.h"
 #include "Error.h"
 #include <algorithm>
+#include <utility>
 #include "llvm/IR/Verifier.h"
 
 namespace filc::environment {
-    Environment::Environment(const std::string &module, const Environment *parent)
-            : _module(module), _parent(parent) {}
+    Environment::Environment(std::string module, const Environment *parent)
+            : _module(std::move(module)), _parent(parent) {}
 
     auto Environment::getModule() const -> const std::string & {
         return _module;
@@ -190,10 +191,10 @@ namespace filc::environment {
         auto *ptr_char = new filc::ast::PointerType(basic_types._char_type);
         auto is_ok = global->addName(
                 "operator++",
-                new ast::LambdaType({basic_types._int_type}, ptr_int)
+                new ast::LambdaType({ptr_int}, ptr_int)
         ) && global->addName(
                 "operator--",
-                new ast::LambdaType({basic_types._int_type}, ptr_int)
+                new ast::LambdaType({ptr_int}, ptr_int)
         ) && global->addName(
                 "operator+",
                 new ast::LambdaType({basic_types._int_type}, basic_types._int_type)
@@ -201,14 +202,11 @@ namespace filc::environment {
                 "operator-",
                 new ast::LambdaType({basic_types._int_type}, basic_types._int_type)
         ) && global->addName(
-                "operator!",
-                new ast::LambdaType({basic_types._int_type}, basic_types._int_type)
-        ) && global->addName(
                 "operator++",
-                new ast::LambdaType({basic_types._double_type}, ptr_double)
+                new ast::LambdaType({ptr_double}, ptr_double)
         ) && global->addName(
                 "operator--",
-                new ast::LambdaType({basic_types._double_type}, ptr_double)
+                new ast::LambdaType({ptr_double}, ptr_double)
         ) && global->addName(
                 "operator+",
                 new ast::LambdaType({basic_types._double_type}, basic_types._double_type)
@@ -216,14 +214,11 @@ namespace filc::environment {
                 "operator-",
                 new ast::LambdaType({basic_types._double_type}, basic_types._double_type)
         ) && global->addName(
-                "operator!",
-                new ast::LambdaType({basic_types._double_type}, basic_types._double_type)
-        ) && global->addName(
                 "operator++",
-                new ast::LambdaType({basic_types._float_type}, ptr_float)
+                new ast::LambdaType({ptr_float}, ptr_float)
         ) && global->addName(
                 "operator--",
-                new ast::LambdaType({basic_types._float_type}, ptr_float)
+                new ast::LambdaType({ptr_float}, ptr_float)
         ) && global->addName(
                 "operator+",
                 new ast::LambdaType({basic_types._float_type}, basic_types._float_type)
@@ -231,17 +226,11 @@ namespace filc::environment {
                 "operator-",
                 new ast::LambdaType({basic_types._float_type}, basic_types._float_type)
         ) && global->addName(
-                "operator!",
-                new ast::LambdaType({basic_types._float_type}, basic_types._float_type)
-        ) && global->addName(
                 "operator++",
-                new ast::LambdaType({basic_types._char_type}, ptr_char)
+                new ast::LambdaType({ptr_char}, ptr_char)
         ) && global->addName(
                 "operator--",
-                new ast::LambdaType({basic_types._char_type}, ptr_char)
-        ) && global->addName(
-                "operator!",
-                new ast::LambdaType({basic_types._char_type}, basic_types._char_type)
+                new ast::LambdaType({ptr_char}, ptr_char)
         ) && global->addName(
                 "operator!",
                 new ast::LambdaType({basic_types._bool_type}, basic_types._bool_type)
@@ -569,7 +558,7 @@ namespace filc::environment {
     auto Environment::generateAssignations(filc::message::MessageCollector *collector,
                                            llvm::LLVMContext *context,
                                            llvm::Module *module,
-                                           llvm::IRBuilder<> *builder) const -> void {
+                                           llvm::IRBuilder<> *builder) -> void {
         ASSIGNATION_FUNCTION(int_int, "operator=(int*, int) -> int", llvm::Type::getInt64Ty(*context))
         ASSIGNATION_FUNCTION(double_double, "operator=(double*, double) -> double", llvm::Type::getDoubleTy(*context))
         ASSIGNATION_FUNCTION(float_float, "operator=(float*, float) -> float", llvm::Type::getFloatTy(*context))
@@ -577,11 +566,254 @@ namespace filc::environment {
         ASSIGNATION_FUNCTION(bool_bool, "operator(bool*, bool) -> bool", llvm::Type::getInt1Ty(*context))
     }
 
+#define DEFINE_FUNCTION(name, params, rtype, body, var) \
+    std::vector<llvm::Type *> types_##var = params; \
+    auto *type_##var = llvm::FunctionType::get( \
+            rtype, \
+            types_##var, \
+            false \
+    ); \
+    auto *function_##var = llvm::Function::Create(type_##var, llvm::Function::ExternalLinkage, name, *module); \
+    if (!function_##var->empty()) { \
+        collector->addError(new filc::message::BasicError( \
+                filc::message::ERROR, \
+                "Tried to redefine " name \
+        )); \
+        return; \
+    } \
+    llvm::BasicBlock *basic_block_##var = llvm::BasicBlock::Create(*context, "entry", function_##var); \
+    builder->SetInsertPoint(basic_block_##var); \
+    body \
+    llvm::verifyFunction(*function_##var);
+
     auto Environment::generatePrefixUnary(filc::message::MessageCollector *collector,
                                           llvm::LLVMContext *context,
                                           llvm::Module *module,
-                                          llvm::IRBuilder<> *builder) const -> void {
-        // TODO
+                                          llvm::IRBuilder<> *builder) -> void {
+        DEFINE_FUNCTION(
+                "operator++(int*) -> int*",
+                { llvm::PointerType::getUnqual(llvm::Type::getInt64Ty(*context)) },
+                llvm::PointerType::getUnqual(llvm::Type::getInt64Ty(*context)),
+                {
+                    auto *variable_plusplus_int = builder->CreateLoad(
+                            function_plusplus_int->getArg(0)->getType(),
+                            function_plusplus_int);
+                    auto *result_plusplus_int = builder->CreateFAdd(
+                            variable_plusplus_int,
+                            llvm::ConstantInt::get(*context, llvm::APInt(64, 1, true))
+                    );
+                    builder->CreateStore(result_plusplus_int, variable_plusplus_int);
+                    builder->CreateRet(function_plusplus_int->getArg(0));
+                },
+                plusplus_int
+        )
+        DEFINE_FUNCTION(
+                "operator--(int*) -> int*",
+                { llvm::PointerType::getUnqual(llvm::Type::getInt64Ty(*context)) },
+                llvm::PointerType::getUnqual(llvm::Type::getInt64Ty(*context)),
+                {
+                    auto *variable_minusminus_int = builder->CreateLoad(
+                            function_minusminus_int->getArg(0)->getType(),
+                            function_minusminus_int);
+                    auto *result_minusminus_int = builder->CreateFSub(
+                            variable_minusminus_int,
+                            llvm::ConstantInt::get(*context, llvm::APInt(64, 1, true))
+                    );
+                    builder->CreateStore(result_minusminus_int, variable_minusminus_int);
+                    builder->CreateRet(function_minusminus_int->getArg(0));
+                },
+                minusminus_int
+        )
+        DEFINE_FUNCTION(
+                "operator+(int) -> int",
+                { llvm::Type::getInt64Ty(*context) },
+                llvm::Type::getInt64Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFAdd(
+                            llvm::ConstantInt::get(*context, llvm::APInt::getZero(64)),
+                            function_plus_int->getArg(0)
+                    ));
+                },
+                plus_int
+        )
+        DEFINE_FUNCTION(
+                "operator-(int) -> int",
+                { llvm::Type::getInt64Ty(*context) },
+                llvm::Type::getInt64Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFSub(
+                            llvm::ConstantInt::get(*context, llvm::APInt::getZero(64)),
+                            function_minus_int->getArg(0)
+                    ));
+                },
+                minus_int
+        )
+
+        DEFINE_FUNCTION(
+                "operator++(double*) -> double*",
+                { llvm::PointerType::getUnqual(llvm::Type::getDoubleTy(*context)) },
+                llvm::PointerType::getUnqual(llvm::Type::getDoubleTy(*context)),
+                {
+                    auto *variable_plusplus_double = builder->CreateLoad(
+                            function_plusplus_double->getArg(0)->getType(),
+                            function_plusplus_double);
+                    auto *result_plusplus_double = builder->CreateFAdd(
+                            variable_plusplus_double,
+                            llvm::ConstantFP::get(*context, llvm::APFloat(1.0))
+                    );
+                    builder->CreateStore(result_plusplus_double, variable_plusplus_double);
+                    builder->CreateRet(function_plusplus_double->getArg(0));
+                },
+                plusplus_double
+        )
+        DEFINE_FUNCTION(
+                "operator--(double*) -> double*",
+                { llvm::PointerType::getUnqual(llvm::Type::getDoubleTy(*context)) },
+                llvm::PointerType::getUnqual(llvm::Type::getDoubleTy(*context)),
+                {
+                    auto *variable_minusminus_double = builder->CreateLoad(
+                            function_minusminus_double->getArg(0)->getType(),
+                            function_minusminus_double);
+                    auto *result_minusminus_double = builder->CreateFSub(
+                            variable_minusminus_double,
+                            llvm::ConstantFP::get(*context, llvm::APFloat(1.0))
+                    );
+                    builder->CreateStore(result_minusminus_double, variable_minusminus_double);
+                    builder->CreateRet(function_minusminus_double->getArg(0));
+                },
+                minusminus_double
+        )
+        DEFINE_FUNCTION(
+                "operator+(double) -> double",
+                { llvm::Type::getDoubleTy(*context) },
+                llvm::Type::getDoubleTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFAdd(
+                            llvm::ConstantFP::get(*context, llvm::APFloat(0.0)),
+                            function_plus_double->getArg(0)
+                    ));
+                },
+                plus_double
+        )
+        DEFINE_FUNCTION(
+                "operator-(double) -> double",
+                { llvm::Type::getDoubleTy(*context) },
+                llvm::Type::getDoubleTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFSub(
+                            llvm::ConstantFP::get(*context, llvm::APFloat(0.0)),
+                            function_minus_double->getArg(0)
+                    ));
+                },
+                minus_double
+        )
+
+        DEFINE_FUNCTION(
+                "operator++(float*) -> float*",
+                { llvm::PointerType::getUnqual(llvm::Type::getFloatTy(*context)) },
+                llvm::PointerType::getUnqual(llvm::Type::getFloatTy(*context)),
+                {
+                    auto *variable_plusplus_float = builder->CreateLoad(
+                            function_plusplus_float->getArg(0)->getType(),
+                            function_plusplus_float);
+                    auto *result_plusplus_float = builder->CreateFAdd(
+                            variable_plusplus_float,
+                            llvm::ConstantFP::get(*context, llvm::APFloat(1.0F))
+                    );
+                    builder->CreateStore(result_plusplus_float, variable_plusplus_float);
+                    builder->CreateRet(function_plusplus_float->getArg(0));
+                },
+                plusplus_float
+        )
+        DEFINE_FUNCTION(
+                "operator--(float*) -> float*",
+                { llvm::PointerType::getUnqual(llvm::Type::getFloatTy(*context)) },
+                llvm::PointerType::getUnqual(llvm::Type::getFloatTy(*context)),
+                {
+                    auto *variable_minusminus_float = builder->CreateLoad(
+                            function_minusminus_float->getArg(0)->getType(),
+                            function_minusminus_float);
+                    auto *result_minusminus_float = builder->CreateFSub(
+                            variable_minusminus_float,
+                            llvm::ConstantFP::get(*context, llvm::APFloat(1.0F))
+                    );
+                    builder->CreateStore(result_minusminus_float, variable_minusminus_float);
+                    builder->CreateRet(function_minusminus_float->getArg(0));
+                },
+                minusminus_float
+        )
+        DEFINE_FUNCTION(
+                "operator+(float) -> float",
+                { llvm::Type::getFloatTy(*context) },
+                llvm::Type::getFloatTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFAdd(
+                            llvm::ConstantFP::get(*context, llvm::APFloat(0.0F)),
+                            function_plus_float->getArg(0)
+                    ));
+                },
+                plus_float
+        )
+        DEFINE_FUNCTION(
+                "operator-(float) -> float",
+                { llvm::Type::getFloatTy(*context) },
+                llvm::Type::getFloatTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFSub(
+                            llvm::ConstantFP::get(*context, llvm::APFloat(0.0F)),
+                            function_minus_float->getArg(0)
+                    ));
+                },
+                minus_float
+        )
+
+        DEFINE_FUNCTION(
+                "operator++(char*) -> char*",
+                { llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(*context)) },
+                llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(*context)),
+                {
+                    auto *variable_plusplus_char = builder->CreateLoad(
+                            function_plusplus_char->getArg(0)->getType(),
+                            function_plusplus_char);
+                    auto *result_plusplus_char = builder->CreateFAdd(
+                            variable_plusplus_char,
+                            llvm::ConstantInt::get(*context, llvm::APInt(8, 1, false))
+                    );
+                    builder->CreateStore(result_plusplus_char, variable_plusplus_char);
+                    builder->CreateRet(function_plusplus_char->getArg(0));
+                },
+                plusplus_char
+        )
+        DEFINE_FUNCTION(
+                "operator--(char*) -> char*",
+                { llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(*context)) },
+                llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(*context)),
+                {
+                    auto *variable_minusminus_char = builder->CreateLoad(
+                            function_minusminus_char->getArg(0)->getType(),
+                            function_minusminus_char);
+                    auto *result_minusminus_char = builder->CreateFSub(
+                            variable_minusminus_char,
+                            llvm::ConstantInt::get(*context, llvm::APInt(8, 1, false))
+                    );
+                    builder->CreateStore(result_minusminus_char, variable_minusminus_char);
+                    builder->CreateRet(function_minusminus_char->getArg(0));
+                },
+                minusminus_char
+        )
+
+        DEFINE_FUNCTION(
+                "operator!(bool) -> bool",
+                { llvm::Type::getInt1Ty(*context) },
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFSub(
+                            llvm::ConstantInt::get(*context, llvm::APInt(1, 1, false)),
+                            function_minus_float->getArg(0)
+                    ));
+                },
+                not_bool
+        )
     }
 
     auto Environment::generatePostFixUnary(filc::message::MessageCollector *collector,
