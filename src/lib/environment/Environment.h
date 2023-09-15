@@ -93,10 +93,10 @@ namespace filc::environment {
                                         llvm::Module *module,
                                         llvm::IRBuilder<> *builder) -> void;
 
-        auto generatePostFixUnary(filc::message::MessageCollector *collector,
-                                  llvm::LLVMContext *context,
-                                  llvm::Module *module,
-                                  llvm::IRBuilder<> *builder) const -> void;
+        static auto generatePostFixUnary(filc::message::MessageCollector *collector,
+                                         llvm::LLVMContext *context,
+                                         llvm::Module *module,
+                                         llvm::IRBuilder<> *builder) -> void;
 
         auto generateBinary(filc::message::MessageCollector *collector,
                             llvm::LLVMContext *context,

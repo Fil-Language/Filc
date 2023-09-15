@@ -121,7 +121,7 @@ namespace filc::ast {
         switch (_operator) {
             case PLUSPLUS:
             case MINUSMINUS:
-                return new LambdaType({type}, type);
+                return new LambdaType({new filc::ast::PointerType(type)}, type);
             case PLUS:
             case MINUS:
             case REF:
