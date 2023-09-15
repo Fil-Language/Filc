@@ -331,6 +331,20 @@ namespace filc::ast {
         AbstractType *_inner_type;
     };
 
+    class ReferenceType : public AbstractType {
+    public:
+        explicit ReferenceType(AbstractType *inner_type);
+
+        ~ReferenceType() override;
+
+        [[nodiscard]] auto getInnerType() const -> AbstractType * override;
+
+        [[nodiscard]] auto dump() const -> std::string override;
+
+    private:
+        AbstractType *_inner_type;
+    };
+
     class LambdaType : public AbstractType {
     public:
         LambdaType(const std::vector<AbstractType *> &argument_types, AbstractType *return_type);

@@ -49,6 +49,7 @@ add_executable(tests
         unit/ast/WhileTest.cpp
         unit/ast/AssignationOperatorTest.cpp
         unit/ast/AbstractExpressionTest.cpp
+        unit/ast/ReferenceTypeTest.cpp
         # === Environment ===
         unit/environment/EnvironmentTest.cpp
         unit/environment/NameTest.cpp

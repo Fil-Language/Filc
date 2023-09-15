@@ -21,78 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_AST_DECL_H
-#define FILC_AST_DECL_H
+#include "AST.h"
 
 namespace filc::ast {
-    class Program;
+    ReferenceType::ReferenceType(filc::ast::AbstractType *inner_type)
+            : _inner_type(inner_type) {}
 
-    class AbstractExpression;
+    ReferenceType::~ReferenceType() {
+//        delete _inner_type;
+    }
 
-    class Identifier;
+    auto ReferenceType::getInnerType() const -> AbstractType * {
+        return _inner_type;
+    }
 
-    template<typename T>
-    class AbstractLiteral;
-
-    class BooleanLiteral;
-
-    class IntegerLiteral;
-
-    class FloatLiteral;
-
-    class CharacterLiteral;
-
-    class StringLiteral;
-
-    class VariableDeclaration;
-
-    class AbstractType;
-
-    class Type;
-
-    class ArrayType;
-
-    class PointerType;
-
-    class ReferenceType;
-
-    class LambdaType;
-
-    class UnaryCalcul;
-
-    class PreUnaryCalcul;
-
-    class PostUnaryCalcul;
-
-    class BinaryCalcul;
-
-    class Operator;
-
-    class ClassicOperator;
-
-    class ArrayOperator;
-
-    class FunctionOperator;
-
-    class AssignationOperator;
-
-    class Lambda;
-
-    class Function;
-
-    class FunctionParameter;
-
-    class If;
-
-    class Switch;
-
-    class SwitchCase;
-
-    class ForI;
-
-    class ForIter;
-
-    class While;
+    auto ReferenceType::dump() const -> std::string {
+        return _inner_type->dump() + "&";
+    }
 }
-
-#endif //FILC_AST_DECL_H
