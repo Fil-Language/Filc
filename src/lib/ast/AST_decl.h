@@ -54,8 +54,6 @@ namespace filc::ast {
 
     class PointerType;
 
-    class ReferenceType;
-
     class LambdaType;
 
     class UnaryCalcul;

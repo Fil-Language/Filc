@@ -430,16 +430,14 @@ function_parameters returns[std::vector<filc::ast::FunctionParameter *> tree]
     })*;
 
 function_parameter returns[filc::ast::FunctionParameter *tree]
-    : i=IDENTIFIER t=function_type {
+    : i=IDENTIFIER COLON t=type {
         $tree = new filc::ast::FunctionParameter(new filc::ast::Identifier($i), $t.tree);
     };
 
 function_type returns[filc::ast::AbstractType *tree]
     : COLON t=type {
         $tree = $t.tree;
-    } (REF {
-        $tree = new filc::ast::ReferenceType($tree);
-    })?;
+    };
 
 function_body returns[std::vector<filc::ast::AbstractExpression *> tree]
     : a=assignation {
