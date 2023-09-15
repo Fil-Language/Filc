@@ -98,3 +98,10 @@ DEV WARNING  <code>  <message>
 | <kbd>3</kdb> | A function that should not be called has been called | Several files (refer to error message) |
 
 These codes are for events that should not happen, but if they do, it's better to fix them.
+
+## Acknowledgements
+
+Thanks to JetBrains for helping me develop this project by offering me
+an [open source license](https://jb.gg/OpenSourceSupport)
+
+![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
