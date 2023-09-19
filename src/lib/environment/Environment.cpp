@@ -328,9 +328,9 @@ namespace filc::environment {
         ) && global->addName(
                 "operator-=",
                 new filc::ast::LambdaType({ptr_int, basic_types._int_type}, basic_types._int_type)
-        )
+        );
 
-                     && global->addName(
+        is_ok = is_ok && global->addName(
                 "operator*",
                 new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type},
                                           basic_types._double_type)
@@ -383,9 +383,9 @@ namespace filc::environment {
         ) && global->addName(
                 "operator-=",
                 new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._int_type)
-        )
+        );
 
-                     && global->addName(
+        is_ok = is_ok && global->addName(
                 "operator*",
                 new filc::ast::LambdaType({basic_types._float_type, basic_types._float_type}, basic_types._float_type)
         ) && global->addName(
@@ -439,9 +439,9 @@ namespace filc::environment {
         ) && global->addName(
                 "operator-=",
                 new filc::ast::LambdaType({ptr_float, basic_types._float_type}, basic_types._float_type)
-        )
+        );
 
-                     && global->addName(
+        is_ok = is_ok && global->addName(
                 "operator*",
                 new filc::ast::LambdaType({basic_types._char_type, basic_types._char_type}, basic_types._char_type)
         ) && global->addName(
@@ -495,9 +495,9 @@ namespace filc::environment {
         ) && global->addName(
                 "operator-=",
                 new filc::ast::LambdaType({ptr_char, basic_types._char_type}, basic_types._char_type)
-        )
+        );
 
-                     && global->addName(
+        is_ok = is_ok && global->addName(
                 "operator==",
                 new filc::ast::LambdaType({basic_types._bool_type, basic_types._bool_type}, basic_types._bool_type)
         ) && global->addName(
@@ -603,7 +603,7 @@ namespace filc::environment {
                     auto *variable_plusplus_int = builder->CreateLoad(
                             function_plusplus_int->getArg(0)->getType(),
                             function_plusplus_int);
-                    auto *result_plusplus_int = builder->CreateFAdd(
+                    auto *result_plusplus_int = builder->CreateAdd(
                             variable_plusplus_int,
                             llvm::ConstantInt::get(*context, llvm::APInt(64, 1, true))
                     );
@@ -620,7 +620,7 @@ namespace filc::environment {
                     auto *variable_minusminus_int = builder->CreateLoad(
                             function_minusminus_int->getArg(0)->getType(),
                             function_minusminus_int);
-                    auto *result_minusminus_int = builder->CreateFSub(
+                    auto *result_minusminus_int = builder->CreateSub(
                             variable_minusminus_int,
                             llvm::ConstantInt::get(*context, llvm::APInt(64, 1, true))
                     );
@@ -634,7 +634,7 @@ namespace filc::environment {
                 { llvm::Type::getInt64Ty(*context) },
                 llvm::Type::getInt64Ty(*context),
                 {
-                    builder->CreateRet(builder->CreateFAdd(
+                    builder->CreateRet(builder->CreateAdd(
                             llvm::ConstantInt::get(*context, llvm::APInt::getZero(64)),
                             function_plus_int->getArg(0)
                     ));
@@ -646,7 +646,7 @@ namespace filc::environment {
                 { llvm::Type::getInt64Ty(*context) },
                 llvm::Type::getInt64Ty(*context),
                 {
-                    builder->CreateRet(builder->CreateFSub(
+                    builder->CreateRet(builder->CreateSub(
                             llvm::ConstantInt::get(*context, llvm::APInt::getZero(64)),
                             function_minus_int->getArg(0)
                     ));
@@ -780,7 +780,7 @@ namespace filc::environment {
                     auto *variable_plusplus_char = builder->CreateLoad(
                             function_plusplus_char->getArg(0)->getType(),
                             function_plusplus_char);
-                    auto *result_plusplus_char = builder->CreateFAdd(
+                    auto *result_plusplus_char = builder->CreateAdd(
                             variable_plusplus_char,
                             llvm::ConstantInt::get(*context, llvm::APInt(8, 1, false))
                     );
@@ -797,7 +797,7 @@ namespace filc::environment {
                     auto *variable_minusminus_char = builder->CreateLoad(
                             function_minusminus_char->getArg(0)->getType(),
                             function_minusminus_char);
-                    auto *result_minusminus_char = builder->CreateFSub(
+                    auto *result_minusminus_char = builder->CreateSub(
                             variable_minusminus_char,
                             llvm::ConstantInt::get(*context, llvm::APInt(8, 1, false))
                     );
@@ -812,7 +812,7 @@ namespace filc::environment {
                 { llvm::Type::getInt1Ty(*context) },
                 llvm::Type::getInt1Ty(*context),
                 {
-                    builder->CreateRet(builder->CreateFSub(
+                    builder->CreateRet(builder->CreateSub(
                             llvm::ConstantInt::get(*context, llvm::APInt(1, 1, false)),
                             function_not_bool->getArg(0)
                     ));
@@ -834,7 +834,7 @@ namespace filc::environment {
                             function_plusplus_int->getArg(0)->getType(),
                             function_plusplus_int
                     );
-                    auto *result_plusplus_int = builder->CreateFAdd(
+                    auto *result_plusplus_int = builder->CreateAdd(
                             variable_plusplus_int,
                             llvm::ConstantInt::get(*context, llvm::APInt(64, 1, true))
                     );
@@ -852,7 +852,7 @@ namespace filc::environment {
                             function_minusminus_int->getArg(0)->getType(),
                             function_minusminus_int
                     );
-                    auto *result_minusminus_int = builder->CreateFSub(
+                    auto *result_minusminus_int = builder->CreateSub(
                             variable_minusminus_int,
                             llvm::ConstantInt::get(*context, llvm::APInt(64, 1, true))
                     );
@@ -945,7 +945,7 @@ namespace filc::environment {
                             function_plusplus_char->getArg(0)->getType(),
                             function_plusplus_char
                     );
-                    auto *result_plusplus_char = builder->CreateFAdd(
+                    auto *result_plusplus_char = builder->CreateAdd(
                             variable_plusplus_char,
                             llvm::ConstantInt::get(*context, llvm::APInt(8, 1, true))
                     );
@@ -963,7 +963,7 @@ namespace filc::environment {
                             function_minusminus_char->getArg(0)->getType(),
                             function_minusminus_char
                     );
-                    auto *result_minusminus_char = builder->CreateFSub(
+                    auto *result_minusminus_char = builder->CreateSub(
                             variable_minusminus_char,
                             llvm::ConstantInt::get(*context, llvm::APInt(8, 1, true))
                     );
@@ -977,7 +977,896 @@ namespace filc::environment {
     auto Environment::generateBinary(filc::message::MessageCollector *collector,
                                      llvm::LLVMContext *context,
                                      llvm::Module *module,
-                                     llvm::IRBuilder<> *builder) const -> void {
-        // TODO
+                                     llvm::IRBuilder<> *builder) -> void {
+        //region int operators
+        DEFINE_FUNCTION(
+                "operator*(int, int) -> int",
+                std::vector<llvm::Type *>({llvm::Type::getInt64Ty(*context), llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt64Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateMul(
+                            function_times_int->getArg(0),
+                            function_times_int->getArg(1)
+                    ));
+                },
+                times_int
+        )
+        DEFINE_FUNCTION(
+                "operator/(int, int) -> int",
+                std::vector<llvm::Type *>({llvm::Type::getInt64Ty(*context), llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt64Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateSDiv(
+                            function_div_int->getArg(0),
+                            function_div_int->getArg(1)
+                    ));
+                },
+                div_int
+        )
+        DEFINE_FUNCTION(
+                "operator%(int, int) -> int",
+                std::vector<llvm::Type *>({llvm::Type::getInt64Ty(*context), llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt64Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateSRem(
+                            function_mod_int->getArg(0),
+                            function_mod_int->getArg(1)
+                    ));
+                },
+                mod_int
+        )
+        DEFINE_FUNCTION(
+                "operator+(int, int) -> int",
+                std::vector<llvm::Type *>({llvm::Type::getInt64Ty(*context), llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt64Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateAdd(
+                            function_plus_int->getArg(0),
+                            function_plus_int->getArg(1)
+                    ));
+                },
+                plus_int
+        )
+        DEFINE_FUNCTION(
+                "operator-(int, int) -> int",
+                std::vector<llvm::Type *>({llvm::Type::getInt64Ty(*context), llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt64Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateSub(
+                            function_sub_int->getArg(0),
+                            function_sub_int->getArg(1)
+                    ));
+                },
+                sub_int
+        )
+        DEFINE_FUNCTION(
+                "operator<(int, int) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt64Ty(*context), llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpSLT(
+                            function_lt_int->getArg(0),
+                            function_lt_int->getArg(1)
+                    ));
+                },
+                lt_int
+        )
+        DEFINE_FUNCTION(
+                "operator>(int, int) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt64Ty(*context), llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpSGT(
+                            function_gt_int->getArg(0),
+                            function_gt_int->getArg(1)
+                    ));
+                },
+                gt_int
+        )
+        DEFINE_FUNCTION(
+                "operator==(int, int) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt64Ty(*context), llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpEQ(
+                            function_eqeq_int->getArg(0),
+                            function_eqeq_int->getArg(1)
+                    ));
+                },
+                eqeq_int
+        )
+        DEFINE_FUNCTION(
+                "operator<=(int, int) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt64Ty(*context), llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpSLE(
+                            function_leq_int->getArg(0),
+                            function_leq_int->getArg(1)
+                    ));
+                },
+                leq_int
+        )
+        DEFINE_FUNCTION(
+                "operator>=(int, int) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt64Ty(*context), llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpSGE(
+                            function_geq_int->getArg(0),
+                            function_geq_int->getArg(1)
+                    ));
+                },
+                geq_int
+        )
+        DEFINE_FUNCTION(
+                "operator!=(int, int) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt64Ty(*context), llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpNE(
+                            function_ne_int->getArg(0),
+                            function_ne_int->getArg(1)
+                    ));
+                },
+                ne_int
+        )
+        DEFINE_FUNCTION(
+                "operator*=(int*, int) -> int",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getInt64Ty(*context)),
+                                           llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt64Ty(*context),
+                {
+                    auto *result = builder->CreateMul(
+                            function_times_eq_int->getArg(0),
+                            function_times_eq_int->getArg(1)
+                    );
+                    builder->CreateStore(result, function_times_eq_int->getArg(0));
+                    builder->CreateRet(result);
+                },
+                times_eq_int
+        )
+        DEFINE_FUNCTION(
+                "operator/=(int*, int) -> int",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getInt64Ty(*context)),
+                                           llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt64Ty(*context),
+                {
+                    auto *result = builder->CreateSDiv(
+                            function_div_eq_int->getArg(0),
+                            function_div_eq_int->getArg(1)
+                    );
+                    builder->CreateStore(result, function_div_eq_int->getArg(0));
+                    builder->CreateRet(result);
+                },
+                div_eq_int
+        )
+        DEFINE_FUNCTION(
+                "operator%=(int*, int) -> int",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getInt64Ty(*context)),
+                                           llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt64Ty(*context),
+                {
+                    auto *result = builder->CreateSRem(
+                            function_mod_eq_int->getArg(0),
+                            function_mod_eq_int->getArg(1)
+                    );
+                    builder->CreateStore(result, function_mod_eq_int->getArg(0));
+                    builder->CreateRet(result);
+                },
+                mod_eq_int
+        )
+        DEFINE_FUNCTION(
+                "operator+=(int*, int) -> int",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getInt64Ty(*context)),
+                                           llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt64Ty(*context),
+                {
+                    auto *result = builder->CreateAdd(
+                            function_add_eq_int->getArg(0),
+                            function_add_eq_int->getArg(1)
+                    );
+                    builder->CreateStore(result, function_add_eq_int->getArg(0));
+                    builder->CreateRet(result);
+                },
+                add_eq_int
+        )
+        DEFINE_FUNCTION(
+                "operator-=(int*, int) -> int",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getInt64Ty(*context)),
+                                           llvm::Type::getInt64Ty(*context)}),
+                llvm::Type::getInt64Ty(*context),
+                {
+                    auto *result = builder->CreateSub(
+                            function_sub_eq_int->getArg(0),
+                            function_sub_eq_int->getArg(1)
+                    );
+                    builder->CreateStore(result, function_sub_eq_int->getArg(0));
+                    builder->CreateRet(result);
+                },
+                sub_eq_int
+        )
+        //endregion
+
+        //region double operators
+        DEFINE_FUNCTION(
+                "operator*(double, double) -> double",
+                std::vector<llvm::Type *>({llvm::Type::getDoubleTy(*context), llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getDoubleTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFMul(
+                            function_times_double->getArg(0),
+                            function_times_double->getArg(1)
+                    ));
+                },
+                times_double
+        )
+        DEFINE_FUNCTION(
+                "operator/(double, double) -> double",
+                std::vector<llvm::Type *>({llvm::Type::getDoubleTy(*context), llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getDoubleTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFDiv(
+                            function_div_double->getArg(0),
+                            function_div_double->getArg(1)
+                    ));
+                },
+                div_double
+        )
+        DEFINE_FUNCTION(
+                "operator%(double, double) -> double",
+                std::vector<llvm::Type *>({llvm::Type::getDoubleTy(*context), llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getDoubleTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFRem(
+                            function_mod_double->getArg(0),
+                            function_mod_double->getArg(1)
+                    ));
+                },
+                mod_double
+        )
+        DEFINE_FUNCTION(
+                "operator+(double, double) -> double",
+                std::vector<llvm::Type *>({llvm::Type::getDoubleTy(*context), llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getDoubleTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFAdd(
+                            function_plus_double->getArg(0),
+                            function_plus_double->getArg(1)
+                    ));
+                },
+                plus_double
+        )
+        DEFINE_FUNCTION(
+                "operator-(double, double) -> double",
+                std::vector<llvm::Type *>({llvm::Type::getDoubleTy(*context), llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getDoubleTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFSub(
+                            function_sub_double->getArg(0),
+                            function_sub_double->getArg(1)
+                    ));
+                },
+                sub_double
+        )
+        DEFINE_FUNCTION(
+                "operator<(double, double) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getDoubleTy(*context), llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFCmpOLT(
+                            function_lt_double->getArg(0),
+                            function_lt_double->getArg(1)
+                    ));
+                },
+                lt_double
+        )
+        DEFINE_FUNCTION(
+                "operator>(double, double) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getDoubleTy(*context), llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFCmpOGT(
+                            function_gt_double->getArg(0),
+                            function_gt_double->getArg(1)
+                    ));
+                },
+                gt_double
+        )
+        DEFINE_FUNCTION(
+                "operator==(double, double) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getDoubleTy(*context), llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFCmpOEQ(
+                            function_eqeq_double->getArg(0),
+                            function_eqeq_double->getArg(1)
+                    ));
+                },
+                eqeq_double
+        )
+        DEFINE_FUNCTION(
+                "operator<=(double, double) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getDoubleTy(*context), llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFCmpOLE(
+                            function_leq_double->getArg(0),
+                            function_leq_double->getArg(1)
+                    ));
+                },
+                leq_double
+        )
+        DEFINE_FUNCTION(
+                "operator>=(double, double) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getDoubleTy(*context), llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFCmpOGE(
+                            function_geq_double->getArg(0),
+                            function_geq_double->getArg(1)
+                    ));
+                },
+                geq_double
+        )
+        DEFINE_FUNCTION(
+                "operator!=(double, double) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getDoubleTy(*context), llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFCmpONE(
+                            function_ne_double->getArg(0),
+                            function_ne_double->getArg(1)
+                    ));
+                },
+                ne_double
+        )
+        DEFINE_FUNCTION(
+                "operator*=(double*, double) -> double",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getDoubleTy(*context)),
+                                           llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getDoubleTy(*context),
+                {
+                    auto *result = builder->CreateFMul(
+                            function_times_eq_double->getArg(0),
+                            function_times_eq_double->getArg(1)
+                    );
+                    builder->CreateStore(result, function_times_eq_double->getArg(0));
+                    builder->CreateRet(result);
+                },
+                times_eq_double
+        )
+        DEFINE_FUNCTION(
+                "operator/=(double*, double) -> double",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getDoubleTy(*context)),
+                                           llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getDoubleTy(*context),
+                {
+                    auto *result = builder->CreateFDiv(
+                            function_div_eq_double->getArg(0),
+                            function_div_eq_double->getArg(1)
+                    );
+                    builder->CreateStore(result, function_div_eq_double->getArg(0));
+                    builder->CreateRet(result);
+                },
+                div_eq_double
+        )
+        DEFINE_FUNCTION(
+                "operator%=(double*, double) -> double",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getDoubleTy(*context)),
+                                           llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getDoubleTy(*context),
+                {
+                    auto *result = builder->CreateFRem(
+                            function_mod_eq_double->getArg(0),
+                            function_mod_eq_double->getArg(1)
+                    );
+                    builder->CreateStore(result, function_mod_eq_double->getArg(0));
+                    builder->CreateRet(result);
+                },
+                mod_eq_double
+        )
+        DEFINE_FUNCTION(
+                "operator+=(double*, double) -> double",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getDoubleTy(*context)),
+                                           llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getDoubleTy(*context),
+                {
+                    auto *result = builder->CreateFAdd(
+                            function_add_eq_double->getArg(0),
+                            function_add_eq_double->getArg(1)
+                    );
+                    builder->CreateStore(result, function_add_eq_double->getArg(0));
+                    builder->CreateRet(result);
+                },
+                add_eq_double
+        )
+        DEFINE_FUNCTION(
+                "operator-=(double*, double) -> double",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getDoubleTy(*context)),
+                                           llvm::Type::getDoubleTy(*context)}),
+                llvm::Type::getDoubleTy(*context),
+                {
+                    auto *result = builder->CreateFSub(
+                            function_sub_eq_double->getArg(0),
+                            function_sub_eq_double->getArg(1)
+                    );
+                    builder->CreateStore(result, function_sub_eq_double->getArg(0));
+                    builder->CreateRet(result);
+                },
+                sub_eq_double
+        )
+        //endregion
+
+        //region float operators
+        DEFINE_FUNCTION(
+                "operator*(float, float) -> float",
+                std::vector<llvm::Type *>({llvm::Type::getFloatTy(*context), llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getFloatTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFMul(
+                            function_times_float->getArg(0),
+                            function_times_float->getArg(1)
+                    ));
+                },
+                times_float
+        )
+        DEFINE_FUNCTION(
+                "operator/(float, float) -> float",
+                std::vector<llvm::Type *>({llvm::Type::getFloatTy(*context), llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getFloatTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFDiv(
+                            function_div_float->getArg(0),
+                            function_div_float->getArg(1)
+                    ));
+                },
+                div_float
+        )
+        DEFINE_FUNCTION(
+                "operator%(float, float) -> float",
+                std::vector<llvm::Type *>({llvm::Type::getFloatTy(*context), llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getFloatTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFRem(
+                            function_mod_float->getArg(0),
+                            function_mod_float->getArg(1)
+                    ));
+                },
+                mod_float
+        )
+        DEFINE_FUNCTION(
+                "operator+(float, float) -> float",
+                std::vector<llvm::Type *>({llvm::Type::getFloatTy(*context), llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getFloatTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFAdd(
+                            function_plus_float->getArg(0),
+                            function_plus_float->getArg(1)
+                    ));
+                },
+                plus_float
+        )
+        DEFINE_FUNCTION(
+                "operator-(float, float) -> float",
+                std::vector<llvm::Type *>({llvm::Type::getFloatTy(*context), llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getFloatTy(*context),
+                {
+                    builder->CreateRet(builder->CreateFSub(
+                            function_sub_float->getArg(0),
+                            function_sub_float->getArg(1)
+                    ));
+                },
+                sub_float
+        )
+        DEFINE_FUNCTION(
+                "operator<(float, float) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getFloatTy(*context), llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFCmpOLT(
+                            function_lt_float->getArg(0),
+                            function_lt_float->getArg(1)
+                    ));
+                },
+                lt_float
+        )
+        DEFINE_FUNCTION(
+                "operator>(float, float) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getFloatTy(*context), llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFCmpOGT(
+                            function_gt_float->getArg(0),
+                            function_gt_float->getArg(1)
+                    ));
+                },
+                gt_float
+        )
+        DEFINE_FUNCTION(
+                "operator==(float, float) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getFloatTy(*context), llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFCmpOEQ(
+                            function_eqeq_float->getArg(0),
+                            function_eqeq_float->getArg(1)
+                    ));
+                },
+                eqeq_float
+        )
+        DEFINE_FUNCTION(
+                "operator<=(float, float) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getFloatTy(*context), llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFCmpOLE(
+                            function_leq_float->getArg(0),
+                            function_leq_float->getArg(1)
+                    ));
+                },
+                leq_float
+        )
+        DEFINE_FUNCTION(
+                "operator>=(float, float) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getFloatTy(*context), llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFCmpOGE(
+                            function_geq_float->getArg(0),
+                            function_geq_float->getArg(1)
+                    ));
+                },
+                geq_float
+        )
+        DEFINE_FUNCTION(
+                "operator!=(float, float) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getFloatTy(*context), llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateFCmpONE(
+                            function_ne_float->getArg(0),
+                            function_ne_float->getArg(1)
+                    ));
+                },
+                ne_float
+        )
+        DEFINE_FUNCTION(
+                "operator*=(float*, float) -> float",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getFloatTy(*context)),
+                                           llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getFloatTy(*context),
+                {
+                    auto *result = builder->CreateFMul(
+                            function_times_eq_float->getArg(0),
+                            function_times_eq_float->getArg(1)
+                    );
+                    builder->CreateStore(result, function_times_eq_float->getArg(0));
+                    builder->CreateRet(result);
+                },
+                times_eq_float
+        )
+        DEFINE_FUNCTION(
+                "operator/=(float*, float) -> float",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getFloatTy(*context)),
+                                           llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getFloatTy(*context),
+                {
+                    auto *result = builder->CreateFDiv(
+                            function_div_eq_float->getArg(0),
+                            function_div_eq_float->getArg(1)
+                    );
+                    builder->CreateStore(result, function_div_eq_float->getArg(0));
+                    builder->CreateRet(result);
+                },
+                div_eq_float
+        )
+        DEFINE_FUNCTION(
+                "operator%=(float*, float) -> float",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getFloatTy(*context)),
+                                           llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getFloatTy(*context),
+                {
+                    auto *result = builder->CreateFRem(
+                            function_mod_eq_float->getArg(0),
+                            function_mod_eq_float->getArg(1)
+                    );
+                    builder->CreateStore(result, function_mod_eq_float->getArg(0));
+                    builder->CreateRet(result);
+                },
+                mod_eq_float
+        )
+        DEFINE_FUNCTION(
+                "operator+=(float*, float) -> float",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getFloatTy(*context)),
+                                           llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getFloatTy(*context),
+                {
+                    auto *result = builder->CreateFAdd(
+                            function_add_eq_float->getArg(0),
+                            function_add_eq_float->getArg(1)
+                    );
+                    builder->CreateStore(result, function_add_eq_float->getArg(0));
+                    builder->CreateRet(result);
+                },
+                add_eq_float
+        )
+        DEFINE_FUNCTION(
+                "operator-=(float*, float) -> float",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getFloatTy(*context)),
+                                           llvm::Type::getFloatTy(*context)}),
+                llvm::Type::getFloatTy(*context),
+                {
+                    auto *result = builder->CreateFSub(
+                            function_sub_eq_float->getArg(0),
+                            function_sub_eq_float->getArg(1)
+                    );
+                    builder->CreateStore(result, function_sub_eq_float->getArg(0));
+                    builder->CreateRet(result);
+                },
+                sub_eq_float
+        )
+        //endregion
+
+        //region char operators
+        DEFINE_FUNCTION(
+                "operator*(char, char) -> char",
+                std::vector<llvm::Type *>({llvm::Type::getInt8Ty(*context), llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt8Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateMul(
+                            function_times_char->getArg(0),
+                            function_times_char->getArg(1)
+                    ));
+                },
+                times_char
+        )
+        DEFINE_FUNCTION(
+                "operator/(char, char) -> char",
+                std::vector<llvm::Type *>({llvm::Type::getInt8Ty(*context), llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt8Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateSDiv(
+                            function_div_char->getArg(0),
+                            function_div_char->getArg(1)
+                    ));
+                },
+                div_char
+        )
+        DEFINE_FUNCTION(
+                "operator%(char, char) -> char",
+                std::vector<llvm::Type *>({llvm::Type::getInt8Ty(*context), llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt8Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateSRem(
+                            function_mod_char->getArg(0),
+                            function_mod_char->getArg(1)
+                    ));
+                },
+                mod_char
+        )
+        DEFINE_FUNCTION(
+                "operator+(char, char) -> char",
+                std::vector<llvm::Type *>({llvm::Type::getInt8Ty(*context), llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt8Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateAdd(
+                            function_plus_char->getArg(0),
+                            function_plus_char->getArg(1)
+                    ));
+                },
+                plus_char
+        )
+        DEFINE_FUNCTION(
+                "operator-(char, char) -> char",
+                std::vector<llvm::Type *>({llvm::Type::getInt8Ty(*context), llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt8Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateSub(
+                            function_sub_char->getArg(0),
+                            function_sub_char->getArg(1)
+                    ));
+                },
+                sub_char
+        )
+        DEFINE_FUNCTION(
+                "operator<(char, char) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt8Ty(*context), llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpULT(
+                            function_lt_char->getArg(0),
+                            function_lt_char->getArg(1)
+                    ));
+                },
+                lt_char
+        )
+        DEFINE_FUNCTION(
+                "operator>(char, char) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt8Ty(*context), llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpUGT(
+                            function_gt_char->getArg(0),
+                            function_gt_char->getArg(1)
+                    ));
+                },
+                gt_char
+        )
+        DEFINE_FUNCTION(
+                "operator==(char, char) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt8Ty(*context), llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpEQ(
+                            function_eqeq_char->getArg(0),
+                            function_eqeq_char->getArg(1)
+                    ));
+                },
+                eqeq_char
+        )
+        DEFINE_FUNCTION(
+                "operator<=(char, char) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt8Ty(*context), llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpULE(
+                            function_leq_char->getArg(0),
+                            function_leq_char->getArg(1)
+                    ));
+                },
+                leq_char
+        )
+        DEFINE_FUNCTION(
+                "operator>=(char, char) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt8Ty(*context), llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpUGE(
+                            function_geq_char->getArg(0),
+                            function_geq_char->getArg(1)
+                    ));
+                },
+                geq_char
+        )
+        DEFINE_FUNCTION(
+                "operator!=(char, char) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt8Ty(*context), llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpNE(
+                            function_ne_char->getArg(0),
+                            function_ne_char->getArg(1)
+                    ));
+                },
+                ne_char
+        )
+        DEFINE_FUNCTION(
+                "operator*=(char*, char) -> char",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(*context)),
+                                           llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt8Ty(*context),
+                {
+                    auto *result = builder->CreateMul(
+                            function_times_eq_char->getArg(0),
+                            function_times_eq_char->getArg(1)
+                    );
+                    builder->CreateStore(result, function_times_eq_char->getArg(0));
+                    builder->CreateRet(result);
+                },
+                times_eq_char
+        )
+        DEFINE_FUNCTION(
+                "operator/=(char*, char) -> char",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(*context)),
+                                           llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt8Ty(*context),
+                {
+                    auto *result = builder->CreateSDiv(
+                            function_div_eq_char->getArg(0),
+                            function_div_eq_char->getArg(1)
+                    );
+                    builder->CreateStore(result, function_div_eq_char->getArg(0));
+                    builder->CreateRet(result);
+                },
+                div_eq_char
+        )
+        DEFINE_FUNCTION(
+                "operator%=(char*, char) -> char",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(*context)),
+                                           llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt8Ty(*context),
+                {
+                    auto *result = builder->CreateSRem(
+                            function_mod_eq_char->getArg(0),
+                            function_mod_eq_char->getArg(1)
+                    );
+                    builder->CreateStore(result, function_mod_eq_char->getArg(0));
+                    builder->CreateRet(result);
+                },
+                mod_eq_char
+        )
+        DEFINE_FUNCTION(
+                "operator+=(char*, char) -> char",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(*context)),
+                                           llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt8Ty(*context),
+                {
+                    auto *result = builder->CreateAdd(
+                            function_add_eq_char->getArg(0),
+                            function_add_eq_char->getArg(1)
+                    );
+                    builder->CreateStore(result, function_add_eq_char->getArg(0));
+                    builder->CreateRet(result);
+                },
+                add_eq_char
+        )
+        DEFINE_FUNCTION(
+                "operator-=(char*, char) -> char",
+                std::vector<llvm::Type *>({llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(*context)),
+                                           llvm::Type::getInt8Ty(*context)}),
+                llvm::Type::getInt8Ty(*context),
+                {
+                    auto *result = builder->CreateSub(
+                            function_sub_eq_char->getArg(0),
+                            function_sub_eq_char->getArg(1)
+                    );
+                    builder->CreateStore(result, function_sub_eq_char->getArg(0));
+                    builder->CreateRet(result);
+                },
+                sub_eq_char
+        )
+        //endregion
+
+        //region bool operators
+        DEFINE_FUNCTION(
+                "operator==(bool, bool) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt1Ty(*context), llvm::Type::getInt1Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpEQ(
+                            function_eqeq_bool->getArg(0),
+                            function_eqeq_bool->getArg(1)
+                    ));
+                },
+                eqeq_bool
+        )
+        DEFINE_FUNCTION(
+                "operator!=(bool, bool) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt1Ty(*context), llvm::Type::getInt1Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateICmpNE(
+                            function_ne_bool->getArg(0),
+                            function_ne_bool->getArg(1)
+                    ));
+                },
+                ne_bool
+        )
+        DEFINE_FUNCTION(
+                "operator&&(bool, bool) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt1Ty(*context), llvm::Type::getInt1Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateAnd(
+                            function_and_bool->getArg(0),
+                            function_and_bool->getArg(1)
+                    ));
+                },
+                and_bool
+        )
+        DEFINE_FUNCTION(
+                "operator||(bool, bool) -> bool",
+                std::vector<llvm::Type *>({llvm::Type::getInt1Ty(*context), llvm::Type::getInt1Ty(*context)}),
+                llvm::Type::getInt1Ty(*context),
+                {
+                    builder->CreateRet(builder->CreateOr(
+                            function_or_bool->getArg(0),
+                            function_or_bool->getArg(1)
+                    ));
+                },
+                or_bool
+        )
+        //endregion
     }
 }
