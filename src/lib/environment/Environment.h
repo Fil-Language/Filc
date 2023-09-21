@@ -83,25 +83,25 @@ namespace filc::environment {
 
         static auto addBinary(Environment *global, BasicTypes &basic_types) -> void;
 
-        static auto generateAssignations(filc::message::MessageCollector *collector,
-                                         llvm::LLVMContext *context,
-                                         llvm::Module *module,
-                                         llvm::IRBuilder<> *builder) -> void;
+        auto generateAssignations(filc::message::MessageCollector *collector,
+                                  llvm::LLVMContext *context,
+                                  llvm::Module *module,
+                                  llvm::IRBuilder<> *builder) const -> void;
 
-        static auto generatePrefixUnary(filc::message::MessageCollector *collector,
-                                        llvm::LLVMContext *context,
-                                        llvm::Module *module,
-                                        llvm::IRBuilder<> *builder) -> void;
+        auto generatePrefixUnary(filc::message::MessageCollector *collector,
+                                 llvm::LLVMContext *context,
+                                 llvm::Module *module,
+                                 llvm::IRBuilder<> *builder) const -> void;
 
-        static auto generatePostFixUnary(filc::message::MessageCollector *collector,
-                                         llvm::LLVMContext *context,
-                                         llvm::Module *module,
-                                         llvm::IRBuilder<> *builder) -> void;
+        auto generatePostFixUnary(filc::message::MessageCollector *collector,
+                                  llvm::LLVMContext *context,
+                                  llvm::Module *module,
+                                  llvm::IRBuilder<> *builder) const -> void;
 
-        static auto generateBinary(filc::message::MessageCollector *collector,
-                                   llvm::LLVMContext *context,
-                                   llvm::Module *module,
-                                   llvm::IRBuilder<> *builder) -> void;
+        auto generateBinary(filc::message::MessageCollector *collector,
+                            llvm::LLVMContext *context,
+                            llvm::Module *module,
+                            llvm::IRBuilder<> *builder) const -> void;
     };
 }
 

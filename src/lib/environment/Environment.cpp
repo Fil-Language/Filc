@@ -370,19 +370,19 @@ namespace filc::environment {
                 new filc::ast::LambdaType({basic_types._double_type, basic_types._double_type}, basic_types._bool_type)
         ) && global->addName(
                 "operator*=",
-                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._double_type)
         ) && global->addName(
                 "operator/=",
-                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._double_type)
         ) && global->addName(
                 "operator%=",
-                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._double_type)
         ) && global->addName(
                 "operator+=",
-                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._double_type)
         ) && global->addName(
                 "operator-=",
-                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._int_type)
+                new filc::ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._double_type)
         );
 
         is_ok = is_ok && global->addName(
@@ -539,7 +539,7 @@ namespace filc::environment {
         generated = true;
     }
 
-#define ASSIGNATION_FUNCTION(var, name, type) \
+#define ASSIGNATION_FUNCTION(var, name, type, operator_type) {\
     std::vector<llvm::Type *> types_##var = {llvm::PointerType::getUnqual(type), type}; \
     auto *type_##var = llvm::FunctionType::get(type, types_##var, false); \
     auto *function_##var = llvm::Function::Create(type_##var, llvm::Function::ExternalLinkage, name, *module); \
@@ -557,20 +557,42 @@ namespace filc::environment {
     auto *variable_##var = builder->CreateLoad(function_##var->getArg(0)->getType(), function_##var); \
     builder->CreateStore(function_##var->getArg(1), variable_##var); \
     builder->CreateRet(variable_##var); \
-    llvm::verifyFunction(*function_##var);
+    llvm::verifyFunction(*function_##var); \
+    getName("operator=", operator_type)->setValue(function_##var);                      \
+    }
 
     auto Environment::generateAssignations(filc::message::MessageCollector *collector,
                                            llvm::LLVMContext *context,
                                            llvm::Module *module,
-                                           llvm::IRBuilder<> *builder) -> void {
-        ASSIGNATION_FUNCTION(int_int, "operator=(int*, int) -> int", llvm::Type::getInt64Ty(*context))
-        ASSIGNATION_FUNCTION(double_double, "operator=(double*, double) -> double", llvm::Type::getDoubleTy(*context))
-        ASSIGNATION_FUNCTION(float_float, "operator=(float*, float) -> float", llvm::Type::getFloatTy(*context))
-        ASSIGNATION_FUNCTION(char_char, "operator(char*, char) -> char", llvm::Type::getInt8Ty(*context))
-        ASSIGNATION_FUNCTION(bool_bool, "operator(bool*, bool) -> bool", llvm::Type::getInt1Ty(*context))
+                                           llvm::IRBuilder<> *builder) const -> void {
+        auto *int_type = getType("int");
+        auto *double_type = getType("double");
+        auto *float_type = getType("float");
+        auto *char_type = getType("char");
+        auto *bool_type = getType("bool");
+        ASSIGNATION_FUNCTION(
+                int_int, "operator=(int*, int) -> int", llvm::Type::getInt64Ty(*context),
+                new filc::ast::LambdaType({new filc::ast::PointerType(int_type), int_type}, int_type)
+        )
+        ASSIGNATION_FUNCTION(
+                double_double, "operator=(double*, double) -> double", llvm::Type::getDoubleTy(*context),
+                new filc::ast::LambdaType({new filc::ast::PointerType(double_type), double_type}, double_type)
+        )
+        ASSIGNATION_FUNCTION(
+                float_float, "operator=(float*, float) -> float", llvm::Type::getFloatTy(*context),
+                new filc::ast::LambdaType({new filc::ast::PointerType(float_type), float_type}, float_type)
+        )
+        ASSIGNATION_FUNCTION(
+                char_char, "operator=(char*, char) -> char", llvm::Type::getInt8Ty(*context),
+                new filc::ast::LambdaType({new filc::ast::PointerType(char_type), char_type}, char_type)
+        )
+        ASSIGNATION_FUNCTION(
+                bool_bool, "operator=(bool*, bool) -> bool", llvm::Type::getInt1Ty(*context),
+                new filc::ast::LambdaType({new filc::ast::PointerType(bool_type), bool_type}, bool_type)
+        )
     }
 
-#define DEFINE_FUNCTION(name, params, rtype, body, var) { \
+#define DEFINE_FUNCTION(name, params, rtype, body, var, operator_name, operator_type) { \
     std::vector<llvm::Type *> types_##var = params; \
     auto *type_##var = llvm::FunctionType::get( \
             rtype, \
@@ -589,12 +611,24 @@ namespace filc::environment {
     builder->SetInsertPoint(basic_block_##var); \
     body \
     llvm::verifyFunction(*function_##var); \
+    getName(operator_name, operator_type)->setValue(function_##var); \
     }
 
     auto Environment::generatePrefixUnary(filc::message::MessageCollector *collector,
                                           llvm::LLVMContext *context,
                                           llvm::Module *module,
-                                          llvm::IRBuilder<> *builder) -> void {
+                                          llvm::IRBuilder<> *builder) const -> void {
+        auto *int_type = getType("int");
+        auto *double_type = getType("double");
+        auto *float_type = getType("float");
+        auto *char_type = getType("char");
+        auto *bool_type = getType("bool");
+        auto *ptr_int = new filc::ast::PointerType(int_type);
+        auto *ptr_double = new filc::ast::PointerType(double_type);
+        auto *ptr_float = new filc::ast::PointerType(float_type);
+        auto *ptr_char = new filc::ast::PointerType(char_type);
+
+        //region int
         DEFINE_FUNCTION(
                 "operator++(int*) -> int*",
                 { llvm::PointerType::getUnqual(llvm::Type::getInt64Ty(*context)) },
@@ -610,7 +644,9 @@ namespace filc::environment {
                     builder->CreateStore(result_plusplus_int, variable_plusplus_int);
                     builder->CreateRet(function_plusplus_int->getArg(0));
                 },
-                plusplus_int
+                plusplus_int,
+                "operator++",
+                new filc::ast::LambdaType({ptr_int}, ptr_int)
         )
         DEFINE_FUNCTION(
                 "operator--(int*) -> int*",
@@ -627,7 +663,9 @@ namespace filc::environment {
                     builder->CreateStore(result_minusminus_int, variable_minusminus_int);
                     builder->CreateRet(function_minusminus_int->getArg(0));
                 },
-                minusminus_int
+                minusminus_int,
+                "operator--",
+                new filc::ast::LambdaType({ptr_int}, ptr_int)
         )
         DEFINE_FUNCTION(
                 "operator+(int) -> int",
@@ -639,7 +677,9 @@ namespace filc::environment {
                             function_plus_int->getArg(0)
                     ));
                 },
-                plus_int
+                plus_int,
+                "operator+",
+                new filc::ast::LambdaType({int_type}, int_type)
         )
         DEFINE_FUNCTION(
                 "operator-(int) -> int",
@@ -651,9 +691,13 @@ namespace filc::environment {
                             function_minus_int->getArg(0)
                     ));
                 },
-                minus_int
+                minus_int,
+                "operator-",
+                new filc::ast::LambdaType({int_type}, int_type)
         )
+        //endregion
 
+        //region double
         DEFINE_FUNCTION(
                 "operator++(double*) -> double*",
                 { llvm::PointerType::getUnqual(llvm::Type::getDoubleTy(*context)) },
@@ -669,7 +713,9 @@ namespace filc::environment {
                     builder->CreateStore(result_plusplus_double, variable_plusplus_double);
                     builder->CreateRet(function_plusplus_double->getArg(0));
                 },
-                plusplus_double
+                plusplus_double,
+                "operator++",
+                new filc::ast::LambdaType({ptr_double}, ptr_double)
         )
         DEFINE_FUNCTION(
                 "operator--(double*) -> double*",
@@ -686,7 +732,9 @@ namespace filc::environment {
                     builder->CreateStore(result_minusminus_double, variable_minusminus_double);
                     builder->CreateRet(function_minusminus_double->getArg(0));
                 },
-                minusminus_double
+                minusminus_double,
+                "operator--",
+                new filc::ast::LambdaType({ptr_double}, ptr_double)
         )
         DEFINE_FUNCTION(
                 "operator+(double) -> double",
@@ -698,7 +746,9 @@ namespace filc::environment {
                             function_plus_double->getArg(0)
                     ));
                 },
-                plus_double
+                plus_double,
+                "operator+",
+                new filc::ast::LambdaType({double_type}, double_type)
         )
         DEFINE_FUNCTION(
                 "operator-(double) -> double",
@@ -710,9 +760,13 @@ namespace filc::environment {
                             function_minus_double->getArg(0)
                     ));
                 },
-                minus_double
+                minus_double,
+                "operator-",
+                new filc::ast::LambdaType({double_type}, double_type)
         )
+        //endregion
 
+        //region float
         DEFINE_FUNCTION(
                 "operator++(float*) -> float*",
                 { llvm::PointerType::getUnqual(llvm::Type::getFloatTy(*context)) },
@@ -728,7 +782,9 @@ namespace filc::environment {
                     builder->CreateStore(result_plusplus_float, variable_plusplus_float);
                     builder->CreateRet(function_plusplus_float->getArg(0));
                 },
-                plusplus_float
+                plusplus_float,
+                "operator++",
+                new filc::ast::LambdaType({ptr_float}, ptr_float)
         )
         DEFINE_FUNCTION(
                 "operator--(float*) -> float*",
@@ -745,7 +801,9 @@ namespace filc::environment {
                     builder->CreateStore(result_minusminus_float, variable_minusminus_float);
                     builder->CreateRet(function_minusminus_float->getArg(0));
                 },
-                minusminus_float
+                minusminus_float,
+                "operator--",
+                new filc::ast::LambdaType({ptr_float}, ptr_float)
         )
         DEFINE_FUNCTION(
                 "operator+(float) -> float",
@@ -757,7 +815,9 @@ namespace filc::environment {
                             function_plus_float->getArg(0)
                     ));
                 },
-                plus_float
+                plus_float,
+                "operator+",
+                new filc::ast::LambdaType({float_type}, float_type)
         )
         DEFINE_FUNCTION(
                 "operator-(float) -> float",
@@ -769,9 +829,13 @@ namespace filc::environment {
                             function_minus_float->getArg(0)
                     ));
                 },
-                minus_float
+                minus_float,
+                "operator-",
+                new filc::ast::LambdaType({float_type}, float_type)
         )
+        //endregion
 
+        //region char
         DEFINE_FUNCTION(
                 "operator++(char*) -> char*",
                 { llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(*context)) },
@@ -787,7 +851,9 @@ namespace filc::environment {
                     builder->CreateStore(result_plusplus_char, variable_plusplus_char);
                     builder->CreateRet(function_plusplus_char->getArg(0));
                 },
-                plusplus_char
+                plusplus_char,
+                "operator++",
+                new filc::ast::LambdaType({ptr_char}, ptr_char)
         )
         DEFINE_FUNCTION(
                 "operator--(char*) -> char*",
@@ -804,9 +870,13 @@ namespace filc::environment {
                     builder->CreateStore(result_minusminus_char, variable_minusminus_char);
                     builder->CreateRet(function_minusminus_char->getArg(0));
                 },
-                minusminus_char
+                minusminus_char,
+                "operator--",
+                new filc::ast::LambdaType({ptr_char}, ptr_char)
         )
+        //endregion
 
+        //region bool
         DEFINE_FUNCTION(
                 "operator!(bool) -> bool",
                 { llvm::Type::getInt1Ty(*context) },
@@ -817,14 +887,27 @@ namespace filc::environment {
                             function_not_bool->getArg(0)
                     ));
                 },
-                not_bool
+                not_bool,
+                "operator!",
+                new filc::ast::LambdaType({bool_type}, bool_type)
         )
+        //endregion
     }
 
     auto Environment::generatePostFixUnary(filc::message::MessageCollector *collector,
                                            llvm::LLVMContext *context,
                                            llvm::Module *module,
-                                           llvm::IRBuilder<> *builder) -> void {
+                                           llvm::IRBuilder<> *builder) const -> void {
+        auto *int_type = getType("int");
+        auto *double_type = getType("double");
+        auto *float_type = getType("float");
+        auto *char_type = getType("char");
+        auto *ptr_int = new filc::ast::PointerType(int_type);
+        auto *ptr_double = new filc::ast::PointerType(double_type);
+        auto *ptr_float = new filc::ast::PointerType(float_type);
+        auto *ptr_char = new filc::ast::PointerType(char_type);
+
+        //region int
         DEFINE_FUNCTION(
                 "operator++(int*) -> int",
                 { llvm::PointerType::getUnqual(llvm::Type::getInt64Ty(*context)) },
@@ -841,7 +924,9 @@ namespace filc::environment {
                     builder->CreateStore(result_plusplus_int, variable_plusplus_int);
                     builder->CreateRet(variable_plusplus_int);
                 },
-                plusplus_int
+                plusplus_int,
+                "operator++",
+                new filc::ast::LambdaType({ptr_int}, int_type)
         )
         DEFINE_FUNCTION(
                 "operator--(int*) -> int",
@@ -859,9 +944,13 @@ namespace filc::environment {
                     builder->CreateStore(result_minusminus_int, variable_minusminus_int);
                     builder->CreateRet(variable_minusminus_int);
                 },
-                minusminus_int
+                minusminus_int,
+                "operator--",
+                new filc::ast::LambdaType({ptr_int}, int_type)
         )
+        //endregion
 
+        //region double
         DEFINE_FUNCTION(
                 "operator++(double*) -> double",
                 { llvm::PointerType::getUnqual(llvm::Type::getDoubleTy(*context)) },
@@ -878,7 +967,9 @@ namespace filc::environment {
                     builder->CreateStore(result_plusplus_double, variable_plusplus_double);
                     builder->CreateRet(variable_plusplus_double);
                 },
-                plusplus_double
+                plusplus_double,
+                "operator++",
+                new filc::ast::LambdaType({ptr_double}, double_type)
         )
         DEFINE_FUNCTION(
                 "operator--(double*) -> double",
@@ -896,9 +987,13 @@ namespace filc::environment {
                     builder->CreateStore(result_minusminus_double, variable_minusminus_double);
                     builder->CreateRet(variable_minusminus_double);
                 },
-                minusminus_double
+                minusminus_double,
+                "operator--",
+                new filc::ast::LambdaType({ptr_double}, double_type)
         )
+        //endregion
 
+        //region float
         DEFINE_FUNCTION(
                 "operator++(float*) -> float",
                 { llvm::PointerType::getUnqual(llvm::Type::getFloatTy(*context)) },
@@ -915,7 +1010,9 @@ namespace filc::environment {
                     builder->CreateStore(result_plusplus_float, variable_plusplus_float);
                     builder->CreateRet(variable_plusplus_float);
                 },
-                plusplus_float
+                plusplus_float,
+                "operator++",
+                new filc::ast::LambdaType({ptr_float}, float_type)
         )
         DEFINE_FUNCTION(
                 "operator--(float*) -> float",
@@ -933,9 +1030,13 @@ namespace filc::environment {
                     builder->CreateStore(result_minusminus_float, variable_minusminus_float);
                     builder->CreateRet(variable_minusminus_float);
                 },
-                minusminus_float
+                minusminus_float,
+                "operator--",
+                new filc::ast::LambdaType({ptr_float}, float_type)
         )
+        //endregion
 
+        //region char
         DEFINE_FUNCTION(
                 "operator++(char*) -> char",
                 { llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(*context)) },
@@ -952,7 +1053,9 @@ namespace filc::environment {
                     builder->CreateStore(result_plusplus_char, variable_plusplus_char);
                     builder->CreateRet(variable_plusplus_char);
                 },
-                plusplus_char
+                plusplus_char,
+                "operator++",
+                new filc::ast::LambdaType({ptr_char}, char_type)
         )
         DEFINE_FUNCTION(
                 "operator--(char*) -> char",
@@ -970,14 +1073,27 @@ namespace filc::environment {
                     builder->CreateStore(result_minusminus_char, variable_minusminus_char);
                     builder->CreateRet(variable_minusminus_char);
                 },
-                minusminus_char
+                minusminus_char,
+                "operator--",
+                new filc::ast::LambdaType({ptr_char}, char_type)
         )
+        //endregion
     }
 
     auto Environment::generateBinary(filc::message::MessageCollector *collector,
                                      llvm::LLVMContext *context,
                                      llvm::Module *module,
-                                     llvm::IRBuilder<> *builder) -> void {
+                                     llvm::IRBuilder<> *builder) const -> void {
+        auto *int_type = getType("int");
+        auto *double_type = getType("double");
+        auto *float_type = getType("float");
+        auto *char_type = getType("char");
+        auto *bool_type = getType("bool");
+        auto *ptr_int = new filc::ast::PointerType(int_type);
+        auto *ptr_double = new filc::ast::PointerType(double_type);
+        auto *ptr_float = new filc::ast::PointerType(float_type);
+        auto *ptr_char = new filc::ast::PointerType(char_type);
+
         //region int operators
         DEFINE_FUNCTION(
                 "operator*(int, int) -> int",
@@ -989,7 +1105,9 @@ namespace filc::environment {
                             function_times_int->getArg(1)
                     ));
                 },
-                times_int
+                times_int,
+                "operator*",
+                new filc::ast::LambdaType({int_type, int_type}, int_type)
         )
         DEFINE_FUNCTION(
                 "operator/(int, int) -> int",
@@ -1001,7 +1119,9 @@ namespace filc::environment {
                             function_div_int->getArg(1)
                     ));
                 },
-                div_int
+                div_int,
+                "operator/",
+                new filc::ast::LambdaType({int_type, int_type}, int_type)
         )
         DEFINE_FUNCTION(
                 "operator%(int, int) -> int",
@@ -1013,7 +1133,9 @@ namespace filc::environment {
                             function_mod_int->getArg(1)
                     ));
                 },
-                mod_int
+                mod_int,
+                "operator%",
+                new filc::ast::LambdaType({int_type, int_type}, int_type)
         )
         DEFINE_FUNCTION(
                 "operator+(int, int) -> int",
@@ -1025,7 +1147,9 @@ namespace filc::environment {
                             function_plus_int->getArg(1)
                     ));
                 },
-                plus_int
+                plus_int,
+                "operator+",
+                new filc::ast::LambdaType({int_type, int_type}, int_type)
         )
         DEFINE_FUNCTION(
                 "operator-(int, int) -> int",
@@ -1037,7 +1161,9 @@ namespace filc::environment {
                             function_sub_int->getArg(1)
                     ));
                 },
-                sub_int
+                sub_int,
+                "operator-",
+                new filc::ast::LambdaType({int_type, int_type}, int_type)
         )
         DEFINE_FUNCTION(
                 "operator<(int, int) -> bool",
@@ -1049,7 +1175,9 @@ namespace filc::environment {
                             function_lt_int->getArg(1)
                     ));
                 },
-                lt_int
+                lt_int,
+                "operator<",
+                new filc::ast::LambdaType({int_type, int_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator>(int, int) -> bool",
@@ -1061,7 +1189,9 @@ namespace filc::environment {
                             function_gt_int->getArg(1)
                     ));
                 },
-                gt_int
+                gt_int,
+                "operator>",
+                new filc::ast::LambdaType({int_type, int_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator==(int, int) -> bool",
@@ -1073,7 +1203,9 @@ namespace filc::environment {
                             function_eqeq_int->getArg(1)
                     ));
                 },
-                eqeq_int
+                eqeq_int,
+                "operator==",
+                new filc::ast::LambdaType({int_type, int_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator<=(int, int) -> bool",
@@ -1085,7 +1217,9 @@ namespace filc::environment {
                             function_leq_int->getArg(1)
                     ));
                 },
-                leq_int
+                leq_int,
+                "operator<=",
+                new filc::ast::LambdaType({int_type, int_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator>=(int, int) -> bool",
@@ -1097,7 +1231,9 @@ namespace filc::environment {
                             function_geq_int->getArg(1)
                     ));
                 },
-                geq_int
+                geq_int,
+                "operator>=",
+                new filc::ast::LambdaType({int_type, int_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator!=(int, int) -> bool",
@@ -1109,7 +1245,9 @@ namespace filc::environment {
                             function_ne_int->getArg(1)
                     ));
                 },
-                ne_int
+                ne_int,
+                "operator!=",
+                new filc::ast::LambdaType({int_type, int_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator*=(int*, int) -> int",
@@ -1124,7 +1262,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_times_eq_int->getArg(0));
                     builder->CreateRet(result);
                 },
-                times_eq_int
+                times_eq_int,
+                "operator*=",
+                new filc::ast::LambdaType({ptr_int, int_type}, int_type)
         )
         DEFINE_FUNCTION(
                 "operator/=(int*, int) -> int",
@@ -1139,7 +1279,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_div_eq_int->getArg(0));
                     builder->CreateRet(result);
                 },
-                div_eq_int
+                div_eq_int,
+                "operator/=",
+                new filc::ast::LambdaType({ptr_int, int_type}, int_type)
         )
         DEFINE_FUNCTION(
                 "operator%=(int*, int) -> int",
@@ -1154,7 +1296,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_mod_eq_int->getArg(0));
                     builder->CreateRet(result);
                 },
-                mod_eq_int
+                mod_eq_int,
+                "operator%=",
+                new filc::ast::LambdaType({ptr_int, int_type}, int_type)
         )
         DEFINE_FUNCTION(
                 "operator+=(int*, int) -> int",
@@ -1169,7 +1313,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_add_eq_int->getArg(0));
                     builder->CreateRet(result);
                 },
-                add_eq_int
+                add_eq_int,
+                "operator+=",
+                new filc::ast::LambdaType({ptr_int, int_type}, int_type)
         )
         DEFINE_FUNCTION(
                 "operator-=(int*, int) -> int",
@@ -1184,7 +1330,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_sub_eq_int->getArg(0));
                     builder->CreateRet(result);
                 },
-                sub_eq_int
+                sub_eq_int,
+                "operator-=",
+                new filc::ast::LambdaType({ptr_int, int_type}, int_type)
         )
         //endregion
 
@@ -1199,7 +1347,9 @@ namespace filc::environment {
                             function_times_double->getArg(1)
                     ));
                 },
-                times_double
+                times_double,
+                "operator*",
+                new filc::ast::LambdaType({double_type, double_type}, double_type)
         )
         DEFINE_FUNCTION(
                 "operator/(double, double) -> double",
@@ -1211,7 +1361,9 @@ namespace filc::environment {
                             function_div_double->getArg(1)
                     ));
                 },
-                div_double
+                div_double,
+                "operator/",
+                new filc::ast::LambdaType({double_type, double_type}, double_type)
         )
         DEFINE_FUNCTION(
                 "operator%(double, double) -> double",
@@ -1223,7 +1375,9 @@ namespace filc::environment {
                             function_mod_double->getArg(1)
                     ));
                 },
-                mod_double
+                mod_double,
+                "operator%",
+                new filc::ast::LambdaType({double_type, double_type}, double_type)
         )
         DEFINE_FUNCTION(
                 "operator+(double, double) -> double",
@@ -1235,7 +1389,9 @@ namespace filc::environment {
                             function_plus_double->getArg(1)
                     ));
                 },
-                plus_double
+                plus_double,
+                "operator+",
+                new filc::ast::LambdaType({double_type, double_type}, double_type)
         )
         DEFINE_FUNCTION(
                 "operator-(double, double) -> double",
@@ -1247,7 +1403,9 @@ namespace filc::environment {
                             function_sub_double->getArg(1)
                     ));
                 },
-                sub_double
+                sub_double,
+                "operator-",
+                new filc::ast::LambdaType({double_type, double_type}, double_type)
         )
         DEFINE_FUNCTION(
                 "operator<(double, double) -> bool",
@@ -1259,7 +1417,9 @@ namespace filc::environment {
                             function_lt_double->getArg(1)
                     ));
                 },
-                lt_double
+                lt_double,
+                "operator<",
+                new filc::ast::LambdaType({double_type, double_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator>(double, double) -> bool",
@@ -1271,7 +1431,9 @@ namespace filc::environment {
                             function_gt_double->getArg(1)
                     ));
                 },
-                gt_double
+                gt_double,
+                "operator>",
+                new filc::ast::LambdaType({double_type, double_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator==(double, double) -> bool",
@@ -1283,7 +1445,9 @@ namespace filc::environment {
                             function_eqeq_double->getArg(1)
                     ));
                 },
-                eqeq_double
+                eqeq_double,
+                "operator==",
+                new filc::ast::LambdaType({double_type, double_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator<=(double, double) -> bool",
@@ -1295,7 +1459,9 @@ namespace filc::environment {
                             function_leq_double->getArg(1)
                     ));
                 },
-                leq_double
+                leq_double,
+                "operator<=",
+                new filc::ast::LambdaType({double_type, double_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator>=(double, double) -> bool",
@@ -1307,7 +1473,9 @@ namespace filc::environment {
                             function_geq_double->getArg(1)
                     ));
                 },
-                geq_double
+                geq_double,
+                "operator>=",
+                new filc::ast::LambdaType({double_type, double_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator!=(double, double) -> bool",
@@ -1319,7 +1487,9 @@ namespace filc::environment {
                             function_ne_double->getArg(1)
                     ));
                 },
-                ne_double
+                ne_double,
+                "operator!=",
+                new filc::ast::LambdaType({double_type, double_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator*=(double*, double) -> double",
@@ -1334,7 +1504,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_times_eq_double->getArg(0));
                     builder->CreateRet(result);
                 },
-                times_eq_double
+                times_eq_double,
+                "operator*=",
+                new filc::ast::LambdaType({ptr_double, double_type}, double_type)
         )
         DEFINE_FUNCTION(
                 "operator/=(double*, double) -> double",
@@ -1349,7 +1521,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_div_eq_double->getArg(0));
                     builder->CreateRet(result);
                 },
-                div_eq_double
+                div_eq_double,
+                "operator/=",
+                new filc::ast::LambdaType({ptr_double, double_type}, double_type)
         )
         DEFINE_FUNCTION(
                 "operator%=(double*, double) -> double",
@@ -1364,7 +1538,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_mod_eq_double->getArg(0));
                     builder->CreateRet(result);
                 },
-                mod_eq_double
+                mod_eq_double,
+                "operator%=",
+                new filc::ast::LambdaType({ptr_double, double_type}, double_type)
         )
         DEFINE_FUNCTION(
                 "operator+=(double*, double) -> double",
@@ -1379,7 +1555,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_add_eq_double->getArg(0));
                     builder->CreateRet(result);
                 },
-                add_eq_double
+                add_eq_double,
+                "operator+=",
+                new filc::ast::LambdaType({ptr_double, double_type}, double_type)
         )
         DEFINE_FUNCTION(
                 "operator-=(double*, double) -> double",
@@ -1394,7 +1572,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_sub_eq_double->getArg(0));
                     builder->CreateRet(result);
                 },
-                sub_eq_double
+                sub_eq_double,
+                "operator-=",
+                new filc::ast::LambdaType({ptr_double, double_type}, double_type)
         )
         //endregion
 
@@ -1409,7 +1589,9 @@ namespace filc::environment {
                             function_times_float->getArg(1)
                     ));
                 },
-                times_float
+                times_float,
+                "operator*",
+                new filc::ast::LambdaType({float_type, float_type}, float_type)
         )
         DEFINE_FUNCTION(
                 "operator/(float, float) -> float",
@@ -1421,7 +1603,9 @@ namespace filc::environment {
                             function_div_float->getArg(1)
                     ));
                 },
-                div_float
+                div_float,
+                "operator/",
+                new filc::ast::LambdaType({float_type, float_type}, float_type)
         )
         DEFINE_FUNCTION(
                 "operator%(float, float) -> float",
@@ -1433,7 +1617,9 @@ namespace filc::environment {
                             function_mod_float->getArg(1)
                     ));
                 },
-                mod_float
+                mod_float,
+                "operator%",
+                new filc::ast::LambdaType({float_type, float_type}, float_type)
         )
         DEFINE_FUNCTION(
                 "operator+(float, float) -> float",
@@ -1445,7 +1631,9 @@ namespace filc::environment {
                             function_plus_float->getArg(1)
                     ));
                 },
-                plus_float
+                plus_float,
+                "operator+",
+                new filc::ast::LambdaType({float_type, float_type}, float_type)
         )
         DEFINE_FUNCTION(
                 "operator-(float, float) -> float",
@@ -1457,7 +1645,9 @@ namespace filc::environment {
                             function_sub_float->getArg(1)
                     ));
                 },
-                sub_float
+                sub_float,
+                "operator-",
+                new filc::ast::LambdaType({float_type, float_type}, float_type)
         )
         DEFINE_FUNCTION(
                 "operator<(float, float) -> bool",
@@ -1469,7 +1659,9 @@ namespace filc::environment {
                             function_lt_float->getArg(1)
                     ));
                 },
-                lt_float
+                lt_float,
+                "operator<",
+                new filc::ast::LambdaType({float_type, float_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator>(float, float) -> bool",
@@ -1481,7 +1673,9 @@ namespace filc::environment {
                             function_gt_float->getArg(1)
                     ));
                 },
-                gt_float
+                gt_float,
+                "operator>",
+                new filc::ast::LambdaType({float_type, float_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator==(float, float) -> bool",
@@ -1493,7 +1687,9 @@ namespace filc::environment {
                             function_eqeq_float->getArg(1)
                     ));
                 },
-                eqeq_float
+                eqeq_float,
+                "operator==",
+                new filc::ast::LambdaType({float_type, float_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator<=(float, float) -> bool",
@@ -1505,7 +1701,9 @@ namespace filc::environment {
                             function_leq_float->getArg(1)
                     ));
                 },
-                leq_float
+                leq_float,
+                "operator<=",
+                new filc::ast::LambdaType({float_type, float_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator>=(float, float) -> bool",
@@ -1517,7 +1715,9 @@ namespace filc::environment {
                             function_geq_float->getArg(1)
                     ));
                 },
-                geq_float
+                geq_float,
+                "operator>=",
+                new filc::ast::LambdaType({float_type, float_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator!=(float, float) -> bool",
@@ -1529,7 +1729,9 @@ namespace filc::environment {
                             function_ne_float->getArg(1)
                     ));
                 },
-                ne_float
+                ne_float,
+                "operator!=",
+                new filc::ast::LambdaType({float_type, float_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator*=(float*, float) -> float",
@@ -1544,7 +1746,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_times_eq_float->getArg(0));
                     builder->CreateRet(result);
                 },
-                times_eq_float
+                times_eq_float,
+                "operator*=",
+                new filc::ast::LambdaType({ptr_float, float_type}, float_type)
         )
         DEFINE_FUNCTION(
                 "operator/=(float*, float) -> float",
@@ -1559,7 +1763,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_div_eq_float->getArg(0));
                     builder->CreateRet(result);
                 },
-                div_eq_float
+                div_eq_float,
+                "operator/=",
+                new filc::ast::LambdaType({ptr_float, float_type}, float_type)
         )
         DEFINE_FUNCTION(
                 "operator%=(float*, float) -> float",
@@ -1574,7 +1780,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_mod_eq_float->getArg(0));
                     builder->CreateRet(result);
                 },
-                mod_eq_float
+                mod_eq_float,
+                "operator%=",
+                new filc::ast::LambdaType({ptr_float, float_type}, float_type)
         )
         DEFINE_FUNCTION(
                 "operator+=(float*, float) -> float",
@@ -1589,7 +1797,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_add_eq_float->getArg(0));
                     builder->CreateRet(result);
                 },
-                add_eq_float
+                add_eq_float,
+                "operator+=",
+                new filc::ast::LambdaType({ptr_float, float_type}, float_type)
         )
         DEFINE_FUNCTION(
                 "operator-=(float*, float) -> float",
@@ -1604,7 +1814,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_sub_eq_float->getArg(0));
                     builder->CreateRet(result);
                 },
-                sub_eq_float
+                sub_eq_float,
+                "operator-=",
+                new filc::ast::LambdaType({ptr_float, float_type}, float_type)
         )
         //endregion
 
@@ -1619,7 +1831,9 @@ namespace filc::environment {
                             function_times_char->getArg(1)
                     ));
                 },
-                times_char
+                times_char,
+                "operator*",
+                new filc::ast::LambdaType({char_type, char_type}, char_type)
         )
         DEFINE_FUNCTION(
                 "operator/(char, char) -> char",
@@ -1631,7 +1845,9 @@ namespace filc::environment {
                             function_div_char->getArg(1)
                     ));
                 },
-                div_char
+                div_char,
+                "operator/",
+                new filc::ast::LambdaType({char_type, char_type}, char_type)
         )
         DEFINE_FUNCTION(
                 "operator%(char, char) -> char",
@@ -1643,7 +1859,9 @@ namespace filc::environment {
                             function_mod_char->getArg(1)
                     ));
                 },
-                mod_char
+                mod_char,
+                "operator%",
+                new filc::ast::LambdaType({char_type, char_type}, char_type)
         )
         DEFINE_FUNCTION(
                 "operator+(char, char) -> char",
@@ -1655,7 +1873,9 @@ namespace filc::environment {
                             function_plus_char->getArg(1)
                     ));
                 },
-                plus_char
+                plus_char,
+                "operator+",
+                new filc::ast::LambdaType({char_type, char_type}, char_type)
         )
         DEFINE_FUNCTION(
                 "operator-(char, char) -> char",
@@ -1667,7 +1887,9 @@ namespace filc::environment {
                             function_sub_char->getArg(1)
                     ));
                 },
-                sub_char
+                sub_char,
+                "operator-",
+                new filc::ast::LambdaType({char_type, char_type}, char_type)
         )
         DEFINE_FUNCTION(
                 "operator<(char, char) -> bool",
@@ -1679,7 +1901,9 @@ namespace filc::environment {
                             function_lt_char->getArg(1)
                     ));
                 },
-                lt_char
+                lt_char,
+                "operator<",
+                new filc::ast::LambdaType({char_type, char_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator>(char, char) -> bool",
@@ -1691,7 +1915,9 @@ namespace filc::environment {
                             function_gt_char->getArg(1)
                     ));
                 },
-                gt_char
+                gt_char,
+                "operator>",
+                new filc::ast::LambdaType({char_type, char_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator==(char, char) -> bool",
@@ -1703,7 +1929,9 @@ namespace filc::environment {
                             function_eqeq_char->getArg(1)
                     ));
                 },
-                eqeq_char
+                eqeq_char,
+                "operator==",
+                new filc::ast::LambdaType({char_type, char_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator<=(char, char) -> bool",
@@ -1715,7 +1943,9 @@ namespace filc::environment {
                             function_leq_char->getArg(1)
                     ));
                 },
-                leq_char
+                leq_char,
+                "operator<=",
+                new filc::ast::LambdaType({char_type, char_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator>=(char, char) -> bool",
@@ -1727,7 +1957,9 @@ namespace filc::environment {
                             function_geq_char->getArg(1)
                     ));
                 },
-                geq_char
+                geq_char,
+                "operator>=",
+                new filc::ast::LambdaType({char_type, char_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator!=(char, char) -> bool",
@@ -1739,7 +1971,9 @@ namespace filc::environment {
                             function_ne_char->getArg(1)
                     ));
                 },
-                ne_char
+                ne_char,
+                "operator!=",
+                new filc::ast::LambdaType({char_type, char_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator*=(char*, char) -> char",
@@ -1754,7 +1988,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_times_eq_char->getArg(0));
                     builder->CreateRet(result);
                 },
-                times_eq_char
+                times_eq_char,
+                "operator*=",
+                new filc::ast::LambdaType({ptr_char, char_type}, char_type)
         )
         DEFINE_FUNCTION(
                 "operator/=(char*, char) -> char",
@@ -1769,7 +2005,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_div_eq_char->getArg(0));
                     builder->CreateRet(result);
                 },
-                div_eq_char
+                div_eq_char,
+                "operator/=",
+                new filc::ast::LambdaType({ptr_char, char_type}, char_type)
         )
         DEFINE_FUNCTION(
                 "operator%=(char*, char) -> char",
@@ -1784,7 +2022,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_mod_eq_char->getArg(0));
                     builder->CreateRet(result);
                 },
-                mod_eq_char
+                mod_eq_char,
+                "operator%=",
+                new filc::ast::LambdaType({ptr_char, char_type}, char_type)
         )
         DEFINE_FUNCTION(
                 "operator+=(char*, char) -> char",
@@ -1799,7 +2039,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_add_eq_char->getArg(0));
                     builder->CreateRet(result);
                 },
-                add_eq_char
+                add_eq_char,
+                "operator+=",
+                new filc::ast::LambdaType({ptr_char, char_type}, char_type)
         )
         DEFINE_FUNCTION(
                 "operator-=(char*, char) -> char",
@@ -1814,7 +2056,9 @@ namespace filc::environment {
                     builder->CreateStore(result, function_sub_eq_char->getArg(0));
                     builder->CreateRet(result);
                 },
-                sub_eq_char
+                sub_eq_char,
+                "operator-=",
+                new filc::ast::LambdaType({ptr_char, char_type}, char_type)
         )
         //endregion
 
@@ -1829,7 +2073,9 @@ namespace filc::environment {
                             function_eqeq_bool->getArg(1)
                     ));
                 },
-                eqeq_bool
+                eqeq_bool,
+                "operator==",
+                new filc::ast::LambdaType({bool_type, bool_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator!=(bool, bool) -> bool",
@@ -1841,7 +2087,9 @@ namespace filc::environment {
                             function_ne_bool->getArg(1)
                     ));
                 },
-                ne_bool
+                ne_bool,
+                "operator!=",
+                new filc::ast::LambdaType({bool_type, bool_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator&&(bool, bool) -> bool",
@@ -1853,7 +2101,9 @@ namespace filc::environment {
                             function_and_bool->getArg(1)
                     ));
                 },
-                and_bool
+                and_bool,
+                "operator&&",
+                new filc::ast::LambdaType({bool_type, bool_type}, bool_type)
         )
         DEFINE_FUNCTION(
                 "operator||(bool, bool) -> bool",
@@ -1865,7 +2115,9 @@ namespace filc::environment {
                             function_or_bool->getArg(1)
                     ));
                 },
-                or_bool
+                or_bool,
+                "operator||",
+                new filc::ast::LambdaType({bool_type, bool_type}, bool_type)
         )
         //endregion
     }
