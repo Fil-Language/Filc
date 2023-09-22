@@ -38,3 +38,20 @@ TEST(Name, value) {
     var1.setValue(llvm::ConstantFP::get(*context, llvm::APFloat(3.6)));
     ASSERT_NE(nullptr, var1.getValue());
 }
+
+TEST(Name, function) {
+    filc::environment::Name fun1(
+            "my_fun",
+            new filc::ast::LambdaType({}, new filc::ast::Type(new filc::ast::Identifier("int")))
+    );
+    auto *context = new llvm::LLVMContext();
+    auto *module = new llvm::Module("test", *context);
+    ASSERT_EQ(nullptr, fun1.getFunction());
+    fun1.setFunction(llvm::Function::Create(
+            llvm::FunctionType::get(llvm::Type::getInt64Ty(*context), {}, false),
+            llvm::Function::ExternalLinkage,
+            "my_fun",
+            *module
+    ));
+    ASSERT_NE(nullptr, fun1.getFunction());
+}

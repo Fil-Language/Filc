@@ -26,7 +26,7 @@
 
 namespace filc::environment {
     Name::Name(std::string name, filc::ast::AbstractType *type)
-            : _name(std::move(name)), _type(type), _value(nullptr) {}
+            : _name(std::move(name)), _type(type), _value(nullptr), _function(nullptr) {}
 
     auto Name::getName() const -> const std::string & {
         return _name;
@@ -42,5 +42,13 @@ namespace filc::environment {
 
     auto Name::setValue(llvm::Value *value) -> void {
         _value = value;
+    }
+
+    auto Name::getFunction() const -> llvm::Function * {
+        return _function;
+    }
+
+    auto Name::setFunction(llvm::Function *function) -> void {
+        _function = function;
     }
 }

@@ -558,7 +558,7 @@ namespace filc::environment {
     builder->CreateStore(function_##var->getArg(1), variable_##var); \
     builder->CreateRet(variable_##var); \
     llvm::verifyFunction(*function_##var); \
-    getName("operator=", operator_type)->setValue(function_##var);                      \
+    getName("operator=", operator_type)->setFunction(function_##var); \
     }
 
     auto Environment::generateAssignations(filc::message::MessageCollector *collector,
@@ -611,7 +611,7 @@ namespace filc::environment {
     builder->SetInsertPoint(basic_block_##var); \
     body \
     llvm::verifyFunction(*function_##var); \
-    getName(operator_name, operator_type)->setValue(function_##var); \
+    getName(operator_name, operator_type)->setFunction(function_##var); \
     }
 
     auto Environment::generatePrefixUnary(filc::message::MessageCollector *collector,

@@ -51,3 +51,17 @@ TEST(PreUnaryCalcul, addNameToEnvironment) {
     ASSERT_TRUE(env1->hasName("test_pre_unary_calcul1_4"));
     ASSERT_TYPE("int*", env1->getName("test_pre_unary_calcul1_4")->getType());
 }
+
+TEST(PreUnaryCalcul, generateIR) {
+    filc::ast::PreUnaryCalcul puc1(new filc::ast::Identifier("my_var"),
+                                   new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUSPLUS));
+    auto *env = new filc::environment::Environment("", filc::environment::Environment::getGlobalEnvironment());
+    env->addName("my_var", env->getType("int"));
+    puc1.resolveType(env, COLLECTOR, nullptr);
+    ASSERT_FALSE(COLLECTOR->hasErrors());
+    auto *context = new llvm::LLVMContext;
+    auto *builder = new llvm::IRBuilder<>(*context);
+    auto *value = puc1.generateIR(COLLECTOR, env, context, nullptr, builder);
+    ASSERT_NE(nullptr, value);
+    ASSERT_TRUE(value->getType()->isPointerTy());
+}

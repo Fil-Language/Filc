@@ -65,4 +65,26 @@ namespace filc::ast {
 
         setExpressionType(operator_type->getReturnType());
     }
+
+    auto PreUnaryCalcul::generateIR(filc::message::MessageCollector *collector,
+                                    filc::environment::Environment *environment,
+                                    llvm::LLVMContext *context,
+                                    llvm::Module *module,
+                                    llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        auto operator_name = "operator" + getOperator()->dump();
+        auto *variable_type = getVariable()->getExpressionType();
+        auto *operator_type = getOperator()->dumpPreLambdaType(variable_type, environment, collector, getPosition());
+
+        auto *function = environment->getName(operator_name, operator_type)->getFunction();
+        if (function == nullptr) {
+            collector->addError(new filc::message::Error(
+                    filc::message::ERROR,
+                    "LLVM function for " + operator_name + ": " + operator_type->dump() + " not implemented",
+                    getPosition()
+            ));
+            return nullptr;
+        }
+
+        return builder->CreateCall(function);
+    }
 }
