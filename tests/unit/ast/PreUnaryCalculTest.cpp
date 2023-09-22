@@ -60,8 +60,11 @@ TEST(PreUnaryCalcul, generateIR) {
     puc1.resolveType(env, COLLECTOR, nullptr);
     ASSERT_FALSE(COLLECTOR->hasErrors());
     auto *context = new llvm::LLVMContext;
+    auto *module = new llvm::Module("module", *context);
     auto *builder = new llvm::IRBuilder<>(*context);
-    auto *value = puc1.generateIR(COLLECTOR, env, context, nullptr, builder);
+    env->generateIR(COLLECTOR, context, module, builder);
+    env->getName("my_var")->setValue(llvm::ConstantInt::get(*context, llvm::APInt(64, 2)));
+    auto *value = puc1.generateIR(COLLECTOR, env, context, module, builder);
     ASSERT_NE(nullptr, value);
     ASSERT_TRUE(value->getType()->isPointerTy());
 }

@@ -25,9 +25,10 @@
 #include "Error.h"
 
 namespace filc::ast {
-    BinaryCalcul::BinaryCalcul(filc::ast::AbstractExpression *left_expression, filc::ast::Operator *p_operator,
-                               filc::ast::AbstractExpression *right_expression)
-            : _left_expression(left_expression), _right_expression(right_expression), _operator(p_operator) {}
+    BinaryCalcul::BinaryCalcul(AbstractExpression *left_expression, Operator *p_operator,
+                               AbstractExpression *right_expression)
+            : _left_expression(left_expression), _right_expression(right_expression), _operator(p_operator),
+              _binary_type(nullptr) {}
 
     auto BinaryCalcul::getLeftExpression() const -> AbstractExpression * {
         return _left_expression;
@@ -60,24 +61,29 @@ namespace filc::ast {
 
         auto operator_name = "operator" + _operator->dump();
         bool has_found_preferred, has_found_left;
+        LambdaType *preferred_lambda, *left_lambda;
         if (dynamic_cast<AssignationOperator *>(_operator) != nullptr) {
             auto *ptr_left = new PointerType(left_type);
+            preferred_lambda = new LambdaType({ptr_left, right_type}, preferred_type);
             has_found_preferred = preferred_type != nullptr && environment->hasName(
                     operator_name,
-                    new LambdaType({ptr_left, right_type}, preferred_type)
+                    preferred_lambda
             );
+            left_lambda = new LambdaType({ptr_left, right_type}, left_type);
             has_found_left = environment->hasName(
                     operator_name,
-                    new LambdaType({ptr_left, right_type}, left_type)
+                    left_lambda
             );
         } else {
+            preferred_lambda = new LambdaType({left_type, right_type}, preferred_type);
             has_found_preferred = preferred_type != nullptr && environment->hasName(
                     operator_name,
-                    new LambdaType({left_type, right_type}, preferred_type)
+                    preferred_lambda
             );
+            left_lambda = new LambdaType({left_type, right_type}, left_type);
             has_found_left = environment->hasName(
                     operator_name,
-                    new LambdaType({left_type, right_type}, left_type)
+                    left_lambda
             );
         }
         if ((preferred_type != nullptr && (!has_found_preferred || !has_found_left)) || !has_found_left) {
@@ -90,6 +96,32 @@ namespace filc::ast {
             return;
         }
 
+        _binary_type = has_found_preferred ? preferred_lambda : left_lambda;
         setExpressionType(has_found_preferred ? preferred_type : left_type);
+    }
+
+    auto BinaryCalcul::generateIR(filc::message::MessageCollector *collector,
+                                  filc::environment::Environment *environment,
+                                  llvm::LLVMContext *context,
+                                  llvm::Module *module,
+                                  llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        auto operator_name = "operator" + getOperator()->dump();
+        auto *name = environment->getName(operator_name, _binary_type);
+        auto *function = name->getFunction();
+        if (function == nullptr) {
+            collector->addError(new filc::message::Error(
+                    filc::message::ERROR,
+                    "LLVM function for " + operator_name + ": " + _binary_type->dump() + " not implemented",
+                    getPosition()
+            ));
+            return nullptr;
+        }
+        auto *left_value = _left_expression->generateIR(collector, environment, context, module, builder);
+        auto *right_value = _right_expression->generateIR(collector, environment, context, module, builder);
+        if (left_value == nullptr || right_value == nullptr) {
+            return nullptr;
+        }
+
+        return builder->CreateCall(function, {left_value, right_value});
     }
 }

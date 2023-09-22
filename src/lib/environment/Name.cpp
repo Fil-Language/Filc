@@ -41,6 +41,9 @@ namespace filc::environment {
     }
 
     auto Name::setValue(llvm::Value *value) -> void {
+        if (value == nullptr) {
+            throw std::logic_error("Tried to set nullptr to a Name value");
+        }
         _value = value;
     }
 
@@ -49,6 +52,9 @@ namespace filc::environment {
     }
 
     auto Name::setFunction(llvm::Function *function) -> void {
+        if (function == nullptr) {
+            throw std::logic_error("Tried to set nullptr to a Name function");
+        }
         _function = function;
     }
 }

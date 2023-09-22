@@ -61,14 +61,17 @@ TEST(PostUnaryCalcul, addNameToEnvironment) {
 
 TEST(PostUnaryCalcul, generateIR) {
     filc::ast::PostUnaryCalcul puc1(new filc::ast::Identifier("my_var"),
-                                   new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUSMINUS));
+                                    new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUSMINUS));
     auto *env = new filc::environment::Environment("", filc::environment::Environment::getGlobalEnvironment());
     env->addName("my_var", env->getType("int"));
     puc1.resolveType(env, COLLECTOR, nullptr);
     ASSERT_FALSE(COLLECTOR->hasErrors());
     auto *context = new llvm::LLVMContext;
+    auto *module = new llvm::Module("module", *context);
     auto *builder = new llvm::IRBuilder<>(*context);
-    auto *value = puc1.generateIR(COLLECTOR, env, context, nullptr, builder);
+    env->generateIR(COLLECTOR, context, module, builder);
+    env->getName("my_var")->setValue(llvm::ConstantInt::get(*context, llvm::APInt(64, 2)));
+    auto *value = puc1.generateIR(COLLECTOR, env, context, module, builder);
     ASSERT_NE(nullptr, value);
     ASSERT_TRUE(value->getType()->isIntegerTy());
 }
