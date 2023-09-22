@@ -77,7 +77,8 @@ namespace filc::ast {
             ));
             return nullptr;
         }
+        auto *variable = getVariable()->generateIR(collector, environment, context, module, builder);
 
-        return builder->CreateCall(function);
+        return builder->CreateCall(function, {variable});
     }
 }
