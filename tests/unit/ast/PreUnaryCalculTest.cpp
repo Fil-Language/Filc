@@ -48,8 +48,8 @@ TEST(PreUnaryCalcul, addNameToEnvironment) {
     auto *program1 = parser1.getProgram();
     program1->resolveEnvironment(COLLECTOR, {});
     auto *env1 = program1->getPublicEnvironment(nullptr);
-    ASSERT_TRUE(env1->hasName("test_pre_unary_calcul1_4"));
-    ASSERT_TYPE("int*", env1->getName("test_pre_unary_calcul1_4")->getType());
+    ASSERT_TRUE(env1->hasName("test_pre_unary_calcul1_4", nullptr));
+    ASSERT_TYPE("int*", env1->getName("test_pre_unary_calcul1_4", nullptr)->getType());
 }
 
 TEST(PreUnaryCalcul, generateIR) {
@@ -63,7 +63,7 @@ TEST(PreUnaryCalcul, generateIR) {
     auto *module = new llvm::Module("module", *context);
     auto *builder = new llvm::IRBuilder<>(*context);
     env->generateIR(COLLECTOR, context, module, builder);
-    env->getName("my_var")->setValue(llvm::ConstantInt::get(*context, llvm::APInt(64, 2)));
+    env->getName("my_var", nullptr)->setValue(llvm::ConstantInt::get(*context, llvm::APInt(64, 2)));
     auto *value = puc1.generateIR(COLLECTOR, env, context, module, builder);
     ASSERT_NE(nullptr, value);
     ASSERT_TRUE(value->getType()->isPointerTy());

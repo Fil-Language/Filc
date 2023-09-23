@@ -31,7 +31,7 @@ TEST(Function, constructor) {
     filc::ast::Function fun1(
             new filc::ast::Identifier("fact"),
             {},
-            new filc::ast::Type(new filc::ast::Identifier("int")),
+            std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")),
             {}
     );
     ASSERT_IDENTIFIER("fact", fun1.getName());
@@ -61,6 +61,6 @@ TEST(Function, addNameToEnvironment) {
     auto *program1 = parser1.getProgram();
     program1->resolveEnvironment(COLLECTOR, {});
     auto *env1 = program1->getPublicEnvironment(nullptr);
-    ASSERT_TRUE(env1->hasName("pi"));
-    ASSERT_TYPE("() -> double", env1->getName("pi")->getType());
+    ASSERT_TRUE(env1->hasName("pi", nullptr));
+    ASSERT_TYPE("() -> double", env1->getName("pi", nullptr)->getType());
 }

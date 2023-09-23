@@ -30,11 +30,11 @@ namespace filc::ast {
 
     auto FloatLiteral::resolveType(filc::environment::Environment *environment,
                                    filc::message::MessageCollector *collector,
-                                   AbstractType *preferred_type) -> void {
-        auto looking_type = _double ? "double" : "float";
+                                   const std::shared_ptr<AbstractType> &preferred_type) -> void {
+        const auto *looking_type = _double ? "double" : "float";
 
         if (!environment->hasType(looking_type)) {
-            environment->addType(new filc::ast::Type(new filc::ast::Identifier(looking_type)));
+            environment->addType(std::make_shared<Type>(new Identifier(looking_type)));
         }
 
         setExpressionType(environment->getType(looking_type));

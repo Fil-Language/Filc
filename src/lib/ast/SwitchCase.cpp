@@ -53,18 +53,18 @@ namespace filc::ast {
 
     auto SwitchCase::resolveType(filc::environment::Environment *environment,
                                  filc::message::MessageCollector *collector,
-                                 AbstractType *preferred_type) -> void {
+                                 const std::shared_ptr<AbstractType> &preferred_type) -> void {
         if (!isDefault()) {
-            _pattern->resolveType(environment, collector);
+            _pattern->resolveType(environment, collector, nullptr);
             if (_pattern->getExpressionType() == nullptr) {
                 return;
             }
         }
 
-        AbstractType *body_type = nullptr;
+        std::shared_ptr<AbstractType> body_type = nullptr;
         for (auto iter = _body.begin(); iter != _body.end(); iter++) {
             if (iter + 1 != _body.end()) {
-                (*iter)->resolveType(environment, collector);
+                (*iter)->resolveType(environment, collector, nullptr);
             } else {
                 (*iter)->resolveType(environment, collector, preferred_type);
                 body_type = (*iter)->getExpressionType();

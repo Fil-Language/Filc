@@ -63,9 +63,9 @@ TEST(Program, getPublicEnvironment) {
     program1->resolveEnvironment(COLLECTOR, {});
     auto *env1 = program1->getPublicEnvironment(new filc::environment::Environment);
     ASSERT_STREQ("test.exported1", env1->getModule().c_str());
-    ASSERT_TRUE(env1->hasName("f1"));
-    ASSERT_TYPE("() -> bool", env1->getName("f1")->getType());
-    ASSERT_FALSE(env1->hasName("f2"));
+    ASSERT_TRUE(env1->hasName("f1", nullptr));
+    ASSERT_TYPE("() -> bool", env1->getName("f1", nullptr)->getType());
+    ASSERT_FALSE(env1->hasName("f2", nullptr));
 }
 
 TEST(Program, generateIR) {

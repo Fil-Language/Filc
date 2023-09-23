@@ -55,12 +55,12 @@ namespace filc::ast {
 
     auto ForIter::resolveType(filc::environment::Environment *environment,
                               filc::message::MessageCollector *collector,
-                              AbstractType *preferred_type) -> void {
+                              const std::shared_ptr<AbstractType> &preferred_type) -> void {
         _body_environment = new filc::environment::Environment("", environment);
 
-        _array->resolveType(environment, collector);
-        auto *array_type = _array->getExpressionType();
-        if (dynamic_cast<PointerType *>(array_type) == nullptr) {
+        _array->resolveType(environment, collector, nullptr);
+        auto array_type = _array->getExpressionType();
+        if (dynamic_cast<PointerType *>(array_type.get()) == nullptr) {
             auto *array_operator = environment->getName(
                     "operator[]",
                     new filc::ast::LambdaType({environment->getType("int")}, array_type->getInnerType())
@@ -75,7 +75,7 @@ namespace filc::ast {
             }
         }
 
-        if (environment->hasName(_identifier->getName())) {
+        if (environment->hasName(_identifier->getName(), nullptr)) {
             collector->addError(new filc::message::Error(
                     filc::message::ERROR,
                     _identifier->getName() + " is already defined",
@@ -85,9 +85,9 @@ namespace filc::ast {
         }
         _body_environment->addName(_identifier->getName(), array_type->getInnerType());
 
-        AbstractType *body_type = nullptr;
+        std::shared_ptr<AbstractType> body_type = nullptr;
         for (auto iter = _body.begin(); iter != _body.end(); iter++) {
-            (*iter)->resolveType(_body_environment, collector);
+            (*iter)->resolveType(_body_environment, collector, nullptr);
             if (iter + 1 == _body.end()) {
                 body_type = (*iter)->getExpressionType();
             }
@@ -96,6 +96,6 @@ namespace filc::ast {
             return;
         }
 
-        setExpressionType(new PointerType(body_type));
+        setExpressionType(std::make_shared<PointerType>(body_type));
     }
 }

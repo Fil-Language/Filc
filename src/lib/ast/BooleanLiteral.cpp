@@ -30,9 +30,9 @@ namespace filc::ast {
 
     auto BooleanLiteral::resolveType(filc::environment::Environment *environment,
                                      filc::message::MessageCollector *collector,
-                                     AbstractType *preferred_type) -> void {
+                                     const std::shared_ptr<AbstractType> &preferred_type) -> void {
         if (!environment->hasType("bool")) {
-            environment->addType(new filc::ast::Type(new filc::ast::Identifier("bool")));
+            environment->addType(std::make_shared<Type>(new Identifier("bool")));
         }
 
         setExpressionType(environment->getType("bool"));

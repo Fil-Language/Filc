@@ -25,8 +25,6 @@
 #include <string>
 #include "test_tools.h"
 
-using namespace ::testing;
-
 #define FIXTURES_PATH_GRAMMAR FIXTURES_PATH "/grammar"
 
 TEST(Parser, filename) {

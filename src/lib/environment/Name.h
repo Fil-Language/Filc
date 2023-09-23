@@ -32,11 +32,11 @@
 namespace filc::environment {
     class Name {
     public:
-        Name(std::string name, filc::ast::AbstractType *type);
+        Name(std::string name, const std::shared_ptr<filc::ast::AbstractType> &type);
 
         [[nodiscard]] auto getName() const -> const std::string &;
 
-        [[nodiscard]] auto getType() const -> filc::ast::AbstractType *;
+        [[nodiscard]] auto getType() const -> std::shared_ptr<filc::ast::AbstractType>;
 
         [[nodiscard]] auto getValue() const -> llvm::Value *;
 
@@ -48,7 +48,7 @@ namespace filc::environment {
 
     private:
         std::string _name;
-        filc::ast::AbstractType *_type;
+        std::shared_ptr<filc::ast::AbstractType> _type;
         llvm::Value *_value;
         llvm::Function *_function;
     };

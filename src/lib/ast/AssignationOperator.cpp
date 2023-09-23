@@ -40,10 +40,10 @@ namespace filc::ast {
         return _inner_operator->dump() + "=";
     }
 
-    auto AssignationOperator::dumpPreLambdaType(AbstractType *type,
+    auto AssignationOperator::dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                                 filc::environment::Environment *environment,
                                                 filc::message::MessageCollector *collector,
-                                                filc::utils::Position *position) const -> LambdaType * {
+                                                filc::utils::Position *position) const -> std::shared_ptr<LambdaType> {
         collector->addError(new filc::message::DevWarning(
                 3,
                 position,
@@ -53,10 +53,10 @@ namespace filc::ast {
         return nullptr;
     }
 
-    auto AssignationOperator::dumpPostLambdaType(AbstractType *type,
+    auto AssignationOperator::dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                                  filc::environment::Environment *environment,
                                                  filc::message::MessageCollector *collector,
-                                                 filc::utils::Position *position) const -> LambdaType * {
+                                                 filc::utils::Position *position) const -> std::shared_ptr<LambdaType> {
         collector->addError(new filc::message::DevWarning(
                 3,
                 position,

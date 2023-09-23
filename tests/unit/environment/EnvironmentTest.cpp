@@ -37,35 +37,35 @@ TEST(Environment, constructor) {
 
 TEST(Environment, names) {
     filc::environment::Environment env1;
-    ASSERT_FALSE(env1.hasName("hello"));
+    ASSERT_FALSE(env1.hasName("hello", nullptr));
     ASSERT_TRUE(env1.addName("hello", new filc::ast::Type(new filc::ast::Identifier("int"))));
-    ASSERT_TRUE(env1.hasName("hello"));
+    ASSERT_TRUE(env1.hasName("hello", nullptr));
     ASSERT_FALSE(env1.addName("hello", nullptr));
-    ASSERT_TRUE(env1.hasName("hello"));
-    ASSERT_STREQ("hello", env1.getName("hello")->getName().c_str());
-    ASSERT_TYPE("int", env1.getName("hello")->getType());
+    ASSERT_TRUE(env1.hasName("hello", nullptr));
+    ASSERT_STREQ("hello", env1.getName("hello", nullptr)->getName().c_str());
+    ASSERT_TYPE("int", env1.getName("hello", nullptr)->getType());
 
     filc::environment::Environment parent;
     parent.addName("a", nullptr);
     filc::environment::Environment env2("", &parent);
-    ASSERT_TRUE(env2.hasName("a"));
-    ASSERT_FALSE(env2.hasName("b"));
+    ASSERT_TRUE(env2.hasName("a", nullptr));
+    ASSERT_FALSE(env2.hasName("b", nullptr));
 }
 
 TEST(Environment, types) {
     filc::environment::Environment env1;
     ASSERT_FALSE(env1.hasType("int"));
-    ASSERT_TRUE(env1.addType(new filc::ast::Type(new filc::ast::Identifier("int"))));
+    ASSERT_TRUE(env1.addType(std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int"))));
     ASSERT_TRUE(env1.hasType("int"));
-    ASSERT_FALSE(env1.addType(new filc::ast::Type(new filc::ast::Identifier("int"))));
+    ASSERT_FALSE(env1.addType(std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int"))));
     ASSERT_TRUE(env1.hasType("int"));
     ASSERT_TYPE("int", env1.getType("int"));
 
     filc::environment::Environment parent;
-    parent.addType(new filc::ast::Type(new filc::ast::Identifier("float")));
+    parent.addType(std::make_shared<filc::ast::Type>(new filc::ast::Identifier("float")));
     filc::environment::Environment env2("", &parent);
     ASSERT_TRUE(env2.hasType("float"));
-    ASSERT_FALSE(env2.hasName("bool"));
+    ASSERT_FALSE(env2.hasName("bool", nullptr));
 }
 
 TEST(Environment, getGlobalEnvironment) {

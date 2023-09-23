@@ -25,12 +25,23 @@
 #include "AST.h"
 #include "Error.h"
 #include <algorithm>
+#include <memory>
 #include <utility>
 #include "llvm/IR/Verifier.h"
 
 namespace filc::environment {
     Environment::Environment(std::string module, const Environment *parent)
-            : _module(std::move(module)), _parent(parent) {}
+            : _module(std::move(module)), _parent(parent) {
+        if (parent == this) {
+            throw std::logic_error("Environment cannot be its own parent");
+        }
+    }
+
+    Environment::~Environment() {
+        for (auto &name: _names) {
+            delete name;
+        }
+    }
 
     auto Environment::getModule() const -> const std::string & {
         return _module;
@@ -40,13 +51,18 @@ namespace filc::environment {
         return _parent;
     }
 
-    auto Environment::hasName(const std::string &name, filc::ast::AbstractType *type) const -> bool {
+    auto Environment::hasName(const std::string &name,
+                              const std::shared_ptr<filc::ast::AbstractType> &type) const -> bool {
         return std::any_of(_names.begin(), _names.end(), [name, type](auto *item) -> bool {
             return item->getName() == name && (type == nullptr || *item->getType() == *type);
-        }) || (_parent != nullptr && _parent->hasName(name));
+        }) || (_parent != nullptr && _parent->hasName(name, nullptr));
     }
 
-    auto Environment::addName(const std::string &name, filc::ast::AbstractType *type) -> bool {
+    auto Environment::hasName(const std::string &name, filc::ast::AbstractType *type) const -> bool {
+        return hasName(name, std::shared_ptr<filc::ast::AbstractType>(type));
+    }
+
+    auto Environment::addName(const std::string &name, const std::shared_ptr<filc::ast::AbstractType> &type) -> bool {
         if (hasName(name, type)) {
             return false;
         }
@@ -56,9 +72,14 @@ namespace filc::environment {
         return true;
     }
 
-    auto Environment::getName(const std::string &name, filc::ast::AbstractType *type) const -> Name * {
+    auto Environment::addName(const std::string &name, filc::ast::AbstractType *type) -> bool {
+        return addName(name, std::shared_ptr<filc::ast::AbstractType>(type));
+    }
+
+    auto Environment::getName(const std::string &name,
+                              const std::shared_ptr<filc::ast::AbstractType> &type) const -> Name * {
         if (hasName(name, type)) {
-            auto result = std::find_if(_names.begin(), _names.end(), [name, type](auto *item) -> bool {
+            auto result = std::find_if(_names.begin(), _names.end(), [name, type](const auto *item) -> bool {
                 return item->getName() == name && (type == nullptr || *item->getType() == *type);
             });
 
@@ -76,13 +97,17 @@ namespace filc::environment {
         return nullptr;
     }
 
+    auto Environment::getName(const std::string &name, filc::ast::AbstractType *type) const -> Name * {
+        return getName(name, std::shared_ptr<filc::ast::AbstractType>(type));
+    }
+
     auto Environment::hasType(const std::string &type) const -> bool {
-        return std::any_of(_types.begin(), _types.end(), [type](auto *item) -> bool {
+        return std::any_of(_types.begin(), _types.end(), [type](const auto &item) -> bool {
             return item->dump() == type;
         }) || (_parent != nullptr && _parent->hasType(type));
     }
 
-    auto Environment::addType(filc::ast::AbstractType *type) -> bool {
+    auto Environment::addType(const std::shared_ptr<filc::ast::AbstractType> &type) -> bool {
         if (hasType(type->dump())) {
             return false;
         }
@@ -92,9 +117,9 @@ namespace filc::environment {
         return true;
     }
 
-    auto Environment::getType(const std::string &type) const -> filc::ast::AbstractType * {
+    auto Environment::getType(const std::string &type) const -> std::shared_ptr<filc::ast::AbstractType> {
         if (hasType(type)) {
-            auto result = std::find_if(_types.begin(), _types.end(), [type](auto *item) -> bool {
+            auto result = std::find_if(_types.begin(), _types.end(), [type](const auto &item) -> bool {
                 return item->dump() == type;
             });
             if (result == _types.end()) {
@@ -131,11 +156,11 @@ namespace filc::environment {
 
     auto Environment::addBasicTypes(Environment *global) -> BasicTypes {
         BasicTypes basic_types;
-        basic_types._int_type = new ast::Type(new ast::Identifier("int"));
-        basic_types._double_type = new ast::Type(new ast::Identifier("double"));
-        basic_types._float_type = new ast::Type(new ast::Identifier("float"));
-        basic_types._char_type = new ast::Type(new ast::Identifier("char"));
-        basic_types._bool_type = new ast::Type(new ast::Identifier("bool"));
+        basic_types._int_type = std::make_shared<filc::ast::Type>(new ast::Identifier("int"));
+        basic_types._double_type = std::make_shared<filc::ast::Type>(new ast::Identifier("double"));
+        basic_types._float_type = std::make_shared<filc::ast::Type>(new ast::Identifier("float"));
+        basic_types._char_type = std::make_shared<filc::ast::Type>(new ast::Identifier("char"));
+        basic_types._bool_type = std::make_shared<filc::ast::Type>(new ast::Identifier("bool"));
 
         auto is_ok = global->addType(basic_types._int_type)
                      && global->addType(basic_types._double_type)
@@ -158,26 +183,36 @@ namespace filc::environment {
     }
 
     auto Environment::addAssignations(Environment *global, BasicTypes &basic_types) -> void {
-        auto *ptr_int = new filc::ast::PointerType(basic_types._int_type);
-        auto *ptr_double = new filc::ast::PointerType(basic_types._double_type);
-        auto *ptr_float = new filc::ast::PointerType(basic_types._float_type);
-        auto *ptr_char = new filc::ast::PointerType(basic_types._char_type);
-        auto *ptr_bool = new filc::ast::PointerType(basic_types._bool_type);
+        auto ptr_int = std::make_shared<filc::ast::PointerType>(basic_types._int_type);
+        auto ptr_double = std::make_shared<filc::ast::PointerType>(basic_types._double_type);
+        auto ptr_float = std::make_shared<filc::ast::PointerType>(basic_types._float_type);
+        auto ptr_char = std::make_shared<filc::ast::PointerType>(basic_types._char_type);
+        auto ptr_bool = std::make_shared<filc::ast::PointerType>(basic_types._bool_type);
         auto iok = global->addName(
                 "operator=",
-                new ast::LambdaType({ptr_int, basic_types._int_type}, basic_types._int_type)
+                std::make_shared<filc::ast::LambdaType>(
+                        std::vector<std::shared_ptr<filc::ast::AbstractType>>({ptr_int, basic_types._int_type}),
+                        basic_types._int_type)
         ) && global->addName(
                 "operator=",
-                new ast::LambdaType({ptr_double, basic_types._double_type}, basic_types._double_type)
+                std::make_shared<filc::ast::LambdaType>(
+                        std::vector<std::shared_ptr<filc::ast::AbstractType>>({ptr_double, basic_types._double_type}),
+                        basic_types._double_type)
         ) && global->addName(
                 "operator=",
-                new ast::LambdaType({ptr_float, basic_types._float_type}, basic_types._float_type)
+                std::make_shared<filc::ast::LambdaType>(
+                        std::vector<std::shared_ptr<filc::ast::AbstractType>>({ptr_float, basic_types._float_type}),
+                        basic_types._float_type)
         ) && global->addName(
                 "operator=",
-                new ast::LambdaType({ptr_char, basic_types._char_type}, basic_types._char_type)
+                std::make_shared<filc::ast::LambdaType>(
+                        std::vector<std::shared_ptr<filc::ast::AbstractType>>({ptr_char, basic_types._char_type}),
+                        basic_types._char_type)
         ) && global->addName(
                 "operator=",
-                new ast::LambdaType({ptr_bool, basic_types._bool_type}, basic_types._bool_type)
+                std::make_shared<filc::ast::LambdaType>(
+                        std::vector<std::shared_ptr<filc::ast::AbstractType>>({ptr_bool, basic_types._bool_type}),
+                        basic_types._bool_type)
         );
         if (!iok) {
             throw std::logic_error("Fail to add base assignations to global environment");
@@ -185,10 +220,10 @@ namespace filc::environment {
     }
 
     auto Environment::addPrefixUnary(Environment *global, BasicTypes &basic_types) -> void {
-        auto *ptr_int = new filc::ast::PointerType(basic_types._int_type);
-        auto *ptr_double = new filc::ast::PointerType(basic_types._double_type);
-        auto *ptr_float = new filc::ast::PointerType(basic_types._float_type);
-        auto *ptr_char = new filc::ast::PointerType(basic_types._char_type);
+        auto ptr_int = std::make_shared<filc::ast::PointerType>(basic_types._int_type);
+        auto ptr_double = std::make_shared<filc::ast::PointerType>(basic_types._double_type);
+        auto ptr_float = std::make_shared<filc::ast::PointerType>(basic_types._float_type);
+        auto ptr_char = std::make_shared<filc::ast::PointerType>(basic_types._char_type);
         auto is_ok = global->addName(
                 "operator++",
                 new ast::LambdaType({ptr_int}, ptr_int)
@@ -241,10 +276,10 @@ namespace filc::environment {
     }
 
     auto Environment::addPostfixUnary(Environment *global, BasicTypes &basic_types) -> void {
-        auto *ptr_int = new filc::ast::PointerType(basic_types._int_type);
-        auto *ptr_double = new filc::ast::PointerType(basic_types._double_type);
-        auto *ptr_float = new filc::ast::PointerType(basic_types._float_type);
-        auto *ptr_char = new filc::ast::PointerType(basic_types._char_type);
+        auto ptr_int = std::make_shared<filc::ast::PointerType>(basic_types._int_type);
+        auto ptr_double = std::make_shared<filc::ast::PointerType>(basic_types._double_type);
+        auto ptr_float = std::make_shared<filc::ast::PointerType>(basic_types._float_type);
+        auto ptr_char = std::make_shared<filc::ast::PointerType>(basic_types._char_type);
         auto is_ok = global->addName(
                 "operator++",
                 new ast::LambdaType({ptr_int}, basic_types._int_type)
@@ -276,10 +311,10 @@ namespace filc::environment {
     }
 
     auto Environment::addBinary(Environment *global, BasicTypes &basic_types) -> void {
-        auto *ptr_int = new filc::ast::PointerType(basic_types._int_type);
-        auto *ptr_double = new filc::ast::PointerType(basic_types._double_type);
-        auto *ptr_float = new filc::ast::PointerType(basic_types._float_type);
-        auto *ptr_char = new filc::ast::PointerType(basic_types._char_type);
+        auto ptr_int = std::make_shared<filc::ast::PointerType>(basic_types._int_type);
+        auto ptr_double = std::make_shared<filc::ast::PointerType>(basic_types._double_type);
+        auto ptr_float = std::make_shared<filc::ast::PointerType>(basic_types._float_type);
+        auto ptr_char = std::make_shared<filc::ast::PointerType>(basic_types._char_type);
         auto is_ok = global->addName(
                 "operator*",
                 new filc::ast::LambdaType({basic_types._int_type, basic_types._int_type}, basic_types._int_type)
@@ -565,30 +600,35 @@ namespace filc::environment {
                                            llvm::LLVMContext *context,
                                            llvm::Module *module,
                                            llvm::IRBuilder<> *builder) const -> void {
-        auto *int_type = getType("int");
-        auto *double_type = getType("double");
-        auto *float_type = getType("float");
-        auto *char_type = getType("char");
-        auto *bool_type = getType("bool");
+        auto int_type = getType("int");
+        auto double_type = getType("double");
+        auto float_type = getType("float");
+        auto char_type = getType("char");
+        auto bool_type = getType("bool");
+        auto ptr_int = std::make_shared<filc::ast::PointerType>(int_type);
+        auto ptr_double = std::make_shared<filc::ast::PointerType>(double_type);
+        auto ptr_float = std::make_shared<filc::ast::PointerType>(float_type);
+        auto ptr_char = std::make_shared<filc::ast::PointerType>(char_type);
+        auto ptr_bool = std::make_shared<filc::ast::PointerType>(bool_type);
         ASSIGNATION_FUNCTION(
                 int_int, "operator=(int*, int) -> int", llvm::Type::getInt64Ty(*context),
-                new filc::ast::LambdaType({new filc::ast::PointerType(int_type), int_type}, int_type)
+                new filc::ast::LambdaType({ptr_int, int_type}, int_type)
         )
         ASSIGNATION_FUNCTION(
                 double_double, "operator=(double*, double) -> double", llvm::Type::getDoubleTy(*context),
-                new filc::ast::LambdaType({new filc::ast::PointerType(double_type), double_type}, double_type)
+                new filc::ast::LambdaType({ptr_double, double_type}, double_type)
         )
         ASSIGNATION_FUNCTION(
                 float_float, "operator=(float*, float) -> float", llvm::Type::getFloatTy(*context),
-                new filc::ast::LambdaType({new filc::ast::PointerType(float_type), float_type}, float_type)
+                new filc::ast::LambdaType({ptr_float, float_type}, float_type)
         )
         ASSIGNATION_FUNCTION(
                 char_char, "operator=(char*, char) -> char", llvm::Type::getInt8Ty(*context),
-                new filc::ast::LambdaType({new filc::ast::PointerType(char_type), char_type}, char_type)
+                new filc::ast::LambdaType({ptr_char, char_type}, char_type)
         )
         ASSIGNATION_FUNCTION(
                 bool_bool, "operator=(bool*, bool) -> bool", llvm::Type::getInt1Ty(*context),
-                new filc::ast::LambdaType({new filc::ast::PointerType(bool_type), bool_type}, bool_type)
+                new filc::ast::LambdaType({ptr_bool, bool_type}, bool_type)
         )
     }
 
@@ -618,15 +658,15 @@ namespace filc::environment {
                                           llvm::LLVMContext *context,
                                           llvm::Module *module,
                                           llvm::IRBuilder<> *builder) const -> void {
-        auto *int_type = getType("int");
-        auto *double_type = getType("double");
-        auto *float_type = getType("float");
-        auto *char_type = getType("char");
-        auto *bool_type = getType("bool");
-        auto *ptr_int = new filc::ast::PointerType(int_type);
-        auto *ptr_double = new filc::ast::PointerType(double_type);
-        auto *ptr_float = new filc::ast::PointerType(float_type);
-        auto *ptr_char = new filc::ast::PointerType(char_type);
+        auto int_type = getType("int");
+        auto double_type = getType("double");
+        auto float_type = getType("float");
+        auto char_type = getType("char");
+        auto bool_type = getType("bool");
+        auto ptr_int = std::make_shared<filc::ast::PointerType>(int_type);
+        auto ptr_double = std::make_shared<filc::ast::PointerType>(double_type);
+        auto ptr_float = std::make_shared<filc::ast::PointerType>(float_type);
+        auto ptr_char = std::make_shared<filc::ast::PointerType>(char_type);
 
         //region int
         DEFINE_FUNCTION(
@@ -898,14 +938,15 @@ namespace filc::environment {
                                            llvm::LLVMContext *context,
                                            llvm::Module *module,
                                            llvm::IRBuilder<> *builder) const -> void {
-        auto *int_type = getType("int");
-        auto *double_type = getType("double");
-        auto *float_type = getType("float");
-        auto *char_type = getType("char");
-        auto *ptr_int = new filc::ast::PointerType(int_type);
-        auto *ptr_double = new filc::ast::PointerType(double_type);
-        auto *ptr_float = new filc::ast::PointerType(float_type);
-        auto *ptr_char = new filc::ast::PointerType(char_type);
+        auto int_type = getType("int");
+        auto double_type = getType("double");
+        auto float_type = getType("float");
+        auto char_type = getType("char");
+        auto bool_type = getType("bool");
+        auto ptr_int = std::make_shared<filc::ast::PointerType>(int_type);
+        auto ptr_double = std::make_shared<filc::ast::PointerType>(double_type);
+        auto ptr_float = std::make_shared<filc::ast::PointerType>(float_type);
+        auto ptr_char = std::make_shared<filc::ast::PointerType>(char_type);
 
         //region int
         DEFINE_FUNCTION(
@@ -1084,15 +1125,15 @@ namespace filc::environment {
                                      llvm::LLVMContext *context,
                                      llvm::Module *module,
                                      llvm::IRBuilder<> *builder) const -> void {
-        auto *int_type = getType("int");
-        auto *double_type = getType("double");
-        auto *float_type = getType("float");
-        auto *char_type = getType("char");
-        auto *bool_type = getType("bool");
-        auto *ptr_int = new filc::ast::PointerType(int_type);
-        auto *ptr_double = new filc::ast::PointerType(double_type);
-        auto *ptr_float = new filc::ast::PointerType(float_type);
-        auto *ptr_char = new filc::ast::PointerType(char_type);
+        auto int_type = getType("int");
+        auto double_type = getType("double");
+        auto float_type = getType("float");
+        auto char_type = getType("char");
+        auto bool_type = getType("bool");
+        auto ptr_int = std::make_shared<filc::ast::PointerType>(int_type);
+        auto ptr_double = std::make_shared<filc::ast::PointerType>(double_type);
+        auto ptr_float = std::make_shared<filc::ast::PointerType>(float_type);
+        auto ptr_char = std::make_shared<filc::ast::PointerType>(char_type);
 
         //region int operators
         DEFINE_FUNCTION(

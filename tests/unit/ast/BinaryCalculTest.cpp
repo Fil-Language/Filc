@@ -57,8 +57,8 @@ TEST(BinaryCalcul, addNameToEnvironment) {
     auto *program1 = parser1.getProgram();
     program1->resolveEnvironment(COLLECTOR, {});
     auto *env1 = program1->getPublicEnvironment(nullptr);
-    ASSERT_TRUE(env1->hasName("test_binary_calcul3_3"));
-    ASSERT_TYPE("int", env1->getName("test_binary_calcul3_3")->getType());
+    ASSERT_TRUE(env1->hasName("test_binary_calcul3_3", nullptr));
+    ASSERT_TYPE("int", env1->getName("test_binary_calcul3_3", nullptr)->getType());
 }
 
 TEST(BinaryCalcul, generateIR) {
@@ -66,7 +66,7 @@ TEST(BinaryCalcul, generateIR) {
                                 new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LEQ),
                                 new filc::ast::Identifier("var2"));
     auto *env = new filc::environment::Environment("", filc::environment::Environment::getGlobalEnvironment());
-    auto *float_type = env->getType("float");
+    auto float_type = env->getType("float");
     env->addName("var1", float_type);
     env->addName("var2", float_type);
     bc1.resolveType(env, COLLECTOR, env->getType("bool"));
@@ -75,8 +75,8 @@ TEST(BinaryCalcul, generateIR) {
     auto *module = new llvm::Module("module", *context);
     auto *builder = new llvm::IRBuilder<>(*context);
     env->generateIR(COLLECTOR, context, module, builder);
-    env->getName("var1")->setValue(llvm::ConstantFP::get(*context, llvm::APFloat(2.0F)));
-    env->getName("var2")->setValue(llvm::ConstantFP::get(*context, llvm::APFloat(2.0F)));
+    env->getName("var1", nullptr)->setValue(llvm::ConstantFP::get(*context, llvm::APFloat(2.0F)));
+    env->getName("var2", nullptr)->setValue(llvm::ConstantFP::get(*context, llvm::APFloat(2.0F)));
     auto *value = bc1.generateIR(COLLECTOR, env, context, module, builder);
     ASSERT_NE(nullptr, value);
     ASSERT_TRUE(value->getType()->isIntegerTy(1));

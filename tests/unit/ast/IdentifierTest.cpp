@@ -50,7 +50,7 @@ TEST(Identifier, addNameToEnvironment) {
     id1.resolveType(env1, COLLECTOR, nullptr);
 
     auto *env2 = new filc::environment::Environment;
-    ASSERT_FALSE(env2->hasName("hello"));
+    ASSERT_FALSE(env2->hasName("hello", nullptr));
     id1.addNameToEnvironment(env2);
     ASSERT_TRUE(env2->hasName("hello", new filc::ast::Type(new filc::ast::Identifier("int"))));
 }
@@ -61,7 +61,7 @@ TEST(Identifier, generateIR) {
     environment->addName("var1", new filc::ast::Type(new filc::ast::Identifier("int")));
     auto *context = new llvm::LLVMContext();
     auto *value = llvm::ConstantFP::get(*context, llvm::APFloat(3.6));
-    environment->getName("var1")->setValue(value);
+    environment->getName("var1", nullptr)->setValue(value);
     id1.resolveType(environment, COLLECTOR, nullptr);
     ASSERT_EQ(value, id1.generateIR(COLLECTOR, environment, nullptr, nullptr, nullptr));
     ASSERT_FALSE(COLLECTOR->hasErrors());

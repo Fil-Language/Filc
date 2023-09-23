@@ -58,9 +58,9 @@ namespace filc::ast {
 
     auto CharacterLiteral::resolveType(filc::environment::Environment *environment,
                                        filc::message::MessageCollector *collector,
-                                       AbstractType *preferred_type) -> void {
+                                       const std::shared_ptr<AbstractType> &preferred_type) -> void {
         if (!environment->hasType("char")) {
-            environment->addType(new filc::ast::Type(new filc::ast::Identifier("char")));
+            environment->addType(std::make_shared<Type>(new Identifier("char")));
         }
 
         setExpressionType(environment->getType("char"));

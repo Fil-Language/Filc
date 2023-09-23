@@ -30,9 +30,9 @@ namespace filc::ast {
 
     auto IntegerLiteral::resolveType(filc::environment::Environment *environment,
                                      filc::message::MessageCollector *collector,
-                                     AbstractType *preferred_type) -> void {
+                                     const std::shared_ptr<AbstractType> &preferred_type) -> void {
         if (!environment->hasType("int")) {
-            environment->addType(new filc::ast::Type(new filc::ast::Identifier("int")));
+            environment->addType(std::make_shared<Type>(new Identifier("int")));
         }
 
         setExpressionType(environment->getType("int"));

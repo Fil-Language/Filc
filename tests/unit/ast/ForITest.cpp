@@ -26,8 +26,9 @@
 #include "Parser.h"
 
 TEST(ForI, constructor) {
-    auto *declaration = new filc::ast::VariableDeclaration(false, new filc::ast::Identifier("i"),
-                                                           new filc::ast::Type(new filc::ast::Identifier("int")));
+    auto *declaration = new filc::ast::VariableDeclaration(
+            false, new filc::ast::Identifier("i"),
+            std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")));
     declaration->setAssignation(new filc::ast::IntegerLiteral(0));
     filc::ast::ForI fi1(
             declaration,
@@ -69,7 +70,7 @@ TEST(ForI, addNameToEnvironment) {
     auto *program1 = parser1.getProgram();
     program1->resolveEnvironment(COLLECTOR, {});
     auto *env1 = program1->getPublicEnvironment(nullptr);
-    ASSERT_FALSE(env1->hasName("test_for_i1_3"));
-    ASSERT_TRUE(env1->hasName("test_for_i1_4"));
-    ASSERT_TYPE("int*", env1->getName("test_for_i1_4")->getType());
+    ASSERT_FALSE(env1->hasName("test_for_i1_3", nullptr));
+    ASSERT_TRUE(env1->hasName("test_for_i1_4", nullptr));
+    ASSERT_TYPE("int*", env1->getName("test_for_i1_4", nullptr)->getType());
 }

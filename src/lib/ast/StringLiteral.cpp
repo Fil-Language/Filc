@@ -31,16 +31,15 @@ namespace filc::ast {
 
     auto StringLiteral::resolveType(filc::environment::Environment *environment,
                                     filc::message::MessageCollector *collector,
-                                    AbstractType *preferred_type) -> void {
+                                    const std::shared_ptr<AbstractType> &preferred_type) -> void {
         if (!environment->hasType("char*")) {
             if (!environment->hasType("char")) {
-                environment->addType(new filc::ast::Type(new filc::ast::Identifier("char")));
+                environment->addType(std::make_shared<Type>(new Identifier("char")));
             }
-            environment->addType(new filc::ast::PointerType(environment->getType("char")));
+            environment->addType(std::make_shared<PointerType>(environment->getType("char")));
         }
-        auto *char_type = environment->getType("char*");
 
-        setExpressionType(char_type);
+        setExpressionType(environment->getType("char*"));
     }
 
     auto StringLiteral::generateIR(filc::message::MessageCollector *collector,

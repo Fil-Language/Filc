@@ -42,10 +42,10 @@ namespace filc::ast {
         return "()";
     }
 
-    auto FunctionOperator::dumpPreLambdaType(AbstractType *type,
+    auto FunctionOperator::dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
-                                             filc::utils::Position *position) const -> LambdaType * {
+                                             filc::utils::Position *position) const -> std::shared_ptr<LambdaType> {
         collector->addError(new filc::message::DevWarning(
                 3,
                 position,
@@ -55,14 +55,14 @@ namespace filc::ast {
         return nullptr;
     }
 
-    auto FunctionOperator::dumpPostLambdaType(AbstractType *type,
+    auto FunctionOperator::dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector,
-                                              filc::utils::Position *position) const -> LambdaType * {
-        std::vector<AbstractType *> args_types;
+                                              filc::utils::Position *position) const -> std::shared_ptr<LambdaType> {
+        std::vector<std::shared_ptr<AbstractType>> args_types;
         for (const auto &expression: _expressions) {
             expression->resolveType(environment, collector, nullptr);
-            auto *expression_type = expression->getExpressionType();
+            auto expression_type = expression->getExpressionType();
             if (expression_type != nullptr) {
                 args_types.push_back(expression_type);
             }
@@ -71,6 +71,6 @@ namespace filc::ast {
             return nullptr;
         }
 
-        return new LambdaType(args_types, type);
+        return std::make_shared<LambdaType>(args_types, type);
     }
 }

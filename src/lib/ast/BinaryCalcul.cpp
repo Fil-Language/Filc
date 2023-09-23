@@ -50,37 +50,43 @@ namespace filc::ast {
 
     auto BinaryCalcul::resolveType(filc::environment::Environment *environment,
                                    filc::message::MessageCollector *collector,
-                                   AbstractType *preferred_type) -> void {
-        _left_expression->resolveType(environment, collector);
-        auto *left_type = _left_expression->getExpressionType();
-        _right_expression->resolveType(environment, collector);
-        auto *right_type = _right_expression->getExpressionType();
+                                   const std::shared_ptr<AbstractType> &preferred_type) -> void {
+        _left_expression->resolveType(environment, collector, nullptr);
+        auto left_type = _left_expression->getExpressionType();
+        _right_expression->resolveType(environment, collector, nullptr);
+        auto right_type = _right_expression->getExpressionType();
         if (left_type == nullptr || right_type == nullptr) {
             return;
         }
 
         auto operator_name = "operator" + _operator->dump();
-        bool has_found_preferred, has_found_left;
-        LambdaType *preferred_lambda, *left_lambda;
+        auto has_found_preferred = false;
+        auto has_found_left = false;
+        std::shared_ptr<LambdaType> preferred_lambda;
+        std::shared_ptr<LambdaType> left_lambda;
         if (dynamic_cast<AssignationOperator *>(_operator) != nullptr) {
-            auto *ptr_left = new PointerType(left_type);
-            preferred_lambda = new LambdaType({ptr_left, right_type}, preferred_type);
+            auto ptr_left = std::make_shared<PointerType>(left_type);
+            preferred_lambda = std::make_shared<LambdaType>(
+                    std::vector<std::shared_ptr<AbstractType>>({ptr_left, right_type}), preferred_type);
             has_found_preferred = preferred_type != nullptr && environment->hasName(
                     operator_name,
                     preferred_lambda
             );
-            left_lambda = new LambdaType({ptr_left, right_type}, left_type);
+            left_lambda = std::make_shared<LambdaType>(
+                    std::vector<std::shared_ptr<AbstractType>>({ptr_left, right_type}), left_type);
             has_found_left = environment->hasName(
                     operator_name,
                     left_lambda
             );
         } else {
-            preferred_lambda = new LambdaType({left_type, right_type}, preferred_type);
+            preferred_lambda = std::make_shared<LambdaType>(
+                    std::vector<std::shared_ptr<AbstractType>>({left_type, right_type}), preferred_type);
             has_found_preferred = preferred_type != nullptr && environment->hasName(
                     operator_name,
                     preferred_lambda
             );
-            left_lambda = new LambdaType({left_type, right_type}, left_type);
+            left_lambda = std::make_shared<LambdaType>(
+                    std::vector<std::shared_ptr<AbstractType>>({left_type, right_type}), left_type);
             has_found_left = environment->hasName(
                     operator_name,
                     left_lambda

@@ -33,6 +33,7 @@ options {
 #include "Error.h"
 #include <string>
 #include <vector>
+#include <memory>
 }
 
 program returns[filc::ast::Program *tree]
@@ -254,15 +255,15 @@ assignation returns[filc::ast::AbstractExpression *tree]
         $tree = $e.tree;
     };
 
-type returns[filc::ast::AbstractType *tree]
+type returns[std::shared_ptr<filc::ast::AbstractType> tree]
 @init {
-    filc::ast::AbstractType *previous = nullptr;
+    std::shared_ptr<filc::ast::AbstractType> previous = nullptr;
 }
 @after {
     $tree = previous;
 }
     : i=IDENTIFIER {
-        previous = new filc::ast::Type(new filc::ast::Identifier($i));
+        previous = std::shared_ptr<filc::ast::AbstractType>(new filc::ast::Type(new filc::ast::Identifier($i)));
     } ((LBRACK it=INTEGER RBRACK {
         int size = stoi($it.text);
         if (size < 0) {
@@ -274,9 +275,9 @@ type returns[filc::ast::AbstractType *tree]
                 )
             );
         }
-        previous = new filc::ast::ArrayType(previous, size);
+        previous = std::shared_ptr<filc::ast::AbstractType>(new filc::ast::ArrayType(previous, size));
     }) | STAR {
-        previous = new filc::ast::PointerType(previous);
+        previous = std::shared_ptr<filc::ast::AbstractType>(new filc::ast::PointerType(previous));
     })*
     | l=lambda_type {
         previous = $l.tree;
@@ -375,7 +376,7 @@ function returns[filc::ast::Function *tree]
         $tree->setPosition(new filc::utils::Position($fd.start));
     };
 
-function_declaration returns[filc::ast::Identifier *identifier, std::vector<filc::ast::FunctionParameter *> parameters, filc::ast::AbstractType *return_type]
+function_declaration returns[filc::ast::Identifier *identifier, std::vector<filc::ast::FunctionParameter *> parameters, std::shared_ptr<filc::ast::AbstractType> return_type]
 @init {
     $parameters = std::vector<filc::ast::FunctionParameter *>();
 }
@@ -434,7 +435,7 @@ function_parameter returns[filc::ast::FunctionParameter *tree]
         $tree = new filc::ast::FunctionParameter(new filc::ast::Identifier($i), $t.tree);
     };
 
-function_type returns[filc::ast::AbstractType *tree]
+function_type returns[std::shared_ptr<filc::ast::AbstractType> tree]
     : COLON t=type {
         $tree = $t.tree;
     };
@@ -480,12 +481,12 @@ lambda returns[filc::ast::Lambda *tree]
         body = $bb.tree;
     });
 
-lambda_type returns[filc::ast::LambdaType *tree]
+lambda_type returns[std::shared_ptr<filc::ast::LambdaType> tree]
 @init {
-    std::vector<filc::ast::AbstractType *> arguments;
+    std::vector<std::shared_ptr<filc::ast::AbstractType>> arguments;
 }
 @after {
-    $tree = new filc::ast::LambdaType(arguments, $t.tree);
+    $tree = std::make_shared<filc::ast::LambdaType>(arguments, $t.tree);
 }
     : LPAREN (t1=type {
         arguments.push_back($t1.tree);

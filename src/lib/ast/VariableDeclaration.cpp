@@ -21,16 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <utility>
+
 #include "AST.h"
 #include "Error.h"
 
 namespace filc::ast {
-    VariableDeclaration::VariableDeclaration(bool is_constant, Identifier *identifier, AbstractType *type)
-            : _constant(is_constant), _identifier(identifier), _type(type), _assignation(nullptr) {}
+    VariableDeclaration::VariableDeclaration(bool is_constant, Identifier *identifier,
+                                             std::shared_ptr<AbstractType> type)
+            : _constant(is_constant), _identifier(identifier), _type(std::move(type)), _assignation(nullptr) {}
 
     VariableDeclaration::~VariableDeclaration() {
         delete _identifier;
-        delete _type;
         delete _assignation;
     }
 
@@ -42,7 +44,7 @@ namespace filc::ast {
         return _identifier;
     }
 
-    auto VariableDeclaration::getType() const -> AbstractType * {
+    auto VariableDeclaration::getType() const -> std::shared_ptr<AbstractType> {
         return _type;
     }
 
@@ -56,8 +58,8 @@ namespace filc::ast {
 
     auto VariableDeclaration::resolveType(filc::environment::Environment *environment,
                                           filc::message::MessageCollector *collector,
-                                          AbstractType *preferred_type) -> void {
-        if (environment->hasName(_identifier->getName())) {
+                                          const std::shared_ptr<AbstractType> &preferred_type) -> void {
+        if (environment->hasName(_identifier->getName(), nullptr)) {
             collector->addError(
                     new filc::message::Error(filc::message::ERROR,
                                              "Variable " + _identifier->getName() + " already defined",
@@ -67,13 +69,13 @@ namespace filc::ast {
         }
 
         _assignation->resolveType(environment, collector, _type);
-        auto *assignation_type = _assignation->getExpressionType();
+        auto assignation_type = _assignation->getExpressionType();
         if (assignation_type == nullptr) {
             return;
         }
 
-        if (!environment->hasName("operator=", new filc::ast::LambdaType({_type, assignation_type},
-                                                                         environment->getType("void")))) {
+        if (!environment->hasName("operator=",
+                                  new LambdaType({_type, assignation_type}, environment->getType("void")))) {
             collector->addError(
                     new filc::message::Error(filc::message::ERROR,
                                              "Cannot assign " + assignation_type->dump() + " to " + _type->dump(),

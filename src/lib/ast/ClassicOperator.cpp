@@ -77,20 +77,21 @@ namespace filc::ast {
         throw std::logic_error("Should not come here");
     }
 
-    auto ClassicOperator::dumpPreLambdaType(AbstractType *type,
+    auto ClassicOperator::dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                             filc::environment::Environment *environment,
                                             filc::message::MessageCollector *collector,
-                                            filc::utils::Position *position) const -> LambdaType * {
+                                            filc::utils::Position *position) const -> std::shared_ptr<LambdaType> {
+        auto ptr = std::make_shared<PointerType>(type);
         switch (_operator) {
             case PLUSPLUS:
             case MINUSMINUS:
-                return new LambdaType({new PointerType(type)}, new PointerType(type));
+                return std::make_shared<LambdaType>(std::vector<std::shared_ptr<AbstractType>>({ptr}), ptr);
             case PLUS:
             case MINUS:
             case REF:
             case STAR:
             case NOT:
-                return new LambdaType({type}, type);
+                return std::make_shared<LambdaType>(std::vector<std::shared_ptr<AbstractType>>({type}), type);
             case DIV:
             case MOD:
             case FLEFT:
@@ -114,14 +115,15 @@ namespace filc::ast {
         return nullptr;
     }
 
-    auto ClassicOperator::dumpPostLambdaType(AbstractType *type,
+    auto ClassicOperator::dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
-                                             filc::utils::Position *position) const -> LambdaType * {
+                                             filc::utils::Position *position) const -> std::shared_ptr<LambdaType> {
+        auto ptr = std::make_shared<PointerType>(type);
         switch (_operator) {
             case PLUSPLUS:
             case MINUSMINUS:
-                return new LambdaType({new filc::ast::PointerType(type)}, type);
+                return std::make_shared<LambdaType>(std::vector<std::shared_ptr<AbstractType>>({ptr}), type);
             case PLUS:
             case MINUS:
             case REF:

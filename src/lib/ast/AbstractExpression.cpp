@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <utility>
 #include "AST.h"
 #include "Error.h"
 #include "tools.h"
@@ -46,17 +47,17 @@ namespace filc::ast {
         _position = position;
     }
 
-    auto AbstractExpression::getExpressionType() const -> AbstractType * {
+    auto AbstractExpression::getExpressionType() const -> std::shared_ptr<AbstractType> {
         return _expression_type;
     }
 
-    auto AbstractExpression::setExpressionType(AbstractType *expression_type) -> void {
-        _expression_type = expression_type;
+    auto AbstractExpression::setExpressionType(std::shared_ptr<AbstractType> expression_type) -> void {
+        _expression_type = std::move(expression_type);
     }
 
     auto AbstractExpression::resolveType(filc::environment::Environment *environment,
                                          filc::message::MessageCollector *collector,
-                                         AbstractType *preferred_type) -> void {
+                                         const std::shared_ptr<AbstractType> &preferred_type) -> void {
         collector->addError(
                 new filc::message::Error(filc::message::FATAL_ERROR,
                                          "resolveType not implemented",
@@ -64,7 +65,8 @@ namespace filc::ast {
         );
     }
 
-    auto AbstractExpression::addNameToEnvironment(filc::environment::Environment *environment) const -> void {
+    auto AbstractExpression::addNameToEnvironment(
+            filc::environment::Environment *environment) const -> void {
         auto name = filc::utils::joinString(filc::utils::splitString(environment->getModule(), '.'), "_")
                     + "_" + std::to_string(getPosition()->getLine());
         environment->addName(name, getExpressionType());

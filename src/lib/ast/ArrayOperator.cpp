@@ -40,10 +40,10 @@ namespace filc::ast {
         return "[]";
     }
 
-    auto ArrayOperator::dumpPreLambdaType(AbstractType *type,
+    auto ArrayOperator::dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                           filc::environment::Environment *environment,
                                           filc::message::MessageCollector *collector,
-                                          filc::utils::Position *position) const -> LambdaType * {
+                                          filc::utils::Position *position) const -> std::shared_ptr<LambdaType> {
         collector->addError(new filc::message::DevWarning(
                 3,
                 position,
@@ -53,16 +53,17 @@ namespace filc::ast {
         return nullptr;
     }
 
-    auto ArrayOperator::dumpPostLambdaType(AbstractType *type,
+    auto ArrayOperator::dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                            filc::environment::Environment *environment,
                                            filc::message::MessageCollector *collector,
-                                           filc::utils::Position *position) const -> LambdaType * {
-        _expression->resolveType(environment, collector);
-        auto *expression_type = _expression->getExpressionType();
+                                           filc::utils::Position *position) const -> std::shared_ptr<LambdaType> {
+        _expression->resolveType(environment, collector, nullptr);
+        auto expression_type = _expression->getExpressionType();
         if (expression_type == nullptr) {
             return nullptr;
         }
 
-        return new LambdaType({expression_type}, type->getInnerType());
+        return std::make_shared<LambdaType>(std::vector<std::shared_ptr<AbstractType>>({expression_type}),
+                                            type->getInnerType());
     }
 }

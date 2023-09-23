@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <utility>
 #include "AST.h"
 #include "Error.h"
 
 namespace filc::ast {
-    Function::Function(Identifier *name, const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
-                       const std::vector<AbstractExpression *> &body)
-            : Lambda(parameters, return_type, body), _name(name) {}
+    Function::Function(Identifier *name, const std::vector<FunctionParameter *> &parameters,
+                       std::shared_ptr<AbstractType> return_type, const std::vector<AbstractExpression *> &body)
+            : Lambda(parameters, std::move(return_type), body), _name(name) {}
 
     auto Function::getName() const -> Identifier * {
         return _name;
@@ -39,7 +40,7 @@ namespace filc::ast {
 
     auto Function::resolveType(filc::environment::Environment *environment,
                                filc::message::MessageCollector *collector,
-                               AbstractType *preferred_type) -> void {
+                               const std::shared_ptr<AbstractType> &preferred_type) -> void {
         Lambda::resolveType(environment, collector, preferred_type);
 
         if (environment->hasName(_name->getName(), getExpressionType())) {

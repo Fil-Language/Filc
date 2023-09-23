@@ -57,7 +57,7 @@ namespace filc::ast {
 
     auto ForI::resolveType(filc::environment::Environment *environment,
                            filc::message::MessageCollector *collector,
-                           AbstractType *preferred_type) -> void {
+                           const std::shared_ptr<AbstractType> &preferred_type) -> void {
         _body_environment = new filc::environment::Environment("", environment);
 
         if (_declaration != nullptr) {
@@ -66,7 +66,7 @@ namespace filc::ast {
 
         if (_condition != nullptr) {
             _condition->resolveType(_body_environment, collector, environment->getType("bool"));
-            auto *condition_type = _condition->getExpressionType();
+            auto condition_type = _condition->getExpressionType();
             if (condition_type == nullptr) {
                 return;
             }
@@ -81,12 +81,12 @@ namespace filc::ast {
         }
 
         if (_iteration != nullptr) {
-            _iteration->resolveType(_body_environment, collector);
+            _iteration->resolveType(_body_environment, collector, nullptr);
         }
 
-        AbstractType *body_type = nullptr;
+        std::shared_ptr<AbstractType> body_type = nullptr;
         for (auto iter = _body.begin(); iter != _body.end(); iter++) {
-            (*iter)->resolveType(_body_environment, collector);
+            (*iter)->resolveType(_body_environment, collector, nullptr);
             if (iter + 1 == _body.end()) {
                 body_type = (*iter)->getExpressionType();
             }
@@ -95,6 +95,6 @@ namespace filc::ast {
             return;
         }
 
-        setExpressionType(new PointerType(body_type));
+        setExpressionType(std::make_shared<PointerType>(body_type));
     }
 }

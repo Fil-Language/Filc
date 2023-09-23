@@ -26,7 +26,7 @@
 #include "test_tools.h"
 
 TEST(ArrayType, constructor) {
-    auto *inner_type = new filc::ast::Type(new filc::ast::Identifier("array"));
+    auto inner_type = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("array"));
     filc::ast::ArrayType at1(
             inner_type,
             4

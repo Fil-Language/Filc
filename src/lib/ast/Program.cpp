@@ -35,7 +35,8 @@ auto getFileName(const std::string &filename) -> std::string {
 namespace filc::ast {
     Program::Program(std::string module, const std::vector<std::string> &imports,
                      const std::vector<AbstractExpression *> &expressions)
-            : _module(std::move(module)), _imports(imports), _expressions(expressions), _environment(nullptr) {}
+            : _module(std::move(module)), _imports(imports), _expressions(expressions), _environment(nullptr),
+              _public_environment(nullptr) {}
 
     Program::~Program() {
         for (const auto &expression: _expressions) {
@@ -83,21 +84,24 @@ namespace filc::ast {
         _environment = new filc::environment::Environment(_module, parent);
 
         for (const auto &expression: _expressions) {
-            expression->resolveType(_environment, collector);
+            expression->resolveType(_environment, collector, nullptr);
         }
     }
 
-    auto Program::getPublicEnvironment(
-            const filc::environment::Environment *parent) const -> filc::environment::Environment * {
-        auto *environment = new filc::environment::Environment(_module, parent);
+    auto Program::getPublicEnvironment(const filc::environment::Environment *parent) -> environment::Environment * {
+        if (_public_environment != nullptr) {
+            return _public_environment;
+        }
+
+        _public_environment = new filc::environment::Environment(_module, parent);
 
         for (const auto &expression: _expressions) {
             if (expression->isExported()) {
-                expression->addNameToEnvironment(environment);
+                expression->addNameToEnvironment(_public_environment);
             }
         }
 
-        return environment;
+        return _public_environment;
     }
 
     auto Program::generateIR(filc::message::MessageCollector *collector) -> void {

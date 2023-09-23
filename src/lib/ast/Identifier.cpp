@@ -40,13 +40,13 @@ namespace filc::ast {
 
     auto Identifier::resolveType(filc::environment::Environment *environment,
                                  filc::message::MessageCollector *collector,
-                                 AbstractType *preferred_type) -> void {
+                                 const std::shared_ptr<AbstractType> &preferred_type) -> void {
         if (!environment->hasName(_name, preferred_type)) {
             collector->addError(
                     new filc::message::Error(filc::message::ERROR, _name + " is not defined", getPosition())
             );
         } else {
-            auto *name = environment->getName(_name);
+            auto *name = environment->getName(_name, nullptr);
             setExpressionType(name->getType());
         }
     }

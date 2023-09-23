@@ -26,13 +26,13 @@
 #include "test_tools.h"
 
 TEST(VariableDeclaration, constructor) {
-    auto *tp1 = new filc::ast::Type(new filc::ast::Identifier("int"));
+    auto tp1 = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int"));
     filc::ast::VariableDeclaration vd1(false, new filc::ast::Identifier("my_var"), tp1);
     ASSERT_FALSE(vd1.isConstant());
     ASSERT_IDENTIFIER("my_var", vd1.getIdentifier());
     ASSERT_TYPE("int", vd1.getType());
 
-    auto *tp2 = new filc::ast::Type(new filc::ast::Identifier("float"));
+    auto tp2 = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("float"));
     filc::ast::VariableDeclaration vd2(true, new filc::ast::Identifier("my_val"), tp2);
     ASSERT_TRUE(vd2.isConstant());
     ASSERT_IDENTIFIER("my_val", vd2.getIdentifier());
@@ -40,7 +40,7 @@ TEST(VariableDeclaration, constructor) {
 }
 
 TEST(VariableDeclaration, assignation) {
-    auto *tp1 = new filc::ast::Type(new filc::ast::Identifier("int"));
+    auto tp1 = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int"));
     filc::ast::VariableDeclaration vd1(false, new filc::ast::Identifier("my_var"), tp1);
     auto *exp1 = new filc::ast::IntegerLiteral(12);
     vd1.setAssignation(exp1);
@@ -61,13 +61,13 @@ TEST(VariableDeclaration, addNameToEnvironment) {
     auto *program1 = parser1.getProgram();
     program1->resolveEnvironment(COLLECTOR, {});
     auto *env1 = program1->getPublicEnvironment(nullptr);
-    ASSERT_TRUE(env1->hasName("pi"));
-    ASSERT_TYPE("double", env1->getName("pi")->getType());
+    ASSERT_TRUE(env1->hasName("pi", nullptr));
+    ASSERT_TYPE("double", env1->getName("pi", nullptr)->getType());
 }
 
 TEST(VariableDeclaration, generateIR) {
     filc::ast::VariableDeclaration vd1(true, new filc::ast::Identifier("my_var"),
-                                       new filc::ast::Type(new filc::ast::Identifier("int")));
+                                       std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")));
     vd1.setAssignation(new filc::ast::IntegerLiteral(2));
     auto *env = new filc::environment::Environment("", filc::environment::Environment::getGlobalEnvironment());
     vd1.resolveType(env, COLLECTOR, nullptr);

@@ -51,6 +51,6 @@ TEST(ForIter, addNameToEnvironment) {
     auto *program1 = parser1.getProgram();
     program1->resolveEnvironment(COLLECTOR, {});
     auto *env1 = program1->getPublicEnvironment(nullptr);
-    ASSERT_TRUE(env1->hasName("test_for_iter2_3"));
-    ASSERT_TYPE("char*", env1->getName("test_for_iter2_3")->getType());
+    ASSERT_TRUE(env1->hasName("test_for_iter2_3", nullptr));
+    ASSERT_TYPE("char*", env1->getName("test_for_iter2_3", nullptr)->getType());
 }

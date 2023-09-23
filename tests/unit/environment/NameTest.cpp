@@ -26,13 +26,13 @@
 #include "test_tools.h"
 
 TEST(Name, constructor) {
-    filc::environment::Name var1("my_var", new filc::ast::Type(new filc::ast::Identifier("int")));
+    filc::environment::Name var1("my_var", std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")));
     ASSERT_STREQ("my_var", var1.getName().c_str());
     ASSERT_TYPE("int", var1.getType());
 }
 
 TEST(Name, value) {
-    filc::environment::Name var1("my_var", new filc::ast::Type(new filc::ast::Identifier("int")));
+    filc::environment::Name var1("my_var", std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")));
     auto *context = new llvm::LLVMContext();
     ASSERT_EQ(nullptr, var1.getValue());
     var1.setValue(llvm::ConstantFP::get(*context, llvm::APFloat(3.6)));
@@ -42,7 +42,8 @@ TEST(Name, value) {
 TEST(Name, function) {
     filc::environment::Name fun1(
             "my_fun",
-            new filc::ast::LambdaType({}, new filc::ast::Type(new filc::ast::Identifier("int")))
+            std::make_shared<filc::ast::LambdaType>(std::vector<std::shared_ptr<filc::ast::AbstractType>>(),
+                                                    std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")))
     );
     auto *context = new llvm::LLVMContext();
     auto *module = new llvm::Module("test", *context);

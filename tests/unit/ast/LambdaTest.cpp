@@ -26,7 +26,7 @@
 #include "Parser.h"
 
 TEST(Lambda, constructor) {
-    filc::ast::Lambda lb1({}, new filc::ast::Type(new filc::ast::Identifier("int")), {});
+    filc::ast::Lambda lb1({}, std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")), {});
     ASSERT_THAT(lb1.getParameters(), IsEmpty());
     ASSERT_TYPE("int", lb1.getReturnType());
     ASSERT_THAT(lb1.getBody(), IsEmpty());
@@ -45,6 +45,6 @@ TEST(Lambda, addNameToEnvironment) {
     auto *program1 = parser1.getProgram();
     program1->resolveEnvironment(COLLECTOR, {});
     auto *env1 = program1->getPublicEnvironment(nullptr);
-    ASSERT_TRUE(env1->hasName("test_lambda1_3"));
-    ASSERT_TYPE("() -> char*", env1->getName("test_lambda1_3")->getType());
+    ASSERT_TRUE(env1->hasName("test_lambda1_3", nullptr));
+    ASSERT_TYPE("() -> char*", env1->getName("test_lambda1_3", nullptr)->getType());
 }

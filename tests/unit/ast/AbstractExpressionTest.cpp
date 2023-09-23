@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <utility>
 #include "AST.h"
 #include "test_tools.h"
 
@@ -50,14 +51,14 @@ TEST(AbstractExpression, exported) {
 TEST(AbstractExpression, expression_type) {
     class : public filc::ast::AbstractExpression {
     public:
-        auto setExpressionTypeO(filc::ast::AbstractType *expression_type) -> void {
-            setExpressionType(expression_type);
+        auto setExpressionTypeO(std::shared_ptr<filc::ast::AbstractType> expression_type) -> void {
+            setExpressionType(std::move(expression_type));
         }
     } obj1;
 
     ASSERT_EQ(nullptr, obj1.getExpressionType());
 
-    obj1.setExpressionTypeO(new filc::ast::Type(new filc::ast::Identifier("int")));
+    obj1.setExpressionTypeO(std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")));
     ASSERT_TYPE("int", obj1.getExpressionType());
 }
 
@@ -77,7 +78,7 @@ TEST(AbstractExpression, resolveType) {
     public:
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
-                         filc::ast::AbstractType *preferred_type) -> void override {
+                         const std::shared_ptr<filc::ast::AbstractType> &preferred_type) -> void override {
             // Nothing
         }
     } obj2;

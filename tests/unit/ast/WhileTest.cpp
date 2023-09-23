@@ -45,7 +45,7 @@ TEST(While, addNameToEnvironment) {
     auto *program1 = parser1.getProgram();
     program1->resolveEnvironment(COLLECTOR, {});
     auto *env1 = program1->getPublicEnvironment(nullptr);
-    ASSERT_FALSE(env1->hasName("i"));
-    ASSERT_TRUE(env1->hasName("test_while1_4"));
-    ASSERT_TYPE("int*", env1->getName("test_while1_4")->getType());
+    ASSERT_FALSE(env1->hasName("i", nullptr));
+    ASSERT_TRUE(env1->hasName("test_while1_4", nullptr));
+    ASSERT_TYPE("int*", env1->getName("test_while1_4", nullptr)->getType());
 }

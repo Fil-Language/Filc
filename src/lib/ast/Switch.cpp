@@ -46,9 +46,9 @@ namespace filc::ast {
 
     auto Switch::resolveType(filc::environment::Environment *environment,
                              filc::message::MessageCollector *collector,
-                             AbstractType *preferred_type) -> void {
-        _condition->resolveType(environment, collector);
-        auto *condition_type = _condition->getExpressionType();
+                             const std::shared_ptr<AbstractType> &preferred_type) -> void {
+        _condition->resolveType(environment, collector, nullptr);
+        auto condition_type = _condition->getExpressionType();
         if (condition_type == nullptr) {
             return;
         }
@@ -65,11 +65,11 @@ namespace filc::ast {
             return;
         }
 
-        AbstractType *return_type = preferred_type;
+        std::shared_ptr<AbstractType> return_type = preferred_type;
         for (auto *item: _cases) {
             item->resolveType(environment, collector, return_type);
-            auto *item_type = item->getExpressionType();
-            auto *pattern_type = item->getPattern()->getExpressionType();
+            auto item_type = item->getExpressionType();
+            auto pattern_type = item->getPattern()->getExpressionType();
             if (item_type == nullptr) {
                 return;
             }
