@@ -586,6 +586,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
 
+        [[nodiscard]] auto getBodyEnvironment() const -> filc::environment::Environment *;
+
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
                          const std::shared_ptr<AbstractType> &preferred_type) -> void override;
@@ -618,6 +620,12 @@ namespace filc::ast {
                          const std::shared_ptr<AbstractType> &preferred_type) -> void override;
 
         auto addNameToEnvironment(filc::environment::Environment *environment) const -> void override;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
 
     private:
         Identifier *_name;

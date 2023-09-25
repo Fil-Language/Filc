@@ -64,3 +64,22 @@ TEST(Function, addNameToEnvironment) {
     ASSERT_TRUE(env1->hasName("pi", nullptr));
     ASSERT_TYPE("() -> double", env1->getName("pi", nullptr)->getType());
 }
+
+TEST(Function, generateIR) {
+    COLLECTOR->flush();
+    auto *env = new filc::environment::Environment("", filc::environment::Environment::getGlobalEnvironment());
+    filc::ast::Function fn1(
+            new filc::ast::Identifier("my_function"),
+            {new filc::ast::FunctionParameter(new filc::ast::Identifier("a"), env->getType("int"))},
+            env->getType("int"),
+            {new filc::ast::Identifier("a")}
+    );
+    fn1.resolveType(env, COLLECTOR, nullptr);
+    ASSERT_FALSE(COLLECTOR->hasErrors());
+    auto *context = new llvm::LLVMContext;
+    auto *module = new llvm::Module("module", *context);
+    auto *builder = new llvm::IRBuilder<>(*context);
+    env->generateIR(COLLECTOR, context, module, builder);
+    auto *value = fn1.generateIR(COLLECTOR, env, context, module, builder);
+    ASSERT_NE(nullptr, value);
+}

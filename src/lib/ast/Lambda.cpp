@@ -45,6 +45,10 @@ namespace filc::ast {
         return _body;
     }
 
+    auto Lambda::getBodyEnvironment() const -> filc::environment::Environment * {
+        return _body_environment;
+    }
+
     Lambda::~Lambda() {
         for (const auto &parameter: _parameters) {
             delete parameter;

@@ -30,6 +30,7 @@ TEST(Lambda, constructor) {
     ASSERT_THAT(lb1.getParameters(), IsEmpty());
     ASSERT_TYPE("int", lb1.getReturnType());
     ASSERT_THAT(lb1.getBody(), IsEmpty());
+    ASSERT_EQ(nullptr, lb1.getBodyEnvironment());
 }
 
 TEST(Lambda, resolveType) {
@@ -38,6 +39,7 @@ TEST(Lambda, resolveType) {
     ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     ASSERT_TYPE("(int) -> bool", program1->getExpressions()[0]->getExpressionType());
+    ASSERT_NE(nullptr, dynamic_cast<filc::ast::Lambda *>(program1->getExpressions()[0])->getBodyEnvironment());
 }
 
 TEST(Lambda, addNameToEnvironment) {

@@ -24,6 +24,7 @@
 #include <utility>
 #include "AST.h"
 #include "Error.h"
+#include "llvm/IR/Verifier.h"
 
 namespace filc::ast {
     Function::Function(Identifier *name, const std::vector<FunctionParameter *> &parameters,
@@ -59,5 +60,49 @@ namespace filc::ast {
 
     auto Function::addNameToEnvironment(filc::environment::Environment *environment) const -> void {
         environment->addName(_name->getName(), getExpressionType());
+    }
+
+    auto Function::generateIR(filc::message::MessageCollector *collector,
+                              filc::environment::Environment *environment,
+                              llvm::LLVMContext *context,
+                              llvm::Module *module,
+                              llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        std::vector<llvm::Type *> parameters_types;
+        for (const auto &parameter: getParameters()) {
+            parameters_types.push_back(parameter->getType()->getLLVMType());
+        }
+
+        auto *function_type = llvm::FunctionType::get(getReturnType()->getLLVMType(), parameters_types, false);
+        auto *function = llvm::Function::Create(
+                function_type, llvm::Function::ExternalLinkage, _name->getName(), module);
+
+        unsigned int nb_arg = 0;
+        for (auto &arg: function->args()) {
+            getBodyEnvironment()->getName(getParameters()[nb_arg]->getName()->getName(), nullptr)->setValue(&arg);
+            arg.setName(getParameters()[nb_arg]->getName()->getName());
+            nb_arg++;
+        }
+
+        auto *block = llvm::BasicBlock::Create(*context, "entry", function);
+        builder->SetInsertPoint(block);
+
+        for (auto iter = getBody().begin(); iter != getBody().end(); iter++) {
+            if (iter + 1 != getBody().end()) {
+                if ((*iter)->generateIR(collector, getBodyEnvironment(), context, module, builder) == nullptr) {
+                    function->eraseFromParent();
+                    return nullptr;
+                }
+            } else {
+                if (auto *ret = (*iter)->generateIR(collector, getBodyEnvironment(), context, module, builder)) {
+                    builder->CreateRet(ret);
+                    llvm::verifyFunction(*function);
+
+                    return function;
+                }
+            }
+        }
+
+        function->eraseFromParent();
+        return nullptr;
     }
 }
