@@ -287,8 +287,15 @@ namespace filc::ast {
 
         [[nodiscard]] virtual auto getInnerType() const -> std::shared_ptr<AbstractType> = 0;
 
+        [[nodiscard]] auto getLLVMType() const -> llvm::Type *;
+
+        auto setLLVMType(llvm::Type *type) -> void;
+
     protected:
         explicit AbstractType() = default;
+
+    private:
+        llvm::Type *_llvm_type{nullptr};
     };
 
     class Type : public AbstractType {
@@ -583,11 +590,18 @@ namespace filc::ast {
                          filc::message::MessageCollector *collector,
                          const std::shared_ptr<AbstractType> &preferred_type) -> void override;
 
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
+
     private:
         std::vector<FunctionParameter *> _parameters;
         std::shared_ptr<AbstractType> _return_type;
         std::vector<AbstractExpression *> _body;
         filc::environment::Environment *_body_environment;
+        static int name_index;
     };
 
     class Function : public Lambda {

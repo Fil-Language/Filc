@@ -30,3 +30,13 @@ auto operator==(const filc::ast::AbstractType &type1, const filc::ast::AbstractT
 auto operator!=(const filc::ast::AbstractType &type1, const filc::ast::AbstractType &type2) -> bool {
     return !(type1 == type2);
 }
+
+namespace filc::ast {
+    auto AbstractType::getLLVMType() const -> llvm::Type * {
+        return _llvm_type;
+    }
+
+    auto AbstractType::setLLVMType(llvm::Type *type) -> void {
+        _llvm_type = type;
+    }
+}

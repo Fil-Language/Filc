@@ -48,3 +48,21 @@ TEST(Lambda, addNameToEnvironment) {
     ASSERT_TRUE(env1->hasName("test_lambda1_3", nullptr));
     ASSERT_TYPE("() -> char*", env1->getName("test_lambda1_3", nullptr)->getType());
 }
+
+TEST(Lambda, generateIR) {
+    COLLECTOR->flush();
+    auto *env = new filc::environment::Environment("", filc::environment::Environment::getGlobalEnvironment());
+    filc::ast::Lambda lb1(
+            {new filc::ast::FunctionParameter(new filc::ast::Identifier("a"), env->getType("int"))},
+            env->getType("int"),
+            {new filc::ast::Identifier("a")}
+    );
+    lb1.resolveType(env, COLLECTOR, nullptr);
+    ASSERT_FALSE(COLLECTOR->hasErrors());
+    auto *context = new llvm::LLVMContext;
+    auto *module = new llvm::Module("module", *context);
+    auto *builder = new llvm::IRBuilder<>(*context);
+    env->generateIR(COLLECTOR, context, module, builder);
+    auto *value = lb1.generateIR(COLLECTOR, env, context, module, builder);
+    ASSERT_NE(nullptr, value);
+}

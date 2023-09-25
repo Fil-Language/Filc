@@ -566,6 +566,12 @@ namespace filc::environment {
             return;
         }
 
+        getType("int")->setLLVMType(llvm::Type::getInt64Ty(*context));
+        getType("double")->setLLVMType(llvm::Type::getDoubleTy(*context));
+        getType("float")->setLLVMType(llvm::Type::getFloatTy(*context));
+        getType("char")->setLLVMType(llvm::Type::getInt8Ty(*context));
+        getType("bool")->setLLVMType(llvm::Type::getInt1Ty(*context));
+
         generateAssignations(collector, context, module, builder);
         generatePrefixUnary(collector, context, module, builder);
         generatePostFixUnary(collector, context, module, builder);
