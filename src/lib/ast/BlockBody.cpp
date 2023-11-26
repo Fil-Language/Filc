@@ -22,30 +22,31 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "test_tools.h"
-#include "Parser.h"
 
-TEST(While, constructor) {
-    filc::ast::While wh1(new filc::ast::Identifier("isTrue"), new filc::ast::BlockBody({}));
-    ASSERT_IDENTIFIER("isTrue", wh1.getCondition());
-    ASSERT_THAT(wh1.getBody()->getExpressions(), IsEmpty());
-}
+namespace filc::ast {
+    BlockBody::BlockBody(const std::vector<AbstractExpression *> &expressions)
+            : _expressions(expressions) {}
 
-TEST(While, resolveType) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/while1.fil", COLLECTOR);
-    auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
-    ASSERT_THAT(program1->getExpressions(), SizeIs(2));
-    ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
-    ASSERT_TYPE("int*", program1->getExpressions()[1]->getExpressionType());
-}
+    BlockBody::~BlockBody() {
+        for (auto &expression: _expressions) {
+            delete expression;
+        }
+    }
 
-TEST(While, addNameToEnvironment) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/while1.fil", COLLECTOR);
-    auto *program1 = parser1.getProgram();
-    program1->resolveEnvironment(COLLECTOR, {});
-    auto *env1 = program1->getPublicEnvironment(nullptr);
-    ASSERT_FALSE(env1->hasName("i", nullptr));
-    ASSERT_TRUE(env1->hasName("test_while1_4", nullptr));
-    ASSERT_TYPE("int*", env1->getName("test_while1_4", nullptr)->getType());
+    auto BlockBody::getExpressions() const -> const std::vector<AbstractExpression *> & {
+        return _expressions;
+    }
+
+    auto BlockBody::resolveType(filc::environment::Environment *environment,
+                                filc::message::MessageCollector *collector,
+                                const std::shared_ptr<AbstractType> &preferred_type) -> void {
+        for (auto it = _expressions.begin(); it != _expressions.end(); it++) {
+            if (it + 1 != _expressions.end()) {
+                (*it)->resolveType(environment, collector, nullptr);
+            } else {
+                (*it)->resolveType(environment, collector, preferred_type);
+                setExpressionType((*it)->getExpressionType());
+            }
+        }
+    }
 }

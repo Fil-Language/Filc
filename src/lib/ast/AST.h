@@ -576,7 +576,7 @@ namespace filc::ast {
     class Lambda : public AbstractExpression {
     public:
         Lambda(const std::vector<FunctionParameter *> &parameters, std::shared_ptr<AbstractType> return_type,
-               const std::vector<AbstractExpression *> &body);
+               BlockBody *body);
 
         ~Lambda() override;
 
@@ -584,7 +584,7 @@ namespace filc::ast {
 
         [[nodiscard]] auto getReturnType() const -> std::shared_ptr<AbstractType>;
 
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getBody() const -> BlockBody *;
 
         [[nodiscard]] auto getBodyEnvironment() const -> filc::environment::Environment *;
 
@@ -601,7 +601,7 @@ namespace filc::ast {
     private:
         std::vector<FunctionParameter *> _parameters;
         std::shared_ptr<AbstractType> _return_type;
-        std::vector<AbstractExpression *> _body;
+        BlockBody *_body;
         filc::environment::Environment *_body_environment;
         static int name_index;
     };
@@ -609,7 +609,7 @@ namespace filc::ast {
     class Function : public Lambda {
     public:
         Function(Identifier *name, const std::vector<FunctionParameter *> &parameters,
-                 std::shared_ptr<AbstractType> return_type, const std::vector<AbstractExpression *> &body);
+                 std::shared_ptr<AbstractType> return_type, BlockBody *body);
 
         ~Function() override;
 
@@ -648,13 +648,13 @@ namespace filc::ast {
 
     class If : public AbstractExpression {
     public:
-        If(AbstractExpression *condition, const std::vector<AbstractExpression *> &body);
+        If(AbstractExpression *condition, BlockBody *body);
 
         ~If() override;
 
         [[nodiscard]] auto getCondition() const -> AbstractExpression *;
 
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getBody() const -> BlockBody *;
 
         [[nodiscard]] auto getElse() const -> If *;
 
@@ -666,7 +666,7 @@ namespace filc::ast {
 
     private:
         AbstractExpression *_condition;
-        std::vector<AbstractExpression *> _body;
+        BlockBody *_body;
         If *_else;
     };
 
@@ -691,7 +691,7 @@ namespace filc::ast {
 
     class SwitchCase : public AbstractExpression {
     public:
-        SwitchCase(AbstractExpression *pattern, const std::vector<AbstractExpression *> &body);
+        SwitchCase(AbstractExpression *pattern, BlockBody *body);
 
         ~SwitchCase() override;
 
@@ -699,7 +699,7 @@ namespace filc::ast {
 
         [[nodiscard]] auto isDefault() const -> bool;
 
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getBody() const -> BlockBody *;
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
@@ -707,13 +707,13 @@ namespace filc::ast {
 
     private:
         AbstractExpression *_pattern;
-        std::vector<AbstractExpression *> _body;
+        BlockBody *_body;
     };
 
     class ForI : public AbstractExpression {
     public:
         ForI(VariableDeclaration *declaration, AbstractExpression *condition, AbstractExpression *iteration,
-             const std::vector<AbstractExpression *> &body);
+             BlockBody *body);
 
         ~ForI() override;
 
@@ -723,7 +723,7 @@ namespace filc::ast {
 
         [[nodiscard]] auto getIteration() const -> AbstractExpression *;
 
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getBody() const -> BlockBody *;
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
@@ -733,14 +733,13 @@ namespace filc::ast {
         VariableDeclaration *_declaration;
         AbstractExpression *_condition;
         AbstractExpression *_iteration;
-        std::vector<AbstractExpression *> _body;
+        BlockBody *_body;
         filc::environment::Environment *_body_environment;
     };
 
     class ForIter : public AbstractExpression {
     public:
-        ForIter(bool constant, Identifier *identifier, AbstractExpression *array,
-                const std::vector<AbstractExpression *> &body);
+        ForIter(bool constant, Identifier *identifier, AbstractExpression *array, BlockBody *body);
 
         ~ForIter() override;
 
@@ -750,7 +749,7 @@ namespace filc::ast {
 
         [[nodiscard]] auto getArray() const -> AbstractExpression *;
 
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getBody() const -> BlockBody *;
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
@@ -760,19 +759,19 @@ namespace filc::ast {
         bool _constant;
         Identifier *_identifier;
         AbstractExpression *_array;
-        std::vector<AbstractExpression *> _body;
+        BlockBody *_body;
         filc::environment::Environment *_body_environment;
     };
 
     class While : public AbstractExpression {
     public:
-        While(AbstractExpression *condition, const std::vector<AbstractExpression *> &body);
+        While(AbstractExpression *condition, BlockBody *body);
 
         ~While() override;
 
         [[nodiscard]] auto getCondition() const -> AbstractExpression *;
 
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getBody() const -> BlockBody *;
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
@@ -780,7 +779,23 @@ namespace filc::ast {
 
     private:
         AbstractExpression *_condition;
-        std::vector<AbstractExpression *> _body;
+        BlockBody *_body;
+    };
+
+    class BlockBody : public AbstractExpression {
+    public:
+        explicit BlockBody(const std::vector<AbstractExpression *> &expressions);
+
+        ~BlockBody() override;
+
+        [[nodiscard]] auto getExpressions() const -> const std::vector<AbstractExpression *> &;
+
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+    private:
+        std::vector<AbstractExpression *> _expressions;
     };
 }
 

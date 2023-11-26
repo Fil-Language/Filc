@@ -30,7 +30,7 @@ namespace filc::ast {
     int Lambda::name_index = 0;
 
     Lambda::Lambda(const std::vector<FunctionParameter *> &parameters, std::shared_ptr<AbstractType> return_type,
-                   const std::vector<AbstractExpression *> &body)
+                   BlockBody *body)
             : _parameters(parameters), _return_type(std::move(return_type)), _body(body), _body_environment(nullptr) {}
 
     auto Lambda::getParameters() const -> const std::vector<FunctionParameter *> & {
@@ -41,7 +41,7 @@ namespace filc::ast {
         return _return_type;
     }
 
-    auto Lambda::getBody() const -> const std::vector<AbstractExpression *> & {
+    auto Lambda::getBody() const -> BlockBody * {
         return _body;
     }
 
@@ -53,9 +53,7 @@ namespace filc::ast {
         for (const auto &parameter: _parameters) {
             delete parameter;
         }
-        for (const auto &expression: _body) {
-            delete expression;
-        }
+        delete _body;
     }
 
     auto Lambda::resolveType(filc::environment::Environment *environment,
@@ -79,15 +77,8 @@ namespace filc::ast {
             parameters_types.push_back(parameter_type);
         }
 
-        std::shared_ptr<AbstractType> body_type = nullptr;
-        for (auto iter = _body.begin(); iter != _body.end(); iter++) {
-            if (iter + 1 != _body.end()) {
-                (*iter)->resolveType(_body_environment, collector, nullptr);
-            } else {
-                (*iter)->resolveType(_body_environment, collector, _return_type);
-                body_type = (*iter)->getExpressionType();
-            }
-        }
+        _body->resolveType(_body_environment, collector, _return_type);
+        std::shared_ptr<AbstractType> body_type = _body->getExpressionType();
         if (body_type == nullptr) {
             return;
         }
@@ -128,23 +119,13 @@ namespace filc::ast {
         auto *block = llvm::BasicBlock::Create(*context, "entry", function);
         builder->SetInsertPoint(block);
 
-        for (auto iter = _body.begin(); iter != _body.end(); iter++) {
-            if (iter + 1 != _body.end()) {
-                if ((*iter)->generateIR(collector, _body_environment, context, module, builder) == nullptr) {
-                    function->eraseFromParent();
-                    return nullptr;
-                }
-            } else {
-                if (auto *ret = (*iter)->generateIR(collector, _body_environment, context, module, builder)) {
-                    builder->CreateRet(ret);
-                    llvm::verifyFunction(*function);
-
-                    return function;
-                }
-            }
+        auto *return_value = _body->generateIR(collector, _body_environment, context, module, builder);
+        if (return_value == nullptr) {
+            function->eraseFromParent();
+            return nullptr;
         }
 
-        function->eraseFromParent();
-        return nullptr;
+        builder->CreateRet(return_value);
+        return function;
     }
 }

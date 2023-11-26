@@ -183,7 +183,7 @@ expression returns[filc::ast::AbstractExpression *tree]
         $tree = $c.tree;
     }
     | p=parenthesis_body {
-        $tree = $p.tree[0];
+        $tree = $p.tree;
     }
     | i=IDENTIFIER {
         $tree = new filc::ast::Identifier($i);
@@ -440,32 +440,35 @@ function_type returns[std::shared_ptr<filc::ast::AbstractType> tree]
         $tree = $t.tree;
     };
 
-function_body returns[std::vector<filc::ast::AbstractExpression *> tree]
+function_body returns[filc::ast::BlockBody *tree]
     : a=assignation {
-        $tree = std::vector<filc::ast::AbstractExpression *>({$a.tree});
+        $tree = new filc::ast::BlockBody({$a.tree});
     } | pb=parenthesis_body {
         $tree = $pb.tree;
     } | bb=block_body {
         $tree = $bb.tree;
     };
 
-parenthesis_body returns[std::vector<filc::ast::AbstractExpression *> tree]
+parenthesis_body returns[filc::ast::BlockBody *tree]
     : LPAREN e=expression {
-        $tree = std::vector<filc::ast::AbstractExpression *>({$e.tree});
+        $tree = new filc::ast::BlockBody({$e.tree});
     } RPAREN;
 
-block_body returns[std::vector<filc::ast::AbstractExpression *> tree]
+block_body returns[filc::ast::BlockBody *tree]
 @init {
-    $tree = std::vector<filc::ast::AbstractExpression *>();
+    auto expressions = std::vector<filc::ast::AbstractExpression *>();
+}
+@after {
+    $tree = new filc::ast::BlockBody(expressions);
 }
     : LBRACE (e=expression {
-        $tree.push_back($e.tree);
+        expressions.push_back($e.tree);
     })* RBRACE;
 
 lambda returns[filc::ast::Lambda *tree]
 @init {
     std::vector<filc::ast::FunctionParameter *> parameters;
-    std::vector<filc::ast::AbstractExpression *> body;
+    filc::ast::BlockBody *body;
 }
 @after {
     $tree = new filc::ast::Lambda(parameters, $ft.tree, body);
@@ -474,7 +477,7 @@ lambda returns[filc::ast::Lambda *tree]
     : lp=LPAREN (fp=function_parameters {
         parameters = $fp.tree;
     })? RPAREN ft=function_type ARROW (e=expression {
-        body.push_back($e.tree);
+        body = new filc::ast::BlockBody({$e.tree});
     } | pb=parenthesis_body {
         body = $pb.tree;
     } | bb=block_body {
@@ -525,12 +528,9 @@ if_condition returns[filc::ast::AbstractExpression *tree]
         $tree = $e.tree;
     } RPAREN;
 
-if_body returns[std::vector<filc::ast::AbstractExpression *> tree]
-@init {
-    $tree = std::vector<filc::ast::AbstractExpression *>();
-}
+if_body returns[filc::ast::BlockBody *tree]
     : e=expression {
-        $tree.push_back($e.tree);
+        $tree = new filc::ast::BlockBody({$e.tree});
     } | bb=block_body {
         $tree = $bb.tree;
     };
@@ -551,18 +551,18 @@ switch_body returns[std::vector<filc::ast::SwitchCase *> tree]
 
 switch_case returns[filc::ast::SwitchCase *tree]
 @init {
-    std::vector<filc::ast::AbstractExpression *> body;
+    filc::ast::BlockBody *body;
 }
 @after {
     $tree = new filc::ast::SwitchCase($sp.tree, body);
     $tree->setPosition(new filc::utils::Position($sp.start));
 }
-    : sp=switch_pattern ARROW (e=expression {
-        body.push_back($e.tree);
-    } | pb=parenthesis_body {
+    : sp=switch_pattern ARROW (pb=parenthesis_body {
         body = $pb.tree;
     } | bb=block_body {
         body = $bb.tree;
+    } | e=expression {
+        body = new filc::ast::BlockBody({$e.tree});
     });
 
 switch_pattern returns[filc::ast::AbstractExpression *tree]

@@ -88,6 +88,7 @@ add_library(compiler_lib
         ast/While.cpp
         ast/AssignationOperator.cpp
         ast/AbstractType.cpp
+        ast/BlockBody.cpp
         # === Environment ===
         environment/Environment.cpp
         environment/Name.cpp

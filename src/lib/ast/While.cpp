@@ -25,22 +25,20 @@
 #include "Error.h"
 
 namespace filc::ast {
-    While::While(filc::ast::AbstractExpression *condition, const std::vector<AbstractExpression *> &body)
+    While::While(AbstractExpression *condition, BlockBody *body)
             : _condition(condition), _body(body) {}
 
     auto While::getCondition() const -> AbstractExpression * {
         return _condition;
     }
 
-    auto While::getBody() const -> const std::vector<AbstractExpression *> & {
+    auto While::getBody() const -> BlockBody * {
         return _body;
     }
 
     While::~While() {
         delete _condition;
-        for (const auto &expression: _body) {
-            delete expression;
-        }
+        delete _body;
     }
 
     auto While::resolveType(filc::environment::Environment *environment,
@@ -60,13 +58,8 @@ namespace filc::ast {
             return;
         }
 
-        std::shared_ptr<AbstractType> body_type = nullptr;
-        for (auto iter = _body.begin(); iter != _body.end(); iter++) {
-            (*iter)->resolveType(environment, collector, nullptr);
-            if (iter + 1 == _body.end()) {
-                body_type = (*iter)->getExpressionType();
-            }
-        }
+        _body->resolveType(environment, collector, nullptr);
+        auto body_type = _body->getExpressionType();
         if (body_type == nullptr) {
             return;
         }

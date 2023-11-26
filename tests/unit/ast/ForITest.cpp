@@ -41,7 +41,7 @@ TEST(ForI, constructor) {
                     new filc::ast::Identifier("i"),
                     new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUSPLUS)
             ),
-            {}
+            new filc::ast::BlockBody({})
     );
     ASSERT_IDENTIFIER("i", fi1.getDeclaration()->getIdentifier());
     ASSERT_TYPE("int", fi1.getDeclaration()->getType());
@@ -53,7 +53,7 @@ TEST(ForI, constructor) {
     auto *iteration = dynamic_cast<filc::ast::PostUnaryCalcul *>(fi1.getIteration());
     ASSERT_IDENTIFIER("i", iteration->getVariable());
     ASSERT_CLASSIC_OPERATOR(PLUSPLUS, iteration->getOperator());
-    ASSERT_THAT(fi1.getBody(), IsEmpty());
+    ASSERT_THAT(fi1.getBody()->getExpressions(), IsEmpty());
 }
 
 TEST(ForI, resolveType) {

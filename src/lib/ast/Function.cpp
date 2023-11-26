@@ -28,7 +28,7 @@
 
 namespace filc::ast {
     Function::Function(Identifier *name, const std::vector<FunctionParameter *> &parameters,
-                       std::shared_ptr<AbstractType> return_type, const std::vector<AbstractExpression *> &body)
+                       std::shared_ptr<AbstractType> return_type, BlockBody *body)
             : Lambda(parameters, std::move(return_type), body), _name(name) {}
 
     auto Function::getName() const -> Identifier * {
@@ -86,23 +86,13 @@ namespace filc::ast {
         auto *block = llvm::BasicBlock::Create(*context, "entry", function);
         builder->SetInsertPoint(block);
 
-        for (auto iter = getBody().begin(); iter != getBody().end(); iter++) {
-            if (iter + 1 != getBody().end()) {
-                if ((*iter)->generateIR(collector, getBodyEnvironment(), context, module, builder) == nullptr) {
-                    function->eraseFromParent();
-                    return nullptr;
-                }
-            } else {
-                if (auto *ret = (*iter)->generateIR(collector, getBodyEnvironment(), context, module, builder)) {
-                    builder->CreateRet(ret);
-                    llvm::verifyFunction(*function);
-
-                    return function;
-                }
-            }
+        auto *return_value = getBody()->generateIR(collector, getBodyEnvironment(), context, module, builder);
+        if (return_value == nullptr) {
+            function->eraseFromParent();
+            return nullptr;
         }
 
-        function->eraseFromParent();
-        return nullptr;
+        builder->CreateRet(return_value);
+        return function;
     }
 }

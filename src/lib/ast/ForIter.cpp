@@ -25,8 +25,7 @@
 #include "Error.h"
 
 namespace filc::ast {
-    ForIter::ForIter(bool constant, filc::ast::Identifier *identifier, filc::ast::AbstractExpression *array,
-                     const std::vector<AbstractExpression *> &body)
+    ForIter::ForIter(bool constant, Identifier *identifier, AbstractExpression *array, BlockBody *body)
             : _constant(constant), _identifier(identifier), _array(array), _body(body), _body_environment(nullptr) {}
 
     auto ForIter::isConstant() const -> bool {
@@ -41,16 +40,14 @@ namespace filc::ast {
         return _array;
     }
 
-    auto ForIter::getBody() const -> const std::vector<AbstractExpression *> & {
+    auto ForIter::getBody() const -> BlockBody * {
         return _body;
     }
 
     ForIter::~ForIter() {
         delete _identifier;
         delete _array;
-        for (const auto &expression: _body) {
-            delete expression;
-        }
+        delete _body;
     }
 
     auto ForIter::resolveType(filc::environment::Environment *environment,
@@ -85,13 +82,8 @@ namespace filc::ast {
         }
         _body_environment->addName(_identifier->getName(), array_type->getInnerType());
 
-        std::shared_ptr<AbstractType> body_type = nullptr;
-        for (auto iter = _body.begin(); iter != _body.end(); iter++) {
-            (*iter)->resolveType(_body_environment, collector, nullptr);
-            if (iter + 1 == _body.end()) {
-                body_type = (*iter)->getExpressionType();
-            }
-        }
+        _body->resolveType(_body_environment, collector, nullptr);
+        std::shared_ptr<AbstractType> body_type = _body->getExpressionType();
         if (body_type == nullptr) {
             return;
         }

@@ -25,9 +25,9 @@
 #include "test_tools.h"
 
 TEST(SwitchCase, constructor) {
-    filc::ast::SwitchCase sc1(new filc::ast::Identifier("default"), {});
+    filc::ast::SwitchCase sc1(new filc::ast::Identifier("default"), new filc::ast::BlockBody({}));
     ASSERT_IDENTIFIER("default", sc1.getPattern());
-    ASSERT_THAT(sc1.getBody(), IsEmpty());
+    ASSERT_THAT(sc1.getBody()->getExpressions(), IsEmpty());
 }
 
 TEST(SwitchCase, isDefault) {

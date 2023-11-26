@@ -30,12 +30,12 @@ TEST(ForIter, constructor) {
             true,
             new filc::ast::Identifier("item"),
             new filc::ast::Identifier("my_array"),
-            {}
+            new filc::ast::BlockBody({})
     );
     ASSERT_TRUE(fi1.isConstant());
     ASSERT_IDENTIFIER("item", fi1.getIdentifier());
     ASSERT_IDENTIFIER("my_array", fi1.getArray());
-    ASSERT_THAT(fi1.getBody(), IsEmpty());
+    ASSERT_THAT(fi1.getBody()->getExpressions(), IsEmpty());
 }
 
 TEST(ForIter, resolveType) {

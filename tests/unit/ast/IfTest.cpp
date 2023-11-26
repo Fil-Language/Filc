@@ -26,18 +26,18 @@
 #include "Parser.h"
 
 TEST(If, constructor) {
-    filc::ast::If if1(new filc::ast::Identifier("isTrue"), {});
+    filc::ast::If if1(new filc::ast::Identifier("isTrue"), new filc::ast::BlockBody({}));
     ASSERT_IDENTIFIER("isTrue", if1.getCondition());
-    ASSERT_THAT(if1.getBody(), IsEmpty());
+    ASSERT_THAT(if1.getBody()->getExpressions(), IsEmpty());
 }
 
 TEST(If, setElse) {
-    filc::ast::If if1(new filc::ast::Identifier("isFalse"), {});
-    if1.setElse(new filc::ast::If(new filc::ast::Identifier("isTrue"), {}));
+    filc::ast::If if1(new filc::ast::Identifier("isFalse"), new filc::ast::BlockBody({}));
+    if1.setElse(new filc::ast::If(new filc::ast::Identifier("isTrue"), new filc::ast::BlockBody({})));
     auto *ielse = if1.getElse();
     ASSERT_NE(nullptr, ielse);
     ASSERT_IDENTIFIER("isTrue", ielse->getCondition());
-    ASSERT_THAT(ielse->getBody(), IsEmpty());
+    ASSERT_THAT(ielse->getBody()->getExpressions(), IsEmpty());
 }
 
 TEST(If, resolveType) {
