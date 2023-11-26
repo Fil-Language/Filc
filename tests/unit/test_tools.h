@@ -42,7 +42,8 @@ using namespace ::testing;
 #define ASSERT_LITERAL(expected, type, literal) ASSERT_EQ(expected, dynamic_cast<filc::ast::type *>(literal)->getValue())
 
 #define ASSERT_VARIABLE_DECLARATION(constant, name, type, value, literal, variable) \
-    auto *var_##variable = dynamic_cast<filc::ast::VariableDeclaration *>(variable); \
+    auto *var_##variable = dynamic_cast<filc::ast::VariableDeclaration *>(variable);\
+    ASSERT_NE(nullptr, var_##variable); \
     ASSERT_EQ(constant, var_##variable->isConstant()); \
     ASSERT_IDENTIFIER(name, var_##variable->getIdentifier()); \
     ASSERT_TYPE(type, var_##variable->getType()); \
