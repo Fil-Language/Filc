@@ -80,7 +80,7 @@ namespace filc::ast {
     auto ClassicOperator::dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                             filc::environment::Environment *environment,
                                             filc::message::MessageCollector *collector,
-                                            filc::utils::Position *position) const -> std::shared_ptr<LambdaType> {
+                                            filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> {
         auto ptr = std::make_shared<PointerType>(type);
         switch (_operator) {
             case PLUSPLUS:
@@ -118,7 +118,7 @@ namespace filc::ast {
     auto ClassicOperator::dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
-                                             filc::utils::Position *position) const -> std::shared_ptr<LambdaType> {
+                                             filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> {
         auto ptr = std::make_shared<PointerType>(type);
         switch (_operator) {
             case PLUSPLUS:

@@ -36,7 +36,7 @@ namespace filc::message {
         return out;
     }
 
-    Error::Error(filc::message::LEVEL level, std::string content, filc::utils::Position *position)
+    Error::Error(filc::message::LEVEL level, std::string content, filc::utils::AbstractPosition *position)
             : Message(level, std::move(content)), _position(position) {}
 
     auto Error::print(std::ostream &out) -> std::ostream & {

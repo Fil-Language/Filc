@@ -32,7 +32,7 @@ TEST(AbstractExpression, position) {
     ASSERT_EQ(nullptr, obj1.getPosition());
 
     obj1.setPosition(new filc::utils::Position("test.fil", 1, 2));
-    auto *position = obj1.getPosition();
+    auto *position = dynamic_cast<filc::utils::Position *>(obj1.getPosition());
     ASSERT_STREQ("test.fil", position->getFilename().c_str());
     ASSERT_EQ(1, position->getLine());
     ASSERT_EQ(2, position->getColumn());

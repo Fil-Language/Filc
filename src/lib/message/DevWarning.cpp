@@ -25,7 +25,7 @@
 #include <utility>
 
 namespace filc::message {
-    DevWarning::DevWarning(unsigned int code, filc::utils::Position *position, std::string content)
+    DevWarning::DevWarning(unsigned int code, filc::utils::AbstractPosition *position, std::string content)
             : Message(ERROR, std::move(content)), _code(code), _position(position) {}
 
     auto DevWarning::print(std::ostream &out) -> std::ostream & {

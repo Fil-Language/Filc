@@ -43,7 +43,7 @@ namespace filc::ast {
     auto ArrayOperator::dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                           filc::environment::Environment *environment,
                                           filc::message::MessageCollector *collector,
-                                          filc::utils::Position *position) const -> std::shared_ptr<LambdaType> {
+                                          filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> {
         collector->addError(new filc::message::DevWarning(
                 3,
                 position,
@@ -56,7 +56,7 @@ namespace filc::ast {
     auto ArrayOperator::dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                            filc::environment::Environment *environment,
                                            filc::message::MessageCollector *collector,
-                                           filc::utils::Position *position) const -> std::shared_ptr<LambdaType> {
+                                           filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> {
         _expression->resolveType(environment, collector, nullptr);
         auto expression_type = _expression->getExpressionType();
         if (expression_type == nullptr) {

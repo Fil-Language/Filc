@@ -28,7 +28,17 @@
 #include <string>
 
 namespace filc::utils {
-    class Position final {
+    class AbstractPosition {
+    public:
+        [[nodiscard]] virtual auto dump(const std::string &color) const -> std::string = 0;
+
+        virtual ~AbstractPosition() = default;
+
+    protected:
+        AbstractPosition() = default;
+    };
+
+    class Position final : public AbstractPosition {
     public:
         Position(std::string filename, unsigned int line, unsigned int column);
 
@@ -42,7 +52,7 @@ namespace filc::utils {
 
         [[nodiscard]] auto getContent() const -> std::string;
 
-        [[nodiscard]] auto dump(const std::string &color) const -> std::string;
+        [[nodiscard]] auto dump(const std::string &color) const -> std::string override;
 
     private:
         std::string _filename;

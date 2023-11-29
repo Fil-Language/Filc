@@ -39,11 +39,11 @@ namespace filc::ast {
         _exported = exported;
     }
 
-    auto AbstractExpression::getPosition() const -> filc::utils::Position * {
+    auto AbstractExpression::getPosition() const -> filc::utils::AbstractPosition * {
         return _position;
     }
 
-    auto AbstractExpression::setPosition(filc::utils::Position *position) -> void {
+    auto AbstractExpression::setPosition(filc::utils::AbstractPosition *position) -> void {
         _position = position;
     }
 
@@ -67,8 +67,9 @@ namespace filc::ast {
 
     auto AbstractExpression::addNameToEnvironment(
             filc::environment::Environment *environment) const -> void {
+        auto *position = dynamic_cast<filc::utils::Position *>(getPosition());
         auto name = filc::utils::joinString(filc::utils::splitString(environment->getModule(), '.'), "_")
-                    + "_" + std::to_string(getPosition()->getLine());
+                    + "_" + std::to_string(position->getLine());
         environment->addName(name, getExpressionType());
     }
 

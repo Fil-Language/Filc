@@ -30,13 +30,13 @@
 namespace filc::message {
     class DevWarning final : public Message {
     public:
-        DevWarning(unsigned int code, filc::utils::Position *position, std::string content);
+        DevWarning(unsigned int code, filc::utils::AbstractPosition *position, std::string content);
 
         auto print(std::ostream &out) -> std::ostream & override;
 
     private:
         unsigned int _code;
-        filc::utils::Position *_position;
+        filc::utils::AbstractPosition *_position;
     };
 }
 

@@ -75,7 +75,7 @@ namespace filc::ast {
     public:
         virtual ~AbstractExpression();
 
-        auto setPosition(filc::utils::Position *position) -> void;
+        auto setPosition(filc::utils::AbstractPosition *position) -> void;
 
         AbstractExpression(const AbstractExpression &other) = default;
 
@@ -89,7 +89,7 @@ namespace filc::ast {
 
         auto setExported(bool exported) -> void;
 
-        [[nodiscard]] auto getPosition() const -> filc::utils::Position *;
+        [[nodiscard]] auto getPosition() const -> filc::utils::AbstractPosition *;
 
         [[nodiscard]] auto getExpressionType() const -> std::shared_ptr<AbstractType>;
 
@@ -107,7 +107,7 @@ namespace filc::ast {
 
     private:
         bool _exported{false};
-        filc::utils::Position *_position{nullptr};
+        filc::utils::AbstractPosition *_position{nullptr};
         std::shared_ptr<AbstractType> _expression_type;
 
     protected:
@@ -446,12 +446,12 @@ namespace filc::ast {
         [[nodiscard]] virtual auto dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                                      filc::environment::Environment *environment,
                                                      filc::message::MessageCollector *collector,
-                                                     filc::utils::Position *position) const -> std::shared_ptr<LambdaType> = 0;
+                                                     filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> = 0;
 
         [[nodiscard]] virtual auto dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                                       filc::environment::Environment *environment,
                                                       filc::message::MessageCollector *collector,
-                                                      filc::utils::Position *position) const -> std::shared_ptr<LambdaType> = 0;
+                                                      filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> = 0;
 
     protected:
         Operator() = default;
@@ -490,12 +490,12 @@ namespace filc::ast {
         [[nodiscard]] auto dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
-                                             filc::utils::Position *position) const -> std::shared_ptr<LambdaType> override;
+                                             filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
         [[nodiscard]] auto dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector,
-                                              filc::utils::Position *position) const -> std::shared_ptr<LambdaType> override;
+                                              filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
     private:
         OPERATOR _operator;
@@ -514,12 +514,12 @@ namespace filc::ast {
         [[nodiscard]] auto dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
-                                             filc::utils::Position *position) const -> std::shared_ptr<LambdaType> override;
+                                             filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
         [[nodiscard]] auto dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector,
-                                              filc::utils::Position *position) const -> std::shared_ptr<LambdaType> override;
+                                              filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
     private:
         AbstractExpression *_expression;
@@ -538,12 +538,12 @@ namespace filc::ast {
         [[nodiscard]] auto dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
-                                             filc::utils::Position *position) const -> std::shared_ptr<LambdaType> override;
+                                             filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
         [[nodiscard]] auto dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector,
-                                              filc::utils::Position *position) const -> std::shared_ptr<LambdaType> override;
+                                              filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
     private:
         std::vector<AbstractExpression *> _expressions;
@@ -562,12 +562,12 @@ namespace filc::ast {
         [[nodiscard]] auto dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
-                                             filc::utils::Position *position) const -> std::shared_ptr<LambdaType> override;
+                                             filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
         [[nodiscard]] auto dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector,
-                                              filc::utils::Position *position) const -> std::shared_ptr<LambdaType> override;
+                                              filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
     private:
         Operator *_inner_operator;
