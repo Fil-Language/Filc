@@ -58,7 +58,7 @@ TEST(Parser, position) {
     ASSERT_THAT(program->getExpressions(), SizeIs(1));
     auto *expression = program->getExpressions()[0];
     ASSERT_NE(nullptr, expression);
-    auto *position = dynamic_cast<filc::utils::Position *>(expression->getPosition());
+    auto *position = dynamic_cast<filc::utils::SimplePosition *>(expression->getPosition());
     ASSERT_STREQ(FIXTURES_PATH_GRAMMAR "/int1.fil", position->getFilename().c_str());
     ASSERT_EQ(3, position->getLine());
     ASSERT_EQ(0, position->getColumn());

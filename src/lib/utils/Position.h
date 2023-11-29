@@ -38,11 +38,11 @@ namespace filc::utils {
         AbstractPosition() = default;
     };
 
-    class Position final : public AbstractPosition {
+    class SimplePosition final : public AbstractPosition {
     public:
-        Position(std::string filename, unsigned int line, unsigned int column);
+        SimplePosition(std::string filename, unsigned int line, unsigned int column);
 
-        explicit Position(const antlr4::Token *token);
+        explicit SimplePosition(const antlr4::Token *token);
 
         [[nodiscard]] auto getFilename() const -> const std::string &;
 

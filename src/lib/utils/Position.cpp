@@ -28,26 +28,26 @@
 #include <fstream>
 
 namespace filc::utils {
-    Position::Position(std::string filename, unsigned int line, unsigned int column)
+    SimplePosition::SimplePosition(std::string filename, unsigned int line, unsigned int column)
             : _filename(std::move(filename)), _line(line), _column(column) {}
 
-    Position::Position(const antlr4::Token *token)
+    SimplePosition::SimplePosition(const antlr4::Token *token)
             : _filename(token->getTokenSource()->getSourceName()), _line(token->getLine()),
               _column(token->getCharPositionInLine()) {}
 
-    auto Position::getFilename() const -> const std::string & {
+    auto SimplePosition::getFilename() const -> const std::string & {
         return _filename;
     }
 
-    auto Position::getLine() const -> unsigned int {
+    auto SimplePosition::getLine() const -> unsigned int {
         return _line;
     }
 
-    auto Position::getColumn() const -> unsigned int {
+    auto SimplePosition::getColumn() const -> unsigned int {
         return _column;
     }
 
-    auto Position::getContent() const -> std::string {
+    auto SimplePosition::getContent() const -> std::string {
         std::ifstream file(_filename);
         if (!file.is_open() || !file.good()) {
             filc::message::MessageCollector::getCollector()->addError(
@@ -68,7 +68,7 @@ namespace filc::utils {
         return line;
     }
 
-    auto Position::dump(const std::string &color) const -> std::string {
+    auto SimplePosition::dump(const std::string &color) const -> std::string {
         std::string nth = " " + std::to_string(_line) + " ";
         std::string res = std::string(nth.length() + 1, ' ') + _filename + "\n";
 

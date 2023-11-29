@@ -26,7 +26,7 @@
 #include <fstream>
 
 TEST(Position, constructor) {
-    filc::utils::Position pos("filename", 20, 10);
+    filc::utils::SimplePosition pos("filename", 20, 10);
 
     ASSERT_STREQ("filename", pos.getFilename().c_str());
     ASSERT_EQ(20, pos.getLine());
@@ -34,7 +34,7 @@ TEST(Position, constructor) {
 }
 
 TEST(Position, getContent) {
-    filc::utils::Position pos("../../tests/unit/Fixtures/position.txt", 12, 10);
+    filc::utils::SimplePosition pos("../../tests/unit/Fixtures/position.txt", 12, 10);
 
     ASSERT_STREQ("12;abcd", pos.getContent().c_str());
 }

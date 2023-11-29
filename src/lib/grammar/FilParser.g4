@@ -95,81 +95,81 @@ expression returns[filc::ast::AbstractExpression *tree]
     | el1=expression STAR er1=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::STAR);
         $tree = new filc::ast::BinaryCalcul($el1.tree, op, $er1.tree);
-        $tree->setPosition(new filc::utils::Position($el1.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el1.start));
     }
     | el2=expression DIV er2=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::DIV);
         $tree = new filc::ast::BinaryCalcul($el2.tree, op, $er2.tree);
-        $tree->setPosition(new filc::utils::Position($el2.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el2.start));
     }
     | el3=expression MOD er3=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MOD);
         $tree = new filc::ast::BinaryCalcul($el3.tree, op, $er3.tree);
-        $tree->setPosition(new filc::utils::Position($el3.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el3.start));
     }
     | el4=expression PLUS er4=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS);
         $tree = new filc::ast::BinaryCalcul($el4.tree, op, $er4.tree);
-        $tree->setPosition(new filc::utils::Position($el4.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el4.start));
     }
     | el5=expression MINUS er5=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUS);
         $tree = new filc::ast::BinaryCalcul($el5.tree, op, $er5.tree);
-        $tree->setPosition(new filc::utils::Position($el5.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el5.start));
     }
     | el6=expression FLEFT er6=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FLEFT);
         $tree = new filc::ast::BinaryCalcul($el6.tree, op, $er6.tree);
-        $tree->setPosition(new filc::utils::Position($el6.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el6.start));
     }
     | el7=expression FRIGHT er7=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FRIGHT);
         $tree = new filc::ast::BinaryCalcul($el7.tree, op, $er7.tree);
-        $tree->setPosition(new filc::utils::Position($el7.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el7.start));
     }
     | el8=expression LESS er8=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LESS);
         $tree = new filc::ast::BinaryCalcul($el8.tree, op, $er8.tree);
-        $tree->setPosition(new filc::utils::Position($el8.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el8.start));
     }
     | el9=expression GREATER er9=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::GREATER);
         $tree = new filc::ast::BinaryCalcul($el9.tree, op, $er9.tree);
-        $tree->setPosition(new filc::utils::Position($el9.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el9.start));
     }
     | el10=expression EQEQ er10=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::EQEQ);
         $tree = new filc::ast::BinaryCalcul($el10.tree, op, $er10.tree);
-        $tree->setPosition(new filc::utils::Position($el10.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el10.start));
     }
     | el11=expression LEQ er11=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LEQ);
         $tree = new filc::ast::BinaryCalcul($el11.tree, op, $er11.tree);
-        $tree->setPosition(new filc::utils::Position($el11.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el11.start));
     }
     | el12=expression GEQ er12=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::GEQ);
         $tree = new filc::ast::BinaryCalcul($el12.tree, op, $er12.tree);
-        $tree->setPosition(new filc::utils::Position($el12.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el12.start));
     }
     | el13=expression NEQ er13=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::NEQ);
         $tree = new filc::ast::BinaryCalcul($el13.tree, op, $er13.tree);
-        $tree->setPosition(new filc::utils::Position($el13.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el13.start));
     }
     | el14=expression AND er14=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::AND);
         $tree = new filc::ast::BinaryCalcul($el14.tree, op, $er14.tree);
-        $tree->setPosition(new filc::utils::Position($el14.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el14.start));
     }
     | el15=expression OR er15=expression {
         op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::OR);
         $tree = new filc::ast::BinaryCalcul($el15.tree, op, $er15.tree);
-        $tree->setPosition(new filc::utils::Position($el15.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el15.start));
     }
     | el16=expression op16=assignation_operator er16=expression {
         $tree = new filc::ast::BinaryCalcul($el16.tree, $op16.tree, $er16.tree);
-        $tree->setPosition(new filc::utils::Position($el16.start));
+        $tree->setPosition(new filc::utils::SimplePosition($el16.start));
     }
     // ==== Binary calcul ====
 
@@ -187,7 +187,7 @@ expression returns[filc::ast::AbstractExpression *tree]
     }
     | i=IDENTIFIER {
         $tree = new filc::ast::Identifier($i);
-        $tree->setPosition(new filc::utils::Position($i));
+        $tree->setPosition(new filc::utils::SimplePosition($i));
     };
 
 literal returns[filc::ast::AbstractExpression *tree]
@@ -201,35 +201,35 @@ literal returns[filc::ast::AbstractExpression *tree]
         $tree = new filc::ast::CharacterLiteral(
             filc::ast::CharacterLiteral::stringToChar($c.text, $c)
         );
-        $tree->setPosition(new filc::utils::Position($c));
+        $tree->setPosition(new filc::utils::SimplePosition($c));
     }
     | s=STRING {
         $tree = new filc::ast::StringLiteral($s.text);
-        $tree->setPosition(new filc::utils::Position($s));
+        $tree->setPosition(new filc::utils::SimplePosition($s));
     };
 
 boolean returns[filc::ast::BooleanLiteral *tree]
     : t=TRUE {
         $tree = new filc::ast::BooleanLiteral(true);
-        $tree->setPosition(new filc::utils::Position($t));
+        $tree->setPosition(new filc::utils::SimplePosition($t));
     }
     | f=FALSE {
         $tree = new filc::ast::BooleanLiteral(false);
-        $tree->setPosition(new filc::utils::Position($f));
+        $tree->setPosition(new filc::utils::SimplePosition($f));
     };
 
 number returns[filc::ast::AbstractExpression *tree]
     : i=INTEGER {
         $tree = new filc::ast::IntegerLiteral(stoi($i.text));
-        $tree->setPosition(new filc::utils::Position($i));
+        $tree->setPosition(new filc::utils::SimplePosition($i));
     }
     | f=FLOAT {
         $tree = new filc::ast::FloatLiteral(stod($f.text), false);
-        $tree->setPosition(new filc::utils::Position($f));
+        $tree->setPosition(new filc::utils::SimplePosition($f));
     }
     | d=DOUBLE {
         $tree = new filc::ast::FloatLiteral(stod($d.text), true);
-        $tree->setPosition(new filc::utils::Position($d));
+        $tree->setPosition(new filc::utils::SimplePosition($d));
     };
 
 variable_declaration returns[filc::ast::VariableDeclaration *tree]
@@ -239,7 +239,7 @@ variable_declaration returns[filc::ast::VariableDeclaration *tree]
 }
 @after {
     $tree = new filc::ast::VariableDeclaration(is_constant, new filc::ast::Identifier($i), $t.tree);
-    $tree->setPosition(new filc::utils::Position($i));
+    $tree->setPosition(new filc::utils::SimplePosition($i));
     if (assign != nullptr) {
         $tree->setAssignation(assign);
     }
@@ -271,7 +271,7 @@ type returns[std::shared_ptr<filc::ast::AbstractType> tree]
                 new filc::message::Error(
                     filc::message::ERROR,
                     "Array size must be positive",
-                    new filc::utils::Position($it)
+                    new filc::utils::SimplePosition($it)
                 )
             );
         }
@@ -286,11 +286,11 @@ type returns[std::shared_ptr<filc::ast::AbstractType> tree]
 unary_calcul returns[filc::ast::UnaryCalcul *tree]
     : i=IDENTIFIER po=post_operator {
         $tree = new filc::ast::PostUnaryCalcul(new filc::ast::Identifier($i), $po.tree);
-        $tree->setPosition(new filc::utils::Position($i));
+        $tree->setPosition(new filc::utils::SimplePosition($i));
     }
     | pr=pre_operator i=IDENTIFIER {
         $tree = new filc::ast::PreUnaryCalcul(new filc::ast::Identifier($i), $pr.tree);
-        $tree->setPosition(new filc::utils::Position($pr.start));
+        $tree->setPosition(new filc::utils::SimplePosition($pr.start));
     };
 
 post_operator returns[filc::ast::Operator *tree]
@@ -373,7 +373,7 @@ classic_binary_operator returns[filc::ast::Operator *tree]
 function returns[filc::ast::Function *tree]
     : fd=function_declaration fb=function_body {
         $tree = new filc::ast::Function($fd.identifier, $fd.parameters, $fd.return_type, $fb.tree);
-        $tree->setPosition(new filc::utils::Position($fd.start));
+        $tree->setPosition(new filc::utils::SimplePosition($fd.start));
     };
 
 function_declaration returns[filc::ast::Identifier *identifier, std::vector<filc::ast::FunctionParameter *> parameters, std::shared_ptr<filc::ast::AbstractType> return_type]
@@ -391,11 +391,11 @@ function_declaration returns[filc::ast::Identifier *identifier, std::vector<filc
 function_identifier returns[filc::ast::Identifier *tree]
     : o=OPERATOR fo=function_operator {
         $tree = new filc::ast::Identifier("operator" + $fo.text);
-        $tree->setPosition(new filc::utils::Position($o));
+        $tree->setPosition(new filc::utils::SimplePosition($o));
     }
     | i=IDENTIFIER {
         $tree = new filc::ast::Identifier($i);
-        $tree->setPosition(new filc::utils::Position($i));
+        $tree->setPosition(new filc::utils::SimplePosition($i));
     };
 
 function_operator
@@ -472,7 +472,7 @@ lambda returns[filc::ast::Lambda *tree]
 }
 @after {
     $tree = new filc::ast::Lambda(parameters, $ft.tree, body);
-    $tree->setPosition(new filc::utils::Position($lp));
+    $tree->setPosition(new filc::utils::SimplePosition($lp));
 }
     : lp=LPAREN (fp=function_parameters {
         parameters = $fp.tree;
@@ -514,12 +514,12 @@ condition returns[filc::ast::AbstractExpression *tree]
 if_c returns[filc::ast::If *tree]
     : i=IF ic=if_condition ib=if_body {
         $tree = new filc::ast::If($ic.tree, $ib.tree);
-        $tree->setPosition(new filc::utils::Position($i));
+        $tree->setPosition(new filc::utils::SimplePosition($i));
     } (ELSE (ic2=if_c {
         $tree->setElse($ic2.tree);
     } | ib2=if_body {
         auto *else_body = new filc::ast::If(new filc::ast::Identifier("true"), $ib2.tree);
-        $tree->setPosition(new filc::utils::Position($ib2.start));
+        $tree->setPosition(new filc::utils::SimplePosition($ib2.start));
         $tree->setElse(else_body);
     }))?;
 
@@ -538,7 +538,7 @@ if_body returns[filc::ast::BlockBody *tree]
 switch_c returns[filc::ast::Switch *tree]
     : s=SWITCH ic=if_condition sb=switch_body {
         $tree = new filc::ast::Switch($ic.tree, $sb.tree);
-        $tree->setPosition(new filc::utils::Position($s));
+        $tree->setPosition(new filc::utils::SimplePosition($s));
     };
 
 switch_body returns[std::vector<filc::ast::SwitchCase *> tree]
@@ -555,7 +555,7 @@ switch_case returns[filc::ast::SwitchCase *tree]
 }
 @after {
     $tree = new filc::ast::SwitchCase($sp.tree, body);
-    $tree->setPosition(new filc::utils::Position($sp.start));
+    $tree->setPosition(new filc::utils::SimplePosition($sp.start));
 }
     : sp=switch_pattern ARROW (pb=parenthesis_body {
         body = $pb.tree;
@@ -568,7 +568,7 @@ switch_case returns[filc::ast::SwitchCase *tree]
 switch_pattern returns[filc::ast::AbstractExpression *tree]
     : d=DEFAULT {
         $tree = new filc::ast::Identifier("default");
-        $tree->setPosition(new filc::utils::Position($d));
+        $tree->setPosition(new filc::utils::SimplePosition($d));
     } | l=literal {
         $tree = $l.tree;
     };
@@ -585,7 +585,7 @@ loop returns[filc::ast::AbstractExpression *tree]
 for_i returns[filc::ast::ForI *tree]
     : f=FOR fic=for_i_condition ib=if_body {
         $tree = new filc::ast::ForI($fic.declaration, $fic.limit, $fic.iteration, $ib.tree);
-        $tree->setPosition(new filc::utils::Position($f));
+        $tree->setPosition(new filc::utils::SimplePosition($f));
     };
 
 for_i_condition returns[filc::ast::VariableDeclaration *declaration, filc::ast::AbstractExpression *limit, filc::ast::AbstractExpression *iteration]
@@ -605,7 +605,7 @@ for_i_condition returns[filc::ast::VariableDeclaration *declaration, filc::ast::
 for_iter returns[filc::ast::ForIter *tree]
     : f=FOR fic=for_iter_condition ib=if_body {
         $tree = new filc::ast::ForIter($fic.constant, $fic.identifier, $fic.array, $ib.tree);
-        $tree->setPosition(new filc::utils::Position($f));
+        $tree->setPosition(new filc::utils::SimplePosition($f));
     };
 
 for_iter_condition returns[bool constant, filc::ast::Identifier *identifier, filc::ast::AbstractExpression *array]
@@ -616,7 +616,7 @@ for_iter_condition returns[bool constant, filc::ast::Identifier *identifier, fil
         $constant = false;
     }) i=IDENTIFIER {
         $identifier = new filc::ast::Identifier($i);
-        $identifier->setPosition(new filc::utils::Position($i));
+        $identifier->setPosition(new filc::utils::SimplePosition($i));
     } COLON e=expression {
         $array = $e.tree;
     } RPAREN;
@@ -624,7 +624,7 @@ for_iter_condition returns[bool constant, filc::ast::Identifier *identifier, fil
 while_l returns[filc::ast::While *tree]
     : w=WHILE ic=if_condition ib=if_body {
         $tree = new filc::ast::While($ic.tree, $ib.tree);
-        $tree->setPosition(new filc::utils::Position($w));
+        $tree->setPosition(new filc::utils::SimplePosition($w));
     };
 
 function_call_params returns[std::vector<filc::ast::AbstractExpression *> tree]

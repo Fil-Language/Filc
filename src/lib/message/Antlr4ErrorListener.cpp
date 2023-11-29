@@ -35,6 +35,6 @@ namespace filc::message {
                                           size_t charPositionInLine,
                                           const std::string &msg,
                                           std::exception_ptr e) {
-        _collector->addError(new Error(LEVEL::ERROR, msg, new filc::utils::Position(offendingSymbol)));
+        _collector->addError(new Error(LEVEL::ERROR, msg, new filc::utils::SimplePosition(offendingSymbol)));
     }
 }
