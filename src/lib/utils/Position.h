@@ -34,6 +34,8 @@ namespace filc::utils {
 
         virtual ~AbstractPosition() = default;
 
+        [[nodiscard]] virtual auto getLine() const -> unsigned int = 0;
+
     protected:
         AbstractPosition() = default;
     };
@@ -46,7 +48,7 @@ namespace filc::utils {
 
         [[nodiscard]] auto getFilename() const -> const std::string &;
 
-        [[nodiscard]] auto getLine() const -> unsigned int;
+        [[nodiscard]] auto getLine() const -> unsigned int override;
 
         [[nodiscard]] auto getColumn() const -> unsigned int;
 
@@ -58,6 +60,31 @@ namespace filc::utils {
         std::string _filename;
         unsigned int _line;
         unsigned int _column;
+    };
+
+    class DoublePosition final : public AbstractPosition {
+    public:
+        DoublePosition(std::string filename, unsigned int start_line, unsigned int start_column,
+                       unsigned int end_line, unsigned int end_column);
+
+        DoublePosition(const antlr4::Token *start_token, const antlr4::Token *end_token);
+
+        [[nodiscard]] auto getFilename() const -> const std::string &;
+
+        [[nodiscard]] auto getStartPosition() const -> std::pair<unsigned int, unsigned int>;
+
+        [[nodiscard]] auto getEndPosition() const -> std::pair<unsigned int, unsigned int>;
+
+        [[nodiscard]] auto getLine() const -> unsigned int override;
+
+        [[nodiscard]] auto getContent() const -> std::vector<std::string>;
+
+        [[nodiscard]] auto dump(const std::string &color) const -> std::string override;
+
+    private:
+        std::string _filename;
+        std::pair<unsigned int, unsigned int> _start_position;
+        std::pair<unsigned int, unsigned int> _end_position;
     };
 }
 

@@ -67,9 +67,8 @@ namespace filc::ast {
 
     auto AbstractExpression::addNameToEnvironment(
             filc::environment::Environment *environment) const -> void {
-        auto *position = dynamic_cast<filc::utils::SimplePosition *>(getPosition());
         auto name = filc::utils::joinString(filc::utils::splitString(environment->getModule(), '.'), "_")
-                    + "_" + std::to_string(position->getLine());
+                    + "_" + std::to_string(getPosition()->getLine());
         environment->addName(name, getExpressionType());
     }
 

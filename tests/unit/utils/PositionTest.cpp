@@ -25,7 +25,9 @@
 #include "test_tools.h"
 #include <fstream>
 
-TEST(Position, constructor) {
+#define POSITION_FILE FIXTURES_PATH "/utils/position.txt"
+
+TEST(SimplePosition, constructor) {
     filc::utils::SimplePosition pos("filename", 20, 10);
 
     ASSERT_STREQ("filename", pos.getFilename().c_str());
@@ -33,8 +35,58 @@ TEST(Position, constructor) {
     ASSERT_EQ(10, pos.getColumn());
 }
 
-TEST(Position, getContent) {
-    filc::utils::SimplePosition pos("../../tests/unit/Fixtures/position.txt", 12, 10);
+TEST(SimplePosition, getContent) {
+    filc::utils::SimplePosition pos(POSITION_FILE, 12, 10);
 
     ASSERT_STREQ("12;abcd", pos.getContent().c_str());
+}
+
+TEST(SimplePosition, dump) {
+    filc::utils::SimplePosition pos(POSITION_FILE, 12, 10);
+
+    const auto *expected =
+            "     ../../tests/unit/Fixtures/utils/position.txt\n"
+            " 12 |12;abcd\n"
+            "    |          \033[31m^\033[0m\n";
+
+    ASSERT_STREQ(expected, pos.dump("\033[31m").c_str());
+}
+
+TEST(DoublePosition, constructor) {
+    filc::utils::DoublePosition pos("filename", 20, 10, 30, 40);
+
+    ASSERT_STREQ("filename", pos.getFilename().c_str());
+    ASSERT_EQ(20, pos.getStartPosition().first);
+    ASSERT_EQ(10, pos.getStartPosition().second);
+    ASSERT_EQ(30, pos.getEndPosition().first);
+    ASSERT_EQ(40, pos.getEndPosition().second);
+    ASSERT_EQ(20, pos.getLine());
+}
+
+TEST(DoublePosition, getContent) {
+    filc::utils::DoublePosition pos1(POSITION_FILE, 10, 0, 10, 10);
+    ASSERT_THAT(pos1.getContent(), ElementsAre("10;abcd"));
+
+    filc::utils::DoublePosition pos2(POSITION_FILE, 5, 0, 8, 0);
+    ASSERT_THAT(pos2.getContent(), ElementsAre("05;abcd", "06;abcd", "07;abcd", "08;abcd"));
+}
+
+TEST(DoublePosition, dump) {
+    filc::utils::DoublePosition pos1(POSITION_FILE, 15, 0, 15, 7);
+    const auto *expected1 =
+            "     ../../tests/unit/Fixtures/utils/position.txt\n"
+            " 15 |15;abcd\n"
+            "    |\033[31m^^^^^^^\033[0m\n";
+    ASSERT_STREQ(expected1, pos1.dump("\033[31m").c_str());
+
+    filc::utils::DoublePosition pos2(POSITION_FILE, 3, 1, 6, 5);
+    const auto *expected2 =
+            "    ../../tests/unit/Fixtures/utils/position.txt\n"
+            "   | \033[31mv\033[0m\n"
+            " 3 |03;abcd\n"
+            " 4 |04;abcd\n"
+            " 5 |05;abcd\n"
+            " 6 |06;abcd\n"
+            "   |     \033[31m^\033[0m\n";
+    ASSERT_STREQ(expected2, pos2.dump("\033[31m").c_str());
 }
