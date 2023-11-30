@@ -85,8 +85,8 @@ namespace filc::utils {
             : _filename(std::move(filename)), _start_position(std::make_pair(start_line, start_column)),
               _end_position(std::make_pair(end_line, end_column)) {}
 
-    DoublePosition::DoublePosition(const antlr4::Token *start_token, const antlr4::Token *end_token) {
-        _filename = start_token->getTokenSource()->getSourceName();
+    DoublePosition::DoublePosition(const antlr4::Token *start_token, const antlr4::Token *end_token)
+            : _filename(start_token->getTokenSource()->getSourceName()) {
         if (end_token->getTokenSource()->getSourceName() != _filename) {
             filc::message::MessageCollector::getCollector()->addError(
                     new filc::message::BasicError(filc::message::FATAL_ERROR,
