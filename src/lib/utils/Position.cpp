@@ -27,6 +27,9 @@
 #include <utility>
 #include <fstream>
 
+#define DETAILS_COLOR "\033[1;34m"
+#define RESET_COLOR "\033[0m"
+
 namespace filc::utils {
     SimplePosition::SimplePosition(std::string filename, unsigned int line, unsigned int column)
             : _filename(std::move(filename)), _line(line), _column(column) {}
@@ -69,12 +72,13 @@ namespace filc::utils {
     }
 
     auto SimplePosition::dump(const std::string &color) const -> std::string {
-        std::string nth = " " + std::to_string(_line) + " ";
-        std::string res = std::string(nth.length() + 1, ' ') + _filename + "\n";
+        auto nth = " " + std::to_string(_line) + " ";
+        auto res = std::string(nth.length() - 1, ' ') + DETAILS_COLOR + "--> " + RESET_COLOR
+                   + _filename + ":" + std::to_string(_line) + ":" + std::to_string(_column) + "\n";
 
-        res += nth + "|" + getContent() + "\n";
-        res += std::string(nth.length(), ' ') + "|";
-        std::string spaces = _column > 0 ? std::string(_column, ' ') : "";
+        res += DETAILS_COLOR + nth + "| " + RESET_COLOR + getContent() + "\n";
+        res += DETAILS_COLOR + std::string(nth.length(), ' ') + "| " + RESET_COLOR;
+        auto spaces = _column > 0 ? std::string(_column, ' ') : "";
         res += spaces + color + "^" + "\033[0m" + "\n";
 
         return res;
@@ -163,14 +167,15 @@ namespace filc::utils {
 
         if (start_line == end_line && content.size() == 1) { // Single line
             auto nth = " " + std::to_string(start_line) + " ";
-            auto res = std::string(nth.length() + 1, ' ') + _filename + "\n";
+            auto res = std::string(nth.length() - 1, ' ') + DETAILS_COLOR + "--> " + RESET_COLOR
+                       + _filename + ":" + std::to_string(start_line) + ":" + std::to_string(start_column) + "\n";
 
             auto line = content[0];
 
-            res += nth + "|" + line + "\n";
-            res += std::string(nth.length(), ' ') + "|";
+            res += DETAILS_COLOR + nth + "| " + RESET_COLOR + line + "\n";
+            res += DETAILS_COLOR + std::string(nth.length(), ' ') + "| " + RESET_COLOR;
             auto spaces = start_column > 0 ? std::string(start_column, ' ') : "";
-            res += spaces + color + std::string(end_column - start_column, '^') + "\033[0m" + "\n";
+            res += spaces + color + std::string(end_column - start_column + 1, '^') + "\033[0m" + "\n";
 
             return res;
         }
@@ -182,19 +187,20 @@ namespace filc::utils {
 
                 nths.push_back(line + std::string(nth_end.length() - line.length(), ' '));
             }
-            auto nth_space = std::string(nth_end.length(), ' ') + "|";
+            auto nth_space = std::string(nth_end.length(), ' ') + "| ";
 
-            auto res = std::string(nth_end.length() + 1, ' ') + _filename + "\n";
+            auto res = std::string(nth_end.length() - 1, ' ') + DETAILS_COLOR + "--> " + RESET_COLOR
+                       + _filename + ":" + std::to_string(start_line) + ":" + std::to_string(start_column) + "\n";
 
             auto spaces = start_column > 0 ? std::string(start_column, ' ') : "";
-            res += nth_space + spaces + color + "v" + "\033[0m" + "\n";
+            res += DETAILS_COLOR + nth_space + RESET_COLOR + spaces + color + "v" + "\033[0m" + "\n";
 
             for (unsigned int i = 0; i < nths.size(); i++) {
-                res += nths[i] + "|" + content[i] + "\n";
+                res += DETAILS_COLOR + nths[i] + "| " + RESET_COLOR + content[i] + "\n";
             }
 
             spaces = end_column > 0 ? std::string(end_column, ' ') : "";
-            res += nth_space + spaces + color + "^" + "\033[0m" + "\n";
+            res += DETAILS_COLOR + nth_space + RESET_COLOR + spaces + color + "^" + "\033[0m" + "\n";
 
             return res;
         }

@@ -45,9 +45,9 @@ TEST(SimplePosition, dump) {
     filc::utils::SimplePosition pos(POSITION_FILE, 12, 10);
 
     const auto *expected =
-            "     ../../tests/unit/Fixtures/utils/position.txt\n"
-            " 12 |12;abcd\n"
-            "    |          \033[31m^\033[0m\n";
+            "   \033[1;34m--> \033[0m../../tests/unit/Fixtures/utils/position.txt:12:10\n"
+            "\033[1;34m 12 | \033[0m12;abcd\n"
+            "\033[1;34m    | \033[0m          \033[31m^\033[0m\n";
 
     ASSERT_STREQ(expected, pos.dump("\033[31m").c_str());
 }
@@ -72,21 +72,21 @@ TEST(DoublePosition, getContent) {
 }
 
 TEST(DoublePosition, dump) {
-    filc::utils::DoublePosition pos1(POSITION_FILE, 15, 0, 15, 7);
+    filc::utils::DoublePosition pos1(POSITION_FILE, 15, 0, 15, 6);
     const auto *expected1 =
-            "     ../../tests/unit/Fixtures/utils/position.txt\n"
-            " 15 |15;abcd\n"
-            "    |\033[31m^^^^^^^\033[0m\n";
+            "   \033[1;34m--> \033[0m../../tests/unit/Fixtures/utils/position.txt:15:0\n"
+            "\033[1;34m 15 | \033[0m15;abcd\n"
+            "\033[1;34m    | \033[0m\033[31m^^^^^^^\033[0m\n";
     ASSERT_STREQ(expected1, pos1.dump("\033[31m").c_str());
 
     filc::utils::DoublePosition pos2(POSITION_FILE, 3, 1, 6, 5);
     const auto *expected2 =
-            "    ../../tests/unit/Fixtures/utils/position.txt\n"
-            "   | \033[31mv\033[0m\n"
-            " 3 |03;abcd\n"
-            " 4 |04;abcd\n"
-            " 5 |05;abcd\n"
-            " 6 |06;abcd\n"
-            "   |     \033[31m^\033[0m\n";
+            "  \033[1;34m--> \033[0m../../tests/unit/Fixtures/utils/position.txt:3:1\n"
+            "\033[1;34m   | \033[0m \033[31mv\033[0m\n"
+            "\033[1;34m 3 | \033[0m03;abcd\n"
+            "\033[1;34m 4 | \033[0m04;abcd\n"
+            "\033[1;34m 5 | \033[0m05;abcd\n"
+            "\033[1;34m 6 | \033[0m06;abcd\n"
+            "\033[1;34m   | \033[0m     \033[31m^\033[0m\n";
     ASSERT_STREQ(expected2, pos2.dump("\033[31m").c_str());
 }
