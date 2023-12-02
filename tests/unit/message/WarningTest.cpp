@@ -21,24 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "Message.h"
+#include "Warning.h"
 #include "test_tools.h"
 
-TEST(Message, constructor) {
-    auto expected = "My message";
-    auto message = filc::message::Message(filc::message::WARNING, expected);
-    ASSERT_EQ(filc::message::WARNING, message.getLevel());
-    ASSERT_MESSAGE_CONTENT(expected, message);
-
-    expected = "My message 2";
-    message = filc::message::Message((filc::message::LEVEL) 9, expected);
-    ASSERT_EQ(5, message.getLevel());
-    ASSERT_MESSAGE_CONTENT(expected, message);
+TEST(BasicWarning, constructor) {
+    auto basic_warning = filc::message::BasicWarning(filc::message::WARNING, "My warning");
+    ASSERT_EQ(filc::message::WARNING, basic_warning.getLevel());
 }
 
-TEST(Message, print) {
-    auto expected = "My message";
-    auto message = filc::message::Message(filc::message::WARNING, expected);
-    ASSERT_MESSAGE_CONTENT(expected, message);
-    ASSERT_MESSAGE_CONTENT("", message);
+TEST(BasicWarning, print) {
+    auto basic_warning = filc::message::BasicWarning(filc::message::WARNING, "My warning");
+    ASSERT_MESSAGE_CONTENT("\033[1;33mWARNING\033[0m\033[1m: My warning\033[0m", basic_warning);
+    ASSERT_MESSAGE_CONTENT("", basic_warning);
 }

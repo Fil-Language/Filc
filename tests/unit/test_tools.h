@@ -24,6 +24,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "MessageCollector.h"
+#include <sstream>
 
 using namespace ::testing;
 
@@ -48,3 +49,10 @@ using namespace ::testing;
     ASSERT_IDENTIFIER(name, var_##variable->getIdentifier()); \
     ASSERT_TYPE(type, var_##variable->getType()); \
     ASSERT_LITERAL(value, literal, var_##variable->getAssignation())
+
+#define ASSERT_MESSAGE_CONTENT(expected, message) { \
+    std::stringstream stream; \
+    message.print(stream); \
+    std::string result(std::istreambuf_iterator<char>(stream), {}); \
+    ASSERT_STREQ(expected, result.c_str()); \
+    }

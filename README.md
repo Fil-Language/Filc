@@ -86,10 +86,10 @@ your code.
 Dev warning are show like this :
 
 ```
-DEV WARNING  <code>  <message>
-        <filename>
-<line> |<code>
-       |  ^
+DEV WARNING[<code>]: <message>
+      --> <filename>
+<line> | <code>
+       |   ^
 ```
 
 |   Dev code   | Meaning                                              | File                                   |

@@ -30,7 +30,7 @@ namespace filc::message {
             return out;
         }
 
-        out << "\033[1;31mERROR:\033[0m " << _content;
+        out << "\033[1;31mERROR\033[0m\033[1m: " << _content << "\033[0m";
         _printed = true;
 
         return out;
@@ -44,8 +44,10 @@ namespace filc::message {
             return out;
         }
 
-        out << "\033[1;31mERROR:\033[0m " << _content << '\n';
+        out << "\033[1;31mERROR\033[0m\033[1m: " << _content << "\033[0m\n";
         out << _position->dump("\033[1;31m");
+
+        _printed = true;
 
         return out;
     }

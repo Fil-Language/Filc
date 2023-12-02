@@ -21,24 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "Message.h"
+#include "DevWarning.h"
 #include "test_tools.h"
 
-TEST(Message, constructor) {
-    auto expected = "My message";
-    auto message = filc::message::Message(filc::message::WARNING, expected);
-    ASSERT_EQ(filc::message::WARNING, message.getLevel());
-    ASSERT_MESSAGE_CONTENT(expected, message);
-
-    expected = "My message 2";
-    message = filc::message::Message((filc::message::LEVEL) 9, expected);
-    ASSERT_EQ(5, message.getLevel());
-    ASSERT_MESSAGE_CONTENT(expected, message);
+TEST(DevWarning, constructor) {
+    auto dev_warning = filc::message::DevWarning(5, new filc::utils::SimplePosition(
+            FIXTURES_PATH "/utils/position.txt", 12, 3
+    ), "My dev warning");
+    ASSERT_EQ(filc::message::ERROR, dev_warning.getLevel());
+    ASSERT_EQ(5, dev_warning.getCode());
 }
 
-TEST(Message, print) {
-    auto expected = "My message";
-    auto message = filc::message::Message(filc::message::WARNING, expected);
-    ASSERT_MESSAGE_CONTENT(expected, message);
-    ASSERT_MESSAGE_CONTENT("", message);
+TEST(DevWarning, print) {
+    auto dev_warning = filc::message::DevWarning(5, new filc::utils::SimplePosition(
+            FIXTURES_PATH "/utils/position.txt", 12, 3
+    ), "My dev warning");
+    auto expected =
+            "\033[1;36mDEV WARNING[5]\033[0m\033[1m: My dev warning\n"
+            "   \033[1;34m--> \033[0m../../tests/unit/Fixtures/utils/position.txt:12:3\n"
+            "\033[1;34m 12 | \033[0m12;abcd\n"
+            "\033[1;34m    | \033[0m   \033[1;36m^\033[0m\n";
+    ASSERT_MESSAGE_CONTENT(expected, dev_warning);
 }

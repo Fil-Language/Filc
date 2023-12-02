@@ -32,6 +32,8 @@ namespace filc::message {
     public:
         DevWarning(unsigned int code, filc::utils::AbstractPosition *position, std::string content);
 
+        [[nodiscard]] auto getCode() const -> unsigned int;
+
         auto print(std::ostream &out) -> std::ostream & override;
 
     private:
