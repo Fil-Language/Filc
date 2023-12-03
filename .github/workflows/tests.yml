@@ -68,6 +68,21 @@ jobs:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: ${{github.workspace}}/coverage.info
 
+  cppcheck:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    needs:
+      - tests
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: cppcheck
+        uses: deep5050/cppcheck-action@v3.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN}}
+          std: c++17
+          force-language: c++
+
 #  clang-tidy:
 #    continue-on-error: true # It not really matter if this job failed
 #    needs:
