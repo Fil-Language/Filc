@@ -28,26 +28,63 @@
 #include <string>
 
 namespace filc::utils {
-    class Position final {
+    class AbstractPosition {
     public:
-        Position(std::string filename, unsigned int line, unsigned int column);
+        [[nodiscard]] virtual auto dump(const std::string &color) const -> std::string = 0;
 
-        explicit Position(const antlr4::Token *token);
+        virtual ~AbstractPosition() = default;
+
+        [[nodiscard]] virtual auto getLine() const -> unsigned int = 0;
+
+    protected:
+        AbstractPosition() = default;
+    };
+
+    class SimplePosition final : public AbstractPosition {
+    public:
+        SimplePosition(std::string filename, unsigned int line, unsigned int column);
+
+        explicit SimplePosition(const antlr4::Token *token);
 
         [[nodiscard]] auto getFilename() const -> const std::string &;
 
-        [[nodiscard]] auto getLine() const -> unsigned int;
+        [[nodiscard]] auto getLine() const -> unsigned int override;
 
         [[nodiscard]] auto getColumn() const -> unsigned int;
 
         [[nodiscard]] auto getContent() const -> std::string;
 
-        [[nodiscard]] auto dump(const std::string &color) const -> std::string;
+        [[nodiscard]] auto dump(const std::string &color) const -> std::string override;
 
     private:
         std::string _filename;
         unsigned int _line;
         unsigned int _column;
+    };
+
+    class DoublePosition final : public AbstractPosition {
+    public:
+        DoublePosition(std::string filename, unsigned int start_line, unsigned int start_column,
+                       unsigned int end_line, unsigned int end_column);
+
+        DoublePosition(const antlr4::Token *start_token, const antlr4::Token *end_token);
+
+        [[nodiscard]] auto getFilename() const -> const std::string &;
+
+        [[nodiscard]] auto getStartPosition() const -> std::pair<unsigned int, unsigned int>;
+
+        [[nodiscard]] auto getEndPosition() const -> std::pair<unsigned int, unsigned int>;
+
+        [[nodiscard]] auto getLine() const -> unsigned int override;
+
+        [[nodiscard]] auto getContent() const -> std::vector<std::string>;
+
+        [[nodiscard]] auto dump(const std::string &color) const -> std::string override;
+
+    private:
+        std::string _filename;
+        std::pair<unsigned int, unsigned int> _start_position;
+        std::pair<unsigned int, unsigned int> _end_position;
     };
 }
 

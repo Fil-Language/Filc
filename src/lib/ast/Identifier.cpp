@@ -28,7 +28,7 @@
 namespace filc::ast {
     Identifier::Identifier(antlr4::Token *token)
             : _name(token->getText()) {
-        setPosition(new filc::utils::Position(token));
+        setPosition(new filc::utils::SimplePosition(token));
     }
 
     Identifier::Identifier(std::string name)

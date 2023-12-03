@@ -29,7 +29,8 @@ namespace filc::message {
             return out;
         }
 
-        out << "\033[1;33mWARNING:\033[0m " << _content;
+        out << "\033[1;33mWARNING\033[0m\033[1m: " << _content << "\033[0m";
+
         _printed = true;
 
         return out;

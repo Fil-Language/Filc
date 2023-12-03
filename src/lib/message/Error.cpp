@@ -30,13 +30,13 @@ namespace filc::message {
             return out;
         }
 
-        out << "\033[1;31mERROR:\033[0m " << _content;
+        out << "\033[1;31mERROR\033[0m\033[1m: " << _content << "\033[0m";
         _printed = true;
 
         return out;
     }
 
-    Error::Error(filc::message::LEVEL level, std::string content, filc::utils::Position *position)
+    Error::Error(filc::message::LEVEL level, std::string content, filc::utils::AbstractPosition *position)
             : Message(level, std::move(content)), _position(position) {}
 
     auto Error::print(std::ostream &out) -> std::ostream & {
@@ -44,8 +44,10 @@ namespace filc::message {
             return out;
         }
 
-        out << "\033[1;31mERROR:\033[0m " << _content << '\n';
+        out << "\033[1;31mERROR\033[0m\033[1m: " << _content << "\033[0m\n";
         out << _position->dump("\033[1;31m");
+
+        _printed = true;
 
         return out;
     }

@@ -39,11 +39,11 @@ namespace filc::ast {
         _exported = exported;
     }
 
-    auto AbstractExpression::getPosition() const -> filc::utils::Position * {
+    auto AbstractExpression::getPosition() const -> filc::utils::AbstractPosition * {
         return _position;
     }
 
-    auto AbstractExpression::setPosition(filc::utils::Position *position) -> void {
+    auto AbstractExpression::setPosition(filc::utils::AbstractPosition *position) -> void {
         _position = position;
     }
 

@@ -171,7 +171,7 @@ namespace filc {
                             collector->addError(
                                     new filc::message::Error(filc::message::ERROR,
                                                              "Module " + module_name + " not found",
-                                                             new filc::utils::Position(program->getFilename(), 0, 0))
+                                                             new filc::utils::SimplePosition(program->getFilename(), 0, 0))
                             );
                         }
                     }

@@ -48,7 +48,7 @@ namespace filc::ast {
         if (token != nullptr) {
             filc::message::MessageCollector::getCollector()->addError(new filc::message::DevWarning(
                     2,
-                    new filc::utils::Position(token),
+                    new filc::utils::SimplePosition(token),
                     "Lexer found a character that is not regular: " + snippet
             ));
         }

@@ -60,7 +60,7 @@ TEST(tools, strStartsWith) {
 }
 
 TEST(tools, fileExists) {
-    auto result = filc::utils::fileExists(FIXTURES_PATH "/position.txt");
+    auto result = filc::utils::fileExists(FIXTURES_PATH "/utils/position.txt");
     ASSERT_TRUE(result);
 
     result = filc::utils::fileExists("non-existing-file.a_file_extension");

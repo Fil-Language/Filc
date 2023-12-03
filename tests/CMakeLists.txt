@@ -16,6 +16,9 @@ add_executable(tests
         # === Message ===
         unit/message/MessageTest.cpp
         unit/message/MessageCollectorTest.cpp
+        unit/message/WarningTest.cpp
+        unit/message/ErrorTest.cpp
+        unit/message/DevWarningTest.cpp
         # === Grammar ===
         unit/grammar/ParserTest.cpp
         # === AST ===
