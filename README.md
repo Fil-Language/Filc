@@ -37,6 +37,7 @@ Refer to the [diagram](src/lib/grammar/diagram.html) for used grammar.
 - [Tar action](https://github.com/marketplace/actions/tar-action)
 - [Upload to release](https://github.com/marketplace/actions/upload-to-release)
 - [Install LLVM](https://github.com/marketplace/actions/install-llvm-and-clang)
+- [Cppcheck](https://github.com/marketplace/actions/cppcheck-action)
 
 ### `version.sh`
 
