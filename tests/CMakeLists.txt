@@ -19,6 +19,7 @@ add_executable(tests
         unit/message/WarningTest.cpp
         unit/message/ErrorTest.cpp
         unit/message/DevWarningTest.cpp
+        unit/message/Antlr4ErrorListenerTest.cpp
         # === Grammar ===
         unit/grammar/ParserTest.cpp
         # === AST ===
