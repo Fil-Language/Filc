@@ -7,7 +7,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(tests
+add_executable(unit-tests
         unit/test_tools.h
         # === Utils ===
         unit/utils/OptionsParserTest.cpp
@@ -57,9 +57,9 @@ add_executable(tests
         unit/environment/EnvironmentTest.cpp
         unit/environment/NameTest.cpp
 )
-target_include_directories(tests PUBLIC unit)
+target_include_directories(unit-tests PUBLIC unit)
 
-target_link_libraries(tests PRIVATE gtest_main gtest gmock compiler_lib)
+target_link_libraries(unit-tests PRIVATE gtest_main gtest gmock compiler_lib)
 
 include(GoogleTest)
-gtest_discover_tests(tests)
+gtest_discover_tests(unit-tests)

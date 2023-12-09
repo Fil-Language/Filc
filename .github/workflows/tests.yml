@@ -49,7 +49,7 @@ jobs:
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
 
       - name: Build
-        run: cmake --build ${{github.workspace}}/build --target tests
+        run: cmake --build ${{github.workspace}}/build --target unit-tests
 
       - name: Run tests
         run: cd ${{github.workspace}}/build && ctest
