@@ -92,3 +92,29 @@ TEST(tools, joinString) {
     result = filc::utils::joinString(vect, ", ");
     ASSERT_STREQ("a, list, of, word", result.c_str());
 }
+
+TEST(tools, parseEscapedChar) {
+    // Normal cases
+    ASSERT_EQ('\'', filc::utils::parseEscapedChar("\\'"));
+    ASSERT_EQ('\"', filc::utils::parseEscapedChar("\\\""));
+    ASSERT_EQ('\?', filc::utils::parseEscapedChar("\\?"));
+    ASSERT_EQ('\a', filc::utils::parseEscapedChar("\\a"));
+    ASSERT_EQ('\b', filc::utils::parseEscapedChar("\\b"));
+    ASSERT_EQ('\f', filc::utils::parseEscapedChar("\\f"));
+    ASSERT_EQ('\n', filc::utils::parseEscapedChar("\\n"));
+    ASSERT_EQ('\r', filc::utils::parseEscapedChar("\\r"));
+    ASSERT_EQ('\t', filc::utils::parseEscapedChar("\\t"));
+    ASSERT_EQ('\v', filc::utils::parseEscapedChar("\\v"));
+    ASSERT_EQ('\\', filc::utils::parseEscapedChar("\\\\"));
+
+    // Limit cases
+    ASSERT_EQ('\0', filc::utils::parseEscapedChar(""));
+    ASSERT_EQ('a', filc::utils::parseEscapedChar("a"));
+    ASSERT_EQ('a', filc::utils::parseEscapedChar("ab"));
+    ASSERT_EQ('a', filc::utils::parseEscapedChar("abcd"));
+    ASSERT_EQ('\\', filc::utils::parseEscapedChar("\\c"));
+}
+
+TEST(tools, parseEscapedString) {
+    ASSERT_STREQ("Hello\nWorld!", filc::utils::parseEscapedString("Hello\\nWorld!").c_str());
+}
