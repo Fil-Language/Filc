@@ -32,9 +32,7 @@ namespace filc::ast {
         return _expression;
     }
 
-    ArrayOperator::~ArrayOperator() {
-        delete _expression;
-    }
+    ArrayOperator::~ArrayOperator() = default;
 
     auto ArrayOperator::dump() const -> std::string {
         return "[]";
