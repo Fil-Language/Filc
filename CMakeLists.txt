@@ -1,9 +1,6 @@
-cmake_policy(SET CMP0048 NEW)
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
-    cmake_policy(SET CMP0135 NEW)
-endif ()
+include(cmake/policies.cmake)
 
-cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -14,7 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(
         Filc
-        VERSION 0.2.1
+        VERSION 0.3.0
         LANGUAGES CXX C
 )
 
