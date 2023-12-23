@@ -5,7 +5,7 @@ add_definitions(-DANTLR4CPP_STATIC)
 
 set(ANTLR4_WITH_STATIC_CRT OFF)
 
-set(ANTLR4_TAG 4.13.0)
+set(ANTLR4_TAG 4.13.1)
 set(ANTLR4_ZIP_REPOSITORY https://github.com/antlr/antlr4/archive/refs/tags/${ANTLR4_TAG}.zip)
 
 include(ExternalAntlr4Cpp)
