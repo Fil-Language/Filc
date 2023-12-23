@@ -44,3 +44,9 @@ sed -i "s/#define FILC_VERSION_MINOR .*/#define FILC_VERSION_MINOR $minor/" src/
 sed -i "s/#define FILC_VERSION_PATCH .*/#define FILC_VERSION_PATCH $patch/" src/lib/utils/VERSION.h
 sed -i "s/#define FILC_VERSION_PRE .*/#define FILC_VERSION_PRE std::string(\"$pre\")/" src/lib/utils/VERSION.h
 echo -e "    \033[32mDone\033[0m"
+
+# Change version in CMakeLists.txt
+#         VERSION 0.3.0
+echo -e " -> Change version in CMakeLists.txt"
+sed -i "s/        VERSION .*/        VERSION $version/" CMakeLists.txt
+echo -e "    \033[32mDone\033[0m"
