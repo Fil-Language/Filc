@@ -24,7 +24,7 @@ antlr_target(Parser ${PROJECT_SOURCE_DIR}/src/lib/grammar/FilParser.g4 PARSER
 ## _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 ## LLVM section
 
-find_package(LLVM REQUIRED CONFIG)
+find_package(LLVM REQUIRED CONFIG 16)
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")

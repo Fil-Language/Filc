@@ -4,11 +4,11 @@ Here are listed all external dependencies used in this project.
 
 ## Compiler
 
-| **Name**       | **Link**                             |                             **Version**                             |
-|:---------------|:-------------------------------------|:-------------------------------------------------------------------:|
-| LLVM           | https://llvm.org/                    | ![Not specified](https://img.shields.io/badge/not_specified-orange) |
-| Antlr          | https://www.antlr.org/               |        ![4.13.1](https://img.shields.io/badge/4.13.1-green)         |
-| Options parser | https://github.com/jarro2783/cxxopts |         ![3.0.0](https://img.shields.io/badge/3.0.0-green)          |
+| **Name**       | **Link**                             |                     **Version**                      |
+|:---------------|:-------------------------------------|:----------------------------------------------------:|
+| LLVM           | https://llvm.org/                    |   ![^16](https://img.shields.io/badge/%5E16-green)   |
+| Antlr          | https://www.antlr.org/               | ![4.13.1](https://img.shields.io/badge/4.13.1-green) |
+| Options parser | https://github.com/jarro2783/cxxopts |  ![3.0.0](https://img.shields.io/badge/3.0.0-green)  |
 
 ## Tests
 
