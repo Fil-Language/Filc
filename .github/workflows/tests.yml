@@ -37,7 +37,7 @@ jobs:
       - name: Install LLVM
         uses: KyleMayes/install-llvm-action@v1
         with:
-          version: "15"
+          version: "16"
 
       - name: Configure CMake
         if: ${{ matrix.os == 'ubuntu-latest' }}
@@ -99,7 +99,7 @@ jobs:
       - name: Install LLVM
         uses: KyleMayes/install-llvm-action@v1
         with:
-          version: "15"
+          version: "16"
 
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
