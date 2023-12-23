@@ -17,38 +17,7 @@ Refer to the [diagram](src/lib/grammar/diagram.html) for used grammar.
 
 ## External dependencies
 
-### Compiler
-
-- [LLVM](https://llvm.org/)
-- [Antlr](https://www.antlr.org/)
-- [Options parser : https://github.com/jarro2783/cxxopts](https://github.com/jarro2783/cxxopts)
-
-### Tests
-
-- [GoogleTest](https://google.github.io/googletest/)
-
-### GitHub actions
-
-- [Checkout](https://github.com/marketplace/actions/checkout)
-- [Setup LCOV](https://github.com/marketplace/actions/setup-lcov)
-- [Setup Java](https://github.com/marketplace/actions/setup-java-jdk)
-- [Codecov coverage report](https://github.com/marketplace/actions/codecov)
-- [Codacy coverage report](https://github.com/marketplace/actions/codacy-coverage-reporter)
-- [Tar action](https://github.com/marketplace/actions/tar-action)
-- [Upload to release](https://github.com/marketplace/actions/upload-to-release)
-- [Install LLVM](https://github.com/marketplace/actions/install-llvm-and-clang)
-
-### `version.sh`
-
-This script is used to update the version badge and the file `src/lib/utils/VERSION.h`.
-
-- [HTTPie](https://github.com/httpie/httpie)
-
-### Railroad diagram
-
-[The diagram](src/lib/grammar/diagram.html)
-
-- [bkiers/rrd-antlr4](https://github.com/bkiers/rrd-antlr4)
+All the external dependencies are listed in [DEPENDENCIES.md](./DEPENDENCIES.md)
 
 ## Building and Testing
 
