@@ -7,6 +7,16 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+add_executable(e2e-tests
+        e2e/test_tools.h
+        e2e/options.cpp
+)
+add_dependencies(e2e-tests filc)
+target_include_directories(e2e-tests PUBLIC e2e)
+target_compile_definitions(e2e-tests PUBLIC FILC_DIR="${FILC_DIR}")
+
+target_link_libraries(e2e-tests PRIVATE gtest_main gtest gmock)
+
 add_executable(unit-tests
         unit/test_tools.h
         # === Utils ===
@@ -63,3 +73,4 @@ target_link_libraries(unit-tests PRIVATE gtest_main gtest gmock compiler_lib)
 
 include(GoogleTest)
 gtest_discover_tests(unit-tests)
+gtest_discover_tests(e2e-tests)
