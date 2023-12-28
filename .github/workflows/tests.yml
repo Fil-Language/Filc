@@ -71,6 +71,7 @@ jobs:
           coverage-reports: ${{github.workspace}}/coverage.info
 
   cppcheck:
+    if: github.event_name != 'pull_request'
     name: Static Analysis
     runs-on: ubuntu-latest
     needs:
