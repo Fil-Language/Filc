@@ -44,6 +44,7 @@ add_executable(unit-tests
         ast/WhileTest.cpp
         ast/AssignationOperatorTest.cpp
         ast/AbstractExpressionTest.cpp
+        ast/AbstractTypeTest.cpp
         # === Environment ===
         environment/EnvironmentTest.cpp
         environment/NameTest.cpp
