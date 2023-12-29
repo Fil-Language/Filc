@@ -17,6 +17,53 @@ on:
       - ".github/workflows/tests.yml"
 
 jobs:
+  build:
+    name: Build & Run
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Install LLVM
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "15"
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build for Windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: cmake --build ${{github.workspace}}/build --config Release
+      - name: Build
+        if: ${{ matrix.os != 'windows-latest' }}
+        run: cmake --build ${{github.workspace}}/build
+
+      - name: Install for Windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: cmake --install ${{github.workspace}}/build
+      - name: Install
+        if: ${{ matrix.os != 'windows-latest' }}
+        run: sudo cmake --install ${{github.workspace}}/build
+
+      - name: Show version and help for Windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          & "C:/Program Files (x86)/Filc/bin/filc.exe" --version
+          & "C:/Program Files (x86)/Filc/bin/filc.exe" --help
+      - name: Show version and help
+        if: ${{ matrix.os != 'windows-latest' }}
+        run: |
+          filc --version
+          filc --help
+
   unit-tests:
     name: Unit tests
     needs:
@@ -122,50 +169,3 @@ jobs:
 
       - name: Run tests
         run: cd ${{github.workspace}}/build && ctest -L e2e
-
-  build:
-    name: Build & Run
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-latest, macos-latest ]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - name: Install LLVM
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: "15"
-
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
-
-      - name: Build for Windows
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: cmake --build ${{github.workspace}}/build --config Release
-      - name: Build
-        if: ${{ matrix.os != 'windows-latest' }}
-        run: cmake --build ${{github.workspace}}/build
-
-      - name: Install for Windows
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: cmake --install ${{github.workspace}}/build
-      - name: Install
-        if: ${{ matrix.os != 'windows-latest' }}
-        run: sudo cmake --install ${{github.workspace}}/build
-
-      - name: Show version and help for Windows
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: |
-          & "C:/Program Files (x86)/Filc/bin/filc.exe" --version
-          & "C:/Program Files (x86)/Filc/bin/filc.exe" --help
-      - name: Show version and help
-        if: ${{ matrix.os != 'windows-latest' }}
-        run: |
-          filc --version
-          filc --help
