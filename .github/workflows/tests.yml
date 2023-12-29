@@ -99,7 +99,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --target unit-tests
 
       - name: Run tests
-        run: cd ${{github.workspace}}/build && ctest -L unit
+        run: cd ${{github.workspace}}/build && ctest -L unit --output-on-failure
 
       - name: Generate coverage report
         if: ${{ matrix.os == 'ubuntu-latest' }}
@@ -168,4 +168,4 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --target e2e-tests
 
       - name: Run tests
-        run: cd ${{github.workspace}}/build && ctest -L e2e
+        run: cd ${{github.workspace}}/build && ctest -L e2e --output-on-failure
