@@ -28,7 +28,7 @@
 
 using namespace ::testing;
 
-#define FIXTURES_PATH "../../tests/unit/Fixtures"
+#define FIXTURES_PATH "../../../tests/unit/Fixtures"
 
 #define COLLECTOR filc::message::MessageCollector::getCollector()
 
