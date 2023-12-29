@@ -72,5 +72,9 @@ target_include_directories(unit-tests PUBLIC unit)
 target_link_libraries(unit-tests PRIVATE gtest_main gtest gmock compiler_lib)
 
 include(GoogleTest)
-gtest_discover_tests(unit-tests)
-gtest_discover_tests(e2e-tests)
+gtest_discover_tests(unit-tests
+        PROPERTIES LABELS "unit"
+)
+gtest_discover_tests(e2e-tests
+        PROPERTIES LABELS "e2e"
+)
