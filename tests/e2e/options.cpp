@@ -25,47 +25,47 @@
 
 using namespace ::testing;
 
-#define HELP_REGEX "Fil compiler\n" \
-                   "Version: .*?\n" \
-                   "License: MIT\n" \
-                   "Usage:\n" \
-                   "  filc \\[options\\.\\.\\.\\] <source files>\n" \
-                   "\n" \
-                   "  -h, --help                Display help message\n" \
-                   "  -v, --version             Display version of compiler\n" \
-                   "      --verbose \\[=arg\\(=3\\)\\]  Verbose level \\(0-5\\) \\(default: 2\\)\n" \
-                   "  -d, --debug               Compile with debug information\n" \
-                   "  -o, --out arg             Executable output filename \\(default: a\\.out\\)\n" \
-                   "      --stdlib arg          Paths to standard library \\(separated by ;\\) \n" \
-                   "                            \\(default: \"\"\\)\n" \
-                   "\n"
+#define HELP_MESSAGE "Fil compiler\n" \
+                     "Version: 0.3.0\n" \
+                     "License: MIT\n" \
+                     "Usage:\n" \
+                     "  filc [options...] <source files>\n" \
+                     "\n" \
+                     "  -h, --help                Display help message\n" \
+                     "  -v, --version             Display version of compiler\n" \
+                     "      --verbose [=arg(=3)]  Verbose level (0-5) (default: 2)\n" \
+                     "  -d, --debug               Compile with debug information\n" \
+                     "  -o, --out arg             Executable output filename (default: a.out)\n" \
+                     "      --stdlib arg          Paths to standard library (separated by ;) \n" \
+                     "                            (default: \"\")\n" \
+                     "\n"
 
-#define VERSION_REGEX "     _______ __    \n" \
-                      "    / ____\\(_\\) /____\n" \
-                      "   / /_  / / / ___/\n" \
-                      "  / __/ / / / /__  \n" \
-                      " /_/   /_/_/\\\\___/  \n" \
-                      "                   \n" \
-                      "Filc version .*? - .*?\n" \
-                      "License: MIT\n"
+#define VERSION_MESSAGE "     _______ __    \n" \
+                        "    / ____(_) /____\n" \
+                        "   / /_  / / / ___/\n" \
+                        "  / __/ / / / /__  \n" \
+                        " /_/   /_/_/\\___/  \n" \
+                        "                   \n" \
+                        "Filc version 0.3.0 - 3000\n" \
+                        "License: MIT\n"
 
 TEST(Options, nothing) {
     const auto result = run_with_args();
-    ASSERT_THAT(result, MatchesRegex(HELP_REGEX));
+    ASSERT_STREQ(HELP_MESSAGE, result.c_str());
 }
 
 TEST(Options, help) {
-    auto result = run_with_args("-h");
-    ASSERT_THAT(result, MatchesRegex(HELP_REGEX));
+    const auto result1 = run_with_args("-h");
+    ASSERT_STREQ(HELP_MESSAGE, result1.c_str());
 
-    result = run_with_args("--help");
-    ASSERT_THAT(result, MatchesRegex(HELP_REGEX));
+    const auto result2 = run_with_args("--help");
+    ASSERT_STREQ(HELP_MESSAGE, result2.c_str());
 }
 
 TEST(Options, version) {
-    auto result = run_with_args("-v");
-    ASSERT_THAT(result, MatchesRegex(VERSION_REGEX));
+    const auto result1 = run_with_args("-v");
+    ASSERT_STREQ(VERSION_MESSAGE, result1.c_str());
 
-    result = run_with_args("--version");
-    ASSERT_THAT(result, MatchesRegex(VERSION_REGEX));
+    const auto result2 = run_with_args("--version");
+    ASSERT_STREQ(VERSION_MESSAGE, result2.c_str());
 }
