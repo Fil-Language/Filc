@@ -74,6 +74,8 @@ public:
                      filc::message::MessageCollector *collector,
                      const std::shared_ptr<filc::ast::AbstractType> &preferred_type) -> void override;
 
+    [[nodiscard]] auto isResolveTypeCalled() const -> bool;
+
     auto addNameToEnvironment(filc::environment::Environment *environment) const -> void override;
 
     auto generateIR(filc::message::MessageCollector *collector,
@@ -81,4 +83,7 @@ public:
                     llvm::LLVMContext *context,
                     llvm::Module *module,
                     llvm::IRBuilder<> *builder) const -> llvm::Value * override;
+
+private:
+    bool _resolveType_called;
 };

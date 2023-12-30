@@ -22,27 +22,29 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "test_tools.h"
 
-namespace filc::ast {
-    BlockBody::BlockBody(const std::vector<AbstractExpression *> &expressions)
-            : _expressions(expressions) {}
+TEST(BlockBody, constructor) {
+    std::vector<filc::ast::AbstractExpression *> expressions = {
+            new TestExpression(),
+            new TestExpression(),
+    };
+    filc::ast::BlockBody bb1(expressions);
+    ASSERT_THAT(bb1.getExpressions(), ContainerEq(expressions));
+}
 
-    BlockBody::~BlockBody() = default;
-
-    auto BlockBody::getExpressions() const -> const std::vector<AbstractExpression *> & {
-        return _expressions;
-    }
-
-    auto BlockBody::resolveType(filc::environment::Environment *environment,
-                                filc::message::MessageCollector *collector,
-                                const std::shared_ptr<AbstractType> &preferred_type) -> void {
-        for (auto it = _expressions.begin(); it != _expressions.end(); it++) {
-            if (it + 1 != _expressions.end()) {
-                (*it)->resolveType(environment, collector, nullptr);
-            } else {
-                (*it)->resolveType(environment, collector, preferred_type);
-                setExpressionType((*it)->getExpressionType());
-            }
-        }
-    }
+TEST(BlockBody, resolveType) {
+    DEFINE_ENVIRONMENT(env);
+    auto int_type = env->getType("int");
+    auto expression1 = TestExpression().withExpressionType(env->getType("char"));
+    auto expression2 = TestExpression().withExpressionType(int_type);
+    std::vector<filc::ast::AbstractExpression *> expressions = {&expression1, &expression2};
+    filc::ast::BlockBody bb1(expressions);
+    bb1.resolveType(env, COLLECTOR, nullptr);
+    ASSERT_TRUE(expression1.isResolveTypeCalled());
+    ASSERT_TRUE(expression2.isResolveTypeCalled());
+    ASSERT_FALSE(COLLECTOR->hasErrors());
+    auto result_type = bb1.getExpressionType();
+    ASSERT_NE(nullptr, result_type);
+    ASSERT_TYPE("int", result_type);
 }

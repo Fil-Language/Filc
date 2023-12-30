@@ -23,7 +23,8 @@
  */
 #include "test_tools.h"
 
-TestExpression::TestExpression() = default;
+TestExpression::TestExpression()
+        : _resolveType_called(false) {}
 
 auto TestExpression::withExpressionType(
         const std::shared_ptr<filc::ast::AbstractType> &expression_type) -> TestExpression & {
@@ -38,6 +39,8 @@ auto TestExpression::resolveType(filc::environment::Environment *environment,
     (void) environment;
     (void) collector;
     (void) preferred_type;
+
+    _resolveType_called = true;
 }
 
 auto TestExpression::addNameToEnvironment(filc::environment::Environment *environment) const -> void {
@@ -50,4 +53,8 @@ auto TestExpression::generateIR(filc::message::MessageCollector *collector,
                                 llvm::Module *module,
                                 llvm::IRBuilder<> *builder) const -> llvm::Value * {
     return nullptr;
+}
+
+auto TestExpression::isResolveTypeCalled() const -> bool {
+    return _resolveType_called;
 }
