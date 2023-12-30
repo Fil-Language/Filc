@@ -81,43 +81,31 @@ TEST(BinaryCalcul, addNameToEnvironment) {
 }
 
 TEST(BinaryCalcul, generateIR) {
+    DEFINE_ENVIRONMENT(env);
     filc::ast::BinaryCalcul bc1(
             new filc::ast::Identifier("var1"),
             new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LEQ),
             new filc::ast::Identifier("var2")
     );
-    DEFINE_ENVIRONMENT(env);
-    auto float_type1 = env->getType("float");
-    env->addName("var1", float_type1);
-    env->addName("var2", float_type1);
+    const auto float_type = env->getType("float");
+    env->addName("var1", float_type);
+    env->addName("var2", float_type);
     bc1.resolveType(env, COLLECTOR, env->getType("bool"));
-    ASSERT_FALSE(COLLECTOR->hasErrors());
     DEFINE_LLVM;
+    auto value = bc1.generateIR(COLLECTOR, env, context, module, builder);
+    ASSERT_EQ(nullptr, value);
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
+
     env->generateIR(COLLECTOR, context, module, builder);
+    value = bc1.generateIR(COLLECTOR, env, context, module, builder);
+    ASSERT_EQ(nullptr, value);
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
+
     env->getName("var1", nullptr)->setValue(llvm::ConstantFP::get(*context, llvm::APFloat(2.0F)));
     env->getName("var2", nullptr)->setValue(llvm::ConstantFP::get(*context, llvm::APFloat(2.0F)));
-    auto *value1 = bc1.generateIR(COLLECTOR, env, context, module, builder);
-    ASSERT_NE(nullptr, value1);
-    ASSERT_TRUE(value1->getType()->isIntegerTy(1));
-
-    DEFINE_ENVIRONMENT(env2);
-    filc::ast::BinaryCalcul bc2(
-            new filc::ast::Identifier("var1"),
-            new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LEQ),
-            new filc::ast::Identifier("var2")
-    );
-    auto float_type2 = env->getType("float");
-    env2->addName("var1", float_type2);
-    env2->addName("var2", float_type2);
-    bc1.resolveType(env, COLLECTOR, env2->getType("bool"));
-    auto *value2 = bc2.generateIR(COLLECTOR, env2, context, module, builder);
-    ASSERT_EQ(nullptr, value2);
-    ASSERT_TRUE(COLLECTOR->hasErrors());
-    COLLECTOR->flush();
-
-    env2->generateIR(COLLECTOR, context, module, builder);
-    auto value2_2 = bc2.generateIR(COLLECTOR, env2, context, module, builder);
-    ASSERT_EQ(nullptr, value2_2);
-    ASSERT_TRUE(COLLECTOR->hasErrors());
-    COLLECTOR->flush();
+    value = bc1.generateIR(COLLECTOR, env, context, module, builder);
+    ASSERT_NE(nullptr, value);
+    ASSERT_TRUE(value->getType()->isIntegerTy(1));
 }
