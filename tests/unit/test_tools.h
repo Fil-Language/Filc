@@ -33,6 +33,12 @@ using namespace ::testing;
 
 #define COLLECTOR filc::message::MessageCollector::getCollector()
 
+#define DEFINE_ENVIRONMENT(name) auto *name = new filc::environment::Environment("name", filc::environment::Environment::getGlobalEnvironment())
+
+#define DEFINE_LLVM auto *context = new llvm::LLVMContext; \
+                    auto *module = new llvm::Module("module", *context); \
+                    auto *builder = new llvm::IRBuilder<>(*context)
+
 #define ASSERT_TYPE(expected, type) ASSERT_STREQ(expected, type->dump().c_str())
 
 #define ASSERT_IDENTIFIER(expected, identifier) ASSERT_STREQ(expected, dynamic_cast<filc::ast::Identifier *>(identifier)->getName().c_str())
