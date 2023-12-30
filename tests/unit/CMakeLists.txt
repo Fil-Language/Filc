@@ -1,5 +1,5 @@
 add_executable(unit-tests
-        test_tools.h
+        test_tools.h test_tools.cpp
         # === Utils ===
         utils/OptionsParserTest.cpp
         utils/PositionTest.cpp
