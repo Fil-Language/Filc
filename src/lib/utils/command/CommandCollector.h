@@ -21,37 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_COMMAND_H
-#define FILC_COMMAND_H
+#ifndef FILC_COMMANDCOLLECTOR_H
+#define FILC_COMMANDCOLLECTOR_H
 
-#include <string>
+#include "Command.h"
 #include <vector>
+#include <memory>
 
 namespace filc::utils::command {
-    class Command {
+    class CommandCollector {
     public:
-        [[nodiscard]] auto getName() const -> const std::string &;
+        CommandCollector();
 
-        [[nodiscard]] auto getDescription() const -> const std::string &;
+        [[nodiscard]] auto getCommands() const -> const std::vector<std::unique_ptr<Command>> &;
 
-        [[nodiscard]] auto getAliases() const -> const std::vector<std::string> &;
+        auto addCommand(Command *command) -> bool;
 
-        [[nodiscard]] auto matchName(const std::string &name) const -> bool;
-
-        [[nodiscard]] virtual auto help() const -> std::string;
-
-        [[nodiscard]] virtual auto run(int argc, char **argv) -> int;
-
-        virtual ~Command() = default;
-
-    protected:
-        Command(std::string name, std::string description, const std::vector<std::string> &aliases);
+        [[nodiscard]] auto run(int argc, char **argv) -> int;
 
     private:
-        const std::string _name;
-        const std::string _description;
-        const std::vector<std::string> _aliases;
+        std::vector<std::unique_ptr<Command>> _commands;
+
+        auto runHelpCommand() const -> int;
     };
 }
 
-#endif //FILC_COMMAND_H
+#endif //FILC_COMMANDCOLLECTOR_H

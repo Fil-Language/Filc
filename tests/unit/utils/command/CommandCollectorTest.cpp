@@ -21,15 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "Command.h"
+#include "CommandCollector.h"
 #include "test_tools.h"
 
 using namespace filc::utils::command;
-
-class IncompleteCommand : public Command {
-public:
-    IncompleteCommand() : Command("name", "description", {}) {}
-};
 
 class CustomCommand : public Command {
 public:
@@ -44,29 +39,22 @@ public:
     }
 };
 
-TEST(Command, constructor) {
-    IncompleteCommand ic1;
+TEST(CommandCollector, constructor) {
+    CommandCollector cc1;
 
-    ASSERT_STREQ("name", ic1.getName().c_str());
-    ASSERT_STREQ("description", ic1.getDescription().c_str());
-    ASSERT_THAT(ic1.getAliases(), IsEmpty());
-    ASSERT_TRUE(ic1.matchName("name"));
-    ASSERT_FALSE(ic1.matchName("n"));
-    ASSERT_FALSE(ic1.matchName("name2"));
-    ASSERT_THROW(ic1.help(), std::logic_error);
-    ASSERT_EQ(2, ic1.run(0, nullptr));
-}
+    ASSERT_THAT(cc1.getCommands(), IsEmpty());
+    ASSERT_TRUE(cc1.addCommand(new CustomCommand()));
+    ASSERT_FALSE(cc1.addCommand(new CustomCommand()));
+    ASSERT_THAT(cc1.getCommands(), SizeIs(1));
 
-TEST(Command, childClass) {
-    CustomCommand cc1;
-
-    ASSERT_STREQ("custom", cc1.getName().c_str());
-    ASSERT_STREQ("My custom command", cc1.getDescription().c_str());
-    ASSERT_THAT(cc1.getAliases(), ElementsAre("c", "custom-command"));
-    ASSERT_TRUE(cc1.matchName("custom"));
-    ASSERT_TRUE(cc1.matchName("c"));
-    ASSERT_TRUE(cc1.matchName("custom-command"));
-    ASSERT_FALSE(cc1.matchName("help"));
-    ASSERT_STREQ("Help of custom command", cc1.help().c_str());
-    ASSERT_EQ(0, cc1.run(0, nullptr));
+    char *argv0[] = {"filc"};
+    ASSERT_EQ(2, cc1.run(1, argv0));
+    char *argv1[] = {"filc", "custom"};
+    ASSERT_EQ(0, cc1.run(2, argv1));
+    char *argv2[] = {"filc", "c"};
+    ASSERT_EQ(0, cc1.run(2, argv2));
+    char *argv3[] = {"filc", "custom-command"};
+    ASSERT_EQ(0, cc1.run(2, argv3));
+    char *argv4[] = {"filc", "non-existing-command"};
+    ASSERT_EQ(2, cc1.run(2, argv4));
 }
