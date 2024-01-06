@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Check that command lcov is installed
+if ! type "lcov" >/dev/null; then
+  echo -e "\033[31mlcov command not found. Please install it.\033[0m"
+  exit 1
+fi
+
 lcov --directory . --capture --output-file coverage.info
 
 # Remove external files

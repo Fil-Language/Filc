@@ -50,6 +50,25 @@ TEST(BinaryCalcul, resolveType) {
     ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     ASSERT_TYPE("bool", program2->getExpressions()[0]->getExpressionType());
+
+    DEFINE_ENVIRONMENT(env);
+    auto left_expression1 = TestExpression().withExpressionType(nullptr);
+    auto right_expression1 = TestExpression().withExpressionType(nullptr);
+    filc::ast::BinaryCalcul bc1(&left_expression1, nullptr, &right_expression1);
+    bc1.resolveType(env, COLLECTOR, nullptr);
+    ASSERT_EQ(nullptr, bc1.getExpressionType());
+
+    auto left_expression2 = TestExpression().withExpressionType(env->getType("int"));
+    auto right_expression2 = TestExpression().withExpressionType(env->getType("bool"));
+    filc::ast::BinaryCalcul bc2(
+            &left_expression2,
+            new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FLEFT),
+            &right_expression2
+    );
+    bc2.resolveType(env, COLLECTOR, nullptr);
+    ASSERT_EQ(nullptr, bc2.getExpressionType());
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
 }
 
 TEST(BinaryCalcul, addNameToEnvironment) {
@@ -62,22 +81,31 @@ TEST(BinaryCalcul, addNameToEnvironment) {
 }
 
 TEST(BinaryCalcul, generateIR) {
-    filc::ast::BinaryCalcul bc1(new filc::ast::Identifier("var1"),
-                                new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LEQ),
-                                new filc::ast::Identifier("var2"));
-    auto *env = new filc::environment::Environment("", filc::environment::Environment::getGlobalEnvironment());
-    auto float_type = env->getType("float");
+    DEFINE_ENVIRONMENT(env);
+    filc::ast::BinaryCalcul bc1(
+            new filc::ast::Identifier("var1"),
+            new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LEQ),
+            new filc::ast::Identifier("var2")
+    );
+    const auto float_type = env->getType("float");
     env->addName("var1", float_type);
     env->addName("var2", float_type);
     bc1.resolveType(env, COLLECTOR, env->getType("bool"));
-    ASSERT_FALSE(COLLECTOR->hasErrors());
-    auto *context = new llvm::LLVMContext;
-    auto *module = new llvm::Module("module", *context);
-    auto *builder = new llvm::IRBuilder<>(*context);
+    DEFINE_LLVM;
+    auto value = bc1.generateIR(COLLECTOR, env, context, module, builder);
+    ASSERT_EQ(nullptr, value);
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
+
     env->generateIR(COLLECTOR, context, module, builder);
+    value = bc1.generateIR(COLLECTOR, env, context, module, builder);
+    ASSERT_EQ(nullptr, value);
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
+
     env->getName("var1", nullptr)->setValue(llvm::ConstantFP::get(*context, llvm::APFloat(2.0F)));
     env->getName("var2", nullptr)->setValue(llvm::ConstantFP::get(*context, llvm::APFloat(2.0F)));
-    auto *value = bc1.generateIR(COLLECTOR, env, context, module, builder);
+    value = bc1.generateIR(COLLECTOR, env, context, module, builder);
     ASSERT_NE(nullptr, value);
     ASSERT_TRUE(value->getType()->isIntegerTy(1));
 }

@@ -26,7 +26,7 @@
 
 namespace filc::utils {
     auto parseEscapedChar(const std::string &escaped_char) -> char {
-        if (escaped_char.size() == 2) {
+        if (escaped_char.length() == 2 && escaped_char[0] == '\\') {
             // An escaped char \\ + ['"?abfnrtv\\]
             switch (escaped_char[1]) {
                 case '\'':
@@ -51,6 +51,8 @@ namespace filc::utils {
                     return '\v';
                 case '\\':
                     return '\\';
+                default:
+                    break;
             }
         }
 

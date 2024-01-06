@@ -24,26 +24,27 @@
 #include "AST.h"
 #include "test_tools.h"
 
-TEST(AssignationOperator, constructor) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FRIGHT));
-    ASSERT_CLASSIC_OPERATOR(FRIGHT, ao1.getInnerOperator());
+TEST(BlockBody, constructor) {
+    std::vector<filc::ast::AbstractExpression *> expressions = {
+            new TestExpression(),
+            new TestExpression(),
+    };
+    filc::ast::BlockBody bb1(expressions);
+    ASSERT_THAT(bb1.getExpressions(), ContainerEq(expressions));
 }
 
-TEST(AssignationOperator, dump) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUS));
-    ASSERT_STREQ("-=", ao1.dump().c_str());
-}
-
-TEST(AssignationOperator, dumpPreLambdaType) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS));
-    ASSERT_EQ(nullptr, ao1.dumpPreLambdaType(nullptr, nullptr, COLLECTOR, nullptr));
-    ASSERT_TRUE(COLLECTOR->hasErrors());
-    COLLECTOR->flush();
-}
-
-TEST(AssignationOperator, dumpPostLambdaType) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS));
-    ASSERT_EQ(nullptr, ao1.dumpPostLambdaType(nullptr, nullptr, COLLECTOR, nullptr));
-    ASSERT_TRUE(COLLECTOR->hasErrors());
-    COLLECTOR->flush();
+TEST(BlockBody, resolveType) {
+    DEFINE_ENVIRONMENT(env);
+    auto int_type = env->getType("int");
+    auto expression1 = TestExpression().withExpressionType(env->getType("char"));
+    auto expression2 = TestExpression().withExpressionType(int_type);
+    std::vector<filc::ast::AbstractExpression *> expressions = {&expression1, &expression2};
+    filc::ast::BlockBody bb1(expressions);
+    bb1.resolveType(env, COLLECTOR, nullptr);
+    ASSERT_TRUE(expression1.isResolveTypeCalled());
+    ASSERT_TRUE(expression2.isResolveTypeCalled());
+    ASSERT_FALSE(COLLECTOR->hasErrors());
+    auto result_type = bb1.getExpressionType();
+    ASSERT_NE(nullptr, result_type);
+    ASSERT_TYPE("int", result_type);
 }

@@ -21,29 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
-#include "test_tools.h"
+#ifndef TEST_TOOLS_H
+#define TEST_TOOLS_H
 
-TEST(AssignationOperator, constructor) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FRIGHT));
-    ASSERT_CLASSIC_OPERATOR(FRIGHT, ao1.getInnerOperator());
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include <string>
+#include <memory>
+#include <cstdio>
+#include <stdexcept>
+#include <regex>
+
+auto exec(const char *cmd) -> std::string {
+    char buffer[128];
+    std::string result;
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+
+    if (!pipe) {
+        throw std::runtime_error("popen() failed!");
+    }
+
+    while (fgets(buffer, sizeof buffer, pipe.get()) != nullptr) {
+        result += buffer;
+    }
+
+    return result;
 }
 
-TEST(AssignationOperator, dump) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUS));
-    ASSERT_STREQ("-=", ao1.dump().c_str());
-}
+#define run_with_args(args) exec(FILC_DIR "/filc " args)
 
-TEST(AssignationOperator, dumpPreLambdaType) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS));
-    ASSERT_EQ(nullptr, ao1.dumpPreLambdaType(nullptr, nullptr, COLLECTOR, nullptr));
-    ASSERT_TRUE(COLLECTOR->hasErrors());
-    COLLECTOR->flush();
-}
-
-TEST(AssignationOperator, dumpPostLambdaType) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS));
-    ASSERT_EQ(nullptr, ao1.dumpPostLambdaType(nullptr, nullptr, COLLECTOR, nullptr));
-    ASSERT_TRUE(COLLECTOR->hasErrors());
-    COLLECTOR->flush();
-}
+#endif //TEST_TOOLS_H

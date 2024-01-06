@@ -42,11 +42,7 @@ namespace filc::ast {
         return _operator;
     }
 
-    BinaryCalcul::~BinaryCalcul() {
-        delete _left_expression;
-        delete _operator;
-        delete _right_expression;
-    }
+    BinaryCalcul::~BinaryCalcul() = default;
 
     auto BinaryCalcul::resolveType(filc::environment::Environment *environment,
                                    filc::message::MessageCollector *collector,

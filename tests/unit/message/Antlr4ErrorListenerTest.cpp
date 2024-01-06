@@ -21,29 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Antlr4ErrorListener.h"
 #include "test_tools.h"
+#include "FilLexer.h"
 
-TEST(AssignationOperator, constructor) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FRIGHT));
-    ASSERT_CLASSIC_OPERATOR(FRIGHT, ao1.getInnerOperator());
-}
+TEST(Antlr4ErrorListener, syntaxError) {
+    auto listener = filc::message::Antlr4ErrorListener(COLLECTOR);
 
-TEST(AssignationOperator, dump) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUS));
-    ASSERT_STREQ("-=", ao1.dump().c_str());
-}
-
-TEST(AssignationOperator, dumpPreLambdaType) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS));
-    ASSERT_EQ(nullptr, ao1.dumpPreLambdaType(nullptr, nullptr, COLLECTOR, nullptr));
+    antlr4::ANTLRFileStream input;
+    input.loadFromFile(FIXTURES_PATH "/grammar/bool1.fil");
+    filc::grammar::FilLexer lexer(&input);
+    const auto factory = antlr4::CommonTokenFactory::DEFAULT.get();
+    auto token = factory->create(
+            {&lexer, &input},
+            0,
+            "text",
+            0, 0, 0, 0, 0
+    );
+    listener.syntaxError(
+            nullptr,
+            token.get(),
+            0, 0,
+            "Message",
+            nullptr
+    );
     ASSERT_TRUE(COLLECTOR->hasErrors());
-    COLLECTOR->flush();
-}
-
-TEST(AssignationOperator, dumpPostLambdaType) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS));
-    ASSERT_EQ(nullptr, ao1.dumpPostLambdaType(nullptr, nullptr, COLLECTOR, nullptr));
-    ASSERT_TRUE(COLLECTOR->hasErrors());
+    ASSERT_FALSE(COLLECTOR->hasMessages());
     COLLECTOR->flush();
 }

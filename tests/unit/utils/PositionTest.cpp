@@ -45,7 +45,7 @@ TEST(SimplePosition, dump) {
     filc::utils::SimplePosition pos(POSITION_FILE, 12, 10);
 
     const auto *expected =
-            "   \033[1;34m--> \033[0m../../tests/unit/Fixtures/utils/position.txt:12:10\n"
+            "   \033[1;34m--> \033[0m../../../tests/unit/Fixtures/utils/position.txt:12:10\n"
             "\033[1;34m 12 | \033[0m12;abcd\n"
             "\033[1;34m    | \033[0m          \033[31m^\033[0m\n";
 
@@ -74,14 +74,14 @@ TEST(DoublePosition, getContent) {
 TEST(DoublePosition, dump) {
     filc::utils::DoublePosition pos1(POSITION_FILE, 15, 0, 15, 6);
     const auto *expected1 =
-            "   \033[1;34m--> \033[0m../../tests/unit/Fixtures/utils/position.txt:15:0\n"
+            "   \033[1;34m--> \033[0m../../../tests/unit/Fixtures/utils/position.txt:15:0\n"
             "\033[1;34m 15 | \033[0m15;abcd\n"
             "\033[1;34m    | \033[0m\033[31m^^^^^^^\033[0m\n";
     ASSERT_STREQ(expected1, pos1.dump("\033[31m").c_str());
 
     filc::utils::DoublePosition pos2(POSITION_FILE, 3, 1, 6, 5);
     const auto *expected2 =
-            "  \033[1;34m--> \033[0m../../tests/unit/Fixtures/utils/position.txt:3:1\n"
+            "  \033[1;34m--> \033[0m../../../tests/unit/Fixtures/utils/position.txt:3:1\n"
             "\033[1;34m   | \033[0m \033[31mv\033[0m\n"
             "\033[1;34m 3 | \033[0m03;abcd\n"
             "\033[1;34m 4 | \033[0m04;abcd\n"

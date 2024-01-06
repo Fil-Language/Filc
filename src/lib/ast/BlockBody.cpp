@@ -27,11 +27,7 @@ namespace filc::ast {
     BlockBody::BlockBody(const std::vector<AbstractExpression *> &expressions)
             : _expressions(expressions) {}
 
-    BlockBody::~BlockBody() {
-        for (auto &expression: _expressions) {
-            delete expression;
-        }
-    }
+    BlockBody::~BlockBody() = default;
 
     auto BlockBody::getExpressions() const -> const std::vector<AbstractExpression *> & {
         return _expressions;

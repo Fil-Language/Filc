@@ -25,12 +25,19 @@
 #include <gmock/gmock.h>
 #include "MessageCollector.h"
 #include <sstream>
+#include "AST.h"
 
 using namespace ::testing;
 
-#define FIXTURES_PATH "../../tests/unit/Fixtures"
+#define FIXTURES_PATH "../../../tests/unit/Fixtures"
 
 #define COLLECTOR filc::message::MessageCollector::getCollector()
+
+#define DEFINE_ENVIRONMENT(name) auto *name = new filc::environment::Environment("name", filc::environment::Environment::getGlobalEnvironment())
+
+#define DEFINE_LLVM auto *context = new llvm::LLVMContext; \
+                    auto *module = new llvm::Module("module", *context); \
+                    auto *builder = new llvm::IRBuilder<>(*context)
 
 #define ASSERT_TYPE(expected, type) ASSERT_STREQ(expected, type->dump().c_str())
 
@@ -56,3 +63,27 @@ using namespace ::testing;
     std::string result(std::istreambuf_iterator<char>(stream), {}); \
     ASSERT_STREQ(expected, result.c_str()); \
     }
+
+class TestExpression : public filc::ast::AbstractExpression {
+public:
+    TestExpression();
+
+    auto withExpressionType(const std::shared_ptr<filc::ast::AbstractType> &expression_type) -> TestExpression &;
+
+    auto resolveType(filc::environment::Environment *environment,
+                     filc::message::MessageCollector *collector,
+                     const std::shared_ptr<filc::ast::AbstractType> &preferred_type) -> void override;
+
+    [[nodiscard]] auto isResolveTypeCalled() const -> bool;
+
+    auto addNameToEnvironment(filc::environment::Environment *environment) const -> void override;
+
+    auto generateIR(filc::message::MessageCollector *collector,
+                    filc::environment::Environment *environment,
+                    llvm::LLVMContext *context,
+                    llvm::Module *module,
+                    llvm::IRBuilder<> *builder) const -> llvm::Value * override;
+
+private:
+    bool _resolveType_called;
+};

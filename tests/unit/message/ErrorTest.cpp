@@ -46,7 +46,7 @@ TEST(Error, print) {
                                       new filc::utils::SimplePosition(FIXTURES_PATH "/utils/position.txt", 5, 2));
     auto expected =
             "\033[1;31mERROR\033[0m\033[1m: My error\033[0m\n"
-            "  \033[1;34m--> \033[0m../../tests/unit/Fixtures/utils/position.txt:5:2\n"
+            "  \033[1;34m--> \033[0m../../../tests/unit/Fixtures/utils/position.txt:5:2\n"
             "\033[1;34m 5 | \033[0m05;abcd\n"
             "\033[1;34m   | \033[0m  \033[1;31m^\033[0m\n";
     ASSERT_MESSAGE_CONTENT(expected, error);

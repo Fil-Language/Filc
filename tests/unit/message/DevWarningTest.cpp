@@ -38,7 +38,7 @@ TEST(DevWarning, print) {
     ), "My dev warning");
     auto expected =
             "\033[1;36mDEV WARNING[5]\033[0m\033[1m: My dev warning\n"
-            "   \033[1;34m--> \033[0m../../tests/unit/Fixtures/utils/position.txt:12:3\n"
+            "   \033[1;34m--> \033[0m../../../tests/unit/Fixtures/utils/position.txt:12:3\n"
             "\033[1;34m 12 | \033[0m12;abcd\n"
             "\033[1;34m    | \033[0m   \033[1;36m^\033[0m\n";
     ASSERT_MESSAGE_CONTENT(expected, dev_warning);

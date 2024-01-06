@@ -24,6 +24,7 @@
 #include "AST.h"
 #include "test_tools.h"
 #include "Parser.h"
+#include "FilLexer.h"
 
 TEST(CharacterLiteral, constructor) {
     filc::ast::CharacterLiteral cl1('a');
@@ -31,10 +32,26 @@ TEST(CharacterLiteral, constructor) {
 }
 
 TEST(CharacterLiteral, stringToChar) {
-    ASSERT_EQ('a', filc::ast::CharacterLiteral::stringToChar("'a'"));
-    ASSERT_EQ('5', filc::ast::CharacterLiteral::stringToChar("'5'"));
-    ASSERT_EQ('\n', filc::ast::CharacterLiteral::stringToChar("'\\n'"));
-    ASSERT_EQ('\t', filc::ast::CharacterLiteral::stringToChar("'\\t'"));
+    ASSERT_EQ('a', filc::ast::CharacterLiteral::stringToChar("'a'", nullptr));
+    ASSERT_EQ('5', filc::ast::CharacterLiteral::stringToChar("'5'", nullptr));
+    ASSERT_EQ('\n', filc::ast::CharacterLiteral::stringToChar("'\\n'", nullptr));
+    ASSERT_EQ('\t', filc::ast::CharacterLiteral::stringToChar("'\\t'", nullptr));
+    ASSERT_EQ('\0', filc::ast::CharacterLiteral::stringToChar("abcdefghijklmnopqrstuvwxyz", nullptr));
+    ASSERT_FALSE(COLLECTOR->hasErrors());
+
+    antlr4::ANTLRFileStream input;
+    input.loadFromFile(FIXTURES_PATH "/grammar/bool1.fil");
+    filc::grammar::FilLexer lexer(&input);
+    const auto factory = antlr4::CommonTokenFactory::DEFAULT.get();
+    auto token = factory->create(
+            {&lexer, &input},
+            0,
+            "text",
+            0, 0, 0, 0, 0
+    );
+    ASSERT_EQ('\0', filc::ast::CharacterLiteral::stringToChar("abcdefghijklmnopqrstuvwxyz", token.get()));
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
 }
 
 TEST(CharacterLiteral, resolveType) {
