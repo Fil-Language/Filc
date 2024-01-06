@@ -1,6 +1,10 @@
 ## Describe your changes
 
+...
+
 ## Related issue reference
+
+...
 
 ## Checklist before requesting a review
 
