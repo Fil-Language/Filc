@@ -45,6 +45,7 @@ add_library(compiler_lib
         utils/OptionsParser.cpp
         utils/Position.cpp
         utils/tools.cpp
+        utils/command/Command.cpp
         # === ANTLR ===
         ${ANTLR_Lexer_CXX_OUTPUTS}
         ${ANTLR_Parser_CXX_OUTPUTS}
@@ -96,6 +97,7 @@ add_library(compiler_lib
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
         utils
+        utils/command
         message
         grammar
         ast
