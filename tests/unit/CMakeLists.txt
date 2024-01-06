@@ -5,6 +5,7 @@ add_executable(unit-tests
         utils/PositionTest.cpp
         utils/ToolsTest.cpp
         utils/command/CommandTest.cpp
+        utils/command/CommandCollectorTest.cpp
         # === Message ===
         message/MessageTest.cpp
         message/MessageCollectorTest.cpp

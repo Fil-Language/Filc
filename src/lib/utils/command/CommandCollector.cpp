@@ -21,47 +21,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "Command.h"
+#include "CommandCollector.h"
 
-#include <utility>
 #include <algorithm>
-#include <stdexcept>
 #include <iostream>
 
 using namespace std;
 using namespace filc::utils::command;
 
-Command::Command(std::string name, std::string description, const std::vector<std::string> &aliases)
-        : _name(std::move(name)), _description(std::move(description)), _aliases(aliases) {}
+CommandCollector::CommandCollector() = default;
 
-auto Command::getName() const -> const std::string & {
-    return _name;
+auto CommandCollector::getCommands() const -> const vector<unique_ptr<Command>> & {
+    return _commands;
 }
 
-auto Command::getDescription() const -> const std::string & {
-    return _description;
-}
+auto CommandCollector::addCommand(Command *command_added) -> bool {
+    if (!any_of(_commands.begin(), _commands.end(), [&command_added](const unique_ptr<Command> &command) -> bool {
+        return command->getName() == command_added->getName();
+    })) {
+        _commands.push_back(unique_ptr<Command>(command_added));
 
-auto Command::getAliases() const -> const std::vector<std::string> & {
-    return _aliases;
-}
-
-auto Command::matchName(const std::string &name) const -> bool {
-    if (_name == name) {
         return true;
     }
 
-    return any_of(_aliases.begin(), _aliases.end(), [&name](const auto &alias) -> bool {
-        return alias == name;
-    });
+    return false;
 }
 
-auto Command::help() const -> std::string {
-    throw logic_error("Command::help not implemented. Should be override by child class");
+auto CommandCollector::run(int argc, char **argv) -> int {
+    argc--; // Remove name of executable
+    argv++;
+
+    if (argc == 0) {
+        return runHelpCommand();
+    }
+
+    const string command_name = argv[0];
+    auto command = find_if(
+            _commands.begin(), _commands.end(),
+            [&command_name](const unique_ptr<Command> &command) -> bool {
+                return command->matchName(command_name);
+            }
+    );
+    if (command == _commands.end()) {
+        return runHelpCommand();
+    }
+
+    argc--; // Remove name of command
+    argv++;
+
+    return (*command)->run(argc, argv);
 }
 
-auto Command::run(int argc, char **argv) -> int {
-    cout << "\033[31m" << "Command::run not implemented. Should be override by child class" << "\033[0m" << '\n';
+auto CommandCollector::runHelpCommand() const -> int {
+    cout << "\033[31m" << "Help command not implemented" << "\033[0m" << '\n';
 
     return 2;
 }
