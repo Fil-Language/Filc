@@ -63,6 +63,10 @@ TEST(Command, childClass) {
     ASSERT_STREQ("custom", cc1.getName().c_str());
     ASSERT_STREQ("My custom command", cc1.getDescription().c_str());
     ASSERT_THAT(cc1.getAliases(), ElementsAre("c", "custom-command"));
+    ASSERT_TRUE(cc1.matchName("custom"));
+    ASSERT_TRUE(cc1.matchName("c"));
+    ASSERT_TRUE(cc1.matchName("custom-command"));
+    ASSERT_FALSE(cc1.matchName("help"));
     ASSERT_STREQ("Help of custom command", cc1.help().c_str());
     ASSERT_EQ(0, cc1.run());
 }
