@@ -30,6 +30,7 @@ using namespace ::testing;
                      "License: MIT\n" \
                      "Usage: `filc <command>`\n" \
                      "\n" \
+                     "\tversion\tDisplay version of compiler\n" \
                      "\thelp\tDisplay this help message\n" \
                      "\n" \
                      "Use `filc help <command>` to see specific help of command\n"
@@ -42,4 +43,19 @@ TEST(Options, nothing) {
 TEST(Options, help) {
     const auto result1 = run_with_args("help");
     ASSERT_STREQ(HELP_MESSAGE, result1.c_str());
+}
+
+TEST(Options, version) {
+    const auto result1 = run_with_args("help version");
+    ASSERT_STREQ("Display version of compiler\n", result1.c_str());
+
+    const auto result2 = run_with_args("version");
+    ASSERT_STREQ("     _______ __    \n"
+                 "    / ____(_) /____\n"
+                 "   / /_  / / / ___/\n"
+                 "  / __/ / / / /__  \n"
+                 " /_/   /_/_/\\___/  \n"
+                 "                   \n"
+                 "Filc version 0.3.0 - 3000\n"
+                 "License: MIT\n", result2.c_str());
 }

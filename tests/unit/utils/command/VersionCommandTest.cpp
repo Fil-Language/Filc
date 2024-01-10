@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2023-Present Kevin Traini
+ * Copyright (c) 2024-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "VERSION.h"
-#include "CommandCollector.h"
 #include "VersionCommand.h"
+#include "test_tools.h"
 
-using namespace filc;
+using namespace filc::utils::command;
 
-auto main(int argc, char **argv) -> int {
-    utils::command::CommandCollector command_collector;
-    command_collector.addCommand(new utils::command::VersionCommand(FILC_VERSION_STRING, FILC_VERSION, FILC_LICENSE));
+TEST(VersionCommand, help) {
+    VersionCommand vc1("", 0, "");
 
-    return command_collector.run(argc, argv);
-    /* auto options = filc::utils::OptionsParser();
+    ASSERT_STREQ("Display version of compiler\n", vc1.help().c_str());
+}
 
-     if (!options.parse(argc, argv)) {
-         return EXIT_FAILURE;
-     }
+TEST(VersionCommand, run) {
+    VersionCommand vc1("1.3.2", 54, "My License");
 
-     auto compiler = filc::FilCompiler(options);
-
-     return compiler.compile();*/
+    ASSERT_OUTPUT("     _______ __    \n"
+                  "    / ____(_) /____\n"
+                  "   / /_  / / / ___/\n"
+                  "  / __/ / / / /__  \n"
+                  " /_/   /_/_/\\___/  \n"
+                  "                   \n"
+                  "Filc version 1.3.2 - 54\n"
+                  "License: My License\n", ASSERT_EQ(0, vc1.run(0, {})));
 }
