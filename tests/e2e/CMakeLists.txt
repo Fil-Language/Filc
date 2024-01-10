@@ -1,6 +1,6 @@
 add_executable(e2e-tests
         test_tools.h
-        options.cpp
+        commands.cpp
 )
 add_dependencies(e2e-tests filc)
 target_include_directories(e2e-tests PUBLIC .)

@@ -47,6 +47,7 @@ add_library(compiler_lib
         utils/tools.cpp
         utils/command/Command.cpp
         utils/command/CommandCollector.cpp
+        utils/command/HelpCommand.cpp
         # === ANTLR ===
         ${ANTLR_Lexer_CXX_OUTPUTS}
         ${ANTLR_Parser_CXX_OUTPUTS}

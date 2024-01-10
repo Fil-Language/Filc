@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2023-Present Kevin Traini
+ * Copyright (c) 2024-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#ifndef FILC_HELPCOMMAND_H
+#define FILC_HELPCOMMAND_H
+
+#include "Command.h"
 #include "CommandCollector.h"
 
-auto main(int argc, char **argv) -> int {
-    filc::utils::command::CommandCollector command_collector;
+namespace filc::utils::command {
+    class HelpCommand : public Command {
+    public:
+        explicit HelpCommand(const CommandCollector *collector);
 
-    return command_collector.run(argc, argv);
-    /* auto options = filc::utils::OptionsParser();
+        [[nodiscard]] auto help() const -> std::string override;
 
-     if (!options.parse(argc, argv)) {
-         return EXIT_FAILURE;
-     }
+        [[nodiscard]] auto run(int argc, char **argv) -> int override;
 
-     auto compiler = filc::FilCompiler(options);
-
-     return compiler.compile();*/
+    private:
+        const CommandCollector *_collector;
+    };
 }
+
+#endif //FILC_HELPCOMMAND_H
