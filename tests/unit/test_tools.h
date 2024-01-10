@@ -64,6 +64,18 @@ using namespace ::testing;
     ASSERT_STREQ(expected, result.c_str()); \
     }
 
+#define ASSERT_OUTPUT(expected, expression) { \
+    std::stringstream redirect_stream; \
+    std::streambuf* oldbuf = std::cout.rdbuf(redirect_stream.rdbuf()); \
+    expression; \
+    std::string result, line; \
+    while (std::getline(redirect_stream, line)) { \
+        result += line + "\n"; \
+    } \
+    ASSERT_STREQ(expected, result.c_str()); \
+    std::cout.rdbuf(oldbuf); \
+    }
+
 class TestExpression : public filc::ast::AbstractExpression {
 public:
     TestExpression();

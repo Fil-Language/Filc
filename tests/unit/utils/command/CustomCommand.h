@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2023-Present Kevin Traini
+ * Copyright (c) 2024-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "CommandCollector.h"
+#ifndef FILC_CUSTOMCOMMAND_H
+#define FILC_CUSTOMCOMMAND_H
 
-auto main(int argc, char **argv) -> int {
-    filc::utils::command::CommandCollector command_collector;
+#include "Command.h"
 
-    return command_collector.run(argc, argv);
-    /* auto options = filc::utils::OptionsParser();
+class CustomCommand : public filc::utils::command::Command {
+public:
+    CustomCommand() : Command("custom", "My custom command", {"c", "custom-command"}) {}
 
-     if (!options.parse(argc, argv)) {
-         return EXIT_FAILURE;
-     }
+    [[nodiscard]] auto help() const -> std::string override {
+        return "Help of custom command";
+    }
 
-     auto compiler = filc::FilCompiler(options);
+    auto run(int argc, char **argv) -> int override {
+        return 0;
+    }
+};
 
-     return compiler.compile();*/
-}
+#endif //FILC_CUSTOMCOMMAND_H

@@ -22,22 +22,10 @@
  * SOFTWARE.
  */
 #include "CommandCollector.h"
+#include "CustomCommand.h"
 #include "test_tools.h"
 
 using namespace filc::utils::command;
-
-class CustomCommand : public Command {
-public:
-    CustomCommand() : Command("custom", "My custom command", {"c", "custom-command"}) {}
-
-    [[nodiscard]] auto help() const -> std::string override {
-        return "Help of custom command";
-    }
-
-    auto run(int argc, char **argv) -> int override {
-        return 0;
-    }
-};
 
 TEST(CommandCollector, constructor) {
     CommandCollector cc1;
@@ -48,7 +36,7 @@ TEST(CommandCollector, constructor) {
     ASSERT_THAT(cc1.getCommands(), SizeIs(1));
 
     char *argv0[] = {"filc"};
-    ASSERT_EQ(2, cc1.run(1, argv0));
+    ASSERT_EQ(0, cc1.run(1, argv0));
     char *argv1[] = {"filc", "custom"};
     ASSERT_EQ(0, cc1.run(2, argv1));
     char *argv2[] = {"filc", "c"};
@@ -56,5 +44,13 @@ TEST(CommandCollector, constructor) {
     char *argv3[] = {"filc", "custom-command"};
     ASSERT_EQ(0, cc1.run(2, argv3));
     char *argv4[] = {"filc", "non-existing-command"};
-    ASSERT_EQ(2, cc1.run(2, argv4));
+    ASSERT_EQ(1, cc1.run(2, argv4));
+    char *argv5[] = {"filc", "help"};
+    ASSERT_EQ(0, cc1.run(2, argv5));
+    char *argv6[] = {"filc", "help", "custom"};
+    ASSERT_EQ(0, cc1.run(3, argv6));
+    char *argv7[] = {"filc", "help", "c"};
+    ASSERT_EQ(0, cc1.run(3, argv7));
+    char *argv8[] = {"filc", "help", "non-existing-command"};
+    ASSERT_EQ(1, cc1.run(3, argv8));
 }

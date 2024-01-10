@@ -42,7 +42,7 @@ namespace filc::utils::command {
     private:
         std::vector<std::unique_ptr<Command>> _commands;
 
-        auto runHelpCommand() const -> int;
+        auto runHelpCommand(int argc, char **argv) const -> int;
     };
 }
 
