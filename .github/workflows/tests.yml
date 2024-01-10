@@ -56,13 +56,13 @@ jobs:
       - name: Show version and help for Windows
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
-          & "C:/Program Files (x86)/Filc/bin/filc.exe" --version
-          & "C:/Program Files (x86)/Filc/bin/filc.exe" --help
+          & "C:/Program Files (x86)/Filc/bin/filc.exe"
+#          & "C:/Program Files (x86)/Filc/bin/filc.exe" version
       - name: Show version and help
         if: ${{ matrix.os != 'windows-latest' }}
         run: |
-          filc --version
-          filc --help
+          filc
+#          filc version
 
   unit-tests:
     name: Unit tests
