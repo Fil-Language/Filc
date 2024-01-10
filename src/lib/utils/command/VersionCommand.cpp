@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2023-Present Kevin Traini
+ * Copyright (c) 2024-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "VERSION.h"
-#include "CommandCollector.h"
 #include "VersionCommand.h"
 
-using namespace filc;
+#include <iostream>
 
-auto main(int argc, char **argv) -> int {
-    utils::command::CommandCollector command_collector;
-    command_collector.addCommand(new utils::command::VersionCommand(FILC_VERSION_STRING, FILC_VERSION, FILC_LICENSE));
+using namespace std;
+using namespace filc::utils::command;
 
-    return command_collector.run(argc, argv);
-    /* auto options = filc::utils::OptionsParser();
+VersionCommand::VersionCommand(const string &version, unsigned int version_numer, const std::string &license)
+        : Command("version", "Display version of compiler", {}), _version(version), _version_number(version_numer),
+          _license(license) {}
 
-     if (!options.parse(argc, argv)) {
-         return EXIT_FAILURE;
-     }
+auto VersionCommand::help() const -> string {
+    return getDescription() + '\n';
+}
 
-     auto compiler = filc::FilCompiler(options);
+auto VersionCommand::run(int argc, char **argv) -> int {
+    cout << "     _______ __    \n"
+            "    / ____(_) /____\n"
+            "   / /_  / / / ___/\n"
+            "  / __/ / / / /__  \n"
+            " /_/   /_/_/\\___/  \n"
+            "                   "
+         << '\n';
+    cout << "Filc version " << _version << " - " << _version_number << '\n';
+    cout << "License: " << _license << '\n';
 
-     return compiler.compile();*/
+    return 0;
 }
