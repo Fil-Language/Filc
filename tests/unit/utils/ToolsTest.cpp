@@ -21,8 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "test_tools.h"
 #include "tools.h"
+#include "test_tools.h"
+
+using namespace filc::utils;
 
 TEST(tools, splitString) {
     auto result = filc::utils::splitString("", '.');
@@ -117,4 +119,17 @@ TEST(tools, parseEscapedChar) {
 
 TEST(tools, parseEscapedString) {
     ASSERT_STREQ("Hello\nWorld!", filc::utils::parseEscapedString("Hello\\nWorld!").c_str());
+}
+
+TEST(tools, trim) {
+    ASSERT_STREQ("abcd", trim("abcd").c_str());
+    ASSERT_STREQ("abcd", trim(" abcd").c_str());
+    ASSERT_STREQ("abcd", trim("    abcd").c_str());
+    ASSERT_STREQ("abcd", trim("abcd ").c_str());
+    ASSERT_STREQ("abcd", trim("abcd     ").c_str());
+    ASSERT_STREQ("abcd", trim(" abcd ").c_str());
+    ASSERT_STREQ("abcd", trim("   abcd   ").c_str());
+    ASSERT_STREQ("ab cd", trim("   ab cd   ").c_str());
+    ASSERT_STREQ("ab   cd", trim("   ab   cd   ").c_str());
+    ASSERT_STREQ("a  b   c d", trim("   a  b   c d   ").c_str());
 }

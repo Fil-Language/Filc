@@ -15,6 +15,8 @@ project(
         LANGUAGES CXX C
 )
 
+include(FetchContent)
+
 # _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 # Code Coverage configuration
 

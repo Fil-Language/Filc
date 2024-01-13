@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2023-Present Kevin Traini
+ * Copyright (c) 2024-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "VERSION.h"
-#include "CommandCollector.h"
-#include "VersionCommand.h"
 #include "InitCommand.h"
+#include "test_tools.h"
 
-using namespace filc;
+using namespace filc::utils::command;
 
-auto main(int argc, char **argv) -> int {
-    utils::command::CommandCollector command_collector;
-    command_collector.addCommand(new utils::command::InitCommand);
-    command_collector.addCommand(new utils::command::VersionCommand(FILC_VERSION_STRING, FILC_VERSION, FILC_LICENSE));
-
-    return command_collector.run(argc, argv);
-    /* auto options = filc::utils::OptionsParser();
-
-     if (!options.parse(argc, argv)) {
-         return EXIT_FAILURE;
-     }
-
-     auto compiler = filc::FilCompiler(options);
-
-     return compiler.compile();*/
+TEST(InitCommand, formatProjectName) {
+    ASSERT_STREQ("project", InitCommand::formatProjectName("project").c_str());
+    ASSERT_STREQ("project", InitCommand::formatProjectName(" project   ").c_str());
+    ASSERT_STREQ("my_project", InitCommand::formatProjectName(" my project   ").c_str());
+    ASSERT_STREQ("my_project", InitCommand::formatProjectName(" my/project   ").c_str());
+    ASSERT_STREQ("my-project", InitCommand::formatProjectName(" my-project   ").c_str());
 }

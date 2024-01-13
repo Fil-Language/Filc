@@ -9,6 +9,8 @@ Here are listed all external dependencies used in this project.
 | LLVM           | https://llvm.org/                    |     ![15](https://img.shields.io/badge/15-green)     |
 | Antlr          | https://www.antlr.org/               | ![4.13.1](https://img.shields.io/badge/4.13.1-green) |
 | Options parser | https://github.com/jarro2783/cxxopts |  ![3.0.0](https://img.shields.io/badge/3.0.0-green)  |
+| yaml-cpp       | https://github.com/jbeder/yaml-cpp/  |  ![0.7.0](https://img.shields.io/badge/0.7.0-green)  |
+| enquirer       | https://github.com/Gashmob/Enquirer  |  ![1.0.2](https://img.shields.io/badge/1.0.2-green)  |
 
 ## Tests
 

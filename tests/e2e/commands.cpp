@@ -30,6 +30,7 @@ using namespace ::testing;
                      "License: MIT\n" \
                      "Usage: `filc <command>`\n" \
                      "\n" \
+                     "\tinit\tInit a new Fil project\n" \
                      "\tversion\tDisplay version of compiler\n" \
                      "\thelp\tDisplay this help message\n" \
                      "\n" \

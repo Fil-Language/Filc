@@ -8,6 +8,7 @@ add_executable(unit-tests
         utils/command/CommandCollectorTest.cpp
         utils/command/HelpCommandTest.cpp
         utils/command/VersionCommandTest.cpp
+        utils/command/InitCommandTest.cpp
         # === Message ===
         message/MessageTest.cpp
         message/MessageCollectorTest.cpp

@@ -23,6 +23,7 @@
  */
 #include "tools.h"
 #include <fstream>
+#include <algorithm>
 
 namespace filc::utils {
     auto parseEscapedChar(const std::string &escaped_char) -> char {
@@ -111,5 +112,14 @@ namespace filc::utils {
         }
 
         return result.substr(0, result.length() - delimiter.length());
+    }
+
+    auto trim(const std::string &input) -> std::string {
+        static const std::string WHITESPACE = " \n\r\t\f\v";
+        const auto begin = input.find_first_not_of(WHITESPACE);
+        const auto copy = input.substr(begin);
+        const auto end = copy.find_last_not_of(WHITESPACE);
+
+        return copy.substr(0, end + 1);
     }
 }
