@@ -24,13 +24,14 @@
 #include "VersionCommand.h"
 
 #include <iostream>
+#include <utility>
 
 using namespace std;
 using namespace filc::utils::command;
 
-VersionCommand::VersionCommand(const string &version, unsigned int version_numer, const std::string &license)
-        : Command("version", "Display version of compiler", {}), _version(version), _version_number(version_numer),
-          _license(license) {}
+VersionCommand::VersionCommand(string version, unsigned int version_number, string license)
+    : Command("version", "Display version of compiler", {}), _version(std::move(version)), _version_number(version_number),
+      _license(std::move(license)) {}
 
 auto VersionCommand::help() const -> string {
     return getDescription() + '\n';

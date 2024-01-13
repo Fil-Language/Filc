@@ -9,9 +9,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Don't use e.g. GNU extension (like -std=gnu++11) for portability
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION FILC_VERSION)
+
 project(
         Filc
-        VERSION 0.3.0
+        VERSION ${FILC_VERSION}
         LANGUAGES CXX C
 )
 
@@ -28,12 +30,12 @@ if (CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
             -O0        # no optimization
             -g         # generate debug info
             --coverage # sets all required flags
-            )
+    )
     target_link_options(additional_config INTERFACE --coverage)
 else ()
     target_compile_options(additional_config INTERFACE
             -O3        # full optimization
-            )
+    )
 endif ()
 
 add_subdirectory(src)

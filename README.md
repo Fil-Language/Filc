@@ -7,7 +7,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/749c60420a9244dbac4ce1e0bd594f1e)](https://www.codacy.com/gh/Fil-Language/Filc/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Fil-Language/Filc&amp;utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/Fil-Language/Filc/branch/master/graph/badge.svg?token=BRT1CEUTW9)](https://codecov.io/gh/Fil-Language/Filc)
 
-Fil language compiler (version in `src/lib/utils/VERSION.h`)
+Fil language compiler (version in [VERSION](VERSION))
 
 Have used `figlet -f slant "Filc"` for the version message.
 

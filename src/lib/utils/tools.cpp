@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 #include "tools.h"
-#include <fstream>
 #include <algorithm>
+#include <fstream>
 
 namespace filc::utils {
     auto parseEscapedChar(const std::string &escaped_char) -> char {
@@ -116,10 +116,24 @@ namespace filc::utils {
 
     auto trim(const std::string &input) -> std::string {
         static const std::string WHITESPACE = " \n\r\t\f\v";
-        const auto begin = input.find_first_not_of(WHITESPACE);
-        const auto copy = input.substr(begin);
-        const auto end = copy.find_last_not_of(WHITESPACE);
+        const auto begin                    = input.find_first_not_of(WHITESPACE);
+        const auto copy                     = input.substr(begin);
+        const auto end                      = copy.find_last_not_of(WHITESPACE);
 
         return copy.substr(0, end + 1);
     }
-}
+
+    auto computeVersionNumber(const std::string &version) -> unsigned int {
+        auto parts = splitString(version, '.');
+        if (parts.size() != 3) {
+            return 0;
+        }
+
+        int major      = std::stoi(parts[0]);
+        int minor      = std::stoi(parts[1]);
+        auto sub_parts = splitString(parts[2], '-');
+        int patch      = std::stoi(sub_parts[0]);
+
+        return ((major) * 1000000 + (minor) * 1000 + (patch));
+    }
+}// namespace filc::utils

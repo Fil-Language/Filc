@@ -144,5 +144,7 @@ target_include_directories(compiler_lib PUBLIC
         ${LLVM_INCLUDE_DIRS}
         ../../lib)
 target_link_libraries(compiler_lib PUBLIC additional_config antlr4_static ${llvm_libs} yaml-cpp enquirer)
-
+target_compile_definitions(compiler_lib
+        PUBLIC FILC_VERSION="${FILC_VERSION}"
+)
 target_compile_options(compiler_lib PUBLIC -Wall)

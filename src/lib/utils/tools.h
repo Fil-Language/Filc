@@ -41,6 +41,8 @@ namespace filc::utils {
     auto joinString(const std::vector<std::string> &source, const std::string &delimiter) -> std::string;
 
     auto trim(const std::string &input) -> std::string;
-}
 
-#endif //FILC_TOOLS_H
+    auto computeVersionNumber(const std::string &version) -> unsigned int;
+}// namespace filc::utils
+
+#endif//FILC_TOOLS_H
