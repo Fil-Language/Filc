@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2023-Present Kevin Traini
+ * Copyright (c) 2024-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "VERSION.h"
-#include "CommandCollector.h"
-#include "VersionCommand.h"
-#include "InitCommand.h"
+#ifndef FILC_INITCOMMAND_H
+#define FILC_INITCOMMAND_H
 
-using namespace filc;
+#include "Command.h"
 
-auto main(int argc, char **argv) -> int {
-    utils::command::CommandCollector command_collector;
-    command_collector.addCommand(new utils::command::InitCommand);
-    command_collector.addCommand(new utils::command::VersionCommand(FILC_VERSION_STRING, FILC_VERSION, FILC_LICENSE));
+namespace filc::utils::command {
+    class InitCommand : public Command {
+    public:
+        InitCommand();
 
-    return command_collector.run(argc, argv);
-    /* auto options = filc::utils::OptionsParser();
+        [[nodiscard]] auto help() const -> std::string override;
 
-     if (!options.parse(argc, argv)) {
-         return EXIT_FAILURE;
-     }
+        [[nodiscard]] auto run(int argc, char **argv) -> int override;
 
-     auto compiler = filc::FilCompiler(options);
-
-     return compiler.compile();*/
+        [[nodiscard]] static auto formatProjectName(const std::string &project_name) -> std::string;
+    };
 }
+
+#endif //FILC_INITCOMMAND_H
