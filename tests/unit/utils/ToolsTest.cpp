@@ -133,3 +133,13 @@ TEST(tools, trim) {
     ASSERT_STREQ("ab   cd", trim("   ab   cd   ").c_str());
     ASSERT_STREQ("a  b   c d", trim("   a  b   c d   ").c_str());
 }
+
+TEST(tools, computeVersionNumber) {
+    ASSERT_EQ(0, computeVersionNumber(""));
+    ASSERT_EQ(0, computeVersionNumber("0.0.0"));
+    ASSERT_EQ(1, computeVersionNumber("0.0.1"));
+    ASSERT_EQ(1000, computeVersionNumber("0.1.0"));
+    ASSERT_EQ(1000000, computeVersionNumber("1.0.0"));
+    ASSERT_EQ(1002003, computeVersionNumber("1.2.3"));
+    ASSERT_EQ(1002003, computeVersionNumber("1.2.3-rc1"));
+}
