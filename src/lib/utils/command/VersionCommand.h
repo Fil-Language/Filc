@@ -29,7 +29,7 @@
 namespace filc::utils::command {
     class VersionCommand : public Command {
     public:
-        VersionCommand(const std::string &version, unsigned int version_numer, const std::string &license);
+        VersionCommand(std::string version, unsigned int version_number, std::string license);
 
         [[nodiscard]] auto help() const -> std::string override;
 
@@ -40,6 +40,6 @@ namespace filc::utils::command {
         const unsigned int _version_number;
         const std::string _license;
     };
-}
+}// namespace filc::utils::command
 
-#endif //FILC_VERSIONCOMMAND_H
+#endif//FILC_VERSIONCOMMAND_H

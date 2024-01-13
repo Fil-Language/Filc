@@ -21,17 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "VERSION.h"
 #include "CommandCollector.h"
-#include "VersionCommand.h"
 #include "InitCommand.h"
+#include "VersionCommand.h"
+#include "tools.h"
 
 using namespace filc;
 
 auto main(int argc, char **argv) -> int {
     utils::command::CommandCollector command_collector;
     command_collector.addCommand(new utils::command::InitCommand);
-    command_collector.addCommand(new utils::command::VersionCommand(FILC_VERSION_STRING, FILC_VERSION, FILC_LICENSE));
+    command_collector.addCommand(new utils::command::VersionCommand(FILC_VERSION, utils::computeVersionNumber(FILC_VERSION), "MIT"));
 
     return command_collector.run(argc, argv);
     /* auto options = filc::utils::OptionsParser();
