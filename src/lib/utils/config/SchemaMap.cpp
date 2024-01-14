@@ -35,6 +35,10 @@ SchemaMap::~SchemaMap() {
     }
 }
 
+auto SchemaMap::has(const std::string &key) const -> bool {
+    return _nodes.find(key) != _nodes.end();
+}
+
 auto SchemaMap::get(const string &key) const -> AbstractSchema * {
     auto it = _nodes.find(key);
     if (it != _nodes.end()) {
@@ -46,4 +50,15 @@ auto SchemaMap::get(const string &key) const -> AbstractSchema * {
 
 auto SchemaMap::set(const string &key, AbstractSchema *value) -> void {
     _nodes[key] = value;
+}
+
+auto SchemaMap::keys() const -> vector<string> {
+    vector<string> result;
+
+    result.reserve(_nodes.size());
+    for (const auto &node: _nodes) {
+        result.push_back(node.first);
+    }
+
+    return result;
 }

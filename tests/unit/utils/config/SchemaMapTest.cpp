@@ -31,9 +31,13 @@ using namespace filc::utils::config;
 TEST(SchemaMap, get) {
     SchemaMap map;
     map.set("my_key", new CustomSchema1(5));
+    ASSERT_FALSE(map.has("non-existing-key"));
     ASSERT_EQ(nullptr, map.get("non-existing-key"));
+    ASSERT_TRUE(map.has("my_key"));
     auto value = map.get("my_key");
     ASSERT_NE(nullptr, value);
     ASSERT_NE(nullptr, value->as<CustomSchema1>());
     ASSERT_EQ(5, value->as<CustomSchema1>()->_value);
+    ASSERT_THAT(map.keys(), SizeIs(1));
+    ASSERT_STREQ("my_key", map.keys()[0].c_str());
 }

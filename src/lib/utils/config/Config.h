@@ -21,58 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef FILC_SCHEMA_H
-#define FILC_SCHEMA_H
+#ifndef FILC_CONFIG_H
+#define FILC_CONFIG_H
 
-#include <map>
-#include <string>
-#include <vector>
+#include "Schema.h"
+#include <memory>
 
 namespace filc::utils::config {
-    class AbstractSchema {
+    class Config final {
     public:
-        template<typename T>
-        auto as() -> T * {
-            return dynamic_cast<T *>(this);
-        }
+        static auto init(const std::string &name) -> void;
 
-        virtual ~AbstractSchema() = default;
+        static auto get() -> Config *;
 
-    protected:
-        AbstractSchema() = default;
-    };
+        [[nodiscard]] auto getName() const -> const std::string &;
 
-    class SchemaMap : public AbstractSchema {
-    public:
-        SchemaMap();
+        auto setName(const std::string &name) -> void;
 
-        ~SchemaMap() override;
+        [[nodiscard]] auto getDescription() const -> const std::string &;
 
-        [[nodiscard]] auto has(const std::string &key) const -> bool;
+        auto setDescription(const std::string &description) -> void;
 
-        [[nodiscard]] auto get(const std::string &key) const -> AbstractSchema *;
+        [[nodiscard]] auto getVersion() const -> const std::string &;
 
-        auto set(const std::string &key, AbstractSchema *value) -> void;
+        auto setVersion(const std::string &version) -> void;
 
-        [[nodiscard]] auto keys() const -> std::vector<std::string>;
+        [[nodiscard]] auto getEntrypoint() const -> const std::string &;
+
+        auto setEntrypoint(const std::string &entrypoint) -> void;
+
+        [[nodiscard]] auto getNamespaces() const -> std::map<std::string, std::string>;
+
+        [[nodiscard]] auto getNamespace(const std::string &name) const -> std::string;
+
+        auto setNamespace(const std::string &name, const std::string &path) -> void;
 
     private:
-        std::map<std::string, AbstractSchema *> _nodes;
-    };
+        static Config *_instance;
+        SchemaMap *_root;
 
-    class SchemaString : public AbstractSchema {
-    public:
-        explicit SchemaString(std::string value);
-
-        ~SchemaString() override;
-
-        [[nodiscard]] auto get() const -> const std::string &;
-
-        auto set(const std::string &value) -> void;
-
-    private:
-        std::string _value;
+        Config();
     };
 }// namespace filc::utils::config
 
-#endif//FILC_SCHEMA_H
+#endif//FILC_CONFIG_H
