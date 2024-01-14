@@ -9,6 +9,9 @@ add_executable(unit-tests
         utils/command/HelpCommandTest.cpp
         utils/command/VersionCommandTest.cpp
         utils/command/InitCommandTest.cpp
+        utils/config/AbstractSchemaTest.cpp
+        utils/config/SchemaMapTest.cpp
+        utils/config/SchemaStringTest.cpp
         # === Message ===
         message/MessageTest.cpp
         message/MessageCollectorTest.cpp
