@@ -61,6 +61,8 @@ namespace filc::utils::config {
         SchemaMap *_root;
 
         Config();
+
+        Config(Config &b);
     };
 }// namespace filc::utils::config
 

@@ -33,6 +33,8 @@ Config *Config::_instance;
 Config::Config()
     : _root(new SchemaMap) {}
 
+Config::Config(Config &b) = default;
+
 auto Config::init(const std::string &name) -> void {
     if (_instance != nullptr) {
         return;
