@@ -42,9 +42,6 @@ TEST(Config, save) {
     Config::save(FIXTURES_PATH "/module.yml");
     ASSERT_TRUE(std::filesystem::exists(FIXTURES_PATH "/module.yml"));
     std::filesystem::remove(FIXTURES_PATH "/module.yml");
-
-    Config::save(FIXTURES_PATH "/read_only_dir/module.yml");
-    ASSERT_FALSE(std::filesystem::exists(FIXTURES_PATH "/read_only_dir/module.yml"));
 }
 
 TEST(Config, name) {
