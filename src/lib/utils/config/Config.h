@@ -30,6 +30,8 @@
 namespace filc::utils::config {
     class Config final {
     public:
+        Config(Config &b);
+
         static auto init(const std::string &name) -> void;
 
         static auto get() -> Config *;
@@ -63,8 +65,6 @@ namespace filc::utils::config {
         SchemaMap *_root;
 
         Config();
-
-        Config(Config &b);
     };
 }// namespace filc::utils::config
 
