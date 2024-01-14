@@ -23,9 +23,10 @@
  */
 #include "InitCommand.h"
 
+#include "Config.h"
 #include "tools.h"
-#include <iostream>
 #include <enquirer.h>
+#include <iostream>
 #include <sys/stat.h>
 
 using namespace std;
@@ -33,7 +34,7 @@ using namespace filc::utils;
 using namespace filc::utils::command;
 
 InitCommand::InitCommand()
-        : Command("init", "Init a new Fil project", {}) {}
+    : Command("init", "Init a new Fil project", {}) {}
 
 auto InitCommand::help() const -> string {
     return "Init a new Fil project by creating a directory an populate it with a config file and an entry point\n"
@@ -52,6 +53,7 @@ auto InitCommand::run(int argc, char **argv) -> int {
     // Create dir
     mkdir(project_name.c_str(), 0755);
     // Create config file
+    config::Config::init(project_name);
     // TODO
     // Create entry point
     // TODO
@@ -74,5 +76,3 @@ auto InitCommand::formatProjectName(const string &project_name) -> string {
 
     return result;
 }
-
-

@@ -84,6 +84,7 @@ add_library(compiler_lib
         utils/command/InitCommand.cpp
         utils/config/SchemaMap.cpp
         utils/config/SchemaString.cpp
+        utils/config/Config.cpp
         # === ANTLR ===
         ${ANTLR_Lexer_CXX_OUTPUTS}
         ${ANTLR_Parser_CXX_OUTPUTS}

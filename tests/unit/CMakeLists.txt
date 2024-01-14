@@ -12,6 +12,7 @@ add_executable(unit-tests
         utils/config/AbstractSchemaTest.cpp
         utils/config/SchemaMapTest.cpp
         utils/config/SchemaStringTest.cpp
+        utils/config/ConfigTest.cpp
         # === Message ===
         message/MessageTest.cpp
         message/MessageCollectorTest.cpp
