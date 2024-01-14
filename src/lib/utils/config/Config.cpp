@@ -23,7 +23,9 @@
  */
 #include "Config.h"
 
+#include <fstream>
 #include <map>
+#include <yaml-cpp/yaml.h>
 
 using namespace std;
 using namespace filc::utils::config;
@@ -52,13 +54,32 @@ auto Config::get() -> Config * {
     return _instance;
 }
 
+auto Config::save(const std::string &filename) -> void {
+    YAML::Node result_yaml;
+    const auto config = get();
+
+    result_yaml["name"]        = config->getName();
+    result_yaml["description"] = config->getDescription();
+    result_yaml["version"]     = config->getVersion();
+    result_yaml["entrypoint"]  = config->getEntrypoint();
+    for (const auto &item: config->getNamespaces()) {
+        result_yaml["namespaces"][item.first] = item.second;
+    }
+
+    ofstream fout(filename);
+    if (!fout.good() || !fout.is_open()) {
+        return;
+    }
+    fout << result_yaml;
+    fout.flush();
+    fout.close();
+}
+
 auto Config::getName() const -> const std::string & {
     return _root->get("name")->as<SchemaString>()->get();
 }
 
 auto Config::setName(const std::string &name) -> void {
-    // TODO: validate name
-
     if (_root->has("name")) {
         _root->get("name")->as<SchemaString>()->set(name);
     } else {
@@ -71,8 +92,6 @@ auto Config::getDescription() const -> const std::string & {
 }
 
 auto Config::setDescription(const std::string &description) -> void {
-    // TODO: validate description
-
     if (_root->has("description")) {
         _root->get("description")->as<SchemaString>()->set(description);
     } else {
@@ -85,8 +104,6 @@ auto Config::getVersion() const -> const std::string & {
 }
 
 auto Config::setVersion(const std::string &version) -> void {
-    // TODO: validate version
-
     if (_root->has("version")) {
         _root->get("version")->as<SchemaString>()->set(version);
     } else {
@@ -99,8 +116,6 @@ auto Config::getEntrypoint() const -> const std::string & {
 }
 
 auto Config::setEntrypoint(const std::string &entrypoint) -> void {
-    // TODO: validate entrypoint
-
     if (_root->has("entrypoint")) {
         _root->get("entrypoint")->as<SchemaString>()->set(entrypoint);
     } else {
@@ -129,8 +144,6 @@ auto Config::getNamespace(const std::string &name) const -> std::string {
 }
 
 auto Config::setNamespace(const std::string &name, const std::string &path) -> void {
-    // TODO: validate name and path
-
     if (!_root->has("namespaces")) {
         _root->set("namespaces", new SchemaMap);
     }

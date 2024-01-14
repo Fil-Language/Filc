@@ -34,6 +34,8 @@ namespace filc::utils::config {
 
         static auto get() -> Config *;
 
+        static auto save(const std::string &filename) -> void;
+
         [[nodiscard]] auto getName() const -> const std::string &;
 
         auto setName(const std::string &name) -> void;

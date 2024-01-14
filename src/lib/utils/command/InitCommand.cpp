@@ -26,6 +26,7 @@
 #include "Config.h"
 #include "tools.h"
 #include <enquirer.h>
+#include <filesystem>
 #include <iostream>
 #include <sys/stat.h>
 
@@ -54,12 +55,12 @@ auto InitCommand::run(int argc, char **argv) -> int {
     mkdir(project_name.c_str(), 0755);
     // Create config file
     config::Config::init(project_name);
-    // TODO
+    config::Config::save(project_name + "/module.yml");
     // Create entry point
     // TODO
 
     // Not implemented, so rmdir
-    rmdir(project_name.c_str());
+    filesystem::remove_all(project_name);
 
     return 2;
 }

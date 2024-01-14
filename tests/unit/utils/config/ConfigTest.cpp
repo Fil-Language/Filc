@@ -24,6 +24,7 @@
 #include "Config.h"
 
 #include "test_tools.h"
+#include <filesystem>
 
 using namespace std;
 using namespace filc::utils::config;
@@ -34,6 +35,16 @@ TEST(Config, init) {
     ASSERT_STREQ("description", Config::get()->getDescription().c_str());
     ASSERT_STREQ("0.1.0", Config::get()->getVersion().c_str());
     ASSERT_STREQ("src/main.fil", Config::get()->getEntrypoint().c_str());
+}
+
+TEST(Config, save) {
+    Config::init("project_name");
+    Config::save(FIXTURES_PATH "/module.yml");
+    ASSERT_TRUE(std::filesystem::exists(FIXTURES_PATH "/module.yml"));
+    std::filesystem::remove(FIXTURES_PATH "/module.yml");
+
+    Config::save(FIXTURES_PATH "/read_only_dir/module.yml");
+    ASSERT_FALSE(std::filesystem::exists(FIXTURES_PATH "/read_only_dir/module.yml"));
 }
 
 TEST(Config, name) {
