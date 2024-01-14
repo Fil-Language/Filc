@@ -82,6 +82,8 @@ add_library(compiler_lib
         utils/command/HelpCommand.cpp
         utils/command/VersionCommand.cpp
         utils/command/InitCommand.cpp
+        utils/config/SchemaMap.cpp
+        utils/config/SchemaString.cpp
         # === ANTLR ===
         ${ANTLR_Lexer_CXX_OUTPUTS}
         ${ANTLR_Parser_CXX_OUTPUTS}
@@ -134,6 +136,7 @@ target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
         utils
         utils/command
+        utils/config
         message
         grammar
         ast
