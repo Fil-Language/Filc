@@ -35,9 +35,7 @@ Config *Config::_instance;
 Config::Config()
     : _root(new SchemaMap) {}
 
-Config::Config(Config &b) = default;
-
-auto Config::init(const std::string &name) -> void {
+auto Config::init(const string &name) -> void {
     if (_instance != nullptr) {
         return;
     }
@@ -54,7 +52,7 @@ auto Config::get() -> Config * {
     return _instance;
 }
 
-auto Config::save(const std::string &filename) -> void {
+auto Config::save(const string &filename) -> void {
     YAML::Node result_yaml;
     const auto config = get();
 
@@ -75,11 +73,11 @@ auto Config::save(const std::string &filename) -> void {
     fout.close();
 }
 
-auto Config::getName() const -> const std::string & {
+auto Config::getName() const -> const string & {
     return _root->get("name")->as<SchemaString>()->get();
 }
 
-auto Config::setName(const std::string &name) -> void {
+auto Config::setName(const string &name) -> void {
     if (_root->has("name")) {
         _root->get("name")->as<SchemaString>()->set(name);
     } else {
@@ -87,11 +85,11 @@ auto Config::setName(const std::string &name) -> void {
     }
 }
 
-auto Config::getDescription() const -> const std::string & {
+auto Config::getDescription() const -> const string & {
     return _root->get("description")->as<SchemaString>()->get();
 }
 
-auto Config::setDescription(const std::string &description) -> void {
+auto Config::setDescription(const string &description) -> void {
     if (_root->has("description")) {
         _root->get("description")->as<SchemaString>()->set(description);
     } else {
@@ -99,11 +97,11 @@ auto Config::setDescription(const std::string &description) -> void {
     }
 }
 
-auto Config::getVersion() const -> const std::string & {
+auto Config::getVersion() const -> const string & {
     return _root->get("version")->as<SchemaString>()->get();
 }
 
-auto Config::setVersion(const std::string &version) -> void {
+auto Config::setVersion(const string &version) -> void {
     if (_root->has("version")) {
         _root->get("version")->as<SchemaString>()->set(version);
     } else {
@@ -111,11 +109,11 @@ auto Config::setVersion(const std::string &version) -> void {
     }
 }
 
-auto Config::getEntrypoint() const -> const std::string & {
+auto Config::getEntrypoint() const -> const string & {
     return _root->get("entrypoint")->as<SchemaString>()->get();
 }
 
-auto Config::setEntrypoint(const std::string &entrypoint) -> void {
+auto Config::setEntrypoint(const string &entrypoint) -> void {
     if (_root->has("entrypoint")) {
         _root->get("entrypoint")->as<SchemaString>()->set(entrypoint);
     } else {
@@ -123,7 +121,7 @@ auto Config::setEntrypoint(const std::string &entrypoint) -> void {
     }
 }
 
-auto Config::getNamespaces() const -> std::map<std::string, std::string> {
+auto Config::getNamespaces() const -> map<string, string> {
     const auto schema = _root->get("namespaces")->as<SchemaMap>();
     map<string, string> result;
 
@@ -134,7 +132,7 @@ auto Config::getNamespaces() const -> std::map<std::string, std::string> {
     return result;
 }
 
-auto Config::getNamespace(const std::string &name) const -> std::string {
+auto Config::getNamespace(const string &name) const -> string {
     const auto schema = _root->get("namespaces")->as<SchemaMap>();
     if (schema->has(name)) {
         return schema->get(name)->as<SchemaString>()->get();
@@ -143,7 +141,7 @@ auto Config::getNamespace(const std::string &name) const -> std::string {
     return "";
 }
 
-auto Config::setNamespace(const std::string &name, const std::string &path) -> void {
+auto Config::setNamespace(const string &name, const string &path) -> void {
     if (!_root->has("namespaces")) {
         _root->set("namespaces", new SchemaMap);
     }
