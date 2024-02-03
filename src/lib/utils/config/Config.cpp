@@ -52,6 +52,10 @@ auto Config::get() -> Config * {
     return _instance;
 }
 
+auto Config::clear() -> void {
+    _instance = nullptr;
+}
+
 auto Config::save(const string &filename) -> void {
     YAML::Node result_yaml;
     const auto config = get();

@@ -76,6 +76,8 @@ using namespace ::testing;
     std::cout.rdbuf(oldbuf); \
     }
 
+auto redirectCin(const std::function<void(std::stringstream &stream)> &function) -> void;
+
 class TestExpression : public filc::ast::AbstractExpression {
 public:
     TestExpression();

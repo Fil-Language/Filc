@@ -27,11 +27,11 @@
 #include "tools.h"
 #include <enquirer.h>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
-#include <sys/stat.h>
 
 using namespace std;
-using namespace filc::utils;
+using namespace filc::utils::config;
 using namespace filc::utils::command;
 
 InitCommand::InitCommand()
@@ -52,17 +52,36 @@ auto InitCommand::run(int argc, char **argv) -> int {
     cout << "\033[34mLet's begin creation of project \033[1m" << project_name << "\033[0m" << '\n';
 
     // Create dir
-    mkdir(project_name.c_str(), 0755);
+    if (!filesystem::create_directory(project_name)) {
+        cout << "\033[31mFailed to create project\033[0m\n";
+        return 1;
+    }
+
     // Create config file
-    config::Config::init(project_name);
-    config::Config::save(project_name + "/module.yml");
+    Config::init(project_name);
+    Config::save(project_name + "/module.yml");
+    const auto config = Config::get();
+
     // Create entry point
-    // TODO
+    const auto source_dir = project_name + "/src";
+    if (!filesystem::create_directory(source_dir)) {
+        cout << "\033[31mFailed to create project\033[0m\n";
+        return 1;
+    }
+    const auto filename = source_dir + "/main.fil";
+    ofstream file(filename);
+    if (!file.is_open()) {
+        cout << "\033[31mFailed to create project\033[0m\n";
+        return 1;
+    }
 
-    // Not implemented, so rmdir
-    filesystem::remove_all(project_name);
+    file << "module " << config->getNamespace("src") << '\n'
+         << '\n'
+         << "fun main() = 0" << '\n';
+    file.flush();
+    file.close();
 
-    return 2;
+    return 0;
 }
 
 auto InitCommand::formatProjectName(const string &project_name) -> string {

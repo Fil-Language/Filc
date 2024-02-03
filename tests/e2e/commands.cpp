@@ -22,18 +22,19 @@
  * SOFTWARE.
  */
 #include "test_tools.h"
+#include <filesystem>
 
 using namespace ::testing;
 
-#define HELP_MESSAGE "Fil compiler\n" \
-                     "Version: 0.3.0\n" \
-                     "License: MIT\n" \
-                     "Usage: `filc <command>`\n" \
-                     "\n" \
-                     "\tinit\tInit a new Fil project\n" \
+#define HELP_MESSAGE "Fil compiler\n"                           \
+                     "Version: 0.3.0\n"                         \
+                     "License: MIT\n"                           \
+                     "Usage: `filc <command>`\n"                \
+                     "\n"                                       \
+                     "\tinit\tInit a new Fil project\n"         \
                      "\tversion\tDisplay version of compiler\n" \
-                     "\thelp\tDisplay this help message\n" \
-                     "\n" \
+                     "\thelp\tDisplay this help message\n"      \
+                     "\n"                                       \
                      "Use `filc help <command>` to see specific help of command\n"
 
 TEST(Options, nothing) {
@@ -58,5 +59,18 @@ TEST(Options, version) {
                  " /_/   /_/_/\\___/  \n"
                  "                   \n"
                  "Filc version 0.3.0 - 3000\n"
-                 "License: MIT\n", result2.c_str());
+                 "License: MIT\n",
+                 result2.c_str());
+}
+
+TEST(Options, init) {
+    run_with_args_and_input("init", "my_project\n");
+    ASSERT_TRUE(std::filesystem::exists("my_project/src/main.fil"));
+    ASSERT_TRUE(std::filesystem::exists("my_project/module.yml"));
+    std::filesystem::remove_all("my_project");
+
+    run_with_args_and_input("init", " my awesome project  \n");
+    ASSERT_TRUE(std::filesystem::exists("my_awesome_project/src/main.fil"));
+    ASSERT_TRUE(std::filesystem::exists("my_awesome_project/module.yml"));
+    std::filesystem::remove_all("my_awesome_project");
 }
