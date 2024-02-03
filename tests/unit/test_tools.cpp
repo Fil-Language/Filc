@@ -58,3 +58,10 @@ auto TestExpression::generateIR(filc::message::MessageCollector *collector,
 auto TestExpression::isResolveTypeCalled() const -> bool {
     return _resolveType_called;
 }
+
+auto redirectCin(const std::function<void(std::stringstream &stream)> &function) -> void {
+    std::stringstream input_stream;
+    std::streambuf *old = std::cin.rdbuf(input_stream.rdbuf());
+    function(input_stream);
+    std::cin.rdbuf(old);
+}

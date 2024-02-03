@@ -24,15 +24,15 @@
 #ifndef TEST_TOOLS_H
 #define TEST_TOOLS_H
 
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-#include <string>
-#include <memory>
 #include <cstdio>
-#include <stdexcept>
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+#include <memory>
 #include <regex>
+#include <stdexcept>
+#include <string>
 
-auto exec(const char *cmd) -> std::string {
+auto exec_output(const char *cmd) -> std::string {
     char buffer[128];
     std::string result;
     std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
@@ -48,6 +48,20 @@ auto exec(const char *cmd) -> std::string {
     return result;
 }
 
-#define run_with_args(args) exec(FILC_DIR "/filc " args)
+#define run_with_args(args) exec_output(FILC_DIR "/filc " args)
 
-#endif //TEST_TOOLS_H
+auto exec_input(const char *cmd, const char *input) -> void {
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "w"), pclose);
+
+    if (!pipe) {
+        throw std::runtime_error("popen() failed!");
+    }
+
+    if (fprintf(pipe.get(), "%s", input) < 0) {
+        throw std::runtime_error("fprintf() failed!");
+    }
+}
+
+#define run_with_args_and_input(args, input) exec_input(FILC_DIR "/filc " args, input)
+
+#endif//TEST_TOOLS_H

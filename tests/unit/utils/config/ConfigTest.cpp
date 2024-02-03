@@ -35,6 +35,7 @@ TEST(Config, init) {
     ASSERT_STREQ("description", Config::get()->getDescription().c_str());
     ASSERT_STREQ("0.1.0", Config::get()->getVersion().c_str());
     ASSERT_STREQ("src/main.fil", Config::get()->getEntrypoint().c_str());
+    Config::clear();
 }
 
 TEST(Config, save) {
@@ -42,30 +43,35 @@ TEST(Config, save) {
     Config::save(FIXTURES_PATH "/module.yml");
     ASSERT_TRUE(std::filesystem::exists(FIXTURES_PATH "/module.yml"));
     std::filesystem::remove(FIXTURES_PATH "/module.yml");
+    Config::clear();
 }
 
 TEST(Config, name) {
     Config::init("project_name");
     Config::get()->setName("custom-name");
     ASSERT_STREQ("custom-name", Config::get()->getName().c_str());
+    Config::clear();
 }
 
 TEST(Config, description) {
     Config::init("project_name");
     Config::get()->setDescription("custom-description");
     ASSERT_STREQ("custom-description", Config::get()->getDescription().c_str());
+    Config::clear();
 }
 
 TEST(Config, version) {
     Config::init("project_name");
     Config::get()->setVersion("1.2.5-rc4");
     ASSERT_STREQ("1.2.5-rc4", Config::get()->getVersion().c_str());
+    Config::clear();
 }
 
 TEST(Config, entrypoint) {
     Config::init("project_name");
     Config::get()->setEntrypoint("sources/index.fil");
     ASSERT_STREQ("sources/index.fil", Config::get()->getEntrypoint().c_str());
+    Config::clear();
 }
 
 TEST(Config, namespaces) {
@@ -78,4 +84,13 @@ TEST(Config, namespaces) {
     const auto namespaces = Config::get()->getNamespaces();
     ASSERT_THAT(namespaces, SizeIs(2));
     ASSERT_THAT(namespaces, UnorderedElementsAre(make_pair("project_name", "src"), make_pair("com.fil.main", "src/com/fil/main")));
+    Config::clear();
+}
+
+TEST(Config, clear) {
+    ASSERT_EQ(nullptr, Config::get());
+    Config::init("project_name");
+    ASSERT_NE(nullptr, Config::get());
+    Config::clear();
+    ASSERT_EQ(nullptr, Config::get());
 }
