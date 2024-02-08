@@ -1,0 +1,7 @@
+name: my_project
+version: 1.0.0
+entrypoint: src/main.fil
+namespaces:
+  - 1
+  - 2
+  - 3
