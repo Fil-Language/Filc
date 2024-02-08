@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2023-Present Kevin Traini
+ * Copyright (c) 2024-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,28 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "BuildCommand.h"
-#include "CommandCollector.h"
-#include "InitCommand.h"
-#include "VersionCommand.h"
-#include "tools.h"
+#ifndef FILC_BUILDCOMMAND_H
+#define FILC_BUILDCOMMAND_H
 
-using namespace filc;
+#include "Command.h"
 
-auto main(int argc, char **argv) -> int {
-    utils::command::CommandCollector command_collector;
-    command_collector.addCommand(new utils::command::BuildCommand);
-    command_collector.addCommand(new utils::command::InitCommand);
-    command_collector.addCommand(new utils::command::VersionCommand(FILC_VERSION, utils::computeVersionNumber(FILC_VERSION), "MIT"));
+namespace filc::utils::command {
+    class BuildCommand : public Command {
+    public:
+        BuildCommand();
 
-    return command_collector.run(argc, argv);
-    /* auto options = filc::utils::OptionsParser();
+        [[nodiscard]] auto help() const -> std::string override;
 
-     if (!options.parse(argc, argv)) {
-         return EXIT_FAILURE;
-     }
+        [[nodiscard]] auto run(int argc, char **argv) -> int override;
+    };
+}// namespace filc::utils::command
 
-     auto compiler = filc::FilCompiler(options);
-
-     return compiler.compile();*/
-}
+#endif//FILC_BUILDCOMMAND_H

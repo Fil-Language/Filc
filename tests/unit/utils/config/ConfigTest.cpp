@@ -94,3 +94,50 @@ TEST(Config, clear) {
     Config::clear();
     ASSERT_EQ(nullptr, Config::get());
 }
+
+#define ERROR_MESSAGE(filename, message) "\033[31mFailed to load " filename ": " message "\033[0m\n"
+
+TEST(Config, load) {
+    ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_file.yml"));
+    Config::clear();
+
+    ASSERT_OUTPUT(
+            ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_1.yml", "File format is invalid, it should be a yaml map"),
+            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_1.yml")))
+    Config::clear();
+
+    ASSERT_OUTPUT(
+            ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_2.yml", "Missing name key"),
+            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_2.yml")))
+    Config::clear();
+
+    ASSERT_OUTPUT(
+            ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_3.yml", "Missing version key"),
+            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_3.yml")))
+    Config::clear();
+
+    ASSERT_OUTPUT(
+            ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_4.yml", "Missing entrypoint key"),
+            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_4.yml")))
+    Config::clear();
+
+    ASSERT_OUTPUT(
+            ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_5.yml", "Missing namespaces key"),
+            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_5.yml")))
+    Config::clear();
+
+    ASSERT_OUTPUT(
+            ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_6.yml", "Namespaces value is invalid, it should be a yaml map"),
+            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_6.yml")))
+    Config::clear();
+
+    ASSERT_EQ(true, Config::load(FIXTURES_PATH "/utils/module.yml"));
+    const auto config = Config::get();
+    ASSERT_STREQ("my_project", config->getName().c_str());
+    ASSERT_STREQ("", config->getDescription().c_str());
+    ASSERT_STREQ("1.0.0", config->getVersion().c_str());
+    ASSERT_STREQ("src/main.fil", config->getEntrypoint().c_str());
+    ASSERT_THAT(config->getNamespaces(), SizeIs(1));
+    ASSERT_STREQ("src", config->getNamespace("com.fil.main").c_str());
+    Config::clear();
+}

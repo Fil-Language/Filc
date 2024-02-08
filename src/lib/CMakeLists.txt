@@ -82,6 +82,7 @@ add_library(compiler_lib
         utils/command/HelpCommand.cpp
         utils/command/VersionCommand.cpp
         utils/command/InitCommand.cpp
+        utils/command/BuildCommand.cpp
         utils/config/SchemaMap.cpp
         utils/config/SchemaString.cpp
         utils/config/Config.cpp

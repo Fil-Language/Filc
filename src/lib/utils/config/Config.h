@@ -38,6 +38,8 @@ namespace filc::utils::config {
 
         static auto save(const std::string &filename) -> void;
 
+        static auto load(const std::string &filename) -> bool;
+
         [[nodiscard]] auto getName() const -> const std::string &;
 
         auto setName(const std::string &name) -> void;

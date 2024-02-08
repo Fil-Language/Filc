@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2023-Present Kevin Traini
+ * Copyright (c) 2024-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,26 @@
  * SOFTWARE.
  */
 #include "BuildCommand.h"
-#include "CommandCollector.h"
-#include "InitCommand.h"
-#include "VersionCommand.h"
-#include "tools.h"
 
-using namespace filc;
+#include "Config.h"
+#include <iostream>
 
-auto main(int argc, char **argv) -> int {
-    utils::command::CommandCollector command_collector;
-    command_collector.addCommand(new utils::command::BuildCommand);
-    command_collector.addCommand(new utils::command::InitCommand);
-    command_collector.addCommand(new utils::command::VersionCommand(FILC_VERSION, utils::computeVersionNumber(FILC_VERSION), "MIT"));
+using namespace std;
+using namespace filc::utils::command;
+using namespace filc::utils::config;
 
-    return command_collector.run(argc, argv);
-    /* auto options = filc::utils::OptionsParser();
+BuildCommand::BuildCommand()
+    : Command("build", "Build your project", {}) {}
 
-     if (!options.parse(argc, argv)) {
-         return EXIT_FAILURE;
-     }
+auto BuildCommand::help() const -> string {
+    return "Build your project following settings of local module.yml";
+}
 
-     auto compiler = filc::FilCompiler(options);
+auto BuildCommand::run(int argc, char **argv) -> int {
+    if (!Config::load("module.yml")) {
+        return 1;
+    }
 
-     return compiler.compile();*/
+    cout << "\033[31mNot implemented\033[0m" << '\n';
+    return 2;
 }

@@ -24,6 +24,7 @@
 #include "Config.h"
 
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <yaml-cpp/yaml.h>
 
@@ -75,6 +76,66 @@ auto Config::save(const string &filename) -> void {
     fout << result_yaml;
     fout.flush();
     fout.close();
+}
+
+#define ERROR_MESSAGE(filename, message) "\033[31mFailed to load " << filename << ": " << message << "\033[0m\n"
+
+auto Config::load(const string &filename) -> bool {
+    if (_instance != nullptr) {
+        return true;
+    }
+    _instance         = new Config;
+    const auto config = _instance;
+
+    YAML::Node file_config;
+    try {
+        file_config = YAML::LoadFile(filename);
+    } catch (exception &e) {
+        cout << ERROR_MESSAGE(filename, e.what());
+    }
+
+    if (!file_config.IsMap()) {
+        cout << ERROR_MESSAGE(filename, "File format is invalid, it should be a yaml map");
+        return false;
+    }
+
+    if (!file_config["name"].IsDefined()) {
+        cout << ERROR_MESSAGE(filename, "Missing name key");
+        return false;
+    }
+    config->setName(file_config["name"].as<string>());
+
+    if (file_config["description"].IsDefined()) {
+        config->setDescription(file_config["description"].as<string>());
+    } else {
+        config->setDescription("");
+    }
+
+    if (!file_config["version"].IsDefined()) {
+        cout << ERROR_MESSAGE(filename, "Missing version key");
+        return false;
+    }
+    config->setVersion(file_config["version"].as<string>());
+
+    if (!file_config["entrypoint"].IsDefined()) {
+        cout << ERROR_MESSAGE(filename, "Missing entrypoint key");
+        return false;
+    }
+    config->setEntrypoint(file_config["entrypoint"].as<string>());
+
+    if (!file_config["namespaces"].IsDefined()) {
+        cout << ERROR_MESSAGE(filename, "Missing namespaces key");
+        return false;
+    }
+    if (!file_config["namespaces"].IsMap()) {
+        cout << ERROR_MESSAGE(filename, "Namespaces value is invalid, it should be a yaml map");
+        return false;
+    }
+    for (auto entry = file_config["namespaces"].begin(); entry != file_config["namespaces"].end(); entry++) {
+        config->setNamespace(entry->first.as<string>(), entry->second.as<string>());
+    }
+
+    return true;
 }
 
 auto Config::getName() const -> const string & {

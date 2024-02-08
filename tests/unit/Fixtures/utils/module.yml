@@ -1,0 +1,5 @@
+name: my_project
+version: 1.0.0
+entrypoint: src/main.fil
+namespaces:
+  com.fil.main: src
