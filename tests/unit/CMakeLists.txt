@@ -7,7 +7,7 @@ file(GLOB_RECURSE UNIT_TEST_FILES
 message(UNIT_TEST_FILES=${UNIT_TEST_FILES})
 
 add_executable(unit-tests ${UNIT_TEST_FILES})
-target_include_directories(unit-tests PUBLIC .)
+target_include_directories(unit-tests PUBLIC . stubs)
 
 target_link_libraries(unit-tests PRIVATE gtest_main gtest gmock compiler_lib)
 
