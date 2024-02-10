@@ -92,6 +92,7 @@ auto Config::load(const string &filename) -> bool {
         file_config = YAML::LoadFile(filename);
     } catch (exception &e) {
         cout << ERROR_MESSAGE(filename, e.what());
+        return false;
     }
 
     if (!file_config.IsMap()) {
