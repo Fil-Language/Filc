@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 #include "CommandCollector.h"
-#include "CustomCommand.h"
 #include "test_tools.h"
 
 using namespace filc::utils::command;

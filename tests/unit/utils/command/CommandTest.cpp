@@ -26,24 +26,6 @@
 
 using namespace filc::utils::command;
 
-class IncompleteCommand : public Command {
-public:
-    IncompleteCommand() : Command("name", "description", {}) {}
-};
-
-class CustomCommand : public Command {
-public:
-    CustomCommand() : Command("custom", "My custom command", {"c", "custom-command"}) {}
-
-    [[nodiscard]] auto help() const -> std::string override {
-        return "Help of custom command";
-    }
-
-    auto run(int argc, char **argv) -> int override {
-        return 0;
-    }
-};
-
 TEST(Command, constructor) {
     IncompleteCommand ic1;
 

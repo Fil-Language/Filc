@@ -23,45 +23,11 @@
  */
 #include "test_tools.h"
 
-TestExpression::TestExpression()
-        : _resolveType_called(false) {}
+using namespace std;
 
-auto TestExpression::withExpressionType(
-        const std::shared_ptr<filc::ast::AbstractType> &expression_type) -> TestExpression & {
-    setExpressionType(expression_type);
-
-    return *this;
-}
-
-auto TestExpression::resolveType(filc::environment::Environment *environment,
-                                 filc::message::MessageCollector *collector,
-                                 const std::shared_ptr<filc::ast::AbstractType> &preferred_type) -> void {
-    (void) environment;
-    (void) collector;
-    (void) preferred_type;
-
-    _resolveType_called = true;
-}
-
-auto TestExpression::addNameToEnvironment(filc::environment::Environment *environment) const -> void {
-    (void) environment;
-}
-
-auto TestExpression::generateIR(filc::message::MessageCollector *collector,
-                                filc::environment::Environment *environment,
-                                llvm::LLVMContext *context,
-                                llvm::Module *module,
-                                llvm::IRBuilder<> *builder) const -> llvm::Value * {
-    return nullptr;
-}
-
-auto TestExpression::isResolveTypeCalled() const -> bool {
-    return _resolveType_called;
-}
-
-auto redirectCin(const std::function<void(std::stringstream &stream)> &function) -> void {
-    std::stringstream input_stream;
-    std::streambuf *old = std::cin.rdbuf(input_stream.rdbuf());
+auto redirectCin(const function<void(stringstream &stream)> &function) -> void {
+    stringstream input_stream;
+    streambuf *old = cin.rdbuf(input_stream.rdbuf());
     function(input_stream);
-    std::cin.rdbuf(old);
+    cin.rdbuf(old);
 }

@@ -23,7 +23,6 @@
  */
 #include "Schema.h"
 
-#include "CustomSchema.h"
 #include "test_tools.h"
 
 using namespace filc::utils::config;
