@@ -1,7 +1,12 @@
-add_executable(e2e-tests
-        test_tools.h
-        commands.cpp
+file(GLOB_RECURSE E2E_TEST_FILES
+        "${PROJECT_SOURCE_DIR}/tests/e2e/*.cpp"
+        "${PROJECT_SOURCE_DIR}/tests/e2e/**/*.cpp"
+        "${PROJECT_SOURCE_DIR}/tests/e2e/*.h"
+        "${PROJECT_SOURCE_DIR}/tests/e2e/**/*.h"
 )
+message(E2E_TEST_FILES=${E2E_TEST_FILES})
+
+add_executable(e2e-tests ${E2E_TEST_FILES})
 add_dependencies(e2e-tests filc)
 target_include_directories(e2e-tests PUBLIC .)
 target_compile_definitions(e2e-tests PUBLIC FILC_DIR="${FILC_DIR}")

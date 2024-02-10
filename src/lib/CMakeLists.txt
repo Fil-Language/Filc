@@ -70,69 +70,16 @@ endif()
 # _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 # Lib section
 
+file(GLOB_RECURSE SRC_FILES
+        "${PROJECT_SOURCE_DIR}/src/lib/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/lib/**/*.cpp"
+)
+message(SRC_FILES=${SRC_FILES})
+
 add_library(compiler_lib
-        # === Main ===
-        FilCompiler.cpp
-        # === Utils ===
-        utils/OptionsParser.cpp
-        utils/Position.cpp
-        utils/tools.cpp
-        utils/command/Command.cpp
-        utils/command/CommandCollector.cpp
-        utils/command/HelpCommand.cpp
-        utils/command/VersionCommand.cpp
-        utils/command/InitCommand.cpp
-        utils/command/BuildCommand.cpp
-        utils/config/SchemaMap.cpp
-        utils/config/SchemaString.cpp
-        utils/config/Config.cpp
-        # === ANTLR ===
+        ${SRC_FILES}
         ${ANTLR_Lexer_CXX_OUTPUTS}
         ${ANTLR_Parser_CXX_OUTPUTS}
-        grammar/Parser.cpp
-        # === Message ===
-        message/Message.cpp
-        message/MessageCollector.cpp
-        message/Warning.cpp
-        message/Error.cpp
-        message/DevWarning.cpp
-        message/Antlr4ErrorListener.cpp
-        # === AST ===
-        ast/Program.cpp
-        ast/AbstractExpression.cpp
-        ast/BooleanLiteral.cpp
-        ast/IntegerLiteral.cpp
-        ast/FloatLiteral.cpp
-        ast/CharacterLiteral.cpp
-        ast/StringLiteral.cpp
-        ast/VariableDeclaration.cpp
-        ast/Identifier.cpp
-        ast/Type.cpp
-        ast/ArrayType.cpp
-        ast/PointerType.cpp
-        ast/LambdaType.cpp
-        ast/UnaryCalcul.cpp
-        ast/ClassicOperator.cpp
-        ast/ArrayOperator.cpp
-        ast/FunctionOperator.cpp
-        ast/PreUnaryCalcul.cpp
-        ast/PostUnaryCalcul.cpp
-        ast/BinaryCalcul.cpp
-        ast/Function.cpp
-        ast/FunctionParameter.cpp
-        ast/Lambda.cpp
-        ast/If.cpp
-        ast/Switch.cpp
-        ast/SwitchCase.cpp
-        ast/ForI.cpp
-        ast/ForIter.cpp
-        ast/While.cpp
-        ast/AssignationOperator.cpp
-        ast/AbstractType.cpp
-        ast/BlockBody.cpp
-        # === Environment ===
-        environment/Environment.cpp
-        environment/Name.cpp
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
