@@ -27,7 +27,6 @@
 #include "AST.h"
 #include "Compiler.h"
 #include "MessageCollector.h"
-#include "OptionsParser.h"
 #include <future>
 #include <map>
 

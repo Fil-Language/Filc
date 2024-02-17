@@ -58,15 +58,15 @@ TEST(HelpCommand, run) {
     cc1.addCommand(custom1);
 
     char *argv0[] = {};
-    ASSERT_OUTPUT(hc1.help().c_str(), ASSERT_EQ(0, hc1.run(0, argv0)));
+    ASSERT_OUTPUT_EQUAL(hc1.help().c_str(), ASSERT_EQ(0, hc1.run(0, argv0)));
     char *argv1[] = {"non-existing-command"};
     const auto expected1 = "\033[31mCommand \033[1mnon-existing-command\033[0m\033[31m not found\033[0m\n" + hc1.help();
-    ASSERT_OUTPUT(expected1.c_str(), ASSERT_EQ(1, hc1.run(1, argv1)));
+    ASSERT_OUTPUT_EQUAL(expected1.c_str(), ASSERT_EQ(1, hc1.run(1, argv1)));
     char *argv2[] = {"custom"};
     const auto custom_help = custom1->help() + '\n';
-    ASSERT_OUTPUT(custom_help.c_str(), ASSERT_EQ(0, hc1.run(1, argv2)));
+    ASSERT_OUTPUT_EQUAL(custom_help.c_str(), ASSERT_EQ(0, hc1.run(1, argv2)));
     char *argv3[] = {"c"};
-    ASSERT_OUTPUT(custom_help.c_str(), ASSERT_EQ(0, hc1.run(1, argv3)));
+    ASSERT_OUTPUT_EQUAL(custom_help.c_str(), ASSERT_EQ(0, hc1.run(1, argv3)));
     char *argv4[] = {"custom-command"};
-    ASSERT_OUTPUT(custom_help.c_str(), ASSERT_EQ(0, hc1.run(1, argv4)));
+    ASSERT_OUTPUT_EQUAL(custom_help.c_str(), ASSERT_EQ(0, hc1.run(1, argv4)));
 }
