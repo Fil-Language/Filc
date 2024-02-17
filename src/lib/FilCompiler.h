@@ -24,38 +24,40 @@
 #ifndef FILC_FILCOMPILER_H
 #define FILC_FILCOMPILER_H
 
-#include "OptionsParser.h"
 #include "AST.h"
+#include "Compiler.h"
 #include "MessageCollector.h"
-#include <map>
+#include "OptionsParser.h"
 #include <future>
+#include <map>
 
 namespace filc {
-    class FilCompiler final {
+    class FilCompiler final : public Compiler {
     public:
-        explicit FilCompiler(utils::OptionsParser options);
+        FilCompiler();
 
-        auto compile() -> int;
+        ~FilCompiler() override = default;
+
+        auto compile() -> int override;
 
     private:
-        utils::OptionsParser _options;
-        std::map<const std::string, filc::ast::Program *> _modules;
+        std::map<const std::string, ast::Program *> _modules;
 
-        static auto checkCollector(filc::message::MessageCollector *collector) -> bool;
+        static auto checkCollector(message::MessageCollector *collector) -> bool;
 
-        auto parseFiles(filc::message::MessageCollector *collector) -> std::vector<std::future<filc::ast::Program *>>;
+        auto parseFiles(message::MessageCollector *collector) -> std::vector<std::future<ast::Program *>>;
 
-        auto collectModules(std::vector<std::future<filc::ast::Program *>> &futures,
-                            filc::message::MessageCollector *collector) -> void;
+        auto collectModules(std::vector<std::future<ast::Program *>> &futures,
+                            message::MessageCollector *collector) -> void;
 
-        auto checkModules(filc::message::MessageCollector *collector) -> void;
+        auto checkModules(message::MessageCollector *collector) -> void;
 
-        auto resolveEnvironment(filc::message::MessageCollector *collector) -> void;
+        auto resolveEnvironment(message::MessageCollector *collector) -> void;
 
-        auto generateLLVMIR(filc::message::MessageCollector *collector) -> void;
+        auto generateLLVMIR(message::MessageCollector *collector) -> void;
 
         static auto getModuleFilename(const std::string &module_name, const std::string &std_path) -> std::string;
     };
-}
+}// namespace filc
 
-#endif //FILC_FILCOMPILER_H
+#endif//FILC_FILCOMPILER_H

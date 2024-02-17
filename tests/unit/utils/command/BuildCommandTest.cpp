@@ -22,25 +22,34 @@
  * SOFTWARE.
  */
 #include "BuildCommand.h"
-
 #include "Config.h"
-#include <iostream>
+#include "test_tools.h"
+#include <filesystem>
 
 using namespace std;
 using namespace filc::utils::command;
 using namespace filc::utils::config;
 
-BuildCommand::BuildCommand(Compiler *compiler)
-    : Command("build", "Build your project", {}), _compiler(compiler) {}
+TEST(BuildCommand, help) {
+    BuildCommand bc1(new CompilerStub(0));
 
-auto BuildCommand::help() const -> string {
-    return "Build your project following settings of local module.yml";
+    ASSERT_STREQ("Build your project following settings of local module.yml", bc1.help().c_str());
 }
 
-auto BuildCommand::run(int argc, char **argv) -> int {
-    if (!Config::load("module.yml")) {
-        return 1;
-    }
+TEST(BuildCommand, run) {
+    BuildCommand bc1(new CompilerStub(0));
+    ASSERT_EQ(1, bc1.run(0, {}));
+    Config::clear();
 
-    return _compiler->compile();
+    BuildCommand bc2(new CompilerStub(0));
+    Config::init("module.yml");
+    ASSERT_EQ(0, bc2.run(0, {}));
+    Config::clear();
+    filesystem::remove("module.yml");
+
+    BuildCommand bc3(new CompilerStub(1));
+    Config::init("module.yml");
+    ASSERT_EQ(1, bc3.run(0, {}));
+    Config::clear();
+    filesystem::remove("module.yml");
 }
