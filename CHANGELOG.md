@@ -1,5 +1,14 @@
 # Changelog
 
+## Next version
+
+*Under development*
+
+- Rework of entrypoint : it now works with command and not options
+- Add Renovate to manage dependencies
+- Add e2e tests
+- Add cppcheck analysis
+
 ## v0.2.1
 
 *2023-08-29*
