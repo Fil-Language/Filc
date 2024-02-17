@@ -23,15 +23,17 @@
  */
 #include "BuildCommand.h"
 #include "CommandCollector.h"
+#include "FilCompiler.h"
 #include "InitCommand.h"
 #include "VersionCommand.h"
 #include "tools.h"
 
+using namespace std;
 using namespace filc;
 
 auto main(int argc, char **argv) -> int {
     utils::command::CommandCollector command_collector;
-    command_collector.addCommand(new utils::command::BuildCommand);
+    command_collector.addCommand(new utils::command::BuildCommand(new FilCompiler));
     command_collector.addCommand(new utils::command::InitCommand);
     command_collector.addCommand(new utils::command::VersionCommand(FILC_VERSION, utils::computeVersionNumber(FILC_VERSION), "MIT"));
 

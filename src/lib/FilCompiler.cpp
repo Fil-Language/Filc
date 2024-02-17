@@ -30,9 +30,8 @@
 #include <future>
 
 namespace filc {
-    FilCompiler::FilCompiler(utils::OptionsParser options)
-            : _options(std::move(options)) {
-        message::MessageCollector::getCollector((filc::message::LEVEL) _options.getVerbose());
+    FilCompiler::FilCompiler(){
+        message::MessageCollector::getCollector();
     }
 
     auto FilCompiler::compile() -> int {
@@ -102,20 +101,20 @@ namespace filc {
 
         std::vector<std::future<filc::ast::Program *>> futures;
         // Parse all files
-        for (const auto &filename: _options.getFilenames()) {
-            auto fut = std::async([collector](const std::string &filename) {
-                try {
-                    filc::grammar::Parser parser(filename, collector);
-
-                    return parser.getProgram();
-                } catch (std::exception &e) {
-                    collector->addError(new filc::message::BasicError(filc::message::FATAL_ERROR, e.what()));
-
-                    return (filc::ast::Program *) nullptr;
-                }
-            }, filename);
-            futures.push_back(std::move(fut));
-        }
+//        for (const auto &filename: _options.getFilenames()) {
+//            auto fut = std::async([collector](const std::string &filename) {
+//                try {
+//                    filc::grammar::Parser parser(filename, collector);
+//
+//                    return parser.getProgram();
+//                } catch (std::exception &e) {
+//                    collector->addError(new filc::message::BasicError(filc::message::FATAL_ERROR, e.what()));
+//
+//                    return (filc::ast::Program *) nullptr;
+//                }
+//            }, filename);
+//            futures.push_back(std::move(fut));
+//        }
 
         collector->addMessage(new filc::message::Message(filc::message::INFO, "All files parsed"));
 
@@ -157,23 +156,23 @@ namespace filc {
                 for (const auto &module_name: program->getImports()) {
                     if (_modules.find(module_name) == _modules.end()) {
                         // Modules not found, check if standard module
-                        auto filename = getModuleFilename(module_name, _options.getStdPath());
-                        if (!filename.empty()) {
-                            // It's a standard module, add it
-                            filc::grammar::Parser parser(filename, collector);
-
-                            _modules.emplace(module_name, parser.getProgram());
-                            collector->addMessage(
-                                    new filc::message::Message(filc::message::DEBUG, "Getting module: " + module_name)
-                            );
-                            has_change = true;
-                        } else {
-                            collector->addError(
-                                    new filc::message::Error(filc::message::ERROR,
-                                                             "Module " + module_name + " not found",
-                                                             new filc::utils::SimplePosition(program->getFilename(), 0, 0))
-                            );
-                        }
+//                        auto filename = getModuleFilename(module_name, _options.getStdPath());
+//                        if (!filename.empty()) {
+//                            // It's a standard module, add it
+//                            filc::grammar::Parser parser(filename, collector);
+//
+//                            _modules.emplace(module_name, parser.getProgram());
+//                            collector->addMessage(
+//                                    new filc::message::Message(filc::message::DEBUG, "Getting module: " + module_name)
+//                            );
+//                            has_change = true;
+//                        } else {
+//                            collector->addError(
+//                                    new filc::message::Error(filc::message::ERROR,
+//                                                             "Module " + module_name + " not found",
+//                                                             new filc::utils::SimplePosition(program->getFilename(), 0, 0))
+//                            );
+//                        }
                     }
                 }
             }

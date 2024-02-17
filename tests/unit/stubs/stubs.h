@@ -26,6 +26,7 @@
 
 #include "AST.h"
 #include "Command.h"
+#include "Compiler.h"
 #include "Schema.h"
 #include <string>
 #include <utility>
@@ -90,6 +91,21 @@ public:
     auto run(int argc, char **argv) -> int override {
         return 0;
     }
+};
+
+class CompilerStub : public filc::Compiler {
+public:
+    explicit CompilerStub(int return_value)
+        : _return_value(return_value) {}
+
+    ~CompilerStub() override = default;
+
+    auto compile() -> int override {
+        return _return_value;
+    };
+
+private:
+    int _return_value;
 };
 
 #endif//FILC_STUBS_H

@@ -25,15 +25,20 @@
 #define FILC_BUILDCOMMAND_H
 
 #include "Command.h"
+#include "Compiler.h"
+#include <memory>
 
 namespace filc::utils::command {
     class BuildCommand : public Command {
     public:
-        BuildCommand();
+        explicit BuildCommand(Compiler *compiler);
 
         [[nodiscard]] auto help() const -> std::string override;
 
         [[nodiscard]] auto run(int argc, char **argv) -> int override;
+
+    private:
+        std::unique_ptr<Compiler> _compiler;
     };
 }// namespace filc::utils::command
 

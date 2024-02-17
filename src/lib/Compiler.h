@@ -21,26 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "BuildCommand.h"
+#ifndef FILC_COMPILER_H
+#define FILC_COMPILER_H
 
-#include "Config.h"
-#include <iostream>
+namespace filc {
+    class Compiler {
+    protected:
+        Compiler() = default;
 
-using namespace std;
-using namespace filc::utils::command;
-using namespace filc::utils::config;
+    public:
+        virtual ~Compiler() = default;
 
-BuildCommand::BuildCommand(Compiler *compiler)
-    : Command("build", "Build your project", {}), _compiler(compiler) {}
+        virtual auto compile() -> int = 0;
+    };
+}// namespace filc
 
-auto BuildCommand::help() const -> string {
-    return "Build your project following settings of local module.yml";
-}
-
-auto BuildCommand::run(int argc, char **argv) -> int {
-    if (!Config::load("module.yml")) {
-        return 1;
-    }
-
-    return _compiler->compile();
-}
+#endif//FILC_COMPILER_H
