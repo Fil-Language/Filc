@@ -1,6 +1,8 @@
 name: Building
 
-on: release
+on:
+  release:
+    types: [ published ]
 
 jobs:
   build-ubuntu:
@@ -13,20 +15,29 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Install LLVM
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "15"
 
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: cmake --build ${{github.workspace}}/build
 
-      - name: Save binary in zip
-        uses: montudor/action-zip@v1.0.0
+      - name: Locate binary
+        run: ls -l ${{github.workspace}}/build/src
+      - name: Save binary in tar
+        uses: a7ul/tar-action@v1.1.0
         with:
-          args: zip filc-ubuntu22.04.zip ${{github.workspace}}/build/src/filc
+          command: c
+          files: |
+            ${{github.workspace}}/build/src/filc
+          outPath: filc-ubuntu22.04.tar.gz
       - name: Upload to Release
         uses: JasonEtco/upload-to-release@v0.1.1
         with:
-          args: filc-ubuntu22.04.zip
+          args: filc-ubuntu22.04.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -40,46 +51,55 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Install LLVM
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "15"
 
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: cmake --build ${{github.workspace}}/build
 
-      - name: Save binary in zip
-        uses: montudor/action-zip@v1.0.0
+      - name: Locate binary
+        run: ls -l ${{github.workspace}}/build/src
+      - name: Save binary in tar
+        uses: a7ul/tar-action@v1.1.0
         with:
-          args: zip filc-macos12.zip ${{github.workspace}}/build/src/filc
+          command: c
+          files: |
+            ${{github.workspace}}/build/src/filc
+          outPath: filc-macos12.tar.gz
       - name: Upload to Release
         uses: JasonEtco/upload-to-release@v0.1.1
         with:
-          args: filc-macos12.zip
+          args: filc-macos12.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-windows:
-    name: Build Windows 2022
-    runs-on: windows-2022
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
-      - name: Build
-        run: cmake --build ${{github.workspace}}/build --config Release
-
-      - name: Save binary in zip
-        uses: montudor/action-zip@v1.0.0
-        with:
-          args: zip filc-windows2022.zip ${{github.workspace}}/build/src/Release/filc.exe
-      - name: Upload to Release
-        uses: JasonEtco/upload-to-release@v0.1.1
-        with:
-          args: filc-windows2022.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#  build-windows:
+#    name: Build Windows 2022
+#    runs-on: windows-2022
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - uses: actions/setup-java@v3
+#        with:
+#          distribution: 'temurin'
+#          java-version: '17'
+#
+#      - name: Configure CMake
+#        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
+#      - name: Build
+#        run: cmake --build ${{github.workspace}}/build --config Release
+#
+#      - name: Save binary in zip
+#        uses: montudor/action-zip@v1.0.0
+#        with:
+#          args: zip filc-windows2022.zip ${{github.workspace}}/build/src/Release/filc.exe
+#      - name: Upload to Release
+#        uses: JasonEtco/upload-to-release@v0.1.1
+#        with:
+#          args: filc-windows2022.zip
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

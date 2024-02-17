@@ -25,14 +25,36 @@
 #include <utility>
 
 namespace filc::environment {
-    Name::Name(std::string name, filc::ast::AbstractType *type)
-            : _name(std::move(name)), _type(type) {}
+    Name::Name(std::string name, const std::shared_ptr<filc::ast::AbstractType> &type)
+            : _name(std::move(name)), _type(type), _value(nullptr), _function(nullptr) {}
 
     auto Name::getName() const -> const std::string & {
         return _name;
     }
 
-    auto Name::getType() const -> filc::ast::AbstractType * {
+    auto Name::getType() const -> std::shared_ptr<filc::ast::AbstractType> {
         return _type;
+    }
+
+    auto Name::getValue() const -> llvm::Value * {
+        return _value;
+    }
+
+    auto Name::setValue(llvm::Value *value) -> void {
+        if (value == nullptr) {
+            throw std::logic_error("Tried to set nullptr to a Name value");
+        }
+        _value = value;
+    }
+
+    auto Name::getFunction() const -> llvm::Function * {
+        return _function;
+    }
+
+    auto Name::setFunction(llvm::Function *function) -> void {
+        if (function == nullptr) {
+            throw std::logic_error("Tried to set nullptr to a Name function");
+        }
+        _function = function;
     }
 }

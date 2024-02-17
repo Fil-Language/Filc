@@ -33,14 +33,7 @@ echo -e "    https://img.shields.io/badge/version-$version_badge-green"
 http --download --output=version.svg "https://img.shields.io/badge/version-$version_badge-green" -q
 echo -e "    \033[32mDone\033[0m"
 
-# Change version in src/lib/utils/VERSION.h
-# #define FILC_VERSION_MAJOR $major
-# #define FILC_VERSION_MINOR $minor
-# #define FILC_VERSION_PATCH $patch
-# #define FILC_VERSION_PRE std::string("$pre")
-echo -e " -> Change version in src/lib/utils/VERSION.h"
-sed -i "s/#define FILC_VERSION_MAJOR .*/#define FILC_VERSION_MAJOR $major/" src/lib/utils/VERSION.h
-sed -i "s/#define FILC_VERSION_MINOR .*/#define FILC_VERSION_MINOR $minor/" src/lib/utils/VERSION.h
-sed -i "s/#define FILC_VERSION_PATCH .*/#define FILC_VERSION_PATCH $patch/" src/lib/utils/VERSION.h
-sed -i "s/#define FILC_VERSION_PRE .*/#define FILC_VERSION_PRE std::string(\"$pre\")/" src/lib/utils/VERSION.h
+# Change version in VERSION
+echo -e " -> Change version in VERSION"
+echo -e "$version" > VERSION
 echo -e "    \033[32mDone\033[0m"

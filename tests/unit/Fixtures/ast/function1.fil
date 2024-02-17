@@ -1,0 +1,3 @@
+module test
+
+export fun pi(): double = 3.1415d

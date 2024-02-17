@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <utility>
 #include "AST.h"
 
 namespace filc::ast {
-    ArrayType::ArrayType(filc::ast::AbstractType *inner_type, unsigned int size)
-            : _inner_type(inner_type), _size(size) {}
+    ArrayType::ArrayType(std::shared_ptr<AbstractType> inner_type, unsigned int size)
+            : _inner_type(std::move(inner_type)), _size(size) {}
 
-    auto ArrayType::getInnerType() const -> AbstractType * {
+    auto ArrayType::getInnerType() const -> std::shared_ptr<AbstractType> {
         return _inner_type;
     }
 
@@ -37,22 +38,5 @@ namespace filc::ast {
 
     auto ArrayType::dump() const -> std::string {
         return _inner_type->dump() + "[" + std::to_string(_size) + "]";
-    }
-
-    ArrayType::~ArrayType() {
-//        delete _inner_type;
-    }
-
-    auto ArrayType::equals(const AbstractType &other) const -> bool {
-        if (dynamic_cast<const ArrayType *>(&other) == nullptr) {
-            return false;
-        }
-        auto other_type = dynamic_cast<const ArrayType &>(other);
-
-        if (_size != other_type._size) {
-            return false;
-        }
-
-        return *_inner_type == *other_type._inner_type;
     }
 }

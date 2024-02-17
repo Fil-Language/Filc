@@ -1,8 +1,8 @@
 changelog:
   categories:
     - title: New Features 🎉
-      labels: enhancement
+      labels: [enhancement]
     - title: Bug fixes 🛠
-      labels: bug
+      labels: [bug]
     - title: Other changes
-      labels: "*"
+      labels: ["*"]

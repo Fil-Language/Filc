@@ -28,7 +28,7 @@
 namespace filc::ast {
     Identifier::Identifier(antlr4::Token *token)
             : _name(token->getText()) {
-        setPosition(new filc::utils::Position(token));
+        setPosition(new filc::utils::SimplePosition(token));
     }
 
     Identifier::Identifier(std::string name)
@@ -40,14 +40,41 @@ namespace filc::ast {
 
     auto Identifier::resolveType(filc::environment::Environment *environment,
                                  filc::message::MessageCollector *collector,
-                                 AbstractType *preferred_type) -> void {
+                                 const std::shared_ptr<AbstractType> &preferred_type) -> void {
         if (!environment->hasName(_name, preferred_type)) {
             collector->addError(
                     new filc::message::Error(filc::message::ERROR, _name + " is not defined", getPosition())
             );
         } else {
-            auto *name = environment->getName(_name);
+            auto *name = environment->getName(_name, nullptr);
             setExpressionType(name->getType());
         }
+    }
+
+    auto Identifier::addNameToEnvironment(filc::environment::Environment *environment) const -> void {
+        environment->addName(_name, getExpressionType());
+    }
+
+    auto Identifier::generateIR(filc::message::MessageCollector *collector,
+                                filc::environment::Environment *environment,
+                                llvm::LLVMContext *context,
+                                llvm::Module *module,
+                                llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        auto *name = environment->getName(_name, getExpressionType());
+        if (name == nullptr) {
+            collector->addError(
+                    new filc::message::Error(filc::message::ERROR, _name + " is not defined", getPosition())
+            );
+
+            return nullptr;
+        }
+        auto *value = name->getValue();
+        if (value == nullptr) {
+            collector->addError(
+                    new filc::message::Error(filc::message::ERROR, _name + " is not defined", getPosition())
+            );
+        }
+
+        return value;
     }
 }

@@ -1,4 +1,3 @@
-include(FetchContent)
 FetchContent_Declare(
         googletest
         URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
@@ -7,55 +6,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(tests
-        unit/test_tools.h
-        # === Utils ===
-        unit/utils/OptionsParserTest.cpp
-        unit/utils/PositionTest.cpp
-        unit/utils/ToolsTest.cpp
-        # === Message ===
-        unit/message/MessageTest.cpp
-        unit/message/MessageCollectorTest.cpp
-        # === Grammar ===
-        unit/grammar/ParserTest.cpp
-        # === AST ===
-        unit/ast/ProgramTest.cpp
-        unit/ast/BooleanLiteralTest.cpp
-        unit/ast/IntegerLiteralTest.cpp
-        unit/ast/FloatLiteralTest.cpp
-        unit/ast/CharacterLiteralTest.cpp
-        unit/ast/StringLiteralTest.cpp
-        unit/ast/VariableDeclarationTest.cpp
-        unit/ast/IdentifierTest.cpp
-        unit/ast/TypeTest.cpp
-        unit/ast/ArrayTypeTest.cpp
-        unit/ast/PointerTypeTest.cpp
-        unit/ast/LambdaTypeTest.cpp
-        unit/ast/UnaryCalculTest.cpp
-        unit/ast/ClassicOperatorTest.cpp
-        unit/ast/ArrayOperatorTest.cpp
-        unit/ast/FunctionOperatorTest.cpp
-        unit/ast/PreUnaryCalculTest.cpp
-        unit/ast/PostUnaryCalculTest.cpp
-        unit/ast/BinaryCalculTest.cpp
-        unit/ast/FunctionTest.cpp
-        unit/ast/FunctionParameterTest.cpp
-        unit/ast/LambdaTest.cpp
-        unit/ast/IfTest.cpp
-        unit/ast/SwitchTest.cpp
-        unit/ast/SwitchCaseTest.cpp
-        unit/ast/ForITest.cpp
-        unit/ast/ForIterTest.cpp
-        unit/ast/WhileTest.cpp
-        unit/ast/AssignationOperatorTest.cpp
-        unit/ast/AbstractExpressionTest.cpp
-        # === Environment ===
-        unit/environment/EnvironmentTest.cpp
-        unit/environment/NameTest.cpp
-)
-target_include_directories(tests PUBLIC unit)
-
-target_link_libraries(tests PRIVATE gtest_main gtest gmock compiler_lib)
-
 include(GoogleTest)
-gtest_discover_tests(tests)
+
+add_subdirectory(unit)
+add_subdirectory(e2e)

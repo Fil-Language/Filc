@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 #include "tools.h"
+#include <algorithm>
 #include <fstream>
 
 namespace filc::utils {
     auto parseEscapedChar(const std::string &escaped_char) -> char {
-        if (escaped_char.size() == 2) {
+        if (escaped_char.length() == 2 && escaped_char[0] == '\\') {
             // An escaped char \\ + ['"?abfnrtv\\]
             switch (escaped_char[1]) {
                 case '\'':
@@ -51,6 +52,8 @@ namespace filc::utils {
                     return '\v';
                 case '\\':
                     return '\\';
+                default:
+                    break;
             }
         }
 
@@ -101,7 +104,7 @@ namespace filc::utils {
         return result;
     }
 
-    auto joinString(std::vector<std::string> &source, const std::string &delimiter) -> std::string {
+    auto joinString(const std::vector<std::string> &source, const std::string &delimiter) -> std::string {
         std::string result;
 
         for (const auto &item: source) {
@@ -110,4 +113,27 @@ namespace filc::utils {
 
         return result.substr(0, result.length() - delimiter.length());
     }
-}
+
+    auto trim(const std::string &input) -> std::string {
+        static const std::string WHITESPACE = " \n\r\t\f\v";
+        const auto begin                    = input.find_first_not_of(WHITESPACE);
+        const auto copy                     = input.substr(begin);
+        const auto end                      = copy.find_last_not_of(WHITESPACE);
+
+        return copy.substr(0, end + 1);
+    }
+
+    auto computeVersionNumber(const std::string &version) -> unsigned int {
+        auto parts = splitString(version, '.');
+        if (parts.size() != 3) {
+            return 0;
+        }
+
+        int major      = std::stoi(parts[0]);
+        int minor      = std::stoi(parts[1]);
+        auto sub_parts = splitString(parts[2], '-');
+        int patch      = std::stoi(sub_parts[0]);
+
+        return ((major) * 1000000 + (minor) * 1000 + (patch));
+    }
+}// namespace filc::utils

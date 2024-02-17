@@ -30,16 +30,28 @@ namespace filc::ast {
 
     auto PreUnaryCalcul::resolveType(filc::environment::Environment *environment,
                                      filc::message::MessageCollector *collector,
-                                     AbstractType *preferred_type) -> void {
+                                     const std::shared_ptr<AbstractType> &preferred_type) -> void {
         getVariable()->resolveType(environment, collector, nullptr);
-        auto *variable_type = getVariable()->getExpressionType();
+        auto variable_type = getVariable()->getExpressionType();
         if (variable_type == nullptr) {
             return;
         }
 
+        auto *cl_op = dynamic_cast<ClassicOperator *>(getOperator());
+        if (cl_op != nullptr) {
+            if (cl_op->getOperator() == ClassicOperator::REF) {
+                setExpressionType(std::make_shared<PointerType>(variable_type));
+                return;
+            }
+            if (cl_op->getOperator() == ClassicOperator::STAR
+                && dynamic_cast<PointerType *>(variable_type.get()) != nullptr) {
+                setExpressionType(variable_type->getInnerType());
+                return;
+            }
+        }
+
         auto operator_name = "operator" + getOperator()->dump();
-        auto *operator_type = getOperator()->dumpPreLambdaType(variable_type, variable_type, environment, collector,
-                                                               getPosition());
+        auto operator_type = getOperator()->dumpPreLambdaType(variable_type, environment, collector, getPosition());
         if (environment->getName(operator_name, operator_type) == nullptr) {
             collector->addError(
                     new filc::message::Error(filc::message::ERROR,
@@ -51,5 +63,31 @@ namespace filc::ast {
         }
 
         setExpressionType(operator_type->getReturnType());
+    }
+
+    auto PreUnaryCalcul::generateIR(filc::message::MessageCollector *collector,
+                                    filc::environment::Environment *environment,
+                                    llvm::LLVMContext *context,
+                                    llvm::Module *module,
+                                    llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        auto operator_name = "operator" + getOperator()->dump();
+        auto variable_type = getVariable()->getExpressionType();
+        auto operator_type = getOperator()->dumpPreLambdaType(variable_type, environment, collector, getPosition());
+
+        auto *function = environment->getName(operator_name, operator_type)->getFunction();
+        if (function == nullptr) {
+            collector->addError(new filc::message::Error(
+                    filc::message::ERROR,
+                    "LLVM function for " + operator_name + ": " + operator_type->dump() + " not implemented",
+                    getPosition()
+            ));
+            return nullptr;
+        }
+        auto *variable = getVariable()->generateIR(collector, environment, context, module, builder);
+        if (variable == nullptr) {
+            return nullptr;
+        }
+
+        return builder->CreateCall(function, {variable});
     }
 }

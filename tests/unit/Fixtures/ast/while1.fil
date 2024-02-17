@@ -1,4 +1,4 @@
 module test
 
 var i: int = 0
-while (i < 10) i++
+export while (i < 10) i++

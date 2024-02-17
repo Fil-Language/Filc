@@ -25,6 +25,7 @@
 #include "MessageCollector.h"
 #include "DevWarning.h"
 #include "tools.h"
+#include "llvm/IR/Constants.h"
 
 namespace filc::ast {
     CharacterLiteral::CharacterLiteral(char value)
@@ -47,7 +48,7 @@ namespace filc::ast {
         if (token != nullptr) {
             filc::message::MessageCollector::getCollector()->addError(new filc::message::DevWarning(
                     2,
-                    new filc::utils::Position(token),
+                    new filc::utils::SimplePosition(token),
                     "Lexer found a character that is not regular: " + snippet
             ));
         }
@@ -57,11 +58,19 @@ namespace filc::ast {
 
     auto CharacterLiteral::resolveType(filc::environment::Environment *environment,
                                        filc::message::MessageCollector *collector,
-                                       AbstractType *preferred_type) -> void {
+                                       const std::shared_ptr<AbstractType> &preferred_type) -> void {
         if (!environment->hasType("char")) {
-            environment->addType(new filc::ast::Type(new filc::ast::Identifier("char")));
+            environment->addType(std::make_shared<Type>(new Identifier("char")));
         }
 
         setExpressionType(environment->getType("char"));
+    }
+
+    auto CharacterLiteral::generateIR(filc::message::MessageCollector *collector,
+                                      filc::environment::Environment *environment,
+                                      llvm::LLVMContext *context,
+                                      llvm::Module *module,
+                                      llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        return llvm::ConstantInt::get(*context, llvm::APInt(8, getValue()));
     }
 }

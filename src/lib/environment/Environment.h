@@ -25,33 +25,93 @@
 #define FILC_ENVIRONMENT_H
 
 #include "Name.h"
+#include "MessageCollector.h"
 #include <vector>
+#include "llvm/IR/IRBuilder.h"
 
 namespace filc::environment {
+    using BasicTypes = struct {
+        std::shared_ptr<filc::ast::AbstractType> _int_type;
+        std::shared_ptr<filc::ast::AbstractType> _double_type;
+        std::shared_ptr<filc::ast::AbstractType> _float_type;
+        std::shared_ptr<filc::ast::AbstractType> _char_type;
+        std::shared_ptr<filc::ast::AbstractType> _bool_type;
+    };
+
     class Environment {
     public:
-        explicit Environment(const Environment *parent = nullptr);
+        explicit Environment(std::string module = "", const Environment *parent = nullptr);
+
+        ~Environment();
+
+        [[nodiscard]] auto getModule() const -> const std::string &;
 
         [[nodiscard]] auto getParent() const -> const Environment *;
 
+        [[nodiscard]] auto hasName(const std::string &name,
+                                   const std::shared_ptr<filc::ast::AbstractType> &type = nullptr) const -> bool;
+
         [[nodiscard]] auto hasName(const std::string &name, filc::ast::AbstractType *type = nullptr) const -> bool;
 
+        auto addName(const std::string &name, const std::shared_ptr<filc::ast::AbstractType> &type) -> bool;
+
         auto addName(const std::string &name, filc::ast::AbstractType *type) -> bool;
+
+        [[nodiscard]] auto getName(const std::string &name,
+                                   const std::shared_ptr<filc::ast::AbstractType> &type = nullptr) const -> Name *;
 
         [[nodiscard]] auto getName(const std::string &name, filc::ast::AbstractType *type = nullptr) const -> Name *;
 
         [[nodiscard]] auto hasType(const std::string &type) const -> bool;
 
-        auto addType(filc::ast::AbstractType *type) -> bool;
+        auto addType(const std::shared_ptr<filc::ast::AbstractType> &type) -> bool;
 
-        [[nodiscard]] auto getType(const std::string &type) const -> filc::ast::AbstractType *;
+        [[nodiscard]] auto getType(const std::string &type) const -> std::shared_ptr<filc::ast::AbstractType>;
 
         static auto getGlobalEnvironment() -> const Environment *;
 
+        auto generateIR(filc::message::MessageCollector *collector,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> void;
+
     private:
+        std::string _module;
         const Environment *_parent;
         std::vector<Name *> _names;
-        std::vector<filc::ast::AbstractType *> _types;
+        std::vector<std::shared_ptr<filc::ast::AbstractType>> _types;
+
+        static auto addBasicTypes(Environment *global) -> BasicTypes;
+
+        static auto addConstants(Environment *global, BasicTypes &basic_types) -> void;
+
+        static auto addAssignations(Environment *global, BasicTypes &basic_types) -> void;
+
+        static auto addPrefixUnary(Environment *global, BasicTypes &basic_types) -> void;
+
+        static auto addPostfixUnary(Environment *global, BasicTypes &basic_types) -> void;
+
+        static auto addBinary(Environment *global, BasicTypes &basic_types) -> void;
+
+        auto generateAssignations(filc::message::MessageCollector *collector,
+                                  llvm::LLVMContext *context,
+                                  llvm::Module *module,
+                                  llvm::IRBuilder<> *builder) const -> void;
+
+        auto generatePrefixUnary(filc::message::MessageCollector *collector,
+                                 llvm::LLVMContext *context,
+                                 llvm::Module *module,
+                                 llvm::IRBuilder<> *builder) const -> void;
+
+        auto generatePostFixUnary(filc::message::MessageCollector *collector,
+                                  llvm::LLVMContext *context,
+                                  llvm::Module *module,
+                                  llvm::IRBuilder<> *builder) const -> void;
+
+        auto generateBinary(filc::message::MessageCollector *collector,
+                            llvm::LLVMContext *context,
+                            llvm::Module *module,
+                            llvm::IRBuilder<> *builder) const -> void;
     };
 }
 

@@ -36,3 +36,30 @@ TEST(FunctionOperator, constructor) {
     filc::ast::FunctionOperator fo1(exprs1);
     ASSERT_THAT(fo1.getExpressions(), ContainerEq(exprs1));
 }
+
+TEST(FunctionOperator, dump) {
+    filc::ast::FunctionOperator fo1({});
+    ASSERT_STREQ("()", fo1.dump().c_str());
+}
+
+TEST(FunctionOperator, dumpPreLambdaType) {
+    filc::ast::FunctionOperator fo1({});
+    ASSERT_EQ(nullptr, fo1.dumpPreLambdaType(nullptr, nullptr, COLLECTOR, nullptr));
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
+}
+
+TEST(FunctionOperator, dumpPostLambdaType) {
+    std::vector<filc::ast::AbstractExpression *> exprs1(
+            {
+                    new filc::ast::IntegerLiteral(12),
+                    new filc::ast::FloatLiteral(5.6)
+            }
+    );
+    filc::ast::FunctionOperator fo1(exprs1);
+    auto environment = filc::environment::Environment("env", filc::environment::Environment::getGlobalEnvironment());
+    const auto int_type = environment.getType("int");
+    const auto fo1_type = fo1.dumpPostLambdaType(int_type, &environment, COLLECTOR, nullptr);
+    ASSERT_NE(nullptr, fo1_type);
+    ASSERT_TYPE("(int, float) -> int", fo1_type);
+}

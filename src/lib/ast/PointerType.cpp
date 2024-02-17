@@ -21,30 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <utility>
 #include "AST.h"
 
 namespace filc::ast {
-    PointerType::PointerType(filc::ast::AbstractType *inner_type)
-            : _inner_type(inner_type) {}
+    PointerType::PointerType(std::shared_ptr<AbstractType> inner_type)
+            : _inner_type(std::move(inner_type)) {}
 
-    auto PointerType::getInnerType() const -> AbstractType * {
+    auto PointerType::getInnerType() const -> std::shared_ptr<AbstractType> {
         return _inner_type;
     }
 
     auto PointerType::dump() const -> std::string {
         return _inner_type->dump() + "*";
-    }
-
-    PointerType::~PointerType() {
-//        delete _inner_type;
-    }
-
-    auto PointerType::equals(const AbstractType &other) const -> bool {
-        if (dynamic_cast<const PointerType *>(&other) == nullptr) {
-            return false;
-        }
-        auto other_type = dynamic_cast<const PointerType &>(other);
-
-        return *_inner_type == *other_type._inner_type;
     }
 }

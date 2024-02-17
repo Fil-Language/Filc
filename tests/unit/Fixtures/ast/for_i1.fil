@@ -1,0 +1,6 @@
+module test
+
+var i: int = 0
+export for (; i <= 10; ++i) {
+    i
+}

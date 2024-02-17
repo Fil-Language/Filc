@@ -38,12 +38,12 @@ namespace filc::message {
 
     class Error final : public Message {
     public:
-        Error(LEVEL level, std::string content, filc::utils::Position *position);
+        Error(LEVEL level, std::string content, filc::utils::AbstractPosition *position);
 
         auto print(std::ostream &out) -> std::ostream & override;
 
     private:
-        filc::utils::Position *_position;
+        filc::utils::AbstractPosition *_position;
     };
 }
 

@@ -27,7 +27,7 @@
 TEST(FunctionParameter, constructor) {
     filc::ast::FunctionParameter fp1(
             new filc::ast::Identifier("n"),
-            new filc::ast::Type(new filc::ast::Identifier("int"))
+            std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int"))
     );
     ASSERT_IDENTIFIER("n", fp1.getName());
     ASSERT_TYPE("int", fp1.getType());

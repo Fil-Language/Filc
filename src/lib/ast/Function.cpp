@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <utility>
 #include "AST.h"
 #include "Error.h"
+#include "llvm/IR/Verifier.h"
 
 namespace filc::ast {
-    Function::Function(Identifier *name, const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
-                       const std::vector<AbstractExpression *> &body)
-            : Lambda(parameters, return_type, body), _name(name) {}
+    Function::Function(Identifier *name, const std::vector<FunctionParameter *> &parameters,
+                       std::shared_ptr<AbstractType> return_type, BlockBody *body)
+            : Lambda(parameters, std::move(return_type), body), _name(name) {}
 
     auto Function::getName() const -> Identifier * {
         return _name;
@@ -39,7 +41,7 @@ namespace filc::ast {
 
     auto Function::resolveType(filc::environment::Environment *environment,
                                filc::message::MessageCollector *collector,
-                               AbstractType *preferred_type) -> void {
+                               const std::shared_ptr<AbstractType> &preferred_type) -> void {
         Lambda::resolveType(environment, collector, preferred_type);
 
         if (environment->hasName(_name->getName(), getExpressionType())) {
@@ -54,5 +56,43 @@ namespace filc::ast {
         }
 
         environment->addName(_name->getName(), getExpressionType());
+    }
+
+    auto Function::addNameToEnvironment(filc::environment::Environment *environment) const -> void {
+        environment->addName(_name->getName(), getExpressionType());
+    }
+
+    auto Function::generateIR(filc::message::MessageCollector *collector,
+                              filc::environment::Environment *environment,
+                              llvm::LLVMContext *context,
+                              llvm::Module *module,
+                              llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        std::vector<llvm::Type *> parameters_types;
+        for (const auto &parameter: getParameters()) {
+            parameters_types.push_back(parameter->getType()->getLLVMType());
+        }
+
+        auto *function_type = llvm::FunctionType::get(getReturnType()->getLLVMType(), parameters_types, false);
+        auto *function = llvm::Function::Create(
+                function_type, llvm::Function::ExternalLinkage, _name->getName(), module);
+
+        unsigned int nb_arg = 0;
+        for (auto &arg: function->args()) {
+            getBodyEnvironment()->getName(getParameters()[nb_arg]->getName()->getName(), nullptr)->setValue(&arg);
+            arg.setName(getParameters()[nb_arg]->getName()->getName());
+            nb_arg++;
+        }
+
+        auto *block = llvm::BasicBlock::Create(*context, "entry", function);
+        builder->SetInsertPoint(block);
+
+        auto *return_value = getBody()->generateIR(collector, getBodyEnvironment(), context, module, builder);
+        if (return_value == nullptr) {
+            function->eraseFromParent();
+            return nullptr;
+        }
+
+        builder->CreateRet(return_value);
+        return function;
     }
 }

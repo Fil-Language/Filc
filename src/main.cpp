@@ -21,17 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "OptionsParser.h"
+#include "BuildCommand.h"
+#include "CommandCollector.h"
 #include "FilCompiler.h"
+#include "InitCommand.h"
+#include "VersionCommand.h"
+#include "tools.h"
 
-auto main(int argc, const char **argv) -> int {
-    auto options = filc::utils::OptionsParser();
+using namespace std;
+using namespace filc;
 
-    if (!options.parse(argc, argv)) {
-        return EXIT_FAILURE;
-    }
+auto main(int argc, char **argv) -> int {
+    utils::command::CommandCollector command_collector;
+    command_collector.addCommand(new utils::command::BuildCommand(new FilCompiler));
+    command_collector.addCommand(new utils::command::InitCommand);
+    command_collector.addCommand(new utils::command::VersionCommand(FILC_VERSION, utils::computeVersionNumber(FILC_VERSION), "MIT"));
 
-    auto compiler = filc::FilCompiler(options);
-
-    return compiler.compile();
+    return command_collector.run(argc, argv);
 }

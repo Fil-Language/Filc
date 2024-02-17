@@ -21,15 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
+#include "AST.h"
 #include "MessageCollector.h"
+#include "stubs.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+#include <sstream>
 
 using namespace ::testing;
 
-#define FIXTURES_PATH "../../tests/unit/Fixtures"
+#define FIXTURES_PATH "../../../tests/unit/Fixtures"
 
 #define COLLECTOR filc::message::MessageCollector::getCollector()
+
+#define DEFINE_ENVIRONMENT(name) auto *name = new filc::environment::Environment("name", filc::environment::Environment::getGlobalEnvironment())
+
+#define DEFINE_LLVM                                       \
+    auto *context = new llvm::LLVMContext;                \
+    auto *module  = new llvm::Module("module", *context); \
+    auto *builder = new llvm::IRBuilder<>(*context)
 
 #define ASSERT_TYPE(expected, type) ASSERT_STREQ(expected, type->dump().c_str())
 
@@ -41,9 +51,37 @@ using namespace ::testing;
 
 #define ASSERT_LITERAL(expected, type, literal) ASSERT_EQ(expected, dynamic_cast<filc::ast::type *>(literal)->getValue())
 
-#define ASSERT_VARIABLE_DECLARATION(constant, name, type, value, literal, variable) \
+#define ASSERT_VARIABLE_DECLARATION(constant, name, type, value, literal, variable)  \
     auto *var_##variable = dynamic_cast<filc::ast::VariableDeclaration *>(variable); \
-    ASSERT_EQ(constant, var_##variable->isConstant()); \
-    ASSERT_IDENTIFIER(name, var_##variable->getIdentifier()); \
-    ASSERT_TYPE(type, var_##variable->getType()); \
+    ASSERT_NE(nullptr, var_##variable);                                              \
+    ASSERT_EQ(constant, var_##variable->isConstant());                               \
+    ASSERT_IDENTIFIER(name, var_##variable->getIdentifier());                        \
+    ASSERT_TYPE(type, var_##variable->getType());                                    \
     ASSERT_LITERAL(value, literal, var_##variable->getAssignation())
+
+#define ASSERT_MESSAGE_CONTENT(expected, message)                       \
+    {                                                                   \
+        std::stringstream stream;                                       \
+        message.print(stream);                                          \
+        std::string result(std::istreambuf_iterator<char>(stream), {}); \
+        ASSERT_STREQ(expected, result.c_str());                         \
+    }
+
+#define ASSERT_OUTPUT(expression, assertion)                               \
+    {                                                                      \
+        std::stringstream redirect_stream;                                 \
+        std::streambuf *oldbuf = std::cout.rdbuf(redirect_stream.rdbuf()); \
+        expression;                                                        \
+        std::string result, line;                                          \
+        while (std::getline(redirect_stream, line)) {                      \
+            result += line + "\n";                                         \
+        }                                                                  \
+        assertion;                                                         \
+        std::cout.rdbuf(oldbuf);                                           \
+    }
+
+#define ASSERT_OUTPUT_EQUAL(expected, expression) ASSERT_OUTPUT(expression, ASSERT_STREQ(expected, result.c_str()))
+
+#define ASSERT_OUTPUT_MATCH(regex, expression) ASSERT_OUTPUT(expression, ASSERT_THAT(result, MatchesRegex(regex)))
+
+auto redirectCin(const std::function<void(std::stringstream &stream)> &function) -> void;

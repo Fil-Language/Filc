@@ -23,32 +23,22 @@
  */
 #include "Message.h"
 #include "test_tools.h"
-#include <sstream>
-
-auto getMessageContent(filc::message::Message &message) -> std::string {
-    std::stringstream stream;
-    stream << message;
-
-    std::string result(std::istreambuf_iterator<char>(stream), {});
-
-    return result;
-}
 
 TEST(Message, constructor) {
-    std::string expected = "My message";
+    auto expected = "My message";
     auto message = filc::message::Message(filc::message::WARNING, expected);
     ASSERT_EQ(filc::message::WARNING, message.getLevel());
-    ASSERT_STREQ(expected.c_str(), getMessageContent(message).c_str());
+    ASSERT_MESSAGE_CONTENT(expected, message);
 
     expected = "My message 2";
     message = filc::message::Message((filc::message::LEVEL) 9, expected);
     ASSERT_EQ(5, message.getLevel());
-    ASSERT_STREQ(expected.c_str(), getMessageContent(message).c_str());
+    ASSERT_MESSAGE_CONTENT(expected, message);
 }
 
 TEST(Message, print) {
-    std::string expected = "My message";
+    auto expected = "My message";
     auto message = filc::message::Message(filc::message::WARNING, expected);
-    ASSERT_STREQ(expected.c_str(), getMessageContent(message).c_str());
-    ASSERT_STREQ("", getMessageContent(message).c_str());
+    ASSERT_MESSAGE_CONTENT(expected, message);
+    ASSERT_MESSAGE_CONTENT("", message);
 }

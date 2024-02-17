@@ -27,14 +27,12 @@
 using namespace ::testing;
 
 TEST(LambdaType, constructor) {
-    auto *arg1 = new filc::ast::Type(new filc::ast::Identifier("arg1"));
-    auto *arg2 = new filc::ast::Type(new filc::ast::Identifier("arg2"));
-    auto *arg3 = new filc::ast::Type(new filc::ast::Identifier("arg3"));
-    auto *return_type = new filc::ast::Type(new filc::ast::Identifier("return_type"));
-    auto *called_type = new filc::ast::Type(new filc::ast::Identifier("called_type"));
-    filc::ast::LambdaType lt1({arg1, arg2, arg3}, return_type, called_type);
+    auto arg1 = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("arg1"));
+    auto arg2 = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("arg2"));
+    auto arg3 = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("arg3"));
+    auto return_type = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("return_type"));
+    filc::ast::LambdaType lt1({arg1, arg2, arg3}, return_type);
     ASSERT_TYPE("return_type", lt1.getReturnType());
     ASSERT_THAT(lt1.getArgumentTypes(), ElementsAre(arg1, arg2, arg3));
     ASSERT_TYPE("(arg1, arg2, arg3) -> return_type", (&lt1));
-    ASSERT_TYPE("called_type", lt1.getCalledOn());
 }

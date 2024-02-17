@@ -6,7 +6,6 @@ Anyone is welcome to contribute to this project. And if you not have time to con
 
 - Star the project ⭐
 - Mention the project to your friends/colleagues 🗣
-- Sponsor the project 💸
 
 ## Code of conduct
 
@@ -14,24 +13,24 @@ The code of conduct is described in [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 ## Issues
 
-Filc use GitHub issues to track issues.
+Filc uses GitHub issues to track issues and development.
 
-Before opening a new one, check that there is not an existing [issue](/issues) answering to your problem.
+Before opening a new one, check that there is not an existing [issue](https://github.com/Fil-Language/Filc/issues)
+answering to your problem.
 
-Then, you can open a [new issue](/issues/new/choose) and choose the corresponding template. Please ensure your
-description is clear and has sufficient details to be able to reproduce the issue.
+Then, you can open a [new issue](https://github.com/Fil-Language/Filc/issues/new/choose) and choose the corresponding
+template. Please ensure your description is clear and has sufficient details to be able to reproduce the issue.
 
-## Getting started
+## Contribute
 
 Here is a small checklist:
 
-- Discuss the changes you want to make first
+- Open an issue to discuss the changes you want to make first
 - Create a fork of this repository
-- Checkout a new branch on top of `develop` branch
-- Make all your changes
-- Submit a pull request
+- Make your changes
+- Submit a pull request on top of `master` branch
 
-## Submitting pull requests
+### Submitting pull requests
 
 Before we can merge your pull request, here are some guidelines you need to follow.
 
@@ -41,7 +40,7 @@ These guidelines help keeping the code clean, stable and easier to review.
 
 - No dead code: If you create a function, it's to use it
 - All functions, class, types should be as strictly as possible
-- Comment, sometimes it's painful to comment, but it helps you and us to understand the code and improve it
+- Comment, sometimes it's painful to comment, but it helps you and us to understand the code, improve it, maintain it
 
 **Conventions**
 
@@ -49,13 +48,22 @@ C++ conventions and rules are all listed in `.clang-tidy` and `.clang-format` fi
 formatting from these files. If you not use an IDE, please call `clang-tidy` as often as possible to keep your code
 clear.
 
+**Commits**
+
+Please follow [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) guidelines for your commit message.
+A [template](commit-template) is available, you can use by running `git config commit.template commit-template`.
+
+All your commit *MUST* work. If your feature is too big to be in one commit, add exceptions, early returns to keep the
+code working.
+
 **Tests**
 
 We tried to keep our test coverage as high as possible. It means that everything *MUST* be tested.
 
 If you submit a bug fix, add a test case reproducing the bug. If it's a new feature, add tests covering all code paths.
 
-For testing we use googletest with cmake. Just use ctest to run them.
+For testing we use googletest with cmake. Just use ctest to run them. A full bench of macro is provided to help you
+to write your tests.
 
 **License**
 

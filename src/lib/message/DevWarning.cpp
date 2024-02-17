@@ -25,15 +25,19 @@
 #include <utility>
 
 namespace filc::message {
-    DevWarning::DevWarning(unsigned int code, filc::utils::Position *position, std::string content)
+    DevWarning::DevWarning(unsigned int code, filc::utils::AbstractPosition *position, std::string content)
             : Message(ERROR, std::move(content)), _code(code), _position(position) {}
+
+    auto DevWarning::getCode() const -> unsigned int {
+        return _code;
+    }
 
     auto DevWarning::print(std::ostream &out) -> std::ostream & {
         if (_printed) {
             return out;
         }
 
-        out << "\033[1;36mDEV WARNING:\033[0m " << "\033[1;46m " << _code << " \033[0m " << _content << std::endl;
+        out << "\033[1;36mDEV WARNING[" << _code << "]\033[0m\033[1m: " << _content << std::endl;
         out << _position->dump("\033[1;36m");
 
         _printed = true;

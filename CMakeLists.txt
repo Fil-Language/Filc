@@ -1,9 +1,6 @@
-cmake_policy(SET CMP0048 NEW)
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
-    cmake_policy(SET CMP0135 NEW)
-endif ()
+include(cmake/policies.cmake)
 
-cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -12,11 +9,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Don't use e.g. GNU extension (like -std=gnu++11) for portability
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION FILC_VERSION)
+
 project(
         Filc
-        VERSION 0.2.1
-        LANGUAGES CXX
+        VERSION ${FILC_VERSION}
+        LANGUAGES CXX C
 )
+
+include(FetchContent)
 
 # _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
 # Code Coverage configuration
@@ -29,12 +30,12 @@ if (CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
             -O0        # no optimization
             -g         # generate debug info
             --coverage # sets all required flags
-            )
+    )
     target_link_options(additional_config INTERFACE --coverage)
 else ()
     target_compile_options(additional_config INTERFACE
             -O3        # full optimization
-            )
+    )
 endif ()
 
 add_subdirectory(src)

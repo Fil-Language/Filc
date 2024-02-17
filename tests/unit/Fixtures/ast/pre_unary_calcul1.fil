@@ -1,4 +1,4 @@
 module test
 
 var a: int = 12
---a
+export --a

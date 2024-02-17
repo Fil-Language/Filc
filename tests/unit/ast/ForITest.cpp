@@ -26,8 +26,9 @@
 #include "Parser.h"
 
 TEST(ForI, constructor) {
-    auto *declaration = new filc::ast::VariableDeclaration(false, new filc::ast::Identifier("i"),
-                                                           new filc::ast::Type(new filc::ast::Identifier("int")));
+    auto *declaration = new filc::ast::VariableDeclaration(
+            false, new filc::ast::Identifier("i"),
+            std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")));
     declaration->setAssignation(new filc::ast::IntegerLiteral(0));
     filc::ast::ForI fi1(
             declaration,
@@ -40,7 +41,7 @@ TEST(ForI, constructor) {
                     new filc::ast::Identifier("i"),
                     new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUSPLUS)
             ),
-            {}
+            new filc::ast::BlockBody({})
     );
     ASSERT_IDENTIFIER("i", fi1.getDeclaration()->getIdentifier());
     ASSERT_TYPE("int", fi1.getDeclaration()->getType());
@@ -52,14 +53,24 @@ TEST(ForI, constructor) {
     auto *iteration = dynamic_cast<filc::ast::PostUnaryCalcul *>(fi1.getIteration());
     ASSERT_IDENTIFIER("i", iteration->getVariable());
     ASSERT_CLASSIC_OPERATOR(PLUSPLUS, iteration->getOperator());
-    ASSERT_THAT(fi1.getBody(), IsEmpty());
+    ASSERT_THAT(fi1.getBody()->getExpressions(), IsEmpty());
 }
 
 TEST(ForI, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/for_i1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(2));
     ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
     ASSERT_TYPE("int*", program1->getExpressions()[1]->getExpressionType());
+}
+
+TEST(ForI, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/for_i1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_FALSE(env1->hasName("test_for_i1_3", nullptr));
+    ASSERT_TRUE(env1->hasName("test_for_i1_4", nullptr));
+    ASSERT_TYPE("int*", env1->getName("test_for_i1_4", nullptr)->getType());
 }

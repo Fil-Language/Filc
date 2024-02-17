@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 #include "AST.h"
+#include "llvm/IR/Constants.h"
 
 namespace filc::ast {
     IntegerLiteral::IntegerLiteral(int value)
@@ -29,11 +30,19 @@ namespace filc::ast {
 
     auto IntegerLiteral::resolveType(filc::environment::Environment *environment,
                                      filc::message::MessageCollector *collector,
-                                     AbstractType *preferred_type) -> void {
+                                     const std::shared_ptr<AbstractType> &preferred_type) -> void {
         if (!environment->hasType("int")) {
-            environment->addType(new filc::ast::Type(new filc::ast::Identifier("int")));
+            environment->addType(std::make_shared<Type>(new Identifier("int")));
         }
 
         setExpressionType(environment->getType("int"));
+    }
+
+    auto IntegerLiteral::generateIR(filc::message::MessageCollector *collector,
+                                    filc::environment::Environment *environment,
+                                    llvm::LLVMContext *context,
+                                    llvm::Module *module,
+                                    llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        return llvm::ConstantInt::get(*context, llvm::APInt(64, getValue(), true));
     }
 }

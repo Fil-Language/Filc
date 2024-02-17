@@ -26,24 +26,33 @@
 #include "Parser.h"
 
 TEST(If, constructor) {
-    filc::ast::If if1(new filc::ast::Identifier("isTrue"), {});
+    filc::ast::If if1(new filc::ast::Identifier("isTrue"), new filc::ast::BlockBody({}));
     ASSERT_IDENTIFIER("isTrue", if1.getCondition());
-    ASSERT_THAT(if1.getBody(), IsEmpty());
+    ASSERT_THAT(if1.getBody()->getExpressions(), IsEmpty());
 }
 
 TEST(If, setElse) {
-    filc::ast::If if1(new filc::ast::Identifier("isFalse"), {});
-    if1.setElse(new filc::ast::If(new filc::ast::Identifier("isTrue"), {}));
+    filc::ast::If if1(new filc::ast::Identifier("isFalse"), new filc::ast::BlockBody({}));
+    if1.setElse(new filc::ast::If(new filc::ast::Identifier("isTrue"), new filc::ast::BlockBody({})));
     auto *ielse = if1.getElse();
     ASSERT_NE(nullptr, ielse);
     ASSERT_IDENTIFIER("isTrue", ielse->getCondition());
-    ASSERT_THAT(ielse->getBody(), IsEmpty());
+    ASSERT_THAT(ielse->getBody()->getExpressions(), IsEmpty());
 }
 
 TEST(If, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/ast/if1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
+}
+
+TEST(If, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/if2.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_TRUE(env1->hasName("test_if2_3", nullptr));
+    ASSERT_TYPE("int", env1->getName("test_if2_3", nullptr)->getType());
 }

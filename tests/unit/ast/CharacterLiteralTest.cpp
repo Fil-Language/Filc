@@ -24,6 +24,7 @@
 #include "AST.h"
 #include "test_tools.h"
 #include "Parser.h"
+#include "FilLexer.h"
 
 TEST(CharacterLiteral, constructor) {
     filc::ast::CharacterLiteral cl1('a');
@@ -31,28 +32,61 @@ TEST(CharacterLiteral, constructor) {
 }
 
 TEST(CharacterLiteral, stringToChar) {
-    ASSERT_EQ('a', filc::ast::CharacterLiteral::stringToChar("'a'"));
-    ASSERT_EQ('5', filc::ast::CharacterLiteral::stringToChar("'5'"));
-    ASSERT_EQ('\n', filc::ast::CharacterLiteral::stringToChar("'\\n'"));
-    ASSERT_EQ('\t', filc::ast::CharacterLiteral::stringToChar("'\\t'"));
+    ASSERT_EQ('a', filc::ast::CharacterLiteral::stringToChar("'a'", nullptr));
+    ASSERT_EQ('5', filc::ast::CharacterLiteral::stringToChar("'5'", nullptr));
+    ASSERT_EQ('\n', filc::ast::CharacterLiteral::stringToChar("'\\n'", nullptr));
+    ASSERT_EQ('\t', filc::ast::CharacterLiteral::stringToChar("'\\t'", nullptr));
+    ASSERT_EQ('\0', filc::ast::CharacterLiteral::stringToChar("abcdefghijklmnopqrstuvwxyz", nullptr));
+    ASSERT_FALSE(COLLECTOR->hasErrors());
+
+    antlr4::ANTLRFileStream input;
+    input.loadFromFile(FIXTURES_PATH "/grammar/bool1.fil");
+    filc::grammar::FilLexer lexer(&input);
+    const auto factory = antlr4::CommonTokenFactory::DEFAULT.get();
+    auto token = factory->create(
+            {&lexer, &input},
+            0,
+            "text",
+            0, 0, 0, 0, 0
+    );
+    ASSERT_EQ('\0', filc::ast::CharacterLiteral::stringToChar("abcdefghijklmnopqrstuvwxyz", token.get()));
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
 }
 
 TEST(CharacterLiteral, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/char1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     ASSERT_TYPE("char", program1->getExpressions()[0]->getExpressionType());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/char2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
-    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     ASSERT_TYPE("char", program2->getExpressions()[0]->getExpressionType());
 
     filc::grammar::Parser parser3(FIXTURES_PATH "/grammar/char3.fil", COLLECTOR);
     auto *program3 = parser3.getProgram();
-    ASSERT_NO_THROW(program3->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program3->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program3->getExpressions(), SizeIs(1));
     ASSERT_TYPE("char", program3->getExpressions()[0]->getExpressionType());
+}
+
+TEST(CharacterLiteral, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/char1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_TRUE(env1->hasName("test_char1_3", nullptr));
+    ASSERT_TYPE("char", env1->getName("test_char1_3", nullptr)->getType());
+}
+
+TEST(CharacterLiteral, generateIR) {
+    filc::ast::CharacterLiteral cl1('a');
+    cl1.resolveType(new filc::environment::Environment, COLLECTOR, nullptr);
+    auto *value = cl1.generateIR(COLLECTOR, new filc::environment::Environment,
+                                 new llvm::LLVMContext, nullptr, nullptr);
+    ASSERT_TRUE(value->getType()->isIntegerTy(8));
 }

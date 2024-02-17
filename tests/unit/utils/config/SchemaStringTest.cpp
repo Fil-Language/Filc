@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2023-Present Kevin Traini
+ * Copyright (c) 2024-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,45 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "Schema.h"
+#include "test_tools.h"
 
-#ifndef FILC_OPTIONSPARSER_H
-#define FILC_OPTIONSPARSER_H
+using namespace filc::utils::config;
 
-#include "cxxopts.hpp"
-
-namespace filc::utils {
-    class OptionsParser final {
-    public:
-        OptionsParser();
-
-        auto parse(int argc, const char **argv) -> bool;
-
-        auto getOptions() const -> const cxxopts::Options &;
-
-        auto getFilenames() const -> const std::vector<std::string> &;
-
-        auto getVerbose() const -> unsigned int;
-
-        auto isDebug() const -> bool;
-
-        auto getOut() const -> const std::string &;
-
-        auto getStdPath() const -> const std::string &;
-
-        static auto extension(const std::string &filename) -> std::string;
-
-    private:
-        cxxopts::Options _options;
-        std::vector<std::string> _filenames;
-        unsigned int _verbose;
-        bool _debug;
-        std::string _out;
-        std::string _std_path;
-
-        auto help() -> void;
-
-        static auto version() -> void;
-    };
+TEST(SchemaString, constructor) {
+    SchemaString ss1("hello");
+    ASSERT_STREQ("hello", ss1.get().c_str());
+    ss1.set("world");
+    ASSERT_STREQ("world", ss1.get().c_str());
 }
-
-#endif//FILC_OPTIONSPARSER_H

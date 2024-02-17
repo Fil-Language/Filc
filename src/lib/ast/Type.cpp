@@ -27,10 +27,6 @@ namespace filc::ast {
     Type::Type(filc::ast::Identifier *name)
             : _name(name) {}
 
-    Type::~Type() {
-//        delete _name;
-    }
-
     auto Type::getName() const -> Identifier * {
         return _name;
     }
@@ -39,16 +35,7 @@ namespace filc::ast {
         return _name->getName();
     }
 
-    auto Type::getInnerType() const -> AbstractType * {
-        return (AbstractType *) this;
-    }
-
-    auto Type::equals(const AbstractType &other) const -> bool {
-        if (dynamic_cast<const Type *>(&other) == nullptr) {
-            return false;
-        }
-        auto other_type = dynamic_cast<const Type &>(other);
-
-        return _name->getName() == other_type._name->getName();
+    auto Type::getInnerType() const -> std::shared_ptr<AbstractType> {
+        return nullptr;
     }
 }

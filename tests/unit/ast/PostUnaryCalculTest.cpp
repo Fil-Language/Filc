@@ -37,15 +37,41 @@ TEST(PostUnaryCalcul, constructor) {
 TEST(PostUnaryCalcul, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/ast/post_unary_calcul1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(2));
     ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
     ASSERT_TYPE("int", program1->getExpressions()[1]->getExpressionType());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/ast/post_unary_calcul2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
-    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program2->getExpressions(), SizeIs(2));
     ASSERT_TYPE("char*", program2->getExpressions()[0]->getExpressionType());
     ASSERT_TYPE("char", program2->getExpressions()[1]->getExpressionType());
+}
+
+TEST(PostUnaryCalcul, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/post_unary_calcul2.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_TRUE(env1->hasName("test_post_unary_calcul2_4", nullptr));
+    ASSERT_TYPE("char", env1->getName("test_post_unary_calcul2_4", nullptr)->getType());
+}
+
+TEST(PostUnaryCalcul, generateIR) {
+    filc::ast::PostUnaryCalcul puc1(new filc::ast::Identifier("my_var"),
+                                    new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUSMINUS));
+    auto *env = new filc::environment::Environment("", filc::environment::Environment::getGlobalEnvironment());
+    env->addName("my_var", env->getType("int"));
+    puc1.resolveType(env, COLLECTOR, nullptr);
+    ASSERT_FALSE(COLLECTOR->hasErrors());
+    auto *context = new llvm::LLVMContext;
+    auto *module = new llvm::Module("module", *context);
+    auto *builder = new llvm::IRBuilder<>(*context);
+    env->generateIR(COLLECTOR, context, module, builder);
+    env->getName("my_var", nullptr)->setValue(llvm::ConstantInt::get(*context, llvm::APInt(64, 2)));
+    auto *value = puc1.generateIR(COLLECTOR, env, context, module, builder);
+    ASSERT_NE(nullptr, value);
+    ASSERT_TRUE(value->getType()->isIntegerTy());
 }

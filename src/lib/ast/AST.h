@@ -30,6 +30,11 @@
 #include "MessageCollector.h"
 #include <string>
 #include <vector>
+#include <map>
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/Value.h"
 
 namespace filc::ast {
     class Program {
@@ -49,21 +54,28 @@ namespace filc::ast {
 
         auto setFilename(const std::string &filename) -> void;
 
-        auto resolveEnvironment(filc::message::MessageCollector *collector) -> void;
+        auto resolveEnvironment(filc::message::MessageCollector *collector,
+                                const std::map<const std::string, Program *> &modules) -> void;
+
+        [[nodiscard]] auto getPublicEnvironment(
+                const filc::environment::Environment *parent) -> filc::environment::Environment *;
+
+        auto generateIR(filc::message::MessageCollector *collector) -> void;
 
     private:
         std::string _module;
         std::vector<std::string> _imports;
         std::vector<AbstractExpression *> _expressions;
         std::string _filename;
-        filc::environment::Environment *_environment{nullptr};
+        filc::environment::Environment *_environment;
+        filc::environment::Environment *_public_environment;
     };
 
     class AbstractExpression {
     public:
         virtual ~AbstractExpression();
 
-        auto setPosition(filc::utils::Position *position) -> void;
+        auto setPosition(filc::utils::AbstractPosition *position) -> void;
 
         AbstractExpression(const AbstractExpression &other) = default;
 
@@ -77,23 +89,31 @@ namespace filc::ast {
 
         auto setExported(bool exported) -> void;
 
-        [[nodiscard]] auto getPosition() const -> filc::utils::Position *;
+        [[nodiscard]] auto getPosition() const -> filc::utils::AbstractPosition *;
 
-        [[nodiscard]] auto getExpressionType() const -> AbstractType *;
+        [[nodiscard]] auto getExpressionType() const -> std::shared_ptr<AbstractType>;
 
         virtual auto resolveType(filc::environment::Environment *environment,
                                  filc::message::MessageCollector *collector,
-                                 AbstractType *preferred_type = nullptr) -> void;
+                                 const std::shared_ptr<AbstractType> &preferred_type) -> void;
+
+        virtual auto addNameToEnvironment(filc::environment::Environment *environment) const -> void;
+
+        [[nodiscard]] virtual auto generateIR(filc::message::MessageCollector *collector,
+                                              filc::environment::Environment *environment,
+                                              llvm::LLVMContext *context,
+                                              llvm::Module *module,
+                                              llvm::IRBuilder<> *builder) const -> llvm::Value *;
 
     private:
         bool _exported{false};
-        filc::utils::Position *_position{nullptr};
-        AbstractType *_expression_type{nullptr};
+        filc::utils::AbstractPosition *_position{nullptr};
+        std::shared_ptr<AbstractType> _expression_type;
 
     protected:
         AbstractExpression() = default;
 
-        auto setExpressionType(AbstractType *expression_type) -> void;
+        auto setExpressionType(std::shared_ptr<AbstractType> expression_type) -> void;
     };
 
     class Identifier : public AbstractExpression {
@@ -106,7 +126,15 @@ namespace filc::ast {
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+        auto addNameToEnvironment(filc::environment::Environment *environment) const -> void override;
+
+        [[nodiscard]] auto generateIR(filc::message::MessageCollector *collector,
+                                      filc::environment::Environment *environment,
+                                      llvm::LLVMContext *context,
+                                      llvm::Module *module,
+                                      llvm::IRBuilder<> *builder) const -> llvm::Value * override;
 
     private:
         std::string _name;
@@ -130,47 +158,87 @@ namespace filc::ast {
     public:
         explicit BooleanLiteral(bool value);
 
-        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+        [[nodiscard]] auto generateIR(filc::message::MessageCollector *collector,
+                                      filc::environment::Environment *environment,
+                                      llvm::LLVMContext *context,
+                                      llvm::Module *module,
+                                      llvm::IRBuilder<> *builder) const -> llvm::Value * override;
     };
 
     class IntegerLiteral : public AbstractLiteral<int> {
     public:
         explicit IntegerLiteral(int value);
 
-        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
     };
 
     class FloatLiteral : public AbstractLiteral<double> {
     public:
-        explicit FloatLiteral(double value);
+        explicit FloatLiteral(double value, bool is_double = false);
 
-        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
+
+        [[nodiscard]] auto isDouble() const -> bool;
+
+    private:
+        bool _double;
     };
 
     class CharacterLiteral : public AbstractLiteral<char> {
     public:
         explicit CharacterLiteral(char value);
 
-        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
 
         static auto stringToChar(const std::string &snippet, antlr4::Token *token = nullptr) -> char;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
     };
 
     class StringLiteral : public AbstractLiteral<std::string> {
     public:
         explicit StringLiteral(const std::string &value);
 
-        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
     };
 
     class VariableDeclaration : public AbstractExpression {
     public:
-        VariableDeclaration(bool is_constant, Identifier *identifier, AbstractType *type);
+        VariableDeclaration(bool is_constant, Identifier *identifier, std::shared_ptr<AbstractType> type);
 
         ~VariableDeclaration() override;
 
@@ -178,19 +246,28 @@ namespace filc::ast {
 
         [[nodiscard]] auto getIdentifier() const -> Identifier *;
 
-        [[nodiscard]] auto getType() const -> AbstractType *;
+        [[nodiscard]] auto getType() const -> std::shared_ptr<AbstractType>;
 
         [[nodiscard]] auto getAssignation() const -> AbstractExpression *;
 
         auto setAssignation(AbstractExpression *assignation) -> void;
 
-        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+        auto addNameToEnvironment(filc::environment::Environment *environment) const -> void override;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
 
     private:
         bool _constant;
         Identifier *_identifier;
-        AbstractType *_type;
+        std::shared_ptr<AbstractType> _type;
         AbstractExpression *_assignation;
     };
 
@@ -208,27 +285,28 @@ namespace filc::ast {
 
         [[nodiscard]] virtual auto dump() const -> std::string = 0;
 
-        [[nodiscard]] virtual auto getInnerType() const -> AbstractType * = 0;
+        [[nodiscard]] virtual auto getInnerType() const -> std::shared_ptr<AbstractType> = 0;
 
-        [[nodiscard]] virtual auto equals(const AbstractType &other) const -> bool = 0;
+        [[nodiscard]] auto getLLVMType() const -> llvm::Type *;
+
+        auto setLLVMType(llvm::Type *type) -> void;
 
     protected:
         explicit AbstractType() = default;
+
+    private:
+        llvm::Type *_llvm_type{nullptr};
     };
 
     class Type : public AbstractType {
     public:
         explicit Type(Identifier *name);
 
-        ~Type() override;
-
         [[nodiscard]] auto getName() const -> Identifier *;
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        [[nodiscard]] auto getInnerType() const -> AbstractType * override;
-
-        [[nodiscard]] auto equals(const AbstractType &other) const -> bool override;
+        [[nodiscard]] auto getInnerType() const -> std::shared_ptr<AbstractType> override;
 
     private:
         Identifier *_name;
@@ -236,62 +314,47 @@ namespace filc::ast {
 
     class ArrayType : public AbstractType {
     public:
-        ArrayType(AbstractType *inner_type, unsigned int size);
+        ArrayType(std::shared_ptr<AbstractType> inner_type, unsigned int size);
 
-        ~ArrayType() override;
-
-        [[nodiscard]] auto getInnerType() const -> AbstractType * override;
+        [[nodiscard]] auto getInnerType() const -> std::shared_ptr<AbstractType> override;
 
         [[nodiscard]] auto getSize() const -> unsigned int;
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        [[nodiscard]] auto equals(const AbstractType &other) const -> bool override;
-
     private:
-        AbstractType *_inner_type;
+        std::shared_ptr<AbstractType> _inner_type;
         unsigned int _size;
     };
 
     class PointerType : public AbstractType {
     public:
-        explicit PointerType(AbstractType *inner_type);
+        explicit PointerType(std::shared_ptr<AbstractType> inner_type);
 
-        ~PointerType() override;
-
-        [[nodiscard]] auto getInnerType() const -> AbstractType * override;
+        [[nodiscard]] auto getInnerType() const -> std::shared_ptr<AbstractType> override;
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        [[nodiscard]] auto equals(const AbstractType &other) const -> bool override;
-
     private:
-        AbstractType *_inner_type;
+        std::shared_ptr<AbstractType> _inner_type;
     };
 
     class LambdaType : public AbstractType {
     public:
-        LambdaType(const std::vector<AbstractType *> &argument_types, AbstractType *return_type,
-                   AbstractType *called_on = nullptr);
+        LambdaType(const std::vector<std::shared_ptr<AbstractType>> &argument_types,
+                   std::shared_ptr<AbstractType> return_type);
 
-        ~LambdaType() override;
+        [[nodiscard]] auto getArgumentTypes() const -> const std::vector<std::shared_ptr<AbstractType>> &;
 
-        [[nodiscard]] auto getArgumentTypes() const -> const std::vector<AbstractType *> &;
-
-        [[nodiscard]] auto getReturnType() const -> AbstractType *;
+        [[nodiscard]] auto getReturnType() const -> std::shared_ptr<AbstractType>;
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        [[nodiscard]] auto getInnerType() const -> AbstractType * override;
-
-        [[nodiscard]] auto getCalledOn() const -> AbstractType *;
-
-        [[nodiscard]] auto equals(const AbstractType &other) const -> bool override;
+        [[nodiscard]] auto getInnerType() const -> std::shared_ptr<AbstractType> override;
 
     private:
-        std::vector<AbstractType *> _argument_types;
-        AbstractType *_return_type;
-        AbstractType *_called_on;
+        std::vector<std::shared_ptr<AbstractType>> _argument_types;
+        std::shared_ptr<AbstractType> _return_type;
     };
 
     class UnaryCalcul : public AbstractExpression {
@@ -313,8 +376,15 @@ namespace filc::ast {
     public:
         PreUnaryCalcul(Identifier *variable, Operator *p_operator);
 
-        auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
     };
 
     class PostUnaryCalcul : public UnaryCalcul {
@@ -322,7 +392,13 @@ namespace filc::ast {
         PostUnaryCalcul(Identifier *variable, Operator *p_operator);
 
         auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
     };
 
     class BinaryCalcul : public AbstractExpression {
@@ -338,12 +414,19 @@ namespace filc::ast {
         [[nodiscard]] auto getOperator() const -> Operator *;
 
         auto resolveType(filc::environment::Environment *environment, filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
 
     private:
         AbstractExpression *_left_expression;
         AbstractExpression *_right_expression;
         Operator *_operator;
+        std::shared_ptr<LambdaType> _binary_type;
     };
 
     class Operator {
@@ -360,17 +443,15 @@ namespace filc::ast {
 
         [[nodiscard]] virtual auto dump() const -> std::string = 0;
 
-        [[nodiscard]] virtual auto dumpPreLambdaType(AbstractType *return_type,
-                                                     AbstractType *called_on,
+        [[nodiscard]] virtual auto dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                                      filc::environment::Environment *environment,
                                                      filc::message::MessageCollector *collector,
-                                                     filc::utils::Position *position) const -> LambdaType * = 0;
+                                                     filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> = 0;
 
-        [[nodiscard]] virtual auto dumpPostLambdaType(AbstractType *return_type,
-                                                      AbstractType *called_on,
+        [[nodiscard]] virtual auto dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                                       filc::environment::Environment *environment,
                                                       filc::message::MessageCollector *collector,
-                                                      filc::utils::Position *position) const -> LambdaType * = 0;
+                                                      filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> = 0;
 
     protected:
         Operator() = default;
@@ -406,15 +487,15 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        [[nodiscard]] auto dumpPreLambdaType(AbstractType *return_type, AbstractType *called_on,
+        [[nodiscard]] auto dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
-                                             filc::utils::Position *position) const -> LambdaType * override;
+                                             filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
-        [[nodiscard]] auto dumpPostLambdaType(AbstractType *return_type, AbstractType *called_on,
+        [[nodiscard]] auto dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector,
-                                              filc::utils::Position *position) const -> LambdaType * override;
+                                              filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
     private:
         OPERATOR _operator;
@@ -430,15 +511,15 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        [[nodiscard]] auto dumpPreLambdaType(AbstractType *return_type, AbstractType *called_on,
+        [[nodiscard]] auto dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
-                                             filc::utils::Position *position) const -> LambdaType * override;
+                                             filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
-        [[nodiscard]] auto dumpPostLambdaType(AbstractType *return_type, AbstractType *called_on,
+        [[nodiscard]] auto dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector,
-                                              filc::utils::Position *position) const -> LambdaType * override;
+                                              filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
     private:
         AbstractExpression *_expression;
@@ -454,15 +535,15 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        [[nodiscard]] auto dumpPreLambdaType(AbstractType *return_type, AbstractType *called_on,
+        [[nodiscard]] auto dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
-                                             filc::utils::Position *position) const -> LambdaType * override;
+                                             filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
-        [[nodiscard]] auto dumpPostLambdaType(AbstractType *return_type, AbstractType *called_on,
+        [[nodiscard]] auto dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector,
-                                              filc::utils::Position *position) const -> LambdaType * override;
+                                              filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
     private:
         std::vector<AbstractExpression *> _expressions;
@@ -478,15 +559,15 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
-        [[nodiscard]] auto dumpPreLambdaType(AbstractType *return_type, AbstractType *called_on,
+        [[nodiscard]] auto dumpPreLambdaType(std::shared_ptr<AbstractType> type,
                                              filc::environment::Environment *environment,
                                              filc::message::MessageCollector *collector,
-                                             filc::utils::Position *position) const -> LambdaType * override;
+                                             filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
-        [[nodiscard]] auto dumpPostLambdaType(AbstractType *return_type, AbstractType *called_on,
+        [[nodiscard]] auto dumpPostLambdaType(std::shared_ptr<AbstractType> type,
                                               filc::environment::Environment *environment,
                                               filc::message::MessageCollector *collector,
-                                              filc::utils::Position *position) const -> LambdaType * override;
+                                              filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> override;
 
     private:
         Operator *_inner_operator;
@@ -494,32 +575,41 @@ namespace filc::ast {
 
     class Lambda : public AbstractExpression {
     public:
-        Lambda(const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
-               const std::vector<AbstractExpression *> &body);
+        Lambda(const std::vector<FunctionParameter *> &parameters, std::shared_ptr<AbstractType> return_type,
+               BlockBody *body);
 
         ~Lambda() override;
 
         [[nodiscard]] auto getParameters() const -> const std::vector<FunctionParameter *> &;
 
-        [[nodiscard]] auto getReturnType() const -> AbstractType *;
+        [[nodiscard]] auto getReturnType() const -> std::shared_ptr<AbstractType>;
 
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getBody() const -> BlockBody *;
+
+        [[nodiscard]] auto getBodyEnvironment() const -> filc::environment::Environment *;
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
 
     private:
         std::vector<FunctionParameter *> _parameters;
-        AbstractType *_return_type;
-        std::vector<AbstractExpression *> _body;
+        std::shared_ptr<AbstractType> _return_type;
+        BlockBody *_body;
         filc::environment::Environment *_body_environment;
+        static int name_index;
     };
 
     class Function : public Lambda {
     public:
-        Function(Identifier *name, const std::vector<FunctionParameter *> &parameters, AbstractType *return_type,
-                 const std::vector<AbstractExpression *> &body);
+        Function(Identifier *name, const std::vector<FunctionParameter *> &parameters,
+                 std::shared_ptr<AbstractType> return_type, BlockBody *body);
 
         ~Function() override;
 
@@ -527,7 +617,15 @@ namespace filc::ast {
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+        auto addNameToEnvironment(filc::environment::Environment *environment) const -> void override;
+
+        auto generateIR(filc::message::MessageCollector *collector,
+                        filc::environment::Environment *environment,
+                        llvm::LLVMContext *context,
+                        llvm::Module *module,
+                        llvm::IRBuilder<> *builder) const -> llvm::Value * override;
 
     private:
         Identifier *_name;
@@ -535,28 +633,28 @@ namespace filc::ast {
 
     class FunctionParameter {
     public:
-        FunctionParameter(Identifier *name, AbstractType *type);
+        FunctionParameter(Identifier *name, std::shared_ptr<AbstractType> type);
 
         ~FunctionParameter();
 
         [[nodiscard]] auto getName() const -> Identifier *;
 
-        [[nodiscard]] auto getType() const -> AbstractType *;
+        [[nodiscard]] auto getType() const -> std::shared_ptr<AbstractType>;
 
     private:
         Identifier *_name;
-        AbstractType *_type;
+        std::shared_ptr<AbstractType> _type;
     };
 
     class If : public AbstractExpression {
     public:
-        If(AbstractExpression *condition, const std::vector<AbstractExpression *> &body);
+        If(AbstractExpression *condition, BlockBody *body);
 
         ~If() override;
 
         [[nodiscard]] auto getCondition() const -> AbstractExpression *;
 
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getBody() const -> BlockBody *;
 
         [[nodiscard]] auto getElse() const -> If *;
 
@@ -564,11 +662,11 @@ namespace filc::ast {
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
 
     private:
         AbstractExpression *_condition;
-        std::vector<AbstractExpression *> _body;
+        BlockBody *_body;
         If *_else;
     };
 
@@ -584,7 +682,7 @@ namespace filc::ast {
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
 
     private:
         AbstractExpression *_condition;
@@ -593,7 +691,7 @@ namespace filc::ast {
 
     class SwitchCase : public AbstractExpression {
     public:
-        SwitchCase(AbstractExpression *pattern, const std::vector<AbstractExpression *> &body);
+        SwitchCase(AbstractExpression *pattern, BlockBody *body);
 
         ~SwitchCase() override;
 
@@ -601,21 +699,21 @@ namespace filc::ast {
 
         [[nodiscard]] auto isDefault() const -> bool;
 
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getBody() const -> BlockBody *;
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
 
     private:
         AbstractExpression *_pattern;
-        std::vector<AbstractExpression *> _body;
+        BlockBody *_body;
     };
 
     class ForI : public AbstractExpression {
     public:
         ForI(VariableDeclaration *declaration, AbstractExpression *condition, AbstractExpression *iteration,
-             const std::vector<AbstractExpression *> &body);
+             BlockBody *body);
 
         ~ForI() override;
 
@@ -625,24 +723,23 @@ namespace filc::ast {
 
         [[nodiscard]] auto getIteration() const -> AbstractExpression *;
 
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getBody() const -> BlockBody *;
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
 
     private:
         VariableDeclaration *_declaration;
         AbstractExpression *_condition;
         AbstractExpression *_iteration;
-        std::vector<AbstractExpression *> _body;
+        BlockBody *_body;
         filc::environment::Environment *_body_environment;
     };
 
     class ForIter : public AbstractExpression {
     public:
-        ForIter(bool constant, Identifier *identifier, AbstractExpression *array,
-                const std::vector<AbstractExpression *> &body);
+        ForIter(bool constant, Identifier *identifier, AbstractExpression *array, BlockBody *body);
 
         ~ForIter() override;
 
@@ -652,37 +749,53 @@ namespace filc::ast {
 
         [[nodiscard]] auto getArray() const -> AbstractExpression *;
 
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getBody() const -> BlockBody *;
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
 
     private:
         bool _constant;
         Identifier *_identifier;
         AbstractExpression *_array;
-        std::vector<AbstractExpression *> _body;
+        BlockBody *_body;
         filc::environment::Environment *_body_environment;
     };
 
     class While : public AbstractExpression {
     public:
-        While(AbstractExpression *condition, const std::vector<AbstractExpression *> &body);
+        While(AbstractExpression *condition, BlockBody *body);
 
         ~While() override;
 
         [[nodiscard]] auto getCondition() const -> AbstractExpression *;
 
-        [[nodiscard]] auto getBody() const -> const std::vector<AbstractExpression *> &;
+        [[nodiscard]] auto getBody() const -> BlockBody *;
 
         auto resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void override;
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
 
     private:
         AbstractExpression *_condition;
-        std::vector<AbstractExpression *> _body;
+        BlockBody *_body;
+    };
+
+    class BlockBody : public AbstractExpression {
+    public:
+        explicit BlockBody(const std::vector<AbstractExpression *> &expressions);
+
+        ~BlockBody() override;
+
+        [[nodiscard]] auto getExpressions() const -> const std::vector<AbstractExpression *> &;
+
+        auto resolveType(filc::environment::Environment *environment,
+                         filc::message::MessageCollector *collector,
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void override;
+
+    private:
+        std::vector<AbstractExpression *> _expressions;
     };
 }
 

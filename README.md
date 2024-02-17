@@ -7,48 +7,17 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/749c60420a9244dbac4ce1e0bd594f1e)](https://www.codacy.com/gh/Fil-Language/Filc/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Fil-Language/Filc&amp;utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/Fil-Language/Filc/branch/master/graph/badge.svg?token=BRT1CEUTW9)](https://codecov.io/gh/Fil-Language/Filc)
 
-Fil language compiler (version in `src/lib/utils/VERSION.h`)
+Fil language compiler (version in [VERSION](VERSION))
 
 Have used `figlet -f slant "Filc"` for the version message.
 
 ## Grammar
 
-Refer to documentation for used
-grammar : [https://fil.ktraini.com/doc/advanced/grammar](https://fil.ktraini.com/doc/advanced/grammar).
+Refer to the [diagram](src/lib/grammar/diagram.html) for used grammar.
 
 ## External dependencies
 
-### Compiler
-
-- [LLVM](https://llvm.org/)
-- [Antlr](https://www.antlr.org/)
-- [Options parser : https://github.com/jarro2783/cxxopts](https://github.com/jarro2783/cxxopts)
-
-### Tests
-
-- [GoogleTest](https://google.github.io/googletest/)
-
-### GitHub actions
-
-- [Checkout](https://github.com/marketplace/actions/checkout)
-- [Setup LCOV](https://github.com/marketplace/actions/setup-lcov)
-- [Setup Java](https://github.com/marketplace/actions/setup-java-jdk)
-- [Codecov coverage report](https://github.com/marketplace/actions/codecov)
-- [Codacy coverage report](https://github.com/marketplace/actions/codacy-coverage-reporter)
-- [Zip action](https://github.com/montudor/action-zip)
-- [Upload to release](https://github.com/JasonEtco/upload-to-release)
-
-### `version.sh`
-
-This script is used to update the version badge and the file `src/lib/utils/VERSION.h`.
-
-- [HTTPie](https://github.com/httpie/httpie)
-
-### Railroad diagram
-
-[The diagram](src/lib/grammar/diagram.html)
-
-- [bkiers/rrd-antlr4](https://github.com/bkiers/rrd-antlr4)
+All the external dependencies are listed in [DEPENDENCIES.md](./DEPENDENCIES.md)
 
 ## Building and Testing
 
@@ -86,10 +55,10 @@ your code.
 Dev warning are show like this :
 
 ```
-DEV WARNING  <code>  <message>
-        <filename>
-<line> |<code>
-       |  ^
+DEV WARNING[<code>]: <message>
+      --> <filename>
+<line> | <code>
+       |   ^
 ```
 
 |   Dev code   | Meaning                                              | File                                   |
@@ -98,3 +67,10 @@ DEV WARNING  <code>  <message>
 | <kbd>3</kdb> | A function that should not be called has been called | Several files (refer to error message) |
 
 These codes are for events that should not happen, but if they do, it's better to fix them.
+
+## Acknowledgements
+
+Thanks to JetBrains for helping me develop this project by offering me
+an [open source license](https://jb.gg/OpenSourceSupport)
+
+![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)

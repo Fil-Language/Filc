@@ -25,8 +25,8 @@
 #include "Error.h"
 
 namespace filc::ast {
-    ForI::ForI(filc::ast::VariableDeclaration *declaration, filc::ast::AbstractExpression *condition,
-               filc::ast::AbstractExpression *iteration, const std::vector<AbstractExpression *> &body)
+    ForI::ForI(VariableDeclaration *declaration, AbstractExpression *condition, AbstractExpression *iteration,
+               BlockBody *body)
             : _declaration(declaration), _condition(condition), _iteration(iteration), _body(body),
               _body_environment(nullptr) {}
 
@@ -42,7 +42,7 @@ namespace filc::ast {
         return _iteration;
     }
 
-    auto ForI::getBody() const -> const std::vector<AbstractExpression *> & {
+    auto ForI::getBody() const -> BlockBody * {
         return _body;
     }
 
@@ -50,15 +50,13 @@ namespace filc::ast {
         delete _declaration;
         delete _condition;
         delete _iteration;
-        for (const auto &expression: _body) {
-            delete expression;
-        }
+        delete _body;
     }
 
     auto ForI::resolveType(filc::environment::Environment *environment,
                            filc::message::MessageCollector *collector,
-                           AbstractType *preferred_type) -> void {
-        _body_environment = new filc::environment::Environment(environment);
+                           const std::shared_ptr<AbstractType> &preferred_type) -> void {
+        _body_environment = new filc::environment::Environment("", environment);
 
         if (_declaration != nullptr) {
             _declaration->resolveType(_body_environment, collector, nullptr);
@@ -66,7 +64,7 @@ namespace filc::ast {
 
         if (_condition != nullptr) {
             _condition->resolveType(_body_environment, collector, environment->getType("bool"));
-            auto *condition_type = _condition->getExpressionType();
+            auto condition_type = _condition->getExpressionType();
             if (condition_type == nullptr) {
                 return;
             }
@@ -81,20 +79,15 @@ namespace filc::ast {
         }
 
         if (_iteration != nullptr) {
-            _iteration->resolveType(_body_environment, collector);
+            _iteration->resolveType(_body_environment, collector, nullptr);
         }
 
-        AbstractType *body_type = nullptr;
-        for (auto iter = _body.begin(); iter != _body.end(); iter++) {
-            (*iter)->resolveType(_body_environment, collector);
-            if (iter + 1 == _body.end()) {
-                body_type = (*iter)->getExpressionType();
-            }
-        }
+        _body->resolveType(environment, collector, nullptr);
+        std::shared_ptr<AbstractType> body_type = _body->getExpressionType();
         if (body_type == nullptr) {
             return;
         }
 
-        setExpressionType(new PointerType(body_type));
+        setExpressionType(std::make_shared<PointerType>(body_type));
     }
 }

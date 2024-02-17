@@ -36,13 +36,30 @@ TEST(BooleanLiteral, constructor) {
 TEST(BooleanLiteral, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/bool1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     ASSERT_TYPE("bool", program1->getExpressions()[0]->getExpressionType());
 
     filc::grammar::Parser parser2(FIXTURES_PATH "/grammar/bool2.fil", COLLECTOR);
     auto *program2 = parser2.getProgram();
-    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program2->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program2->getExpressions(), SizeIs(1));
     ASSERT_TYPE("bool", program2->getExpressions()[0]->getExpressionType());
+}
+
+TEST(BooleanLiteral, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/bool1.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_TRUE(env1->hasName("test_bool1_3", nullptr));
+    ASSERT_TYPE("bool", env1->getName("test_bool1_3", nullptr)->getType());
+}
+
+TEST(BooleanLiteral, generateIR) {
+    filc::ast::BooleanLiteral bl1(true);
+    bl1.resolveType(new filc::environment::Environment, COLLECTOR, nullptr);
+    auto *value = bl1.generateIR(COLLECTOR, new filc::environment::Environment,
+                                 new llvm::LLVMContext, nullptr, nullptr);
+    ASSERT_TRUE(value->getType()->isIntegerTy());
 }

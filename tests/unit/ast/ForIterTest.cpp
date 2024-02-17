@@ -30,18 +30,27 @@ TEST(ForIter, constructor) {
             true,
             new filc::ast::Identifier("item"),
             new filc::ast::Identifier("my_array"),
-            {}
+            new filc::ast::BlockBody({})
     );
     ASSERT_TRUE(fi1.isConstant());
     ASSERT_IDENTIFIER("item", fi1.getIdentifier());
     ASSERT_IDENTIFIER("my_array", fi1.getArray());
-    ASSERT_THAT(fi1.getBody(), IsEmpty());
+    ASSERT_THAT(fi1.getBody()->getExpressions(), IsEmpty());
 }
 
 TEST(ForIter, resolveType) {
     filc::grammar::Parser parser1(FIXTURES_PATH "/ast/for_iter1.fil", COLLECTOR);
     auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR));
+    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
     ASSERT_TYPE("char*", program1->getExpressions()[0]->getExpressionType());
+}
+
+TEST(ForIter, addNameToEnvironment) {
+    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/for_iter2.fil", COLLECTOR);
+    auto *program1 = parser1.getProgram();
+    program1->resolveEnvironment(COLLECTOR, {});
+    auto *env1 = program1->getPublicEnvironment(nullptr);
+    ASSERT_TRUE(env1->hasName("test_for_iter2_3", nullptr));
+    ASSERT_TYPE("char*", env1->getName("test_for_iter2_3", nullptr)->getType());
 }

@@ -91,6 +91,8 @@ namespace filc::ast {
     class ForIter;
 
     class While;
+
+    class BlockBody;
 }
 
 #endif //FILC_AST_DECL_H

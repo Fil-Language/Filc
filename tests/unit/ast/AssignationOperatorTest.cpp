@@ -28,3 +28,22 @@ TEST(AssignationOperator, constructor) {
     filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FRIGHT));
     ASSERT_CLASSIC_OPERATOR(FRIGHT, ao1.getInnerOperator());
 }
+
+TEST(AssignationOperator, dump) {
+    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUS));
+    ASSERT_STREQ("-=", ao1.dump().c_str());
+}
+
+TEST(AssignationOperator, dumpPreLambdaType) {
+    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS));
+    ASSERT_EQ(nullptr, ao1.dumpPreLambdaType(nullptr, nullptr, COLLECTOR, nullptr));
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
+}
+
+TEST(AssignationOperator, dumpPostLambdaType) {
+    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS));
+    ASSERT_EQ(nullptr, ao1.dumpPostLambdaType(nullptr, nullptr, COLLECTOR, nullptr));
+    ASSERT_TRUE(COLLECTOR->hasErrors());
+    COLLECTOR->flush();
+}

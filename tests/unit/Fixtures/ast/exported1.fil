@@ -1,0 +1,5 @@
+module test
+
+export fun f1(): bool = true
+
+fun f2(): bool = false

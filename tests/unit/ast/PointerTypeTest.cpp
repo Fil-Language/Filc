@@ -25,7 +25,7 @@
 #include "test_tools.h"
 
 TEST(PointerType, constructor) {
-    auto *inner_type = new filc::ast::Type(new filc::ast::Identifier("abcd"));
+    auto inner_type = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("abcd"));
     filc::ast::PointerType pt1(inner_type);
     ASSERT_TYPE("abcd", pt1.getInnerType());
     ASSERT_TYPE("abcd*", (&pt1));

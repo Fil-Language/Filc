@@ -24,7 +24,7 @@
 #include "AST.h"
 
 namespace filc::ast {
-    SwitchCase::SwitchCase(filc::ast::AbstractExpression *pattern, const std::vector<AbstractExpression *> &body)
+    SwitchCase::SwitchCase(AbstractExpression *pattern, BlockBody *body)
             : _pattern(pattern), _body(body) {}
 
     auto SwitchCase::getPattern() const -> AbstractExpression * {
@@ -40,36 +40,27 @@ namespace filc::ast {
         return identifier->getName() == "default";
     }
 
-    auto SwitchCase::getBody() const -> const std::vector<AbstractExpression *> & {
+    auto SwitchCase::getBody() const -> BlockBody * {
         return _body;
     }
 
     SwitchCase::~SwitchCase() {
         delete _pattern;
-        for (const auto &expression: _body) {
-            delete expression;
-        }
+        delete _body;
     }
 
     auto SwitchCase::resolveType(filc::environment::Environment *environment,
                                  filc::message::MessageCollector *collector,
-                                 AbstractType *preferred_type) -> void {
+                                 const std::shared_ptr<AbstractType> &preferred_type) -> void {
         if (!isDefault()) {
-            _pattern->resolveType(environment, collector);
+            _pattern->resolveType(environment, collector, nullptr);
             if (_pattern->getExpressionType() == nullptr) {
                 return;
             }
         }
 
-        AbstractType *body_type = nullptr;
-        for (auto iter = _body.begin(); iter != _body.end(); iter++) {
-            if (iter + 1 != _body.end()) {
-                (*iter)->resolveType(environment, collector);
-            } else {
-                (*iter)->resolveType(environment, collector, preferred_type);
-                body_type = (*iter)->getExpressionType();
-            }
-        }
+        _body->resolveType(environment, collector, preferred_type);
+        std::shared_ptr<AbstractType> body_type = _body->getExpressionType();
 
         setExpressionType(body_type);
     }

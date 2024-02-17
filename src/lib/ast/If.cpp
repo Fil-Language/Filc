@@ -25,14 +25,14 @@
 #include "Error.h"
 
 namespace filc::ast {
-    If::If(filc::ast::AbstractExpression *condition, const std::vector<AbstractExpression *> &body)
+    If::If(AbstractExpression *condition, BlockBody *body)
             : _condition(condition), _body(body), _else(nullptr) {}
 
     auto If::getCondition() const -> AbstractExpression * {
         return _condition;
     }
 
-    auto If::getBody() const -> const std::vector<AbstractExpression *> & {
+    auto If::getBody() const -> BlockBody * {
         return _body;
     }
 
@@ -46,17 +46,15 @@ namespace filc::ast {
 
     If::~If() {
         delete _condition;
-        for (const auto &expression: _body) {
-            delete expression;
-        }
+        delete _body;
         delete _else;
     }
 
     auto If::resolveType(filc::environment::Environment *environment,
                          filc::message::MessageCollector *collector,
-                         AbstractType *preferred_type) -> void {
+                         const std::shared_ptr<AbstractType> &preferred_type) -> void {
         _condition->resolveType(environment, collector, environment->getType("bool"));
-        auto *condition_type = _condition->getExpressionType();
+        auto condition_type = _condition->getExpressionType();
         if (condition_type == nullptr) {
             return;
         }
@@ -69,13 +67,8 @@ namespace filc::ast {
             return;
         }
 
-        AbstractType *body_type = nullptr;
-        for (auto iter = _body.begin(); iter != _body.end(); iter++) {
-            (*iter)->resolveType(environment, collector, preferred_type);
-            if (iter + 1 == _body.end()) {
-                body_type = (*iter)->getExpressionType();
-            }
-        }
+        _body->resolveType(environment, collector, preferred_type);
+        std::shared_ptr<AbstractType> body_type = _body->getExpressionType();
 
         if (_else != nullptr) {
             _else->resolveType(environment, collector, preferred_type);

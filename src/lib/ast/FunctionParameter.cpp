@@ -21,22 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <utility>
 #include "AST.h"
 
 namespace filc::ast {
-    FunctionParameter::FunctionParameter(filc::ast::Identifier *name, filc::ast::AbstractType *type)
-            : _name(name), _type(type) {}
+    FunctionParameter::FunctionParameter(Identifier *name, std::shared_ptr<AbstractType> type)
+            : _name(name), _type(std::move(type)) {}
 
     auto FunctionParameter::getName() const -> Identifier * {
         return _name;
     }
 
-    auto FunctionParameter::getType() const -> AbstractType * {
+    auto FunctionParameter::getType() const -> std::shared_ptr<AbstractType> {
         return _type;
     }
 
     FunctionParameter::~FunctionParameter() {
         delete _name;
-        delete _type;
     }
 }

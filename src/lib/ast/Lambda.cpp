@@ -21,46 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <utility>
 #include "AST.h"
 #include "Error.h"
+#include "llvm/IR/Verifier.h"
 
 namespace filc::ast {
-    Lambda::Lambda(const std::vector<FunctionParameter *> &parameters, filc::ast::AbstractType *return_type,
-                   const std::vector<AbstractExpression *> &body)
-            : _parameters(parameters), _return_type(return_type), _body(body), _body_environment(nullptr) {}
+    int Lambda::name_index = 0;
+
+    Lambda::Lambda(const std::vector<FunctionParameter *> &parameters, std::shared_ptr<AbstractType> return_type,
+                   BlockBody *body)
+            : _parameters(parameters), _return_type(std::move(return_type)), _body(body), _body_environment(nullptr) {}
 
     auto Lambda::getParameters() const -> const std::vector<FunctionParameter *> & {
         return _parameters;
     }
 
-    auto Lambda::getReturnType() const -> AbstractType * {
+    auto Lambda::getReturnType() const -> std::shared_ptr<AbstractType> {
         return _return_type;
     }
 
-    auto Lambda::getBody() const -> const std::vector<AbstractExpression *> & {
+    auto Lambda::getBody() const -> BlockBody * {
         return _body;
+    }
+
+    auto Lambda::getBodyEnvironment() const -> filc::environment::Environment * {
+        return _body_environment;
     }
 
     Lambda::~Lambda() {
         for (const auto &parameter: _parameters) {
             delete parameter;
         }
-        delete _return_type;
-        for (const auto &expression: _body) {
-            delete expression;
-        }
+        delete _body;
     }
 
     auto Lambda::resolveType(filc::environment::Environment *environment,
                              filc::message::MessageCollector *collector,
-                             AbstractType *preferred_type) -> void {
-        _body_environment = new filc::environment::Environment(environment);
+                             const std::shared_ptr<AbstractType> &preferred_type) -> void {
+        _body_environment = new filc::environment::Environment("", environment);
 
-        std::vector<AbstractType *> parameters_types;
+        std::vector<std::shared_ptr<AbstractType>> parameters_types;
         for (const auto &parameter: _parameters) {
-            auto *parameter_type = parameter->getType();
+            auto parameter_type = parameter->getType();
             auto *parameter_name = parameter->getName();
-            if (_body_environment->hasName(parameter_name->getName())) {
+            if (_body_environment->hasName(parameter_name->getName(), nullptr)) {
                 collector->addError(new filc::message::Error(
                         filc::message::ERROR,
                         "Name " + parameter_name->getName() + " is already defined",
@@ -72,15 +77,8 @@ namespace filc::ast {
             parameters_types.push_back(parameter_type);
         }
 
-        AbstractType *body_type = nullptr;
-        for (auto iter = _body.begin(); iter != _body.end(); iter++) {
-            if (iter + 1 != _body.end()) {
-                (*iter)->resolveType(_body_environment, collector);
-            } else {
-                (*iter)->resolveType(_body_environment, collector, _return_type);
-                body_type = (*iter)->getExpressionType();
-            }
-        }
+        _body->resolveType(_body_environment, collector, _return_type);
+        std::shared_ptr<AbstractType> body_type = _body->getExpressionType();
         if (body_type == nullptr) {
             return;
         }
@@ -94,6 +92,40 @@ namespace filc::ast {
             return;
         }
 
-        setExpressionType(new filc::ast::LambdaType(parameters_types, _return_type, environment->getType("void")));
+        setExpressionType(std::make_shared<LambdaType>(parameters_types, _return_type));
+    }
+
+    auto Lambda::generateIR(filc::message::MessageCollector *collector,
+                            filc::environment::Environment *environment,
+                            llvm::LLVMContext *context,
+                            llvm::Module *module,
+                            llvm::IRBuilder<> *builder) const -> llvm::Value * {
+        std::vector<llvm::Type *> parameters_types;
+        for (const auto &parameter: _parameters) {
+            parameters_types.push_back(parameter->getType()->getLLVMType());
+        }
+
+        auto *function_type = llvm::FunctionType::get(_return_type->getLLVMType(), parameters_types, false);
+        auto function_name = "anonymous_" + environment->getModule() + "_" + std::to_string(Lambda::name_index++);
+        auto *function = llvm::Function::Create(function_type, llvm::Function::ExternalLinkage, function_name, module);
+
+        unsigned int nb_arg = 0;
+        for (auto &arg: function->args()) {
+            _body_environment->getName(_parameters[nb_arg]->getName()->getName(), nullptr)->setValue(&arg);
+            arg.setName(_parameters[nb_arg]->getName()->getName());
+            nb_arg++;
+        }
+
+        auto *block = llvm::BasicBlock::Create(*context, "entry", function);
+        builder->SetInsertPoint(block);
+
+        auto *return_value = _body->generateIR(collector, _body_environment, context, module, builder);
+        if (return_value == nullptr) {
+            function->eraseFromParent();
+            return nullptr;
+        }
+
+        builder->CreateRet(return_value);
+        return function;
     }
 }
