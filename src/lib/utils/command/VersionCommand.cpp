@@ -46,7 +46,27 @@ auto VersionCommand::run(int argc, char **argv) -> int {
             "                   "
          << '\n';
     cout << "Filc version " << _version << " - " << _version_number << '\n';
+    cout << "Build time: " << __DATE__ << ' ' << __TIME__ << '\n';
+    cout << "Build OS: " << getOSName() << '\n';
     cout << "License: " << _license << '\n';
 
     return 0;
+}
+
+auto VersionCommand::getOSName() -> string {
+#ifdef _WIN32
+    return "Windows 32-bit";
+#elif _WIN64
+    return "Windows 64-bit";
+#elif __APPLE__ || __MACH__
+    return "Mac OSX";
+#elif __linux__
+    return "Linux";
+#elif __FreeBSD__
+    return "FreeBSD";
+#elif __unix || __unix__
+    return "Unix";
+#else
+    return "Other";
+#endif
 }
