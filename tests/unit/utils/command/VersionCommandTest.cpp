@@ -35,12 +35,14 @@ TEST(VersionCommand, help) {
 TEST(VersionCommand, run) {
     VersionCommand vc1("1.3.2", 54, "My License");
 
-    ASSERT_OUTPUT("     _______ __    \n"
-                  "    / ____(_) /____\n"
-                  "   / /_  / / / ___/\n"
-                  "  / __/ / / / /__  \n"
-                  " /_/   /_/_/\\___/  \n"
-                  "                   \n"
-                  "Filc version 1.3.2 - 54\n"
-                  "License: My License\n", ASSERT_EQ(0, vc1.run(0, {})));
+    ASSERT_OUTPUT_MATCH("     _______ __    \n"
+                        "    / ____\\(_\\) /____\n"
+                        "   / /_  / / / ___/\n"
+                        "  / __/ / / / /__  \n"
+                        " /_/   /_/_/\\\\___/  \n"
+                        "                   \n"
+                        "Filc version 1\\.3\\.2 - 54\n"
+                        "Build time: [A-Za-z]{3} [0-9]{2} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}\n"
+                        "Build OS: " + VersionCommand::getOSName() + "\n"
+                        "License: My License\n", ASSERT_EQ(0, vc1.run(0, {})));
 }

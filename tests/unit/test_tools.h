@@ -67,7 +67,7 @@ using namespace ::testing;
         ASSERT_STREQ(expected, result.c_str());                         \
     }
 
-#define ASSERT_OUTPUT(expected, expression)                                \
+#define ASSERT_OUTPUT(expression, assertion)                               \
     {                                                                      \
         std::stringstream redirect_stream;                                 \
         std::streambuf *oldbuf = std::cout.rdbuf(redirect_stream.rdbuf()); \
@@ -76,8 +76,12 @@ using namespace ::testing;
         while (std::getline(redirect_stream, line)) {                      \
             result += line + "\n";                                         \
         }                                                                  \
-        ASSERT_STREQ(expected, result.c_str());                            \
+        assertion;                                                         \
         std::cout.rdbuf(oldbuf);                                           \
     }
+
+#define ASSERT_OUTPUT_EQUAL(expected, expression) ASSERT_OUTPUT(expression, ASSERT_STREQ(expected, result.c_str()))
+
+#define ASSERT_OUTPUT_MATCH(regex, expression) ASSERT_OUTPUT(expression, ASSERT_THAT(result, MatchesRegex(regex)))
 
 auto redirectCin(const std::function<void(std::stringstream &stream)> &function) -> void;

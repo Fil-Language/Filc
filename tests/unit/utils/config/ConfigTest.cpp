@@ -101,32 +101,32 @@ TEST(Config, load) {
     ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_file.yml"));
     Config::clear();
 
-    ASSERT_OUTPUT(
+    ASSERT_OUTPUT_EQUAL(
             ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_1.yml", "File format is invalid, it should be a yaml map"),
             ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_1.yml")))
     Config::clear();
 
-    ASSERT_OUTPUT(
+    ASSERT_OUTPUT_EQUAL(
             ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_2.yml", "Missing name key"),
             ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_2.yml")))
     Config::clear();
 
-    ASSERT_OUTPUT(
+    ASSERT_OUTPUT_EQUAL(
             ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_3.yml", "Missing version key"),
             ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_3.yml")))
     Config::clear();
 
-    ASSERT_OUTPUT(
+    ASSERT_OUTPUT_EQUAL(
             ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_4.yml", "Missing entrypoint key"),
             ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_4.yml")))
     Config::clear();
 
-    ASSERT_OUTPUT(
+    ASSERT_OUTPUT_EQUAL(
             ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_5.yml", "Missing namespaces key"),
             ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_5.yml")))
     Config::clear();
 
-    ASSERT_OUTPUT(
+    ASSERT_OUTPUT_EQUAL(
             ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_6.yml", "Namespaces value is invalid, it should be a yaml map"),
             ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_6.yml")))
     Config::clear();
