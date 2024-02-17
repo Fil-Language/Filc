@@ -38,13 +38,4 @@ auto main(int argc, char **argv) -> int {
     command_collector.addCommand(new utils::command::VersionCommand(FILC_VERSION, utils::computeVersionNumber(FILC_VERSION), "MIT"));
 
     return command_collector.run(argc, argv);
-    /* auto options = filc::utils::OptionsParser();
-
-     if (!options.parse(argc, argv)) {
-         return EXIT_FAILURE;
-     }
-
-     auto compiler = filc::FilCompiler(options);
-
-     return compiler.compile();*/
 }

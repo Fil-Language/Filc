@@ -53,15 +53,17 @@ TEST(Options, version) {
     ASSERT_STREQ("Display version of compiler\n", result1.c_str());
 
     const auto result2 = run_with_args("version");
-    ASSERT_STREQ("     _______ __    \n"
-                 "    / ____(_) /____\n"
-                 "   / /_  / / / ___/\n"
-                 "  / __/ / / / /__  \n"
-                 " /_/   /_/_/\\___/  \n"
-                 "                   \n"
-                 "Filc version 0.3.0 - 3000\n"
-                 "License: MIT\n",
-                 result2.c_str());
+    ASSERT_THAT(result2, MatchesRegex(
+                                 "     _______ __    \n"
+                                 "    / ____\\(_\\) /____\n"
+                                 "   / /_  / / / ___/\n"
+                                 "  / __/ / / / /__  \n"
+                                 " /_/   /_/_/\\\\___/  \n"
+                                 "                   \n"
+                                 "Filc version 0\\.3\\.0 - 3000\n"
+                                 "Build time: [A-Za-z]{3} [0-9]{2} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}\n"
+                                 "Build OS: (Windows 32-bit|Windows 64-bit|Mac OSX|Linux|FreeBSD|Unix|Other)\n"
+                                 "License: MIT\n"));
 }
 
 TEST(Options, init) {

@@ -35,6 +35,8 @@ namespace filc::utils::command {
 
         [[nodiscard]] auto run(int argc, char **argv) -> int override;
 
+        static auto getOSName() -> std::string;
+
     private:
         const std::string _version;
         const unsigned int _version_number;
