@@ -13,7 +13,7 @@ The code of conduct is described in [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 ## Issues
 
-Filc use GitHub issues to track issues and development.
+Filc uses GitHub issues to track issues and development.
 
 Before opening a new one, check that there is not an existing [issue](https://github.com/Fil-Language/Filc/issues)
 answering to your problem.
@@ -28,7 +28,7 @@ Here is a small checklist:
 - Open an issue to discuss the changes you want to make first
 - Create a fork of this repository
 - Make your changes
-- Submit a pull request on top of `develop` branch
+- Submit a pull request on top of `master` branch
 
 ### Submitting pull requests
 
@@ -47,6 +47,14 @@ These guidelines help keeping the code clean, stable and easier to review.
 C++ conventions and rules are all listed in `.clang-tidy` and `.clang-format` files. Modern IDEs all supports
 formatting from these files. If you not use an IDE, please call `clang-tidy` as often as possible to keep your code
 clear.
+
+**Commits**
+
+Please follow [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) guidelines for your commit message.
+A [template](commit-template) is available, you can use by running `git config commit.template commit-template`.
+
+All your commit *MUST* work. If your feature is too big to be in one commit, add exceptions, early returns to keep the
+code working.
 
 **Tests**
 

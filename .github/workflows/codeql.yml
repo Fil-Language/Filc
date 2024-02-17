@@ -2,17 +2,9 @@ name: CodeQL
 
 on:
   push:
-    paths:
-      - "src/**"
-      - "lib/**"
-      - "tests/**"
-      - ".github/workflows/codeql.yml"
+    branches:
+      - master
   pull_request:
-    paths:
-      - "src/**"
-      - "lib/**"
-      - "tests/**"
-      - ".github/workflows/codeql.yml"
   schedule:
     - cron: '0 1 * * *'
 

@@ -2,10 +2,9 @@ name: Changes check
 
 on:
   push:
-    paths:
-      - "src/lib/grammar/FilLexer.g4"
-      - "src/lib/grammar/FilParser.g4"
-      - ".github/workflows/changes.yml"
+    branches:
+      - master
+  pull_request:
 
 jobs:
   diagram:
