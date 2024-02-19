@@ -27,7 +27,7 @@
 using namespace ::testing;
 
 #define HELP_MESSAGE "Fil compiler\n"                           \
-                     "Version: 0.3.0\n"                         \
+                     "Version: 0.2.1\n"                         \
                      "License: MIT\n"                           \
                      "Usage: `filc <command>`\n"                \
                      "\n"                                       \
@@ -60,7 +60,7 @@ TEST(Options, version) {
                                  "  / __/ / / / /__  \n"
                                  " /_/   /_/_/\\\\___/  \n"
                                  "                   \n"
-                                 "Filc version 0\\.3\\.0 - 3000\n"
+                                 "Filc version 0\\.2\\.1 - 2001\n"
                                  "Build time: [A-Za-z]{3} [0-9]{2} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}\n"
                                  "Build OS: (Windows 32-bit|Windows 64-bit|Mac OSX|Linux|FreeBSD|Unix|Other)\n"
                                  "License: MIT\n"));

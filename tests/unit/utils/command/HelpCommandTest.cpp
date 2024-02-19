@@ -31,7 +31,7 @@ TEST(HelpCommand, help) {
     HelpCommand hc1(&cc1);
 
     ASSERT_STREQ("Fil compiler\n"
-                 "Version: 0.3.0\n"
+                 "Version: 0.2.1\n"
                  "License: MIT\n"
                  "Usage: `filc <command>`\n"
                  "\n"
@@ -41,7 +41,7 @@ TEST(HelpCommand, help) {
 
     cc1.addCommand(new CustomCommand());
     ASSERT_STREQ("Fil compiler\n"
-                 "Version: 0.3.0\n"
+                 "Version: 0.2.1\n"
                  "License: MIT\n"
                  "Usage: `filc <command>`\n"
                  "\n"
