@@ -11,7 +11,7 @@ jobs:
     name: Diagram check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Generate diagram
         run: ${{github.workspace}}/bin/railroad_diagram.sh

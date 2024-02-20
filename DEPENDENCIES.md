@@ -21,7 +21,7 @@ Here are listed all external dependencies used in this project.
 
 | **Name**                | **Link**                                                        |                     **Version**                      |
 |:------------------------|:----------------------------------------------------------------|:----------------------------------------------------:|
-| Checkout                | https://github.com/marketplace/actions/checkout                 |     ![v3](https://img.shields.io/badge/v3-green)     |
+| Checkout                | https://github.com/marketplace/actions/checkout                 |     ![v4](https://img.shields.io/badge/v4-green)     |
 | Setup LCOV              | https://github.com/marketplace/actions/setup-lcov               |     ![v1](https://img.shields.io/badge/v1-green)     |
 | Setup Java              | https://github.com/marketplace/actions/setup-java-jdk           |     ![v3](https://img.shields.io/badge/v3-green)     |
 | Codecov coverage report | https://github.com/marketplace/actions/codecov                  |     ![v3](https://img.shields.io/badge/v3-green)     |
