@@ -42,7 +42,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-macos:
-    name: Build MacOS 12
+    name: Build MacOS 13
     runs-on: macos-13
     steps:
       - uses: actions/checkout@v4
@@ -69,11 +69,11 @@ jobs:
           command: c
           files: |
             ${{github.workspace}}/build/src/filc
-          outPath: filc-macos12.tar.gz
+          outPath: filc-macos13.tar.gz
       - name: Upload to Release
         uses: JasonEtco/upload-to-release@v0.1.1
         with:
-          args: filc-macos12.tar.gz
+          args: filc-macos13.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
