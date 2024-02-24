@@ -80,8 +80,23 @@ using namespace ::testing;
         std::cout.rdbuf(oldbuf);                                           \
     }
 
+#define ASSERT_ERR_OUTPUT(expression, assertion)                               \
+    {                                                                      \
+        std::stringstream redirect_stream;                                 \
+        std::streambuf *oldbuf = std::cerr.rdbuf(redirect_stream.rdbuf()); \
+        expression;                                                        \
+        std::string result, line;                                          \
+        while (std::getline(redirect_stream, line)) {                      \
+            result += line + "\n";                                         \
+        }                                                                  \
+        assertion;                                                         \
+        std::cerr.rdbuf(oldbuf);                                           \
+    }
+
 #define ASSERT_OUTPUT_EQUAL(expected, expression) ASSERT_OUTPUT(expression, ASSERT_STREQ(expected, result.c_str()))
 
 #define ASSERT_OUTPUT_MATCH(regex, expression) ASSERT_OUTPUT(expression, ASSERT_THAT(result, MatchesRegex(regex)))
+
+#define ASSERT_ERR_OUTPUT_MATCH(regex, expression) ASSERT_ERR_OUTPUT(expression, ASSERT_THAT(result, MatchesRegex(regex)))
 
 auto redirectCin(const std::function<void(std::stringstream &stream)> &function) -> void;

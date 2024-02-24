@@ -24,21 +24,41 @@
 #ifndef FILC_PARSER_H
 #define FILC_PARSER_H
 
-#include <string>
 #include "AST.h"
 #include "MessageCollector.h"
+#include <string>
 
 namespace filc::grammar {
+    template<typename T>
     class Parser {
     public:
-        explicit Parser(const std::string &filename, filc::message::MessageCollector *collector);
+        virtual ~Parser() = default;
 
-        [[nodiscard]] auto getProgram() const -> ast::Program *;
+        virtual auto parse(const std::string &filename, message::MessageCollector *collector) -> void = 0;
+
+        [[nodiscard]] auto getResult() const -> T * {
+            return _result;
+        }
+
+    protected:
+        Parser() = default;
+
+        auto setResult(T *result) -> void {
+            _result = result;
+        }
 
     private:
-        filc::ast::Program *_program;
-        filc::message::MessageCollector *_collector;
+        T *_result;
     };
-}
 
-#endif //FILC_PARSER_H
+    class FilParser final : public Parser<ast::Program> {
+    public:
+        FilParser() = default;
+
+        ~FilParser() override = default;
+
+        auto parse(const std::string &filename, message::MessageCollector *collector) -> void override;
+    };
+}// namespace filc::grammar
+
+#endif//FILC_PARSER_H

@@ -39,30 +39,4 @@ namespace filc::ast {
     auto AssignationOperator::dump() const -> std::string {
         return _inner_operator->dump() + "=";
     }
-
-    auto AssignationOperator::dumpPreLambdaType(std::shared_ptr<AbstractType> type,
-                                                filc::environment::Environment *environment,
-                                                filc::message::MessageCollector *collector,
-                                                filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> {
-        collector->addError(new filc::message::DevWarning(
-                3,
-                position,
-                "AssignationOperator::dumpPreLambdaType should not be called but has been called"
-        ));
-
-        return nullptr;
-    }
-
-    auto AssignationOperator::dumpPostLambdaType(std::shared_ptr<AbstractType> type,
-                                                 filc::environment::Environment *environment,
-                                                 filc::message::MessageCollector *collector,
-                                                 filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> {
-        collector->addError(new filc::message::DevWarning(
-                3,
-                position,
-                "AssignationOperator::dumpPostLambdaType should not be called but has been called"
-        ));
-
-        return nullptr;
-    }
 }

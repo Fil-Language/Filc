@@ -41,36 +41,4 @@ namespace filc::ast {
     auto FunctionOperator::dump() const -> std::string {
         return "()";
     }
-
-    auto FunctionOperator::dumpPreLambdaType(std::shared_ptr<AbstractType> type,
-                                             filc::environment::Environment *environment,
-                                             filc::message::MessageCollector *collector,
-                                             filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> {
-        collector->addError(new filc::message::DevWarning(
-                3,
-                position,
-                "FunctionOperator::dumpPreLambdaType should not be called but has been called"
-        ));
-
-        return nullptr;
-    }
-
-    auto FunctionOperator::dumpPostLambdaType(std::shared_ptr<AbstractType> type,
-                                              filc::environment::Environment *environment,
-                                              filc::message::MessageCollector *collector,
-                                              filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> {
-        std::vector<std::shared_ptr<AbstractType>> args_types;
-        for (const auto &expression: _expressions) {
-            expression->resolveType(environment, collector, nullptr);
-            auto expression_type = expression->getExpressionType();
-            if (expression_type != nullptr) {
-                args_types.push_back(expression_type);
-            }
-        }
-        if (args_types.size() != _expressions.size()) {
-            return nullptr;
-        }
-
-        return std::make_shared<LambdaType>(args_types, type);
-    }
 }

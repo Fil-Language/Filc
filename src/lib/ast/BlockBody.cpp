@@ -32,17 +32,4 @@ namespace filc::ast {
     auto BlockBody::getExpressions() const -> const std::vector<AbstractExpression *> & {
         return _expressions;
     }
-
-    auto BlockBody::resolveType(filc::environment::Environment *environment,
-                                filc::message::MessageCollector *collector,
-                                const std::shared_ptr<AbstractType> &preferred_type) -> void {
-        for (auto it = _expressions.begin(); it != _expressions.end(); it++) {
-            if (it + 1 != _expressions.end()) {
-                (*it)->resolveType(environment, collector, nullptr);
-            } else {
-                (*it)->resolveType(environment, collector, preferred_type);
-                setExpressionType((*it)->getExpressionType());
-            }
-        }
-    }
 }

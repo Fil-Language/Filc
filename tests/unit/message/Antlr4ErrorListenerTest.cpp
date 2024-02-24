@@ -30,7 +30,7 @@ TEST(Antlr4ErrorListener, syntaxError) {
 
     antlr4::ANTLRFileStream input;
     input.loadFromFile(FIXTURES_PATH "/grammar/bool1.fil");
-    filc::grammar::FilLexer lexer(&input);
+    filc::antlr::FilLexer lexer(&input);
     const auto factory = antlr4::CommonTokenFactory::DEFAULT.get();
     auto token = factory->create(
             {&lexer, &input},

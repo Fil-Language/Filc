@@ -27,35 +27,23 @@
 #include "AST.h"
 #include "Compiler.h"
 #include "MessageCollector.h"
+#include "Parser.h"
 #include <future>
 #include <map>
 
 namespace filc {
     class FilCompiler final : public Compiler {
     public:
-        FilCompiler();
+        explicit FilCompiler(grammar::Parser<ast::Program> *parser);
 
         ~FilCompiler() override = default;
 
         auto compile() -> int override;
 
     private:
-        std::map<const std::string, ast::Program *> _modules;
+        std::unique_ptr<grammar::Parser<ast::Program>> _parser;
 
-        static auto checkCollector(message::MessageCollector *collector) -> bool;
-
-        auto parseFiles(message::MessageCollector *collector) -> std::vector<std::future<ast::Program *>>;
-
-        auto collectModules(std::vector<std::future<ast::Program *>> &futures,
-                            message::MessageCollector *collector) -> void;
-
-        auto checkModules(message::MessageCollector *collector) -> void;
-
-        auto resolveEnvironment(message::MessageCollector *collector) -> void;
-
-        auto generateLLVMIR(message::MessageCollector *collector) -> void;
-
-        static auto getModuleFilename(const std::string &module_name, const std::string &std_path) -> std::string;
+        static auto getEntrypoint() -> std::string;
     };
 }// namespace filc
 

@@ -52,42 +52,4 @@ namespace filc::ast {
         delete _iteration;
         delete _body;
     }
-
-    auto ForI::resolveType(filc::environment::Environment *environment,
-                           filc::message::MessageCollector *collector,
-                           const std::shared_ptr<AbstractType> &preferred_type) -> void {
-        _body_environment = new filc::environment::Environment("", environment);
-
-        if (_declaration != nullptr) {
-            _declaration->resolveType(_body_environment, collector, nullptr);
-        }
-
-        if (_condition != nullptr) {
-            _condition->resolveType(_body_environment, collector, environment->getType("bool"));
-            auto condition_type = _condition->getExpressionType();
-            if (condition_type == nullptr) {
-                return;
-            }
-            if (*condition_type != *environment->getType("bool")) {
-                collector->addError(new filc::message::Error(
-                        filc::message::ERROR,
-                        "Condition of for must return bool, found: " + condition_type->dump(),
-                        _condition->getPosition()
-                ));
-                return;
-            }
-        }
-
-        if (_iteration != nullptr) {
-            _iteration->resolveType(_body_environment, collector, nullptr);
-        }
-
-        _body->resolveType(environment, collector, nullptr);
-        std::shared_ptr<AbstractType> body_type = _body->getExpressionType();
-        if (body_type == nullptr) {
-            return;
-        }
-
-        setExpressionType(std::make_shared<PointerType>(body_type));
-    }
 }

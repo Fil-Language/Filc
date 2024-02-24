@@ -33,6 +33,8 @@ namespace filc::utils::command {
     public:
         CommandCollector();
 
+        ~CommandCollector();
+
         [[nodiscard]] auto getCommands() const -> const std::vector<std::unique_ptr<Command>> &;
 
         auto addCommand(Command *command) -> bool;

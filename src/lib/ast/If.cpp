@@ -49,40 +49,4 @@ namespace filc::ast {
         delete _body;
         delete _else;
     }
-
-    auto If::resolveType(filc::environment::Environment *environment,
-                         filc::message::MessageCollector *collector,
-                         const std::shared_ptr<AbstractType> &preferred_type) -> void {
-        _condition->resolveType(environment, collector, environment->getType("bool"));
-        auto condition_type = _condition->getExpressionType();
-        if (condition_type == nullptr) {
-            return;
-        }
-        if (*condition_type != *environment->getType("bool")) {
-            collector->addError(new filc::message::Error(
-                    filc::message::ERROR,
-                    "Condition must return a bool",
-                    _condition->getPosition()
-            ));
-            return;
-        }
-
-        _body->resolveType(environment, collector, preferred_type);
-        std::shared_ptr<AbstractType> body_type = _body->getExpressionType();
-
-        if (_else != nullptr) {
-            _else->resolveType(environment, collector, preferred_type);
-            if (*_else->getExpressionType() != *body_type) {
-                collector->addError(new filc::message::Error(
-                        filc::message::ERROR,
-                        "If and Else body must return same type: " + body_type->dump()
-                        + ", found " + _else->getExpressionType()->dump() + " for Else",
-                        _else->getPosition()
-                ));
-                return;
-            }
-        }
-
-        setExpressionType(body_type);
-    }
 }

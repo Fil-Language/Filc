@@ -28,25 +28,4 @@
 namespace filc::ast {
     StringLiteral::StringLiteral(const std::string &value)
             : AbstractLiteral<std::string>(filc::utils::parseEscapedString(value.substr(1, value.length() - 2))) {}
-
-    auto StringLiteral::resolveType(filc::environment::Environment *environment,
-                                    filc::message::MessageCollector *collector,
-                                    const std::shared_ptr<AbstractType> &preferred_type) -> void {
-        if (!environment->hasType("char*")) {
-            if (!environment->hasType("char")) {
-                environment->addType(std::make_shared<Type>(new Identifier("char")));
-            }
-            environment->addType(std::make_shared<PointerType>(environment->getType("char")));
-        }
-
-        setExpressionType(environment->getType("char*"));
-    }
-
-    auto StringLiteral::generateIR(filc::message::MessageCollector *collector,
-                                   filc::environment::Environment *environment,
-                                   llvm::LLVMContext *context,
-                                   llvm::Module *module,
-                                   llvm::IRBuilder<> *builder) const -> llvm::Value * {
-        return llvm::ConstantDataArray::getString(*context, getValue());
-    }
 }

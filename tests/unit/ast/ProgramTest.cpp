@@ -43,33 +43,3 @@ TEST(Program, filename) {
     program.setFilename(filename);
     ASSERT_STREQ(filename, program.getFilename().c_str());
 }
-
-TEST(Program, resolveEnvironment) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/grammar/module1.fil", COLLECTOR);
-    auto *program1 = parser1.getProgram();
-    program1->resolveEnvironment(COLLECTOR, {});
-    ASSERT_FALSE(COLLECTOR->hasErrors());
-
-    COLLECTOR->flush();
-    filc::grammar::Parser parser2(FIXTURES_PATH "/ast/while1.fil", COLLECTOR);
-    auto *program2 = parser2.getProgram();
-    program2->resolveEnvironment(COLLECTOR, {});
-    ASSERT_FALSE(COLLECTOR->hasErrors());
-}
-
-TEST(Program, getPublicEnvironment) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/exported1.fil", COLLECTOR);
-    auto *program1 = parser1.getProgram();
-    program1->resolveEnvironment(COLLECTOR, {});
-    auto *env1 = program1->getPublicEnvironment(new filc::environment::Environment);
-    ASSERT_STREQ("test.exported1", env1->getModule().c_str());
-    ASSERT_TRUE(env1->hasName("f1", nullptr));
-    ASSERT_TYPE("() -> bool", env1->getName("f1", nullptr)->getType());
-    ASSERT_FALSE(env1->hasName("f2", nullptr));
-}
-
-TEST(Program, generateIR) {
-    filc::ast::Program program1("", {}, {});
-    program1.resolveEnvironment(COLLECTOR, {});
-    ASSERT_NO_THROW(program1.generateIR(COLLECTOR));
-}

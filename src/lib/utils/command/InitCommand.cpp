@@ -75,9 +75,9 @@ auto InitCommand::run(int argc, char **argv) -> int {
         return 1;
     }
 
-    file << "module " << config->getNamespace("src") << '\n'
+    file << "module " << project_name << '\n'
          << '\n'
-         << "fun main() = 0" << '\n';
+         << "fun main(): int = 0" << '\n';
     file.flush();
     file.close();
 

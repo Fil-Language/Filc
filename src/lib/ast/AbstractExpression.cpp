@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include <utility>
 #include "AST.h"
 #include "Error.h"
 #include "tools.h"
+#include <utility>
 
 namespace filc::ast {
     AbstractExpression::~AbstractExpression() {
@@ -54,34 +54,4 @@ namespace filc::ast {
     auto AbstractExpression::setExpressionType(std::shared_ptr<AbstractType> expression_type) -> void {
         _expression_type = std::move(expression_type);
     }
-
-    auto AbstractExpression::resolveType(filc::environment::Environment *environment,
-                                         filc::message::MessageCollector *collector,
-                                         const std::shared_ptr<AbstractType> &preferred_type) -> void {
-        collector->addError(
-                new filc::message::Error(filc::message::FATAL_ERROR,
-                                         "resolveType not implemented",
-                                         getPosition())
-        );
-    }
-
-    auto AbstractExpression::addNameToEnvironment(
-            filc::environment::Environment *environment) const -> void {
-        auto name = filc::utils::joinString(filc::utils::splitString(environment->getModule(), '.'), "_")
-                    + "_" + std::to_string(getPosition()->getLine());
-        environment->addName(name, getExpressionType());
-    }
-
-    auto AbstractExpression::generateIR(filc::message::MessageCollector *collector,
-                                        filc::environment::Environment *environment,
-                                        llvm::LLVMContext *context, llvm::Module *module,
-                                        llvm::IRBuilder<> *builder) const -> llvm::Value * {
-        collector->addError(
-                new filc::message::Error(filc::message::FATAL_ERROR,
-                                         "generateIR not implemented",
-                                         getPosition())
-        );
-
-        return nullptr;
-    }
-}
+}// namespace filc::ast

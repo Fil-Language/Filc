@@ -32,19 +32,3 @@ TEST(BlockBody, constructor) {
     filc::ast::BlockBody bb1(expressions);
     ASSERT_THAT(bb1.getExpressions(), ContainerEq(expressions));
 }
-
-TEST(BlockBody, resolveType) {
-    DEFINE_ENVIRONMENT(env);
-    auto int_type = env->getType("int");
-    auto expression1 = TestExpression().withExpressionType(env->getType("char"));
-    auto expression2 = TestExpression().withExpressionType(int_type);
-    std::vector<filc::ast::AbstractExpression *> expressions = {&expression1, &expression2};
-    filc::ast::BlockBody bb1(expressions);
-    bb1.resolveType(env, COLLECTOR, nullptr);
-    ASSERT_TRUE(expression1.isResolveTypeCalled());
-    ASSERT_TRUE(expression2.isResolveTypeCalled());
-    ASSERT_FALSE(COLLECTOR->hasErrors());
-    auto result_type = bb1.getExpressionType();
-    ASSERT_NE(nullptr, result_type);
-    ASSERT_TYPE("int", result_type);
-}

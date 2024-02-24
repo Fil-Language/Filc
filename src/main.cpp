@@ -23,6 +23,7 @@
  */
 #include "BuildCommand.h"
 #include "CommandCollector.h"
+#include "Parser.h"
 #include "FilCompiler.h"
 #include "InitCommand.h"
 #include "VersionCommand.h"
@@ -33,7 +34,7 @@ using namespace filc;
 
 auto main(int argc, char **argv) -> int {
     utils::command::CommandCollector command_collector;
-    command_collector.addCommand(new utils::command::BuildCommand(new FilCompiler));
+    command_collector.addCommand(new utils::command::BuildCommand(new FilCompiler(new grammar::FilParser)));
     command_collector.addCommand(new utils::command::InitCommand);
     command_collector.addCommand(new utils::command::VersionCommand(FILC_VERSION, utils::computeVersionNumber(FILC_VERSION), "MIT"));
 

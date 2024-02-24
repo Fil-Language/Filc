@@ -23,6 +23,7 @@
  */
 #include "CommandCollector.h"
 
+#include "Config.h"
 #include "HelpCommand.h"
 #include <algorithm>
 #include <iostream>
@@ -32,14 +33,18 @@ using namespace filc::utils::command;
 
 CommandCollector::CommandCollector() = default;
 
+CommandCollector::~CommandCollector() {
+    config::Config::clear();
+}
+
 auto CommandCollector::getCommands() const -> const vector<unique_ptr<Command>> & {
     return _commands;
 }
 
 auto CommandCollector::addCommand(Command *command_added) -> bool {
     if (!any_of(_commands.begin(), _commands.end(), [&command_added](const unique_ptr<Command> &command) -> bool {
-        return command->getName() == command_added->getName();
-    })) {
+            return command->getName() == command_added->getName();
+        })) {
         _commands.push_back(unique_ptr<Command>(command_added));
 
         return true;
@@ -49,7 +54,7 @@ auto CommandCollector::addCommand(Command *command_added) -> bool {
 }
 
 auto CommandCollector::run(int argc, char **argv) -> int {
-    argc--; // Remove name of executable
+    argc--;// Remove name of executable
     argv++;
 
     if (argc == 0) {
@@ -64,16 +69,19 @@ auto CommandCollector::run(int argc, char **argv) -> int {
             _commands.begin(), _commands.end(),
             [&command_name](const unique_ptr<Command> &command) -> bool {
                 return command->matchName(command_name);
-            }
-    );
+            });
     if (command == _commands.end()) {
-        cout << "\033[31m" << "Command " << "\033[1m" << command_name
-             << "\033[0m\033[31m" << " not found" << "\033[0m" << '\n';
+        cout << "\033[31m"
+             << "Command "
+             << "\033[1m" << command_name
+             << "\033[0m\033[31m"
+             << " not found"
+             << "\033[0m" << '\n';
         runHelpCommand(0, {});
         return 1;
     }
 
-    argc--; // Remove name of command
+    argc--;// Remove name of command
     argv++;
 
     return (*command)->run(argc, argv);

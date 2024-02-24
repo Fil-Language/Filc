@@ -30,20 +30,3 @@ TEST(Switch, constructor) {
     ASSERT_IDENTIFIER("abcd", sw1.getCondition());
     ASSERT_THAT(sw1.getCases(), IsEmpty());
 }
-
-TEST(Switch, resolveType) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/switch1.fil", COLLECTOR);
-    auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
-    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    ASSERT_TYPE("char*", program1->getExpressions()[0]->getExpressionType());
-}
-
-TEST(Switch, addNameToEnvironment) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/switch1.fil", COLLECTOR);
-    auto *program1 = parser1.getProgram();
-    program1->resolveEnvironment(COLLECTOR, {});
-    auto *env1 = program1->getPublicEnvironment(nullptr);
-    ASSERT_TRUE(env1->hasName("test_switch1_3", nullptr));
-    ASSERT_TYPE("char*", env1->getName("test_switch1_3", nullptr)->getType());
-}

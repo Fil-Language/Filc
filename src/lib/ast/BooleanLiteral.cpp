@@ -27,22 +27,4 @@
 namespace filc::ast {
     BooleanLiteral::BooleanLiteral(bool value)
             : AbstractLiteral<bool>(value) {}
-
-    auto BooleanLiteral::resolveType(filc::environment::Environment *environment,
-                                     filc::message::MessageCollector *collector,
-                                     const std::shared_ptr<AbstractType> &preferred_type) -> void {
-        if (!environment->hasType("bool")) {
-            environment->addType(std::make_shared<Type>(new Identifier("bool")));
-        }
-
-        setExpressionType(environment->getType("bool"));
-    }
-
-    auto BooleanLiteral::generateIR(filc::message::MessageCollector *collector,
-                                    filc::environment::Environment *environment,
-                                    llvm::LLVMContext *context,
-                                    llvm::Module *module,
-                                    llvm::IRBuilder<> *builder) const -> llvm::Value * {
-        return llvm::ConstantInt::getBool(*context, getValue());
-    }
 }
