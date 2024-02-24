@@ -54,6 +54,7 @@ auto Config::get() -> Config * {
 }
 
 auto Config::clear() -> void {
+    delete _instance;
     _instance = nullptr;
 }
 
