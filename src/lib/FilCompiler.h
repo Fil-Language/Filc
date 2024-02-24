@@ -33,29 +33,11 @@
 namespace filc {
     class FilCompiler final : public Compiler {
     public:
-        FilCompiler();
+        FilCompiler() = default;
 
         ~FilCompiler() override = default;
 
         auto compile() -> int override;
-
-    private:
-        std::map<const std::string, ast::Program *> _modules;
-
-        static auto checkCollector(message::MessageCollector *collector) -> bool;
-
-        auto parseFiles(message::MessageCollector *collector) -> std::vector<std::future<ast::Program *>>;
-
-        auto collectModules(std::vector<std::future<ast::Program *>> &futures,
-                            message::MessageCollector *collector) -> void;
-
-        auto checkModules(message::MessageCollector *collector) -> void;
-
-        auto resolveEnvironment(message::MessageCollector *collector) -> void;
-
-        auto generateLLVMIR(message::MessageCollector *collector) -> void;
-
-        static auto getModuleFilename(const std::string &module_name, const std::string &std_path) -> std::string;
     };
 }// namespace filc
 

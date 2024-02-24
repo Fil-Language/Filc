@@ -34,26 +34,3 @@ TEST(ArrayOperator, dump) {
     filc::ast::ArrayOperator ao1(nullptr);
     ASSERT_STREQ("[]", ao1.dump().c_str());
 }
-
-TEST(ArrayOperator, dumpPreLambdaType) {
-    filc::ast::ArrayOperator ao1(nullptr);
-    ASSERT_EQ(nullptr, ao1.dumpPreLambdaType(nullptr, nullptr, COLLECTOR, nullptr));
-    ASSERT_TRUE(COLLECTOR->hasErrors());
-    COLLECTOR->flush();
-}
-
-TEST(ArrayOperator, dumpPostLambdaType) {
-    auto environment = filc::environment::Environment("env", filc::environment::Environment::getGlobalEnvironment());
-    auto int_type = environment.getType("int");
-    auto int_pointer = std::make_shared<filc::ast::PointerType>(int_type);
-    auto expression1 = filc::ast::IntegerLiteral(1);
-    filc::ast::ArrayOperator ao1(&expression1);
-    const auto result_type1 = ao1.dumpPostLambdaType(int_pointer, &environment, COLLECTOR, nullptr);
-    ASSERT_NE(nullptr, result_type1);
-    ASSERT_TYPE("(int) -> int", result_type1);
-
-    auto expression2 = TestExpression().withExpressionType(nullptr);
-    filc::ast::ArrayOperator ao2(&expression2);
-    const auto result_type2 = ao2.dumpPostLambdaType(int_pointer, &environment, COLLECTOR, nullptr);
-    ASSERT_EQ(nullptr, result_type2);
-}

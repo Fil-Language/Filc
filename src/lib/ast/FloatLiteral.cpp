@@ -28,26 +28,6 @@ namespace filc::ast {
     FloatLiteral::FloatLiteral(double value, bool is_double)
             : AbstractLiteral<double>(value), _double(is_double) {}
 
-    auto FloatLiteral::resolveType(filc::environment::Environment *environment,
-                                   filc::message::MessageCollector *collector,
-                                   const std::shared_ptr<AbstractType> &preferred_type) -> void {
-        const auto *looking_type = _double ? "double" : "float";
-
-        if (!environment->hasType(looking_type)) {
-            environment->addType(std::make_shared<Type>(new Identifier(looking_type)));
-        }
-
-        setExpressionType(environment->getType(looking_type));
-    }
-
-    auto FloatLiteral::generateIR(filc::message::MessageCollector *collector,
-                                  filc::environment::Environment *environment,
-                                  llvm::LLVMContext *context,
-                                  llvm::Module *module,
-                                  llvm::IRBuilder<> *builder) const -> llvm::Value * {
-        return llvm::ConstantFP::get(*context, llvm::APFloat(getValue()));
-    }
-
     auto FloatLiteral::isDouble() const -> bool {
         return _double;
     }

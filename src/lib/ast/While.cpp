@@ -40,30 +40,4 @@ namespace filc::ast {
         delete _condition;
         delete _body;
     }
-
-    auto While::resolveType(filc::environment::Environment *environment,
-                            filc::message::MessageCollector *collector,
-                            const std::shared_ptr<AbstractType> &preferred_type) -> void {
-        _condition->resolveType(environment, collector, environment->getType("bool"));
-        auto condition_type = _condition->getExpressionType();
-        if (condition_type == nullptr) {
-            return;
-        }
-        if (*condition_type != *environment->getType("bool")) {
-            collector->addError(new filc::message::Error(
-                    filc::message::ERROR,
-                    "Condition must return bool, found: " + condition_type->dump(),
-                    _condition->getPosition()
-            ));
-            return;
-        }
-
-        _body->resolveType(environment, collector, nullptr);
-        auto body_type = _body->getExpressionType();
-        if (body_type == nullptr) {
-            return;
-        }
-
-        setExpressionType(std::make_shared<PointerType>(body_type));
-    }
 }

@@ -48,20 +48,4 @@ namespace filc::ast {
         delete _pattern;
         delete _body;
     }
-
-    auto SwitchCase::resolveType(filc::environment::Environment *environment,
-                                 filc::message::MessageCollector *collector,
-                                 const std::shared_ptr<AbstractType> &preferred_type) -> void {
-        if (!isDefault()) {
-            _pattern->resolveType(environment, collector, nullptr);
-            if (_pattern->getExpressionType() == nullptr) {
-                return;
-            }
-        }
-
-        _body->resolveType(environment, collector, preferred_type);
-        std::shared_ptr<AbstractType> body_type = _body->getExpressionType();
-
-        setExpressionType(body_type);
-    }
 }

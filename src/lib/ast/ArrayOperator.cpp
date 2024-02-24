@@ -37,31 +37,4 @@ namespace filc::ast {
     auto ArrayOperator::dump() const -> std::string {
         return "[]";
     }
-
-    auto ArrayOperator::dumpPreLambdaType(std::shared_ptr<AbstractType> type,
-                                          filc::environment::Environment *environment,
-                                          filc::message::MessageCollector *collector,
-                                          filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> {
-        collector->addError(new filc::message::DevWarning(
-                3,
-                position,
-                "ArrayOperator::dumpPreLambdaType should not be called but has been called"
-        ));
-
-        return nullptr;
-    }
-
-    auto ArrayOperator::dumpPostLambdaType(std::shared_ptr<AbstractType> type,
-                                           filc::environment::Environment *environment,
-                                           filc::message::MessageCollector *collector,
-                                           filc::utils::AbstractPosition *position) const -> std::shared_ptr<LambdaType> {
-        _expression->resolveType(environment, collector, nullptr);
-        auto expression_type = _expression->getExpressionType();
-        if (expression_type == nullptr) {
-            return nullptr;
-        }
-
-        return std::make_shared<LambdaType>(std::vector<std::shared_ptr<AbstractType>>({expression_type}),
-                                            type->getInnerType());
-    }
 }

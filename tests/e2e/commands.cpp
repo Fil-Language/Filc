@@ -77,3 +77,14 @@ TEST(Options, init) {
     ASSERT_TRUE(std::filesystem::exists("my_awesome_project/module.yml"));
     std::filesystem::remove_all("my_awesome_project");
 }
+
+TEST(Options, build) {
+    run_with_args_and_input("init", "my_project\n");
+    chdir("./my_project");
+
+    const auto result = run_with_args("build 2>&1");
+    ASSERT_STREQ("\033[1;31mERROR\033[0m\033[1m: Compiler not implemented yet!\033[0m\n", result.c_str());
+
+    chdir("..");
+    std::filesystem::remove_all("my_project");
+}

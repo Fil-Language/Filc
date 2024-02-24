@@ -55,22 +55,4 @@ namespace filc::ast {
 
         return '\0';
     }
-
-    auto CharacterLiteral::resolveType(filc::environment::Environment *environment,
-                                       filc::message::MessageCollector *collector,
-                                       const std::shared_ptr<AbstractType> &preferred_type) -> void {
-        if (!environment->hasType("char")) {
-            environment->addType(std::make_shared<Type>(new Identifier("char")));
-        }
-
-        setExpressionType(environment->getType("char"));
-    }
-
-    auto CharacterLiteral::generateIR(filc::message::MessageCollector *collector,
-                                      filc::environment::Environment *environment,
-                                      llvm::LLVMContext *context,
-                                      llvm::Module *module,
-                                      llvm::IRBuilder<> *builder) const -> llvm::Value * {
-        return llvm::ConstantInt::get(*context, llvm::APInt(8, getValue()));
-    }
 }

@@ -39,20 +39,3 @@ TEST(If, setElse) {
     ASSERT_IDENTIFIER("isTrue", ielse->getCondition());
     ASSERT_THAT(ielse->getBody()->getExpressions(), IsEmpty());
 }
-
-TEST(If, resolveType) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/if1.fil", COLLECTOR);
-    auto *program1 = parser1.getProgram();
-    ASSERT_NO_THROW(program1->resolveEnvironment(COLLECTOR, {}));
-    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    ASSERT_TYPE("int", program1->getExpressions()[0]->getExpressionType());
-}
-
-TEST(If, addNameToEnvironment) {
-    filc::grammar::Parser parser1(FIXTURES_PATH "/ast/if2.fil", COLLECTOR);
-    auto *program1 = parser1.getProgram();
-    program1->resolveEnvironment(COLLECTOR, {});
-    auto *env1 = program1->getPublicEnvironment(nullptr);
-    ASSERT_TRUE(env1->hasName("test_if2_3", nullptr));
-    ASSERT_TYPE("int", env1->getName("test_if2_3", nullptr)->getType());
-}

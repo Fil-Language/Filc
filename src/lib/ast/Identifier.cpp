@@ -37,44 +37,4 @@ namespace filc::ast {
     auto Identifier::getName() const -> const std::string & {
         return _name;
     }
-
-    auto Identifier::resolveType(filc::environment::Environment *environment,
-                                 filc::message::MessageCollector *collector,
-                                 const std::shared_ptr<AbstractType> &preferred_type) -> void {
-        if (!environment->hasName(_name, preferred_type)) {
-            collector->addError(
-                    new filc::message::Error(filc::message::ERROR, _name + " is not defined", getPosition())
-            );
-        } else {
-            auto *name = environment->getName(_name, nullptr);
-            setExpressionType(name->getType());
-        }
-    }
-
-    auto Identifier::addNameToEnvironment(filc::environment::Environment *environment) const -> void {
-        environment->addName(_name, getExpressionType());
-    }
-
-    auto Identifier::generateIR(filc::message::MessageCollector *collector,
-                                filc::environment::Environment *environment,
-                                llvm::LLVMContext *context,
-                                llvm::Module *module,
-                                llvm::IRBuilder<> *builder) const -> llvm::Value * {
-        auto *name = environment->getName(_name, getExpressionType());
-        if (name == nullptr) {
-            collector->addError(
-                    new filc::message::Error(filc::message::ERROR, _name + " is not defined", getPosition())
-            );
-
-            return nullptr;
-        }
-        auto *value = name->getValue();
-        if (value == nullptr) {
-            collector->addError(
-                    new filc::message::Error(filc::message::ERROR, _name + " is not defined", getPosition())
-            );
-        }
-
-        return value;
-    }
 }
