@@ -22,31 +22,50 @@
  * SOFTWARE.
  */
 #include "FilCompiler.h"
+#include "Config.h"
 #include "Error.h"
 #include "MessageCollector.h"
 #include "tools.h"
+#include <filesystem>
 
 using namespace std;
 using namespace filc;
 
 auto FilCompiler::compile() -> int {
-    auto *collector = message::MessageCollector::getCollector();
+    auto *collector = message::MessageCollector::getCollector(message::ERROR);
 
     collector->addMessage(new message::Message(message::SYSTEM, "Begin compilation"));
 
     /*
      * TODO:
-     * - get entrypoint
-     * - antlr parse it and its includes
-     * - create dependency tree
-     * - checks pass with visitors on tree
-     * - llvm pass with visitors on tree
-     * - return 0;
+     * - [x] get entrypoint
+     * - [ ] antlr parse it and its includes
+     * - [ ] create dependency tree
+     * - [ ] checks pass with visitors on tree
+     * - [ ] llvm pass with visitors on tree
+     * - [ ] return 0;
      */
+    const auto entrypoint = getEntrypoint();
+    if (collector->hasErrors()) {
+        collector->printAll();
+        return 1;
+    }
+    collector->printAll();
 
     collector->addError(new message::BasicError(message::FATAL_ERROR, "Compiler not implemented yet!"));
     //collector->addMessage(new filc::message::Message(filc::message::SYSTEM, "Compilation finished"));
-
     collector->printAll();
-    return 0;
+    return 2;
+}
+
+auto FilCompiler::getEntrypoint() -> std::string {
+    auto *collector       = message::MessageCollector::getCollector();
+    const auto *config    = utils::config::Config::get();
+    const auto entrypoint = config->getEntrypoint();
+
+    if (entrypoint.empty() || !filesystem::exists(entrypoint) || !filesystem::is_regular_file(entrypoint)) {
+        collector->addError(new message::BasicError(message::FATAL_ERROR, "Entrypoint cannot be found, or is not readable"));
+    }
+
+    return entrypoint;
 }

@@ -38,6 +38,9 @@ namespace filc {
         ~FilCompiler() override = default;
 
         auto compile() -> int override;
+
+    private:
+        static auto getEntrypoint() -> std::string;
     };
 }// namespace filc
 
