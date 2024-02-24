@@ -22,33 +22,30 @@
  * SOFTWARE.
  */
 #include "Parser.h"
-#include "antlr4-runtime.h"
-#include "FilParser.h"
-#include "FilLexer.h"
+
 #include "Antlr4ErrorListener.h"
+#include "FilLexer.h"
+#include "FilParser.h"
+#include "antlr4-runtime.h"
 
-namespace filc::grammar {
-    Parser::Parser(const std::string &filename, filc::message::MessageCollector *collector) :
-            _collector(collector) {
-        auto *error_listener = new filc::message::Antlr4ErrorListener(_collector);
+using namespace filc::grammar;
 
-        antlr4::ANTLRFileStream input;
-        input.loadFromFile(filename);
-        FilLexer lexer(&input);
-        lexer.removeErrorListeners();
-        lexer.addErrorListener(error_listener);
-        antlr4::CommonTokenStream tokens(&lexer);
-        tokens.fill();
+auto FilParser::parse(const std::string &filename, message::MessageCollector *collector) -> void {
+    auto *error_listener = new filc::message::Antlr4ErrorListener(collector);
 
-        FilParser parser(&tokens);
-        parser.removeErrorListeners();
-        parser.addErrorListener(error_listener);
+    antlr4::ANTLRFileStream input;
+    input.loadFromFile(filename);
+    antlr::FilLexer lexer(&input);
+    lexer.removeErrorListeners();
+    lexer.addErrorListener(error_listener);
+    antlr4::CommonTokenStream tokens(&lexer);
+    tokens.fill();
 
-        _program = parser.program()->tree;
-        _program->setFilename(filename);
-    }
+    antlr::FilParser parser(&tokens);
+    parser.removeErrorListeners();
+    parser.addErrorListener(error_listener);
 
-    auto Parser::getProgram() const -> ast::Program * {
-        return _program;
-    }
+    auto program = parser.program()->tree;
+    program->setFilename(filename);
+    setResult(program);
 }

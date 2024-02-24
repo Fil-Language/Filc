@@ -15,9 +15,9 @@ set(ANTLR_EXECUTABLE ${PROJECT_SOURCE_DIR}/bin/antlr-${ANTLR4_TAG}-complete.jar)
 find_package(ANTLR REQUIRED)
 
 antlr_target(Lexer ${PROJECT_SOURCE_DIR}/src/lib/grammar/FilLexer.g4 LEXER
-        PACKAGE filc::grammar)
+        PACKAGE filc::antlr)
 antlr_target(Parser ${PROJECT_SOURCE_DIR}/src/lib/grammar/FilParser.g4 PARSER
-        PACKAGE filc::grammar
+        PACKAGE filc::antlr
         DEPENDS_ANTLR Lexer
         COMPILE_FLAGS -lib ${ANTLR_Lexer_OUTPUT_DIR})
 

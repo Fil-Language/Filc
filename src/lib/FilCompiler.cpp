@@ -31,6 +31,9 @@
 using namespace std;
 using namespace filc;
 
+FilCompiler::FilCompiler(grammar::Parser<ast::Program> *parser)
+    : _parser(unique_ptr<grammar::Parser<ast::Program>>(parser)) {}
+
 auto FilCompiler::compile() -> int {
     auto *collector = message::MessageCollector::getCollector(message::ERROR);
 
@@ -39,7 +42,7 @@ auto FilCompiler::compile() -> int {
     /*
      * TODO:
      * - [x] get entrypoint
-     * - [ ] antlr parse it and its includes
+     * - [x] antlr parse it and its includes
      * - [ ] create dependency tree
      * - [ ] checks pass with visitors on tree
      * - [ ] llvm pass with visitors on tree
@@ -48,13 +51,22 @@ auto FilCompiler::compile() -> int {
     const auto entrypoint = getEntrypoint();
     if (collector->hasErrors()) {
         collector->printAll();
+        // Assert that MessageCollector will not be used anymore after this line
+        delete collector;
         return 1;
     }
     collector->printAll();
 
+    _parser->parse(entrypoint, collector);
+    auto *program = _parser->getResult();
+    delete program;
+
     collector->addError(new message::BasicError(message::FATAL_ERROR, "Compiler not implemented yet!"));
     //collector->addMessage(new filc::message::Message(filc::message::SYSTEM, "Compilation finished"));
     collector->printAll();
+
+    // Assert that MessageCollector will not be used anymore after this line
+    delete collector;
     return 2;
 }
 

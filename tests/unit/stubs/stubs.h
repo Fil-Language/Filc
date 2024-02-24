@@ -27,6 +27,7 @@
 #include "AST.h"
 #include "Command.h"
 #include "Compiler.h"
+#include "Parser.h"
 #include "Schema.h"
 #include <string>
 #include <utility>
@@ -87,6 +88,15 @@ public:
 
 private:
     int _return_value;
+};
+
+class ParserStub final : public filc::grammar::Parser<filc::ast::Program> {
+public:
+    ParserStub() = default;
+
+    auto parse(const std::string &filename, filc::message::MessageCollector *collector) -> void override {
+        setResult(new filc::ast::Program(filename, {}, {}));
+    }
 };
 
 #endif//FILC_STUBS_H

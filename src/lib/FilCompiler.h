@@ -27,19 +27,22 @@
 #include "AST.h"
 #include "Compiler.h"
 #include "MessageCollector.h"
+#include "Parser.h"
 #include <future>
 #include <map>
 
 namespace filc {
     class FilCompiler final : public Compiler {
     public:
-        FilCompiler() = default;
+        explicit FilCompiler(grammar::Parser<ast::Program> *parser);
 
         ~FilCompiler() override = default;
 
         auto compile() -> int override;
 
     private:
+        std::unique_ptr<grammar::Parser<ast::Program>> _parser;
+
         static auto getEntrypoint() -> std::string;
     };
 }// namespace filc
