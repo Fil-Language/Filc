@@ -34,8 +34,7 @@ VAR: 'var';
 FUN: 'fun';
 IF: 'if';
 ELSE: 'else';
-SWITCH: 'switch';
-DEFAULT: 'default';
+MATCH: 'match';
 FOR: 'for';
 WHILE: 'while';
 OPERATOR: 'operator';
@@ -71,6 +70,7 @@ RBRACE: '}';
 DOT: '.';
 ARROW: '->';
 SEMI: ';';
+UNDERSCORE: '_';
 
 fragment DIGIT: [0-9];
 fragment SIGN: ('+'|'-');

@@ -507,7 +507,7 @@ control returns[filc::ast::AbstractExpression *tree]
 condition returns[filc::ast::AbstractExpression *tree]
     : i=if_c {
         $tree = $i.tree;
-    } | s=switch_c {
+    } | s=match_c {
         $tree = $s.tree;
     };
 
@@ -535,29 +535,29 @@ if_body returns[filc::ast::BlockBody *tree]
         $tree = $bb.tree;
     };
 
-switch_c returns[filc::ast::Switch *tree]
-    : s=SWITCH ic=if_condition sb=switch_body {
-        $tree = new filc::ast::Switch($ic.tree, $sb.tree);
-        $tree->setPosition(new filc::utils::DoublePosition($s, $sb.stop));
+match_c returns[filc::ast::Match *tree]
+    : m=MATCH ic=if_condition mb=match_body {
+        $tree = new filc::ast::Match($ic.tree, $mb.tree);
+        $tree->setPosition(new filc::utils::DoublePosition($m, $mb.stop));
     };
 
-switch_body returns[std::vector<filc::ast::SwitchCase *> tree]
+match_body returns[std::vector<filc::ast::MatchCase *> tree]
 @init {
-    $tree = std::vector<filc::ast::SwitchCase *>();
+    $tree = std::vector<filc::ast::MatchCase *>();
 }
-    : LBRACE (sc=switch_case {
-        $tree.push_back($sc.tree);
+    : LBRACE (mc=match_case {
+        $tree.push_back($mc.tree);
     })* RBRACE;
 
-switch_case returns[filc::ast::SwitchCase *tree]
+match_case returns[filc::ast::MatchCase *tree]
 @init {
     filc::ast::BlockBody *body;
 }
 @after {
-    $tree = new filc::ast::SwitchCase($sp.tree, body);
-    $tree->setPosition(new filc::utils::SimplePosition($sp.start));
+    $tree = new filc::ast::MatchCase($mp.tree, body);
+    $tree->setPosition(new filc::utils::SimplePosition($mp.start));
 }
-    : sp=switch_pattern ARROW (pb=parenthesis_body {
+    : mp=match_pattern ARROW (pb=parenthesis_body {
         body = $pb.tree;
     } | bb=block_body {
         body = $bb.tree;
@@ -565,10 +565,10 @@ switch_case returns[filc::ast::SwitchCase *tree]
         body = new filc::ast::BlockBody({$e.tree});
     });
 
-switch_pattern returns[filc::ast::AbstractExpression *tree]
-    : d=DEFAULT {
-        $tree = new filc::ast::Identifier("default");
-        $tree->setPosition(new filc::utils::SimplePosition($d));
+match_pattern returns[filc::ast::AbstractExpression *tree]
+    : u=UNDERSCORE {
+        $tree = new filc::ast::Identifier("_");
+        $tree->setPosition(new filc::utils::SimplePosition($u));
     } | l=literal {
         $tree = $l.tree;
     };

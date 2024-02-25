@@ -472,26 +472,26 @@ namespace filc::ast {
         If *_else;
     };
 
-    class Switch : public AbstractExpression {
+    class Match : public AbstractExpression {
     public:
-        Switch(AbstractExpression *condition, const std::vector<SwitchCase *> &cases);
+        Match(AbstractExpression *condition, const std::vector<MatchCase *> &cases);
 
-        ~Switch() override;
+        ~Match() override;
 
         [[nodiscard]] auto getCondition() const -> AbstractExpression *;
 
-        [[nodiscard]] auto getCases() const -> const std::vector<SwitchCase *> &;
+        [[nodiscard]] auto getCases() const -> const std::vector<MatchCase *> &;
 
     private:
         AbstractExpression *_condition;
-        std::vector<SwitchCase *> _cases;
+        std::vector<MatchCase *> _cases;
     };
 
-    class SwitchCase : public AbstractExpression {
+    class MatchCase : public AbstractExpression {
     public:
-        SwitchCase(AbstractExpression *pattern, BlockBody *body);
+        MatchCase(AbstractExpression *pattern, BlockBody *body);
 
-        ~SwitchCase() override;
+        ~MatchCase() override;
 
         [[nodiscard]] auto getPattern() const -> AbstractExpression *;
 

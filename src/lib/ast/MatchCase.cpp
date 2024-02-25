@@ -24,27 +24,27 @@
 #include "AST.h"
 
 namespace filc::ast {
-    SwitchCase::SwitchCase(AbstractExpression *pattern, BlockBody *body)
+    MatchCase::MatchCase(AbstractExpression *pattern, BlockBody *body)
             : _pattern(pattern), _body(body) {}
 
-    auto SwitchCase::getPattern() const -> AbstractExpression * {
+    auto MatchCase::getPattern() const -> AbstractExpression * {
         return _pattern;
     }
 
-    auto SwitchCase::isDefault() const -> bool {
+    auto MatchCase::isDefault() const -> bool {
         auto *identifier = dynamic_cast<Identifier *>(_pattern);
         if (identifier == nullptr) {
             return false;
         }
 
-        return identifier->getName() == "default";
+        return identifier->getName() == "_";
     }
 
-    auto SwitchCase::getBody() const -> BlockBody * {
+    auto MatchCase::getBody() const -> BlockBody * {
         return _body;
     }
 
-    SwitchCase::~SwitchCase() {
+    MatchCase::~MatchCase() {
         delete _pattern;
         delete _body;
     }

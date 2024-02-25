@@ -22,21 +22,25 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "test_tools.h"
+#include "Error.h"
+#include <algorithm>
 
-TEST(SwitchCase, constructor) {
-    filc::ast::SwitchCase sc1(new filc::ast::Identifier("default"), new filc::ast::BlockBody({}));
-    ASSERT_IDENTIFIER("default", sc1.getPattern());
-    ASSERT_THAT(sc1.getBody()->getExpressions(), IsEmpty());
-}
+namespace filc::ast {
+    Match::Match(filc::ast::AbstractExpression *condition, const std::vector<MatchCase *> &cases)
+            : _condition(condition), _cases(cases) {}
 
-TEST(SwitchCase, isDefault) {
-    filc::ast::SwitchCase sc1(new filc::ast::Identifier("default"), {});
-    ASSERT_TRUE(sc1.isDefault());
+    auto Match::getCondition() const -> AbstractExpression * {
+        return _condition;
+    }
 
-    filc::ast::SwitchCase sc2(new filc::ast::Identifier("abcd"), {});
-    ASSERT_FALSE(sc2.isDefault());
+    auto Match::getCases() const -> const std::vector<MatchCase *> & {
+        return _cases;
+    }
 
-    filc::ast::SwitchCase sc3(new filc::ast::IntegerLiteral(2), {});
-    ASSERT_FALSE(sc3.isDefault());
+    Match::~Match() {
+        delete _condition;
+        for (const auto &item: _cases) {
+            delete item;
+        }
+    }
 }

@@ -522,12 +522,12 @@ TEST(FilParser, If) {
     ASSERT_EQ(nullptr, expression2->getElse());
 }
 
-TEST(FilParser, Switch) {
+TEST(FilParser, Match) {
     filc::grammar::FilParser parser1;
-    parser1.parse(FIXTURES_PATH_GRAMMAR "/switch1.fil", COLLECTOR);
+    parser1.parse(FIXTURES_PATH_GRAMMAR "/match1.fil", COLLECTOR);
     auto *program1 = parser1.getResult();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    auto *expression1 = dynamic_cast<filc::ast::Switch *>(program1->getExpressions()[0]);
+    auto *expression1 = dynamic_cast<filc::ast::Match *>(program1->getExpressions()[0]);
     ASSERT_NE(nullptr, expression1);
     ASSERT_IDENTIFIER("value", expression1->getCondition());
     ASSERT_THAT(expression1->getCases(), SizeIs(3));
@@ -536,7 +536,7 @@ TEST(FilParser, Switch) {
     auto *case1_3 = expression1->getCases()[2];
     ASSERT_LITERAL("b", StringLiteral, case1_1->getPattern());
     ASSERT_LITERAL("c", StringLiteral, case1_2->getPattern());
-    ASSERT_IDENTIFIER("default", case1_3->getPattern());
+    ASSERT_IDENTIFIER("_", case1_3->getPattern());
     ASSERT_THAT(case1_1->getBody()->getExpressions(), SizeIs(1));
     ASSERT_THAT(case1_2->getBody()->getExpressions(), SizeIs(1));
     ASSERT_THAT(case1_3->getBody()->getExpressions(), SizeIs(1));

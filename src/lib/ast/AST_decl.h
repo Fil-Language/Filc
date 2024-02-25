@@ -82,9 +82,9 @@ namespace filc::ast {
 
     class If;
 
-    class Switch;
+    class Match;
 
-    class SwitchCase;
+    class MatchCase;
 
     class ForI;
 
