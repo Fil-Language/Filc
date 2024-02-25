@@ -497,10 +497,8 @@ TEST(FilParser, If) {
     ASSERT_IDENTIFIER("b", body1_1->getExpressions()[0]);
     auto *else1 = expression1->getElse();
     ASSERT_NE(nullptr, else1);
-    ASSERT_IDENTIFIER("true", else1->getCondition());
-    auto *body1_2 = dynamic_cast<filc::ast::BlockBody *>(else1->getBody());
-    ASSERT_THAT(body1_2->getExpressions(), SizeIs(1));
-    ASSERT_IDENTIFIER("c", body1_2->getExpressions()[0]);
+    ASSERT_THAT(else1->getExpressions(), SizeIs(1));
+    ASSERT_IDENTIFIER("c", else1->getExpressions()[0]);
 
     filc::grammar::FilParser parser2;
     parser2.parse(FIXTURES_PATH_GRAMMAR "/if2.fil", COLLECTOR);

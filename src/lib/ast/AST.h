@@ -462,14 +462,14 @@ namespace filc::ast {
 
         [[nodiscard]] auto getBody() const -> BlockBody *;
 
-        [[nodiscard]] auto getElse() const -> If *;
+        [[nodiscard]] auto getElse() const -> BlockBody *;
 
-        auto setElse(If *p_else) -> void;
+        auto setElse(BlockBody *p_else) -> void;
 
     private:
         AbstractExpression *_condition;
         BlockBody *_body;
-        If *_else;
+        BlockBody *_else;
     };
 
     class Match : public AbstractExpression {

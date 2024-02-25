@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "test_tools.h"
 #include "Parser.h"
+#include "test_tools.h"
 
 TEST(If, constructor) {
     filc::ast::If if1(new filc::ast::Identifier("isTrue"), new filc::ast::BlockBody({}));
@@ -33,9 +33,8 @@ TEST(If, constructor) {
 
 TEST(If, setElse) {
     filc::ast::If if1(new filc::ast::Identifier("isFalse"), new filc::ast::BlockBody({}));
-    if1.setElse(new filc::ast::If(new filc::ast::Identifier("isTrue"), new filc::ast::BlockBody({})));
+    if1.setElse(new filc::ast::BlockBody({}));
     auto *ielse = if1.getElse();
     ASSERT_NE(nullptr, ielse);
-    ASSERT_IDENTIFIER("isTrue", ielse->getCondition());
-    ASSERT_THAT(ielse->getBody()->getExpressions(), IsEmpty());
+    ASSERT_THAT(ielse->getExpressions(), IsEmpty());
 }

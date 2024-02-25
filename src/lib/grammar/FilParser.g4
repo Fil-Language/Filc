@@ -468,7 +468,7 @@ block_body returns[filc::ast::BlockBody *tree]
 lambda returns[filc::ast::Lambda *tree]
 @init {
     std::vector<filc::ast::FunctionParameter *> parameters;
-    filc::ast::BlockBody *body;
+    filc::ast::BlockBody *body = nullptr;
 }
 @after {
     $tree = new filc::ast::Lambda(parameters, $ft.tree, body);
@@ -515,13 +515,9 @@ if_c returns[filc::ast::If *tree]
     : i=IF ic=if_condition ib=if_body {
         $tree = new filc::ast::If($ic.tree, $ib.tree);
         $tree->setPosition(new filc::utils::SimplePosition($i));
-    } (ELSE (ic2=if_c {
-        $tree->setElse($ic2.tree);
-    } | ib2=if_body {
-        auto *else_body = new filc::ast::If(new filc::ast::Identifier("true"), $ib2.tree);
-        else_body->setPosition(new filc::utils::SimplePosition($ib2.start));
-        $tree->setElse(else_body);
-    }))?;
+    } (ELSE eb=if_body {
+        $tree->setElse($eb.tree);
+    })?;
 
 if_condition returns[filc::ast::AbstractExpression *tree]
     : LPAREN e=expression {
@@ -551,7 +547,7 @@ match_body returns[std::vector<filc::ast::MatchCase *> tree]
 
 match_case returns[filc::ast::MatchCase *tree]
 @init {
-    filc::ast::BlockBody *body;
+    filc::ast::BlockBody *body = nullptr;
 }
 @after {
     $tree = new filc::ast::MatchCase($mp.tree, body);

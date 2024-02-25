@@ -24,29 +24,29 @@
 #include "AST.h"
 #include "Error.h"
 
-namespace filc::ast {
-    If::If(AbstractExpression *condition, BlockBody *body)
-            : _condition(condition), _body(body), _else(nullptr) {}
+using namespace filc::ast;
 
-    auto If::getCondition() const -> AbstractExpression * {
-        return _condition;
-    }
+If::If(AbstractExpression *condition, BlockBody *body)
+    : _condition(condition), _body(body), _else(nullptr) {}
 
-    auto If::getBody() const -> BlockBody * {
-        return _body;
-    }
+auto If::getCondition() const -> AbstractExpression * {
+    return _condition;
+}
 
-    auto If::getElse() const -> If * {
-        return _else;
-    }
+auto If::getBody() const -> BlockBody * {
+    return _body;
+}
 
-    auto If::setElse(filc::ast::If *p_else) -> void {
-        _else = p_else;
-    }
+auto If::getElse() const -> BlockBody * {
+    return _else;
+}
 
-    If::~If() {
-        delete _condition;
-        delete _body;
-        delete _else;
-    }
+auto If::setElse(BlockBody *p_else) -> void {
+    _else = p_else;
+}
+
+If::~If() {
+    delete _condition;
+    delete _body;
+    delete _else;
 }
