@@ -28,6 +28,7 @@
 #include "Environment.h"
 #include "MessageCollector.h"
 #include "Position.h"
+#include "Visitor.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
@@ -63,7 +64,7 @@ namespace filc::ast {
         filc::environment::Environment *_public_environment;
     };
 
-    class AbstractExpression {
+    class AbstractExpression : public Visitable {
     public:
         virtual ~AbstractExpression();
 
@@ -84,6 +85,8 @@ namespace filc::ast {
         [[nodiscard]] auto getPosition() const -> filc::utils::AbstractPosition *;
 
         [[nodiscard]] auto getExpressionType() const -> std::shared_ptr<AbstractType>;
+
+        auto accept(Visitor *visitor) -> void override;
 
     private:
         bool _exported{false};
