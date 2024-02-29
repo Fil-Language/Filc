@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2023-Present Kevin Traini
+ * Copyright (c) 2024-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,41 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
-#include "Error.h"
-#include "tools.h"
-#include <utility>
+#ifndef FILC_VISITOR_H
+#define FILC_VISITOR_H
 
-using namespace filc::ast;
+#include "AST_decl.h"
 
-AbstractExpression::~AbstractExpression() {
-    delete _position;
-}
+namespace filc {
+    class Visitor {
+    public:
+        virtual auto visitAbstractExpression(ast::AbstractExpression *abstract_expression) -> void = 0;
+    };
 
-auto AbstractExpression::isExported() const -> bool {
-    return _exported;
-}
+    class Visitable {
+    public:
+        virtual auto accept(Visitor *visitor) -> void = 0;
+    };
+}// namespace filc
 
-auto AbstractExpression::setExported(bool exported) -> void {
-    _exported = exported;
-}
-
-auto AbstractExpression::getPosition() const -> utils::AbstractPosition * {
-    return _position;
-}
-
-auto AbstractExpression::setPosition(utils::AbstractPosition *position) -> void {
-    _position = position;
-}
-
-auto AbstractExpression::getExpressionType() const -> std::shared_ptr<AbstractType> {
-    return _expression_type;
-}
-
-auto AbstractExpression::setExpressionType(std::shared_ptr<AbstractType> expression_type) -> void {
-    _expression_type = std::move(expression_type);
-}
-
-auto AbstractExpression::accept(Visitor *visitor) -> void {
-    visitor->visitAbstractExpression(this);
-}
+#endif//FILC_VISITOR_H
