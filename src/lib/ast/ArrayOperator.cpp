@@ -24,17 +24,21 @@
 #include "AST.h"
 #include "DevWarning.h"
 
-namespace filc::ast {
-    ArrayOperator::ArrayOperator(filc::ast::AbstractExpression *expression)
-            : _expression(expression) {}
+using namespace filc::ast;
 
-    auto ArrayOperator::getExpression() const -> AbstractExpression * {
-        return _expression;
-    }
+ArrayOperator::ArrayOperator(AbstractExpression *expression)
+    : _expression(expression) {}
 
-    ArrayOperator::~ArrayOperator() = default;
+auto ArrayOperator::getExpression() const -> AbstractExpression * {
+    return _expression;
+}
 
-    auto ArrayOperator::dump() const -> std::string {
-        return "[]";
-    }
+ArrayOperator::~ArrayOperator() = default;
+
+auto ArrayOperator::dump() const -> std::string {
+    return "[]";
+}
+
+auto ArrayOperator::accept(Visitor *visitor) -> void {
+    visitor->visitArrayOperator(this);
 }

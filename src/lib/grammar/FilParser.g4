@@ -92,84 +92,39 @@ expression returns[filc::ast::AbstractExpression *tree]
     }
 
     // ==== Binary calcul ====
-    | el1=expression STAR er1=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::STAR);
-        $tree = new filc::ast::BinaryCalcul($el1.tree, op, $er1.tree);
+    | el1=expression op1=assignation_operator er1=expression {
+        $tree = new filc::ast::BinaryCalcul($el1.tree, $op1.tree, $er1.tree);
         $tree->setPosition(new filc::utils::DoublePosition($el1.start, $er1.stop));
     }
-    | el2=expression DIV er2=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::DIV);
+    | el2=expression op2=(AND | OR) er2=expression {
+        op = new filc::ast::ClassicOperator($op2.text);
         $tree = new filc::ast::BinaryCalcul($el2.tree, op, $er2.tree);
         $tree->setPosition(new filc::utils::DoublePosition($el2.start, $er2.stop));
     }
-    | el3=expression MOD er3=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MOD);
+    | el3=expression op3=(LESS | GREATER | EQEQ | LEQ | GEQ | NEQ) er3=expression {
+        op = new filc::ast::ClassicOperator($op3.text);
         $tree = new filc::ast::BinaryCalcul($el3.tree, op, $er3.tree);
         $tree->setPosition(new filc::utils::DoublePosition($el3.start, $er3.stop));
     }
-    | el4=expression PLUS er4=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS);
+    | el4=expression MOD er4=expression {
+        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MOD);
         $tree = new filc::ast::BinaryCalcul($el4.tree, op, $er4.tree);
         $tree->setPosition(new filc::utils::DoublePosition($el4.start, $er4.stop));
     }
-    | el5=expression MINUS er5=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUS);
+    | el5=expression op5=(STAR | DIV) er5=expression {
+        op = new filc::ast::ClassicOperator($op5.text);
         $tree = new filc::ast::BinaryCalcul($el5.tree, op, $er5.tree);
         $tree->setPosition(new filc::utils::DoublePosition($el5.start, $er5.stop));
     }
-    | el6=expression FLEFT er6=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FLEFT);
+    | el6=expression op6=(PLUS | MINUS) er6=expression {
+        op = new filc::ast::ClassicOperator($op6.text);
         $tree = new filc::ast::BinaryCalcul($el6.tree, op, $er6.tree);
         $tree->setPosition(new filc::utils::DoublePosition($el6.start, $er6.stop));
     }
-    | el7=expression FRIGHT er7=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FRIGHT);
+    | el7=expression op7=(FLEFT | FRIGHT) er7=expression {
+        op = new filc::ast::ClassicOperator($op7.text);
         $tree = new filc::ast::BinaryCalcul($el7.tree, op, $er7.tree);
         $tree->setPosition(new filc::utils::DoublePosition($el7.start, $er7.stop));
-    }
-    | el8=expression LESS er8=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LESS);
-        $tree = new filc::ast::BinaryCalcul($el8.tree, op, $er8.tree);
-        $tree->setPosition(new filc::utils::DoublePosition($el8.start, $er8.stop));
-    }
-    | el9=expression GREATER er9=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::GREATER);
-        $tree = new filc::ast::BinaryCalcul($el9.tree, op, $er9.tree);
-        $tree->setPosition(new filc::utils::DoublePosition($el9.start, $er9.stop));
-    }
-    | el10=expression EQEQ er10=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::EQEQ);
-        $tree = new filc::ast::BinaryCalcul($el10.tree, op, $er10.tree);
-        $tree->setPosition(new filc::utils::DoublePosition($el10.start, $er10.stop));
-    }
-    | el11=expression LEQ er11=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LEQ);
-        $tree = new filc::ast::BinaryCalcul($el11.tree, op, $er11.tree);
-        $tree->setPosition(new filc::utils::DoublePosition($el11.start, $er11.stop));
-    }
-    | el12=expression GEQ er12=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::GEQ);
-        $tree = new filc::ast::BinaryCalcul($el12.tree, op, $er12.tree);
-        $tree->setPosition(new filc::utils::DoublePosition($el12.start, $er12.stop));
-    }
-    | el13=expression NEQ er13=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::NEQ);
-        $tree = new filc::ast::BinaryCalcul($el13.tree, op, $er13.tree);
-        $tree->setPosition(new filc::utils::DoublePosition($el13.start, $er13.stop));
-    }
-    | el14=expression AND er14=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::AND);
-        $tree = new filc::ast::BinaryCalcul($el14.tree, op, $er14.tree);
-        $tree->setPosition(new filc::utils::DoublePosition($el14.start, $er14.stop));
-    }
-    | el15=expression OR er15=expression {
-        op = new filc::ast::ClassicOperator(filc::ast::ClassicOperator::OR);
-        $tree = new filc::ast::BinaryCalcul($el15.tree, op, $er15.tree);
-        $tree->setPosition(new filc::utils::DoublePosition($el15.start, $er15.stop));
-    }
-    | el16=expression op16=assignation_operator er16=expression {
-        $tree = new filc::ast::BinaryCalcul($el16.tree, $op16.tree, $er16.tree);
-        $tree->setPosition(new filc::utils::DoublePosition($el16.start, $er16.stop));
     }
     // ==== Binary calcul ====
 

@@ -24,7 +24,11 @@
 #include "AST.h"
 #include "llvm/IR/Constants.h"
 
-namespace filc::ast {
-    IntegerLiteral::IntegerLiteral(int value)
-            : AbstractLiteral<int>(value) {}
+using namespace filc::ast;
+
+IntegerLiteral::IntegerLiteral(int value)
+    : AbstractLiteral<int>(value) {}
+
+auto IntegerLiteral::accept(Visitor *visitor) -> void {
+    visitor->visitIntegerLiteral(this);
 }

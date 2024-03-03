@@ -25,16 +25,20 @@
 #include "Error.h"
 #include <utility>
 
-namespace filc::ast {
-    Identifier::Identifier(antlr4::Token *token)
-            : _name(token->getText()) {
-        setPosition(new filc::utils::SimplePosition(token));
-    }
+using namespace filc::ast;
 
-    Identifier::Identifier(std::string name)
-            : _name(std::move(name)) {}
+Identifier::Identifier(antlr4::Token *token)
+    : _name(token->getText()) {
+    setPosition(new filc::utils::SimplePosition(token));
+}
 
-    auto Identifier::getName() const -> const std::string & {
-        return _name;
-    }
+Identifier::Identifier(std::string name)
+    : _name(std::move(name)) {}
+
+auto Identifier::getName() const -> const std::string & {
+    return _name;
+}
+
+auto Identifier::accept(Visitor *visitor) -> void {
+    visitor->visitIdentifier(this);
 }

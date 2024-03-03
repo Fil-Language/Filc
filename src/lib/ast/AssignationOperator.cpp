@@ -24,19 +24,23 @@
 #include "AST.h"
 #include "DevWarning.h"
 
-namespace filc::ast {
-    AssignationOperator::AssignationOperator(filc::ast::Operator *inner_operator)
-            : _inner_operator(inner_operator) {}
+using namespace filc::ast;
 
-    AssignationOperator::~AssignationOperator() {
-        delete _inner_operator;
-    }
+AssignationOperator::AssignationOperator(filc::ast::Operator *inner_operator)
+    : _inner_operator(inner_operator) {}
 
-    auto AssignationOperator::getInnerOperator() const -> Operator * {
-        return _inner_operator;
-    }
+AssignationOperator::~AssignationOperator() {
+    delete _inner_operator;
+}
 
-    auto AssignationOperator::dump() const -> std::string {
-        return _inner_operator->dump() + "=";
-    }
+auto AssignationOperator::getInnerOperator() const -> Operator * {
+    return _inner_operator;
+}
+
+auto AssignationOperator::dump() const -> std::string {
+    return _inner_operator->dump() + "=";
+}
+
+auto AssignationOperator::accept(Visitor *visitor) -> void {
+    visitor->visitAssignationOperator(this);
 }

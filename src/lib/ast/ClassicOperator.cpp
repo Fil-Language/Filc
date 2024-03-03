@@ -24,56 +24,104 @@
 #include "AST.h"
 #include "DevWarning.h"
 
-namespace filc::ast {
-    ClassicOperator::ClassicOperator(filc::ast::ClassicOperator::OPERATOR p_operator)
-            : _operator(p_operator) {}
+using namespace filc::ast;
 
-    auto ClassicOperator::getOperator() const -> OPERATOR {
-        return _operator;
+ClassicOperator::ClassicOperator(ClassicOperator::OPERATOR p_operator)
+    : _operator(p_operator) {}
+
+ClassicOperator::ClassicOperator(const std::string &p_operator) {
+    if (p_operator == "++") {
+        _operator = PLUSPLUS;
+    } else if (p_operator == "--") {
+        _operator = MINUSMINUS;
+    } else if (p_operator == "+") {
+        _operator = PLUS;
+    } else if (p_operator == "-") {
+        _operator = MINUS;
+    } else if (p_operator == "&") {
+        _operator = REF;
+    } else if (p_operator == "*") {
+        _operator = STAR;
+    } else if (p_operator == "!") {
+        _operator = NOT;
+    } else if (p_operator == "/") {
+        _operator = DIV;
+    } else if (p_operator == "%") {
+        _operator = MOD;
+    } else if (p_operator == "<<") {
+        _operator = FLEFT;
+    } else if (p_operator == ">>") {
+        _operator = FRIGHT;
+    } else if (p_operator == "<") {
+        _operator = LESS;
+    } else if (p_operator == ">") {
+        _operator = GREATER;
+    } else if (p_operator == "==") {
+        _operator = EQEQ;
+    } else if (p_operator == "<=") {
+        _operator = LEQ;
+    } else if (p_operator == ">=") {
+        _operator = GEQ;
+    } else if (p_operator == "!=") {
+        _operator = NEQ;
+    } else if (p_operator == "&&") {
+        _operator = AND;
+    } else if (p_operator == "||") {
+        _operator = OR;
+    } else {
+        throw std::logic_error("Operator '" + p_operator + "' is invalid");
+    }
+}
+
+auto ClassicOperator::getOperator() const -> OPERATOR {
+    return _operator;
+}
+
+auto ClassicOperator::dump() const -> std::string {
+    switch (_operator) {
+        case PLUSPLUS:
+            return "++";
+        case MINUSMINUS:
+            return "--";
+        case PLUS:
+            return "+";
+        case MINUS:
+            return "-";
+        case REF:
+            return "&";
+        case STAR:
+            return "*";
+        case NOT:
+            return "!";
+        case DIV:
+            return "/";
+        case MOD:
+            return "%";
+        case FLEFT:
+            return "<<";
+        case FRIGHT:
+            return ">>";
+        case LESS:
+            return "<";
+        case GREATER:
+            return ">";
+        case EQEQ:
+            return "==";
+        case LEQ:
+            return "<=";
+        case GEQ:
+            return ">=";
+        case NEQ:
+            return "!=";
+        case AND:
+            return "&&";
+        case OR:
+            return "||";
     }
 
-    auto ClassicOperator::dump() const -> std::string {
-        switch (_operator) {
-            case PLUSPLUS:
-                return "++";
-            case MINUSMINUS:
-                return "--";
-            case PLUS:
-                return "+";
-            case MINUS:
-                return "-";
-            case REF:
-                return "&";
-            case STAR:
-                return "*";
-            case NOT:
-                return "!";
-            case DIV:
-                return "/";
-            case MOD:
-                return "%";
-            case FLEFT:
-                return "<<";
-            case FRIGHT:
-                return ">>";
-            case LESS:
-                return "<";
-            case GREATER:
-                return ">";
-            case EQEQ:
-                return "==";
-            case LEQ:
-                return "<=";
-            case GEQ:
-                return ">=";
-            case NEQ:
-                return "!=";
-            case AND:
-                return "&&";
-            case OR:
-                return "||";
-        }
+    throw std::logic_error("Should not come here");
+}
 
-        throw std::logic_error("Should not come here");
-    }
+auto ClassicOperator::accept(Visitor *visitor) -> void {
+    visitor->visitClassicOperator(this);
 }

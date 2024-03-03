@@ -24,7 +24,11 @@
 #include "AST.h"
 #include "llvm/IR/Constants.h"
 
-namespace filc::ast {
-    BooleanLiteral::BooleanLiteral(bool value)
-            : AbstractLiteral<bool>(value) {}
+using namespace filc::ast;
+
+BooleanLiteral::BooleanLiteral(bool value)
+    : AbstractLiteral<bool>(value) {}
+
+auto BooleanLiteral::accept(Visitor *visitor) -> void {
+    visitor->visitBooleanLiteral(this);
 }

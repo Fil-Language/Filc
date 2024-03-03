@@ -24,21 +24,25 @@
 #include "AST.h"
 #include "DevWarning.h"
 
-namespace filc::ast {
-    FunctionOperator::FunctionOperator(const std::vector<AbstractExpression *> &expressions)
-            : _expressions(expressions) {}
+using namespace filc::ast;
 
-    auto FunctionOperator::getExpressions() const -> const std::vector<AbstractExpression *> & {
-        return _expressions;
-    }
+FunctionOperator::FunctionOperator(const std::vector<AbstractExpression *> &expressions)
+    : _expressions(expressions) {}
 
-    FunctionOperator::~FunctionOperator() {
-        for (const auto &expression: _expressions) {
-            delete expression;
-        }
-    }
+auto FunctionOperator::getExpressions() const -> const std::vector<AbstractExpression *> & {
+    return _expressions;
+}
 
-    auto FunctionOperator::dump() const -> std::string {
-        return "()";
+FunctionOperator::~FunctionOperator() {
+    for (const auto &expression: _expressions) {
+        delete expression;
     }
+}
+
+auto FunctionOperator::dump() const -> std::string {
+    return "()";
+}
+
+auto FunctionOperator::accept(Visitor *visitor) -> void {
+    visitor->visitFunctionOperator(this);
 }

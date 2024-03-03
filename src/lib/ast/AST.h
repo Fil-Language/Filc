@@ -107,6 +107,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto getName() const -> const std::string &;
 
+        auto accept(Visitor *visitor) -> void override;
+
     private:
         std::string _name;
     };
@@ -128,11 +130,15 @@ namespace filc::ast {
     class BooleanLiteral : public AbstractLiteral<bool> {
     public:
         explicit BooleanLiteral(bool value);
+
+        auto accept(Visitor *visitor) -> void override;
     };
 
     class IntegerLiteral : public AbstractLiteral<int> {
     public:
         explicit IntegerLiteral(int value);
+
+        auto accept(Visitor *visitor) -> void override;
     };
 
     class FloatLiteral : public AbstractLiteral<double> {
@@ -140,6 +146,8 @@ namespace filc::ast {
         explicit FloatLiteral(double value, bool is_double = false);
 
         [[nodiscard]] auto isDouble() const -> bool;
+
+        auto accept(Visitor *visitor) -> void override;
 
     private:
         bool _double;
@@ -150,11 +158,15 @@ namespace filc::ast {
         explicit CharacterLiteral(char value);
 
         static auto stringToChar(const std::string &snippet, antlr4::Token *token = nullptr) -> char;
+
+        auto accept(Visitor *visitor) -> void override;
     };
 
     class StringLiteral : public AbstractLiteral<std::string> {
     public:
         explicit StringLiteral(const std::string &value);
+
+        auto accept(Visitor *visitor) -> void override;
     };
 
     class VariableDeclaration : public AbstractExpression {
@@ -303,6 +315,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto getOperator() const -> Operator *;
 
+        auto accept(Visitor *visitor) -> void override;
+
     private:
         AbstractExpression *_left_expression;
         AbstractExpression *_right_expression;
@@ -310,7 +324,7 @@ namespace filc::ast {
         std::shared_ptr<LambdaType> _binary_type;
     };
 
-    class Operator {
+    class Operator : public Visitable {
     public:
         Operator(const Operator &other) = default;
 
@@ -323,6 +337,8 @@ namespace filc::ast {
         auto operator=(Operator &&other) -> Operator & = default;
 
         [[nodiscard]] virtual auto dump() const -> std::string = 0;
+
+        auto accept(Visitor *visitor) -> void override {}
 
     protected:
         Operator() = default;
@@ -354,9 +370,13 @@ namespace filc::ast {
 
         explicit ClassicOperator(OPERATOR p_operator);
 
+        explicit ClassicOperator(const std::string &p_operator);
+
         [[nodiscard]] auto getOperator() const -> OPERATOR;
 
         [[nodiscard]] auto dump() const -> std::string override;
+
+        auto accept(Visitor *visitor) -> void override;
 
     private:
         OPERATOR _operator;
@@ -372,6 +392,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
+        auto accept(Visitor *visitor) -> void override;
+
     private:
         AbstractExpression *_expression;
     };
@@ -386,6 +408,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
+        auto accept(Visitor *visitor) -> void override;
+
     private:
         std::vector<AbstractExpression *> _expressions;
     };
@@ -399,6 +423,8 @@ namespace filc::ast {
         [[nodiscard]] auto getInnerOperator() const -> Operator *;
 
         [[nodiscard]] auto dump() const -> std::string override;
+
+        auto accept(Visitor *visitor) -> void override;
 
     private:
         Operator *_inner_operator;
@@ -574,6 +600,8 @@ namespace filc::ast {
         ~BlockBody() override;
 
         [[nodiscard]] auto getExpressions() const -> const std::vector<AbstractExpression *> &;
+
+        auto accept(Visitor *visitor) -> void override;
 
     private:
         std::vector<AbstractExpression *> _expressions;
