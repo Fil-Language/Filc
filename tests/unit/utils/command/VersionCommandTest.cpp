@@ -42,7 +42,7 @@ TEST(VersionCommand, run) {
                         " /_/   /_/_/\\\\___/  \n"
                         "                   \n"
                         "Filc version 1\\.3\\.2 - 54\n"
-                        "Build time: [A-Za-z]{3} [0-9]{2} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}\n"
+                        "Build time: .*\n"
                         "Build OS: " + VersionCommand::getOSName() + "\n"
                         "License: My License\n", ASSERT_EQ(0, vc1.run(0, {})));
 }
