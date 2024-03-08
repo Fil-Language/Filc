@@ -43,6 +43,8 @@ namespace filc::utils {
     auto trim(const std::string &input) -> std::string;
 
     auto computeVersionNumber(const std::string &version) -> unsigned int;
+
+    auto getFilenameFromModule(const std::string &module) -> std::string;
 }// namespace filc::utils
 
 #endif//FILC_TOOLS_H

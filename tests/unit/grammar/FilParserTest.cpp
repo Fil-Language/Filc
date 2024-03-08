@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "Config.h"
 #include "Parser.h"
 #include "test_tools.h"
 #include <string>
@@ -87,6 +88,10 @@ TEST(FilParser, module) {
 }
 
 TEST(FilParser, use) {
+    filc::utils::config::Config::init("test");
+    auto config = filc::utils::config::Config::get();
+    config->setNamespace("my.code", FIXTURES_PATH_GRAMMAR);
+
     filc::grammar::FilParser parser1;
     parser1.parse(FIXTURES_PATH_GRAMMAR "/use1.fil", COLLECTOR);
     auto *program1 = parser1.getResult();
@@ -112,6 +117,8 @@ TEST(FilParser, use) {
     ASSERT_THAT(program4->getImports(), Contains("a.b"));
     ASSERT_THAT(program4->getImports(), Contains("c.d"));
     ASSERT_THAT(program4->getImports(), Contains("e.f"));
+
+    filc::utils::config::Config::clear();
 }
 
 TEST(FilParser, BooleanLiteral) {
@@ -529,4 +536,24 @@ TEST(FilParser, While) {
     auto *expression1_1 = dynamic_cast<filc::ast::PostUnaryCalcul *>(body1->getExpressions()[0]);
     ASSERT_IDENTIFIER("i", expression1_1->getVariable());
     ASSERT_CLASSIC_OPERATOR(PLUSPLUS, expression1_1->getOperator());
+}
+
+TEST(FilParser, cache) {
+    filc::utils::config::Config::init("test");
+    auto config = filc::utils::config::Config::get();
+    config->setNamespace("my.code", FIXTURES_PATH_GRAMMAR);
+
+    filc::grammar::FilParser parser1;
+    parser1.parse(FIXTURES_PATH_GRAMMAR "/import1.fil", COLLECTOR);
+    auto program1 = parser1.getResult();
+    ASSERT_EQ(1, program1->getImports().size());
+    ASSERT_STREQ("my.code.import2", program1->getImports()[0].c_str());
+
+    filc::grammar::FilParser parser2;
+    parser2.parse(FIXTURES_PATH_GRAMMAR "/import2.fil", COLLECTOR);
+    auto program2 = parser2.getResult();
+    ASSERT_EQ(1, program2->getImports().size());
+    ASSERT_STREQ("my.code.import1", program2->getImports()[0].c_str());
+
+    filc::utils::config::Config::clear();
 }

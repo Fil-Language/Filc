@@ -22,50 +22,54 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include <utility>
 #include <algorithm>
+#include <utility>
 
 auto getFileName(const std::string &filename) -> std::string {
     auto slash = filename.find_last_of('/');
-    auto dot = filename.find_last_of('.');
+    auto dot   = filename.find_last_of('.');
 
     return filename.substr(slash + 1, dot - slash - 1);
 }
 
-namespace filc::ast {
-    Program::Program(std::string module, const std::vector<std::string> &imports,
-                     const std::vector<AbstractExpression *> &expressions)
-            : _module(std::move(module)), _imports(imports), _expressions(expressions), _environment(nullptr),
-              _public_environment(nullptr) {}
+using namespace filc::ast;
 
-    Program::~Program() {
-        for (const auto &expression: _expressions) {
-            delete expression;
-        }
+Program::Program(std::string module, const std::vector<std::string> &imports,
+                 const std::vector<AbstractExpression *> &expressions)
+    : _module(std::move(module)), _import_modules(imports), _expressions(expressions), _environment(nullptr),
+      _public_environment(nullptr) {}
+
+Program::~Program() {
+    for (const auto &expression: _expressions) {
+        delete expression;
     }
+}
 
-    auto Program::getModule() const -> const std::string & {
-        return _module;
-    }
+auto Program::getModule() const -> const std::string & {
+    return _module;
+}
 
-    auto Program::getImports() const -> const std::vector<std::string> & {
-        return _imports;
-    }
+auto Program::getImports() const -> const std::vector<std::string> & {
+    return _import_modules;
+}
 
-    auto Program::getExpressions() const -> const std::vector<AbstractExpression *> & {
-        return _expressions;
-    }
+auto Program::setImports(const std::vector<Program *> &imports) -> void {
+    _imports = imports;
+}
 
-    auto Program::getFilename() const -> const std::string & {
-        return _filename;
-    }
+auto Program::getExpressions() const -> const std::vector<AbstractExpression *> & {
+    return _expressions;
+}
 
-    auto Program::setFilename(const std::string &filename) -> void {
-        _filename = filename;
+auto Program::getFilename() const -> const std::string & {
+    return _filename;
+}
 
-        auto file = getFileName(_filename);
-        if (file != "index" || file != "main") {
-            _module += "." + file;
-        }
+auto Program::setFilename(const std::string &filename) -> void {
+    _filename = filename;
+
+    auto file = getFileName(_filename);
+    if (file != "index" || file != "main") {
+        _module += "." + file;
     }
 }

@@ -58,6 +58,9 @@ namespace filc::grammar {
         ~FilParser() override = default;
 
         auto parse(const std::string &filename, message::MessageCollector *collector) -> void override;
+
+    private:
+        std::map<std::string, ast::Program *> _program_cache;
     };
 }// namespace filc::grammar
 

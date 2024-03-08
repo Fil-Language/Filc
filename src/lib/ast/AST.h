@@ -49,6 +49,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto getImports() const -> const std::vector<std::string> &;
 
+        auto setImports(const std::vector<Program *> &imports) -> void;
+
         [[nodiscard]] auto getExpressions() const -> const std::vector<AbstractExpression *> &;
 
         [[nodiscard]] auto getFilename() const -> const std::string &;
@@ -57,7 +59,8 @@ namespace filc::ast {
 
     private:
         std::string _module;
-        std::vector<std::string> _imports;
+        std::vector<std::string> _import_modules;
+        std::vector<Program *> _imports;
         std::vector<AbstractExpression *> _expressions;
         std::string _filename;
         filc::environment::Environment *_environment;

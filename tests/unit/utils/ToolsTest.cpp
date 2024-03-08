@@ -23,6 +23,7 @@
  */
 #include "tools.h"
 #include "test_tools.h"
+#include "Config.h"
 
 using namespace filc::utils;
 
@@ -142,4 +143,20 @@ TEST(tools, computeVersionNumber) {
     ASSERT_EQ(1000000, computeVersionNumber("1.0.0"));
     ASSERT_EQ(1002003, computeVersionNumber("1.2.3"));
     ASSERT_EQ(1002003, computeVersionNumber("1.2.3-rc1"));
+}
+
+TEST(tools, getFilenameFromModule) {
+    config::Config::init("test");
+    auto config = config::Config::get();
+    config->setNamespace("my.module", FIXTURES_PATH "/grammar");
+
+    ASSERT_THROW(getFilenameFromModule(""), std::logic_error);
+
+    ASSERT_THROW(getFilenameFromModule("non-existing-module"), std::logic_error);
+
+    ASSERT_THROW(getFilenameFromModule("my.module.not.found"), std::logic_error);
+
+    ASSERT_STREQ(FIXTURES_PATH "/grammar/float1.fil", getFilenameFromModule("my.module.float1").c_str());
+
+    config::Config::clear();
 }
