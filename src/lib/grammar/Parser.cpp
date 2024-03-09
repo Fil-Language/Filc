@@ -27,10 +27,16 @@
 #include "FilLexer.h"
 #include "FilParser.h"
 #include "antlr4-runtime.h"
+#include "tools.h"
 
 using namespace filc::grammar;
 
 auto FilParser::parse(const std::string &filename, message::MessageCollector *collector) -> void {
+    // Check if file was already parsed or not
+    if (_program_cache.find(filename) != _program_cache.end()) {
+        return;
+    }
+
     auto *error_listener = new filc::message::Antlr4ErrorListener(collector);
 
     antlr4::ANTLRFileStream input;
@@ -47,5 +53,24 @@ auto FilParser::parse(const std::string &filename, message::MessageCollector *co
 
     auto program = parser.program()->tree;
     program->setFilename(filename);
+
+    // Add file in cache to avoid parsing it twice
+    _program_cache[filename] = program;
+
+    std::vector<ast::Program *> imports;
+    for (const auto &import_module: program->getImports()) {
+        try {
+            auto import_filename = utils::getFilenameFromModule(import_module);
+            parse(import_filename, collector);
+            if (_program_cache.find(import_filename) == _program_cache.end()) {
+                collector->addError(new filc::message::BasicError(filc::message::FATAL_ERROR, "Cannot find program attached to file " + import_filename));
+            }
+            imports.push_back(_program_cache[import_filename]);
+        } catch (std::logic_error &e) {
+            collector->addError(new filc::message::BasicError(filc::message::FATAL_ERROR, "Module " + import_module + " not found"));
+        }
+    }
+    program->setImports(imports);
+
     setResult(program);
 }

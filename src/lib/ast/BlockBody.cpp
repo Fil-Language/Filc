@@ -23,13 +23,17 @@
  */
 #include "AST.h"
 
-namespace filc::ast {
-    BlockBody::BlockBody(const std::vector<AbstractExpression *> &expressions)
-            : _expressions(expressions) {}
+using namespace filc::ast;
 
-    BlockBody::~BlockBody() = default;
+BlockBody::BlockBody(const std::vector<AbstractExpression *> &expressions)
+    : _expressions(expressions) {}
 
-    auto BlockBody::getExpressions() const -> const std::vector<AbstractExpression *> & {
-        return _expressions;
-    }
+BlockBody::~BlockBody() = default;
+
+auto BlockBody::getExpressions() const -> const std::vector<AbstractExpression *> & {
+    return _expressions;
+}
+
+auto BlockBody::accept(Visitor *visitor) -> void {
+    visitor->visitBlockBody(this);
 }

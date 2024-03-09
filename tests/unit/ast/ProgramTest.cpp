@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 #include "AST.h"
-#include "Parser.h"
 #include "test_tools.h"
 
 TEST(Program, constructor) {

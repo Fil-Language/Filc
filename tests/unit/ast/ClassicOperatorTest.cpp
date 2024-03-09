@@ -24,9 +24,32 @@
 #include "AST.h"
 #include "test_tools.h"
 
-TEST(ClassicOperator, constructor) {
+TEST(ClassicOperator, operator_constructor) {
     filc::ast::ClassicOperator co1(filc::ast::ClassicOperator::PLUSPLUS);
     ASSERT_EQ(filc::ast::ClassicOperator::PLUSPLUS, co1.getOperator());
+}
+
+TEST(ClassicOperator, string_constructor) {
+    ASSERT_EQ(filc::ast::ClassicOperator::PLUSPLUS, filc::ast::ClassicOperator("++").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::MINUSMINUS, filc::ast::ClassicOperator("--").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::PLUS, filc::ast::ClassicOperator("+").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::MINUS, filc::ast::ClassicOperator("-").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::REF, filc::ast::ClassicOperator("&").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::STAR, filc::ast::ClassicOperator("*").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::NOT, filc::ast::ClassicOperator("!").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::DIV, filc::ast::ClassicOperator("/").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::MOD, filc::ast::ClassicOperator("%").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::FLEFT, filc::ast::ClassicOperator("<<").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::FRIGHT, filc::ast::ClassicOperator(">>").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::LESS, filc::ast::ClassicOperator("<").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::GREATER, filc::ast::ClassicOperator(">").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::EQEQ, filc::ast::ClassicOperator("==").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::LEQ, filc::ast::ClassicOperator("<=").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::GEQ, filc::ast::ClassicOperator(">=").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::NEQ, filc::ast::ClassicOperator("!=").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::AND, filc::ast::ClassicOperator("&&").getOperator());
+    ASSERT_EQ(filc::ast::ClassicOperator::OR, filc::ast::ClassicOperator("||").getOperator());
+    ASSERT_THROW(filc::ast::ClassicOperator("non-existing-operator"), std::logic_error);
 }
 
 TEST(ClassicOperator, dump) {

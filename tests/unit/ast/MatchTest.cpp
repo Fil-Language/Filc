@@ -26,7 +26,7 @@
 #include "Parser.h"
 
 TEST(Switch, constructor) {
-    filc::ast::Switch sw1(new filc::ast::Identifier("abcd"), {});
+    filc::ast::Match sw1(new filc::ast::Identifier("abcd"), {});
     ASSERT_IDENTIFIER("abcd", sw1.getCondition());
     ASSERT_THAT(sw1.getCases(), IsEmpty());
 }

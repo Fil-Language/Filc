@@ -1,7 +1,7 @@
 module test
 
-switch (value) {
+match (value) {
 "b" -> b
 "c" -> (c)
-default -> {a}
+_ -> {a}
 }

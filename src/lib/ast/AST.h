@@ -49,6 +49,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto getImports() const -> const std::vector<std::string> &;
 
+        auto setImports(const std::vector<Program *> &imports) -> void;
+
         [[nodiscard]] auto getExpressions() const -> const std::vector<AbstractExpression *> &;
 
         [[nodiscard]] auto getFilename() const -> const std::string &;
@@ -57,7 +59,8 @@ namespace filc::ast {
 
     private:
         std::string _module;
-        std::vector<std::string> _imports;
+        std::vector<std::string> _import_modules;
+        std::vector<Program *> _imports;
         std::vector<AbstractExpression *> _expressions;
         std::string _filename;
         filc::environment::Environment *_environment;
@@ -107,6 +110,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto getName() const -> const std::string &;
 
+        auto accept(Visitor *visitor) -> void override;
+
     private:
         std::string _name;
     };
@@ -128,11 +133,15 @@ namespace filc::ast {
     class BooleanLiteral : public AbstractLiteral<bool> {
     public:
         explicit BooleanLiteral(bool value);
+
+        auto accept(Visitor *visitor) -> void override;
     };
 
     class IntegerLiteral : public AbstractLiteral<int> {
     public:
         explicit IntegerLiteral(int value);
+
+        auto accept(Visitor *visitor) -> void override;
     };
 
     class FloatLiteral : public AbstractLiteral<double> {
@@ -140,6 +149,8 @@ namespace filc::ast {
         explicit FloatLiteral(double value, bool is_double = false);
 
         [[nodiscard]] auto isDouble() const -> bool;
+
+        auto accept(Visitor *visitor) -> void override;
 
     private:
         bool _double;
@@ -150,11 +161,15 @@ namespace filc::ast {
         explicit CharacterLiteral(char value);
 
         static auto stringToChar(const std::string &snippet, antlr4::Token *token = nullptr) -> char;
+
+        auto accept(Visitor *visitor) -> void override;
     };
 
     class StringLiteral : public AbstractLiteral<std::string> {
     public:
         explicit StringLiteral(const std::string &value);
+
+        auto accept(Visitor *visitor) -> void override;
     };
 
     class VariableDeclaration : public AbstractExpression {
@@ -303,6 +318,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto getOperator() const -> Operator *;
 
+        auto accept(Visitor *visitor) -> void override;
+
     private:
         AbstractExpression *_left_expression;
         AbstractExpression *_right_expression;
@@ -310,7 +327,7 @@ namespace filc::ast {
         std::shared_ptr<LambdaType> _binary_type;
     };
 
-    class Operator {
+    class Operator : public Visitable {
     public:
         Operator(const Operator &other) = default;
 
@@ -323,6 +340,8 @@ namespace filc::ast {
         auto operator=(Operator &&other) -> Operator & = default;
 
         [[nodiscard]] virtual auto dump() const -> std::string = 0;
+
+        auto accept(Visitor *visitor) -> void override {}
 
     protected:
         Operator() = default;
@@ -354,9 +373,13 @@ namespace filc::ast {
 
         explicit ClassicOperator(OPERATOR p_operator);
 
+        explicit ClassicOperator(const std::string &p_operator);
+
         [[nodiscard]] auto getOperator() const -> OPERATOR;
 
         [[nodiscard]] auto dump() const -> std::string override;
+
+        auto accept(Visitor *visitor) -> void override;
 
     private:
         OPERATOR _operator;
@@ -372,6 +395,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
+        auto accept(Visitor *visitor) -> void override;
+
     private:
         AbstractExpression *_expression;
     };
@@ -386,6 +411,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto dump() const -> std::string override;
 
+        auto accept(Visitor *visitor) -> void override;
+
     private:
         std::vector<AbstractExpression *> _expressions;
     };
@@ -399,6 +426,8 @@ namespace filc::ast {
         [[nodiscard]] auto getInnerOperator() const -> Operator *;
 
         [[nodiscard]] auto dump() const -> std::string override;
+
+        auto accept(Visitor *visitor) -> void override;
 
     private:
         Operator *_inner_operator;
@@ -465,36 +494,36 @@ namespace filc::ast {
 
         [[nodiscard]] auto getBody() const -> BlockBody *;
 
-        [[nodiscard]] auto getElse() const -> If *;
+        [[nodiscard]] auto getElse() const -> BlockBody *;
 
-        auto setElse(If *p_else) -> void;
+        auto setElse(BlockBody *p_else) -> void;
 
     private:
         AbstractExpression *_condition;
         BlockBody *_body;
-        If *_else;
+        BlockBody *_else;
     };
 
-    class Switch : public AbstractExpression {
+    class Match : public AbstractExpression {
     public:
-        Switch(AbstractExpression *condition, const std::vector<SwitchCase *> &cases);
+        Match(AbstractExpression *condition, const std::vector<MatchCase *> &cases);
 
-        ~Switch() override;
+        ~Match() override;
 
         [[nodiscard]] auto getCondition() const -> AbstractExpression *;
 
-        [[nodiscard]] auto getCases() const -> const std::vector<SwitchCase *> &;
+        [[nodiscard]] auto getCases() const -> const std::vector<MatchCase *> &;
 
     private:
         AbstractExpression *_condition;
-        std::vector<SwitchCase *> _cases;
+        std::vector<MatchCase *> _cases;
     };
 
-    class SwitchCase : public AbstractExpression {
+    class MatchCase : public AbstractExpression {
     public:
-        SwitchCase(AbstractExpression *pattern, BlockBody *body);
+        MatchCase(AbstractExpression *pattern, BlockBody *body);
 
-        ~SwitchCase() override;
+        ~MatchCase() override;
 
         [[nodiscard]] auto getPattern() const -> AbstractExpression *;
 
@@ -574,6 +603,8 @@ namespace filc::ast {
         ~BlockBody() override;
 
         [[nodiscard]] auto getExpressions() const -> const std::vector<AbstractExpression *> &;
+
+        auto accept(Visitor *visitor) -> void override;
 
     private:
         std::vector<AbstractExpression *> _expressions;

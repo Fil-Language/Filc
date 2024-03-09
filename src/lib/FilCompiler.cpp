@@ -51,8 +51,6 @@ auto FilCompiler::compile() -> int {
     const auto entrypoint = getEntrypoint();
     if (collector->hasErrors()) {
         collector->printAll();
-        // Assert that MessageCollector will not be used anymore after this line
-        delete collector;
         return 1;
     }
     collector->printAll();
@@ -65,8 +63,6 @@ auto FilCompiler::compile() -> int {
     //collector->addMessage(new filc::message::Message(filc::message::SYSTEM, "Compilation finished"));
     collector->printAll();
 
-    // Assert that MessageCollector will not be used anymore after this line
-    delete collector;
     return 2;
 }
 

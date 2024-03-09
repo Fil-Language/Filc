@@ -24,23 +24,27 @@
 #include "AST.h"
 #include "Error.h"
 
-namespace filc::ast {
-    BinaryCalcul::BinaryCalcul(AbstractExpression *left_expression, Operator *p_operator,
-                               AbstractExpression *right_expression)
-            : _left_expression(left_expression), _right_expression(right_expression), _operator(p_operator),
-              _binary_type(nullptr) {}
+using namespace filc::ast;
 
-    auto BinaryCalcul::getLeftExpression() const -> AbstractExpression * {
-        return _left_expression;
-    }
+BinaryCalcul::BinaryCalcul(AbstractExpression *left_expression, Operator *p_operator,
+                           AbstractExpression *right_expression)
+    : _left_expression(left_expression), _right_expression(right_expression), _operator(p_operator),
+      _binary_type(nullptr) {}
 
-    auto BinaryCalcul::getRightExpression() const -> AbstractExpression * {
-        return _right_expression;
-    }
+BinaryCalcul::~BinaryCalcul() = default;
 
-    auto BinaryCalcul::getOperator() const -> Operator * {
-        return _operator;
-    }
+auto BinaryCalcul::getLeftExpression() const -> AbstractExpression * {
+    return _left_expression;
+}
 
-    BinaryCalcul::~BinaryCalcul() = default;
+auto BinaryCalcul::getRightExpression() const -> AbstractExpression * {
+    return _right_expression;
+}
+
+auto BinaryCalcul::getOperator() const -> Operator * {
+    return _operator;
+}
+
+auto BinaryCalcul::accept(Visitor *visitor) -> void {
+    visitor->visitBinaryCalcul(this);
 }

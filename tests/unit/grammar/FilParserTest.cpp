@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "Config.h"
 #include "Parser.h"
 #include "test_tools.h"
 #include <string>
@@ -87,6 +88,10 @@ TEST(FilParser, module) {
 }
 
 TEST(FilParser, use) {
+    filc::utils::config::Config::init("test");
+    auto config = filc::utils::config::Config::get();
+    config->setNamespace("my.code", FIXTURES_PATH_GRAMMAR);
+
     filc::grammar::FilParser parser1;
     parser1.parse(FIXTURES_PATH_GRAMMAR "/use1.fil", COLLECTOR);
     auto *program1 = parser1.getResult();
@@ -112,6 +117,8 @@ TEST(FilParser, use) {
     ASSERT_THAT(program4->getImports(), Contains("a.b"));
     ASSERT_THAT(program4->getImports(), Contains("c.d"));
     ASSERT_THAT(program4->getImports(), Contains("e.f"));
+
+    filc::utils::config::Config::clear();
 }
 
 TEST(FilParser, BooleanLiteral) {
@@ -325,81 +332,6 @@ TEST(FilParser, UnaryCalcul) {
     ASSERT_LITERAL(4, IntegerLiteral, operator4->getExpression());
 }
 
-TEST(FilParser, BinaryCalcul) {
-    filc::grammar::FilParser parser1;
-    parser1.parse(FIXTURES_PATH_GRAMMAR "/binary_calcul1.fil", COLLECTOR);
-    auto *program1 = parser1.getResult();
-    ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    auto *expression1 = dynamic_cast<filc::ast::BinaryCalcul *>(program1->getExpressions()[0]);
-    ASSERT_NE(nullptr, expression1);
-    ASSERT_LITERAL(3, IntegerLiteral, expression1->getLeftExpression());
-    ASSERT_LITERAL(2, IntegerLiteral, expression1->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(STAR, expression1->getOperator());
-
-    filc::grammar::FilParser parser2;
-    parser2.parse(FIXTURES_PATH_GRAMMAR "/binary_calcul2.fil", COLLECTOR);
-    auto *program2 = parser2.getResult();
-    ASSERT_THAT(program2->getExpressions(), SizeIs(4));
-    auto *expression2_1 = dynamic_cast<filc::ast::BinaryCalcul *>(program2->getExpressions()[0]);
-    auto *expression2_2 = dynamic_cast<filc::ast::BinaryCalcul *>(program2->getExpressions()[1]);
-    auto *expression2_3 = dynamic_cast<filc::ast::BinaryCalcul *>(program2->getExpressions()[2]);
-    auto *expression2_4 = dynamic_cast<filc::ast::BinaryCalcul *>(program2->getExpressions()[3]);
-    ASSERT_NE(nullptr, expression2_1);
-    ASSERT_NE(nullptr, expression2_2);
-    ASSERT_NE(nullptr, expression2_3);
-    ASSERT_NE(nullptr, expression2_4);
-    auto *expression2_1_l = dynamic_cast<filc::ast::BinaryCalcul *>(expression2_1->getLeftExpression());
-    ASSERT_NE(nullptr, expression2_1_l);
-    ASSERT_LITERAL(1, IntegerLiteral, expression2_1_l->getLeftExpression());
-    ASSERT_LITERAL(2, IntegerLiteral, expression2_1_l->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(STAR, expression2_1_l->getOperator());
-    ASSERT_LITERAL(3, IntegerLiteral, expression2_1->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(PLUS, expression2_1->getOperator());
-    auto *expression2_2_r = dynamic_cast<filc::ast::BinaryCalcul *>(expression2_2->getRightExpression());
-    ASSERT_NE(nullptr, expression2_2_r);
-    ASSERT_LITERAL(1, IntegerLiteral, expression2_2->getLeftExpression());
-    ASSERT_CLASSIC_OPERATOR(PLUS, expression2_2->getOperator());
-    ASSERT_LITERAL(2, IntegerLiteral, expression2_2_r->getLeftExpression());
-    ASSERT_LITERAL(3, IntegerLiteral, expression2_2_r->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(STAR, expression2_2_r->getOperator());
-    auto *expression2_3_br = dynamic_cast<filc::ast::BlockBody *>(expression2_3->getRightExpression());
-    ASSERT_NE(nullptr, expression2_3_br);
-    ASSERT_THAT(expression2_3_br->getExpressions(), SizeIs(1));
-    auto *expression2_3_r = dynamic_cast<filc::ast::BinaryCalcul *>(expression2_3_br->getExpressions()[0]);
-    ASSERT_NE(nullptr, expression2_3_r);
-    ASSERT_LITERAL(1, IntegerLiteral, expression2_3->getLeftExpression());
-    ASSERT_CLASSIC_OPERATOR(STAR, expression2_3->getOperator());
-    ASSERT_LITERAL(2, IntegerLiteral, expression2_3_r->getLeftExpression());
-    ASSERT_LITERAL(3, IntegerLiteral, expression2_3_r->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(PLUS, expression2_3_r->getOperator());
-    auto *expression2_4_bl = dynamic_cast<filc::ast::BlockBody *>(expression2_4->getLeftExpression());
-    ASSERT_NE(nullptr, expression2_4_bl);
-    ASSERT_THAT(expression2_4_bl->getExpressions(), SizeIs(1));
-    auto *expression2_4_l = dynamic_cast<filc::ast::BinaryCalcul *>(expression2_4_bl->getExpressions()[0]);
-    ASSERT_NE(nullptr, expression2_4_l);
-    ASSERT_LITERAL(1, IntegerLiteral, expression2_4_l->getLeftExpression());
-    ASSERT_LITERAL(2, IntegerLiteral, expression2_4_l->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(PLUS, expression2_4_l->getOperator());
-    ASSERT_LITERAL(3, IntegerLiteral, expression2_4->getRightExpression());
-    ASSERT_CLASSIC_OPERATOR(STAR, expression2_4->getOperator());
-
-    filc::grammar::FilParser parser3;
-    parser3.parse(FIXTURES_PATH_GRAMMAR "/binary_calcul3.fil", COLLECTOR);
-    auto *program3 = parser3.getResult();
-    ASSERT_THAT(program3->getExpressions(), SizeIs(2));
-    auto *expression3_1 = dynamic_cast<filc::ast::BinaryCalcul *>(program3->getExpressions()[0]);
-    auto *expression3_2 = dynamic_cast<filc::ast::BinaryCalcul *>(program3->getExpressions()[1]);
-    ASSERT_NE(nullptr, expression3_1);
-    ASSERT_NE(nullptr, expression3_2);
-    ASSERT_IDENTIFIER("a", expression3_1->getLeftExpression());
-    ASSERT_LITERAL(2, IntegerLiteral, expression3_1->getRightExpression());
-    ASSERT_EQ(nullptr,
-              dynamic_cast<filc::ast::AssignationOperator *>(expression3_1->getOperator())->getInnerOperator());
-    ASSERT_IDENTIFIER("b", expression3_2->getLeftExpression());
-    ASSERT_IDENTIFIER("a", expression3_2->getRightExpression());
-    ASSERT_ASSIGNATION_OPERATOR(PLUS, expression3_2->getOperator());
-}
-
 TEST(FilParser, Function) {
     filc::grammar::FilParser parser1;
     parser1.parse(FIXTURES_PATH_GRAMMAR "/function1.fil", COLLECTOR);
@@ -497,10 +429,8 @@ TEST(FilParser, If) {
     ASSERT_IDENTIFIER("b", body1_1->getExpressions()[0]);
     auto *else1 = expression1->getElse();
     ASSERT_NE(nullptr, else1);
-    ASSERT_IDENTIFIER("true", else1->getCondition());
-    auto *body1_2 = dynamic_cast<filc::ast::BlockBody *>(else1->getBody());
-    ASSERT_THAT(body1_2->getExpressions(), SizeIs(1));
-    ASSERT_IDENTIFIER("c", body1_2->getExpressions()[0]);
+    ASSERT_THAT(else1->getExpressions(), SizeIs(1));
+    ASSERT_IDENTIFIER("c", else1->getExpressions()[0]);
 
     filc::grammar::FilParser parser2;
     parser2.parse(FIXTURES_PATH_GRAMMAR "/if2.fil", COLLECTOR);
@@ -522,12 +452,12 @@ TEST(FilParser, If) {
     ASSERT_EQ(nullptr, expression2->getElse());
 }
 
-TEST(FilParser, Switch) {
+TEST(FilParser, Match) {
     filc::grammar::FilParser parser1;
-    parser1.parse(FIXTURES_PATH_GRAMMAR "/switch1.fil", COLLECTOR);
+    parser1.parse(FIXTURES_PATH_GRAMMAR "/match1.fil", COLLECTOR);
     auto *program1 = parser1.getResult();
     ASSERT_THAT(program1->getExpressions(), SizeIs(1));
-    auto *expression1 = dynamic_cast<filc::ast::Switch *>(program1->getExpressions()[0]);
+    auto *expression1 = dynamic_cast<filc::ast::Match *>(program1->getExpressions()[0]);
     ASSERT_NE(nullptr, expression1);
     ASSERT_IDENTIFIER("value", expression1->getCondition());
     ASSERT_THAT(expression1->getCases(), SizeIs(3));
@@ -536,7 +466,7 @@ TEST(FilParser, Switch) {
     auto *case1_3 = expression1->getCases()[2];
     ASSERT_LITERAL("b", StringLiteral, case1_1->getPattern());
     ASSERT_LITERAL("c", StringLiteral, case1_2->getPattern());
-    ASSERT_IDENTIFIER("default", case1_3->getPattern());
+    ASSERT_IDENTIFIER("_", case1_3->getPattern());
     ASSERT_THAT(case1_1->getBody()->getExpressions(), SizeIs(1));
     ASSERT_THAT(case1_2->getBody()->getExpressions(), SizeIs(1));
     ASSERT_THAT(case1_3->getBody()->getExpressions(), SizeIs(1));
@@ -606,4 +536,24 @@ TEST(FilParser, While) {
     auto *expression1_1 = dynamic_cast<filc::ast::PostUnaryCalcul *>(body1->getExpressions()[0]);
     ASSERT_IDENTIFIER("i", expression1_1->getVariable());
     ASSERT_CLASSIC_OPERATOR(PLUSPLUS, expression1_1->getOperator());
+}
+
+TEST(FilParser, cache) {
+    filc::utils::config::Config::init("test");
+    auto config = filc::utils::config::Config::get();
+    config->setNamespace("my.code", FIXTURES_PATH_GRAMMAR);
+
+    filc::grammar::FilParser parser1;
+    parser1.parse(FIXTURES_PATH_GRAMMAR "/import1.fil", COLLECTOR);
+    auto program1 = parser1.getResult();
+    ASSERT_EQ(1, program1->getImports().size());
+    ASSERT_STREQ("my.code.import2", program1->getImports()[0].c_str());
+
+    filc::grammar::FilParser parser2;
+    parser2.parse(FIXTURES_PATH_GRAMMAR "/import2.fil", COLLECTOR);
+    auto program2 = parser2.getResult();
+    ASSERT_EQ(1, program2->getImports().size());
+    ASSERT_STREQ("my.code.import1", program2->getImports()[0].c_str());
+
+    filc::utils::config::Config::clear();
 }

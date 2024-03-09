@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 #include "tools.h"
+#include "Config.h"
 #include <algorithm>
+#include <filesystem>
 #include <fstream>
 
 namespace filc::utils {
@@ -135,5 +137,52 @@ namespace filc::utils {
         int patch      = std::stoi(sub_parts[0]);
 
         return ((major) * 1000000 + (minor) * 1000 + (patch));
+    }
+
+    auto getFilePathForModule(const std::string &base_path, const std::vector<std::string> &module_parts) -> std::string {
+        const auto &last_part = module_parts.back();
+        std::vector<std::string> sub_parts(module_parts.begin(), module_parts.end() - 1);
+        const auto path = base_path + "/" + (sub_parts.empty() ? "" : (joinString(sub_parts, "/") + "/"));
+
+        if (std::filesystem::exists(path + last_part + ".fil")) {
+            return path + last_part + ".fil";
+        }
+        if (std::filesystem::exists(path + last_part + "/main.fil")) {
+            return path + last_part + "/main.fil";
+        }
+        if (std::filesystem::exists(path + last_part + "/index.fil")) {
+            return path + last_part + "/index.fil";
+        }
+
+        return "";
+    }
+
+    auto getFilenameFromModule(const std::string &module) -> std::string {
+        auto parts = splitString(module, '.');
+        if (parts.empty()) {
+            throw std::logic_error("Module name should not be empty");
+        }
+
+        const auto config = utils::config::Config::get();
+        std::string current_module;
+        std::string found;
+        while (!parts.empty()) {
+            current_module += current_module.empty() ? parts.front() : "." + parts.front();
+            parts.erase(parts.begin(), parts.begin() + 1);
+            auto path = config->getNamespace(current_module);
+            if (!path.empty()) {
+                auto potential_path = getFilePathForModule(path, parts);
+                if (!potential_path.empty()) {
+                    found = potential_path;
+                    break;
+                }
+            }
+        }
+
+        if (found.empty()) {
+            throw std::logic_error("Module " + module + " not found");
+        }
+
+        return found;
     }
 }// namespace filc::utils

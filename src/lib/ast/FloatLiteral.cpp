@@ -24,11 +24,15 @@
 #include "AST.h"
 #include "llvm/IR/Constants.h"
 
-namespace filc::ast {
-    FloatLiteral::FloatLiteral(double value, bool is_double)
-            : AbstractLiteral<double>(value), _double(is_double) {}
+using namespace filc::ast;
 
-    auto FloatLiteral::isDouble() const -> bool {
-        return _double;
-    }
+FloatLiteral::FloatLiteral(double value, bool is_double)
+    : AbstractLiteral<double>(value), _double(is_double) {}
+
+auto FloatLiteral::isDouble() const -> bool {
+    return _double;
+}
+
+auto FloatLiteral::accept(Visitor *visitor) -> void {
+    visitor->visitFloatLiteral(this);
 }

@@ -29,7 +29,31 @@
 namespace filc {
     class Visitor {
     public:
-        virtual auto visitAbstractExpression(ast::AbstractExpression *abstract_expression) -> void = 0;
+        virtual auto visitAbstractExpression(ast::AbstractExpression *abstract_expression) -> void {}
+
+        virtual auto visitBooleanLiteral(ast::BooleanLiteral *boolean_literal) -> void {}
+
+        virtual auto visitIntegerLiteral(ast::IntegerLiteral *integer_literal) -> void {}
+
+        virtual auto visitFloatLiteral(ast::FloatLiteral *float_literal) -> void {}
+
+        virtual auto visitCharacterLiteral(ast::CharacterLiteral *character_literal) -> void {}
+
+        virtual auto visitStringLiteral(ast::StringLiteral *string_literal) -> void {}
+
+        virtual auto visitBinaryCalcul(ast::BinaryCalcul *binary_calcul) -> void {}
+
+        virtual auto visitClassicOperator(ast::ClassicOperator *classic_operator) -> void {}
+
+        virtual auto visitArrayOperator(ast::ArrayOperator *array_operator) -> void {}
+
+        virtual auto visitFunctionOperator(ast::FunctionOperator *function_operator) -> void {}
+
+        virtual auto visitAssignationOperator(ast::AssignationOperator *assignation_operator) -> void {}
+
+        virtual auto visitIdentifier(ast::Identifier *identifier) -> void {}
+
+        virtual auto visitBlockBody(ast::BlockBody *block_body) -> void {}
     };
 
     class Visitable {

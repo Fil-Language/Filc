@@ -1,0 +1,3 @@
+module my.code.import2
+
+use my.code.import1

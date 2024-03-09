@@ -25,7 +25,11 @@
 #include "tools.h"
 #include "llvm/IR/Constants.h"
 
-namespace filc::ast {
-    StringLiteral::StringLiteral(const std::string &value)
-            : AbstractLiteral<std::string>(filc::utils::parseEscapedString(value.substr(1, value.length() - 2))) {}
+using namespace filc::ast;
+
+StringLiteral::StringLiteral(const std::string &value)
+    : AbstractLiteral<std::string>(filc::utils::parseEscapedString(value.substr(1, value.length() - 2))) {}
+
+void StringLiteral::accept(Visitor *visitor) {
+    visitor->visitStringLiteral(this);
 }
