@@ -4,12 +4,12 @@ Here are listed all external dependencies used in this project.
 
 ## Compiler
 
-| **Name**       | **Link**                             |                     **Version**                      |
-|:---------------|:-------------------------------------|:----------------------------------------------------:|
-| LLVM           | https://llvm.org/                    |     ![15](https://img.shields.io/badge/15-green)     |
-| Antlr          | https://www.antlr.org/               | ![4.13.1](https://img.shields.io/badge/4.13.1-green) |
-| yaml-cpp       | https://github.com/jbeder/yaml-cpp/  |  ![0.7.0](https://img.shields.io/badge/0.7.0-green)  |
-| enquirer       | https://github.com/Gashmob/Enquirer  |  ![1.0.2](https://img.shields.io/badge/1.0.2-green)  |
+| **Name** | **Link**                            |                     **Version**                      |
+|:---------|:------------------------------------|:----------------------------------------------------:|
+| LLVM     | https://llvm.org/                   |     ![15](https://img.shields.io/badge/15-green)     |
+| Antlr    | https://www.antlr.org/              | ![4.13.1](https://img.shields.io/badge/4.13.1-green) |
+| yaml-cpp | https://github.com/jbeder/yaml-cpp/ |  ![0.7.0](https://img.shields.io/badge/0.7.0-green)  |
+| enquirer | https://github.com/Gashmob/Enquirer |  ![1.0.2](https://img.shields.io/badge/1.0.2-green)  |
 
 ## Tests
 
@@ -31,6 +31,7 @@ Here are listed all external dependencies used in this project.
 | Install LLVM            | https://github.com/marketplace/actions/install-llvm-and-clang   |     ![v1](https://img.shields.io/badge/v1-green)     |
 | CodeQL                  | https://github.com/github/codeql-action                         |     ![v3](https://img.shields.io/badge/v3-green)     |
 | CppCheck                | https://github.com/marketplace/actions/cppcheck-action          |   ![v3.0](https://img.shields.io/badge/v3.0-green)   |
+| Upload artifact         | https://github.com/marketplace/actions/upload-a-build-artifact  |     ![v4](https://img.shields.io/badge/v4-green)     |
 
 ## Scripts
 

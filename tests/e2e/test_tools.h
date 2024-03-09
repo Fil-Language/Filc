@@ -48,7 +48,7 @@ auto exec_output(const char *cmd) -> std::string {
     return result;
 }
 
-#define run_with_args(args) exec_output(FILC_DIR "/filc " args)
+#define run_with_args(args) exec_output(FILC_BIN " " args)
 
 auto exec_input(const char *cmd, const char *input) -> void {
     std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "w"), pclose);
@@ -62,6 +62,6 @@ auto exec_input(const char *cmd, const char *input) -> void {
     }
 }
 
-#define run_with_args_and_input(args, input) exec_input(FILC_DIR "/filc " args, input)
+#define run_with_args_and_input(args, input) exec_input(FILC_BIN " " args, input)
 
 #endif//TEST_TOOLS_H
