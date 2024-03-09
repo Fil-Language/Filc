@@ -1,4 +1,4 @@
-name: Building
+name: Packaging
 
 on:
   release:
