@@ -16,10 +16,10 @@ jobs:
       fail-fast: false
       matrix:
         job:
-          - { target: arm-unknown-linux-gnu    , os: ubuntu-22.04 }
-          - { target: x86_64-unknown-linux-gnu , os: ubuntu-22.04 }
-          - { target: i386-unknown-linux-gnu   , os: ubuntu-22.04 }
-          - { target: x86_64-apple-darwin      , os: macos-13 }
+          - { target: arm-unknown-linux-gnu    , os: ubuntu-22.04, pkg-name: arm   }
+          - { target: x86_64-unknown-linux-gnu , os: ubuntu-22.04, pkg-name: amd64 }
+          - { target: i386-unknown-linux-gnu   , os: ubuntu-22.04, pkg-name: i386  }
+          - { target: x86_64-apple-darwin      , os: macos-13,     pkg-name: amd64 }
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -33,6 +33,7 @@ jobs:
         uses: KyleMayes/install-llvm-action@v1
         with:
           version: "15"
+          env: true
 
       - name: Configure CMake
         run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=Release --toolchain=cmake/toolchains/${{ matrix.job.target }}.toolchain.cmake
@@ -52,5 +53,5 @@ jobs:
       - name: "Artifact upload: binary" # Temp, will be replaced by tarball
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.job.target }}_${{ matrix.job.os }}-${{ steps.metadata.outputs.PACKAGE_VERSION }}
+          name: ${{ matrix.job.pkg-name }}_${{ matrix.job.os }}-v${{ steps.metadata.outputs.PACKAGE_VERSION }}
           path: ${{ steps.metadata.outputs.BINARY_PATH }}
