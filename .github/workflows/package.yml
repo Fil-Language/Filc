@@ -38,12 +38,13 @@ jobs:
         run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=Release --toolchain=cmake/toolchains/${{ matrix.job.target }}.toolchain.cmake
 
       - name: Build
-        run: cmake --build ${{ github.workspace }}/build
+        run: cmake --build ${{ github.workspace }}/build --target filc
 
       - name: Get metadata
         id: metadata
         run: |
           BINARY_PATH=${{ github.workspace }}/build/filc
+          echo "BINARY_PATH=${BINARY_PATH}" >> $GITHUB_OUTPUT
           
           PACKAGE_VERSION=$(cat VERSION)
           echo "PACKAGE_VERSION=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT

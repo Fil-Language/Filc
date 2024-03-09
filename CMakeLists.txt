@@ -9,9 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Don't use e.g. GNU extension (like -std=gnu++11) for portability
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-message("C++ compiler is: ${CMAKE_CXX_COMPILER}")
-message("Build target is: ${CMAKE_CXX_COMPILER_TARGET}")
-
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION FILC_VERSION)
 
 project(
