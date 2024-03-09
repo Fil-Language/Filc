@@ -4,5 +4,7 @@ changelog:
       labels: [enhancement]
     - title: Bug fixes 🛠
       labels: [bug]
+    - title: Dependencies updates
+      labels: [dependencies]
     - title: Other changes
       labels: ["*"]
