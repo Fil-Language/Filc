@@ -17,8 +17,6 @@ jobs:
       fail-fast: false
       matrix:
         job:
-          - { target: arm-unknown-linux-gnu    , os: ubuntu-20.04, pkg-name: arm   }
-          - { target: x86_64-unknown-linux-gnu , os: ubuntu-20.04, pkg-name: amd64 }
           - { target: i386-unknown-linux-gnu   , os: ubuntu-20.04, pkg-name: i386  }
     steps:
       - name: Checkout source code
@@ -34,8 +32,6 @@ jobs:
         with:
           version: "15"
           env: true
-      - name: Install libstdc++-devel
-        run: apt install libstdc++-devel
 
       - name: Configure CMake
         run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=Release --toolchain=cmake/toolchains/${{ matrix.job.target }}.toolchain.cmake
