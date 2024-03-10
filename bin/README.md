@@ -34,3 +34,9 @@ Replace current antlr jar with a new one
 ## `check_no_changes.sh`
 
 Check if there is change in git tree. If so it exits with code 1, else it exits with code 0.
+
+## `build_deb_package.sh`
+
+Usage: `bin/build_deb_package.sh <binary path> <version> <architecture>`
+
+Build `.deb` package

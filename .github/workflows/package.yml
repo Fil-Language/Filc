@@ -48,8 +48,18 @@ jobs:
           PACKAGE_VERSION=$(cat VERSION)
           echo "PACKAGE_VERSION=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
 
-      - name: "Artifact upload: binary" # Temp, will be replaced by tarball
+      - name: Create Debian package
+        if: startsWith(matrix.job.os, 'ubuntu')
+        id: debian_package
+        run: |
+          DEB_PKG_NAME=filc_${{ steps.metadata.outputs.PACKAGE_VERSION }}_${{ matrix.job.pkg_name }}.deb
+          ${{ github.workspace }}/bin/build_deb_package.sh ${{ steps.metadata.outputs.BINARY_PATH }} ${{ steps.metadata.outputs.PACKAGE_VERSION }} ${{ matrix.job.pkg_name }}
+          mv filc.deb $DEB_PKG_NAME
+          echo "DEB_PKG_NAME=${DEB_PKG_NAME}" >> $GITHUB_OUTPUT
+
+      - name: "Artifact upload: Debian package"
+        if: steps.debian_package.outputs.DEB_PKG_NAME
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.job.pkg-name }}_${{ matrix.job.os }}-v${{ steps.metadata.outputs.PACKAGE_VERSION }}
-          path: ${{ steps.metadata.outputs.BINARY_PATH }}
+          name: ${{ steps.debian_package.outputs.DEB_PKG_NAME }}
+          path: ${{ github.workspace }}/${{ steps.debian_package.outputs.DEB_PKG_NAME }}
