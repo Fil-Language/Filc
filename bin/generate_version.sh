@@ -37,3 +37,6 @@ echo -e "    \033[32mDone\033[0m"
 echo -e " -> Change version in VERSION"
 echo -e "$version" > VERSION
 echo -e "    \033[32mDone\033[0m"
+
+# Version to change manually
+echo -e " -> You must change version manually in some tests files"
