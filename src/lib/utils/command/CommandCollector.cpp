@@ -88,7 +88,7 @@ auto CommandCollector::run(int argc, char **argv) -> int {
 }
 
 auto CommandCollector::runHelpCommand(int argc, char **argv) const -> int {
-    const auto help_command = new HelpCommand(this);
+    HelpCommand help_command(this);
 
-    return help_command->run(argc, argv);
+    return help_command.run(argc, argv);
 }

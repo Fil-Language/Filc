@@ -36,3 +36,11 @@ TEST(Memory, version_command) {
     const auto result = valgrind_run("version");
     ASSERT_THAT(result, HasSubstr("in use at exit: 0 bytes in 0 blocks"));
 }
+
+TEST(Memory, help_command) {
+    const auto result = valgrind_run("help");
+    ASSERT_THAT(result, HasSubstr("in use at exit: 0 bytes in 0 blocks"));
+
+    const auto result2 = valgrind_run("");
+    ASSERT_THAT(result2, HasSubstr("in use at exit: 0 bytes in 0 blocks"));
+}
