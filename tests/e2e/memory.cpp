@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2023-Present Kevin Traini
+ * Copyright (c) 2024-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef TEST_TOOLS_H
-#define TEST_TOOLS_H
+#include "test_tools.h"
 
-#include <cstdio>
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
-#include <memory>
-#include <regex>
-#include <stdexcept>
-#include <string>
+/**
+ * This test file aims to check memory usage of commands at the end
+ * We should try to reduce it to the minimum (if zero is too hard to achieve)
+ */
 
-auto exec_output(const char *cmd) -> std::string;
+using namespace ::testing;
 
-#define run_with_args(args) exec_output(FILC_BIN " " args)
+#define valgrind_run(args) exec_output("valgrind " FILC_BIN " " args " 2>&1")
 
-auto exec_input(const char *cmd, const char *input) -> void;
-
-#define run_with_args_and_input(args, input) exec_input(FILC_BIN " " args, input)
-
-#endif//TEST_TOOLS_H
+TEST(Memory, version_command) {
+    const auto result = valgrind_run("version");
+    ASSERT_THAT(result, HasSubstr("in use at exit: 0 bytes in 0 blocks"));
+}

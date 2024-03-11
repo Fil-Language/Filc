@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2023-Present Kevin Traini
+ * Copyright (c) 2024-Present Kevin Traini
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef TEST_TOOLS_H
-#define TEST_TOOLS_H
+#include "test_tools.h"
 
-#include <cstdio>
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
-#include <memory>
-#include <regex>
-#include <stdexcept>
-#include <string>
+auto exec_output(const char *cmd) -> std::string {
+    char buffer[128];
+    std::string result;
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
 
-auto exec_output(const char *cmd) -> std::string;
+    if (!pipe) {
+        throw std::runtime_error("popen() failed!");
+    }
 
-#define run_with_args(args) exec_output(FILC_BIN " " args)
+    while (fgets(buffer, sizeof buffer, pipe.get()) != nullptr) {
+        result += buffer;
+    }
 
-auto exec_input(const char *cmd, const char *input) -> void;
+    return result;
+}
 
-#define run_with_args_and_input(args, input) exec_input(FILC_BIN " " args, input)
+auto exec_input(const char *cmd, const char *input) -> void {
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "w"), pclose);
 
-#endif//TEST_TOOLS_H
+    if (!pipe) {
+        throw std::runtime_error("popen() failed!");
+    }
+
+    if (fprintf(pipe.get(), "%s", input) < 0) {
+        throw std::runtime_error("fprintf() failed!");
+    }
+}
