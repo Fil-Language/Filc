@@ -30,6 +30,8 @@
 
 using namespace ::testing;
 
+#ifdef __linux__
+
 #define valgrind_run(args) exec_output("valgrind " FILC_BIN " " args " 2>&1")
 
 TEST(Memory, version_command) {
@@ -44,3 +46,5 @@ TEST(Memory, help_command) {
     const auto result2 = valgrind_run("");
     ASSERT_THAT(result2, HasSubstr("in use at exit: 0 bytes in 0 blocks"));
 }
+
+#endif
