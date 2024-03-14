@@ -36,6 +36,10 @@ Config *Config::_instance;
 Config::Config()
     : _root(new SchemaMap) {}
 
+Config::~Config() {
+    delete _root;
+}
+
 auto Config::init(const string &name) -> void {
     if (_instance != nullptr) {
         return;

@@ -32,19 +32,28 @@ using namespace ::testing;
 
 #ifdef __linux__
 
-#define valgrind_run(args) exec_output("valgrind " FILC_BIN " " args " 2>&1")
+#define VALGRIND_OUTPUT_ZERO "in use at exit: 0 bytes in 0 blocks"
+
+#define valgrind_run_input(input, args) exec_output("echo '" input "' | valgrind " FILC_BIN " " args " 2>&1")
+
+#define valgrind_run(args) valgrind_run_input("", args)
 
 TEST(Memory, version_command) {
     const auto result = valgrind_run("version");
-    ASSERT_THAT(result, HasSubstr("in use at exit: 0 bytes in 0 blocks"));
+    ASSERT_THAT(result, HasSubstr(VALGRIND_OUTPUT_ZERO));
 }
 
 TEST(Memory, help_command) {
     const auto result = valgrind_run("help");
-    ASSERT_THAT(result, HasSubstr("in use at exit: 0 bytes in 0 blocks"));
+    ASSERT_THAT(result, HasSubstr(VALGRIND_OUTPUT_ZERO));
 
     const auto result2 = valgrind_run("");
-    ASSERT_THAT(result2, HasSubstr("in use at exit: 0 bytes in 0 blocks"));
+    ASSERT_THAT(result2, HasSubstr(VALGRIND_OUTPUT_ZERO));
+}
+
+TEST(Memory, init_command) {
+    const auto result = valgrind_run_input("test\n", "init");
+    ASSERT_THAT(result, HasSubstr(VALGRIND_OUTPUT_ZERO));
 }
 
 #endif

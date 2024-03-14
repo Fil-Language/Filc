@@ -38,15 +38,3 @@ auto exec_output(const char *cmd) -> std::string {
 
     return result;
 }
-
-auto exec_input(const char *cmd, const char *input) -> void {
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "w"), pclose);
-
-    if (!pipe) {
-        throw std::runtime_error("popen() failed!");
-    }
-
-    if (fprintf(pipe.get(), "%s", input) < 0) {
-        throw std::runtime_error("fprintf() failed!");
-    }
-}

@@ -34,10 +34,8 @@
 
 auto exec_output(const char *cmd) -> std::string;
 
-#define run_with_args(args) exec_output(FILC_BIN " " args)
+#define run_with_args_and_input(args, input) exec_output("echo '" input "' | " FILC_BIN " " args)
 
-auto exec_input(const char *cmd, const char *input) -> void;
-
-#define run_with_args_and_input(args, input) exec_input(FILC_BIN " " args, input)
+#define run_with_args(args) run_with_args_and_input(args, "")
 
 #endif//TEST_TOOLS_H
