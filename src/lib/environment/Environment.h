@@ -70,7 +70,7 @@ namespace filc::environment {
 
         static auto getGlobalEnvironment() -> const Environment *;
 
-        auto generateIR(filc::message::MessageCollector *collector,
+        auto generateIR(std::shared_ptr<message::MessageCollector> collector,
                         llvm::LLVMContext *context,
                         llvm::Module *module,
                         llvm::IRBuilder<> *builder) const -> void;
@@ -93,22 +93,22 @@ namespace filc::environment {
 
         static auto addBinary(Environment *global, BasicTypes &basic_types) -> void;
 
-        auto generateAssignations(filc::message::MessageCollector *collector,
+        auto generateAssignations(std::shared_ptr<message::MessageCollector> collector,
                                   llvm::LLVMContext *context,
                                   llvm::Module *module,
                                   llvm::IRBuilder<> *builder) const -> void;
 
-        auto generatePrefixUnary(filc::message::MessageCollector *collector,
+        auto generatePrefixUnary(std::shared_ptr<message::MessageCollector> collector,
                                  llvm::LLVMContext *context,
                                  llvm::Module *module,
                                  llvm::IRBuilder<> *builder) const -> void;
 
-        auto generatePostFixUnary(filc::message::MessageCollector *collector,
+        auto generatePostFixUnary(std::shared_ptr<message::MessageCollector> collector,
                                   llvm::LLVMContext *context,
                                   llvm::Module *module,
                                   llvm::IRBuilder<> *builder) const -> void;
 
-        auto generateBinary(filc::message::MessageCollector *collector,
+        auto generateBinary(std::shared_ptr<message::MessageCollector> collector,
                             llvm::LLVMContext *context,
                             llvm::Module *module,
                             llvm::IRBuilder<> *builder) const -> void;

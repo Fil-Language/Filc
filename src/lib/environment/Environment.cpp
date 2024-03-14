@@ -550,7 +550,7 @@ namespace filc::environment {
         }
     }
 
-    auto Environment::generateIR(filc::message::MessageCollector *collector,
+    auto Environment::generateIR(std::shared_ptr<filc::message::MessageCollector> collector,
                                  llvm::LLVMContext *context,
                                  llvm::Module *module,
                                  llvm::IRBuilder<> *builder) const -> void {
@@ -602,7 +602,7 @@ namespace filc::environment {
     getName("operator=", operator_type)->setFunction(function_##var); \
     }
 
-    auto Environment::generateAssignations(filc::message::MessageCollector *collector,
+    auto Environment::generateAssignations(std::shared_ptr<filc::message::MessageCollector> collector,
                                            llvm::LLVMContext *context,
                                            llvm::Module *module,
                                            llvm::IRBuilder<> *builder) const -> void {
@@ -660,7 +660,7 @@ namespace filc::environment {
     getName(operator_name, operator_type)->setFunction(function_##var); \
     }
 
-    auto Environment::generatePrefixUnary(filc::message::MessageCollector *collector,
+    auto Environment::generatePrefixUnary(std::shared_ptr<filc::message::MessageCollector> collector,
                                           llvm::LLVMContext *context,
                                           llvm::Module *module,
                                           llvm::IRBuilder<> *builder) const -> void {
@@ -940,7 +940,7 @@ namespace filc::environment {
         //endregion
     }
 
-    auto Environment::generatePostFixUnary(filc::message::MessageCollector *collector,
+    auto Environment::generatePostFixUnary(std::shared_ptr<filc::message::MessageCollector> collector,
                                            llvm::LLVMContext *context,
                                            llvm::Module *module,
                                            llvm::IRBuilder<> *builder) const -> void {
@@ -1127,7 +1127,7 @@ namespace filc::environment {
         //endregion
     }
 
-    auto Environment::generateBinary(filc::message::MessageCollector *collector,
+    auto Environment::generateBinary(std::shared_ptr<filc::message::MessageCollector> collector,
                                      llvm::LLVMContext *context,
                                      llvm::Module *module,
                                      llvm::IRBuilder<> *builder) const -> void {

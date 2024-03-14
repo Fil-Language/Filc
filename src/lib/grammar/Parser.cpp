@@ -31,7 +31,7 @@
 
 using namespace filc::grammar;
 
-auto FilParser::parse(const std::string &filename, message::MessageCollector *collector) -> void {
+auto FilParser::parse(const std::string &filename, std::shared_ptr<message::MessageCollector> collector) -> void {
     // Check if file was already parsed or not
     if (_program_cache.find(filename) != _program_cache.end()) {
         return;

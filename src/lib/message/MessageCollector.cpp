@@ -24,75 +24,68 @@
 #include "MessageCollector.h"
 #include <algorithm>
 
-namespace filc::message {
-    MessageCollector::MessageCollector(LEVEL level)
-            : _level(level) {}
+using namespace filc::message;
 
-    MessageCollector::~MessageCollector() {
-        std::for_each(_messages.begin(), _messages.end(), [](Message *message) {
-            delete message;
-        });
-        std::for_each(_errors.begin(), _errors.end(), [](Message *error) {
-            delete error;
-        });
-    }
+MessageCollector::MessageCollector(LEVEL level)
+    : _level(level) {}
 
-    auto MessageCollector::addMessage(Message *message) -> MessageCollector & {
-        _messages.push_back(message);
+MessageCollector::~MessageCollector() = default;
 
-        return *this;
-    }
+auto MessageCollector::addMessage(Message *message) -> MessageCollector & {
+    _messages.push_back(std::unique_ptr<Message>(message));
 
-    auto MessageCollector::addError(Message *error) -> MessageCollector & {
-        _errors.push_back(error);
+    return *this;
+}
 
-        return *this;
-    }
+auto MessageCollector::addError(Message *error) -> MessageCollector & {
+    _errors.push_back(std::unique_ptr<Message>(error));
 
-    auto MessageCollector::hasMessages() -> bool {
-        return !_messages.empty();
-    }
+    return *this;
+}
 
-    auto MessageCollector::printMessages() -> MessageCollector & {
-        std::for_each(_messages.begin(), _messages.end(), [this](Message *message) {
-            if (message->getLevel() <= _level) {
-                std::cout << *message << std::endl;
-            }
-        });
+auto MessageCollector::hasMessages() -> bool {
+    return !_messages.empty();
+}
 
-        _messages.clear();
+auto MessageCollector::printMessages() -> MessageCollector & {
+    std::for_each(_messages.begin(), _messages.end(), [this](const std::unique_ptr<Message> &message) {
+        if (message->getLevel() <= _level) {
+            std::cout << *message << '\n';
+        }
+    });
 
-        return *this;
-    }
+    _messages.clear();
 
-    auto MessageCollector::hasErrors() -> bool {
-        return !_errors.empty();
-    }
+    return *this;
+}
 
-    auto MessageCollector::printErrors() -> MessageCollector & {
-        std::for_each(_errors.begin(), _errors.end(), [this](Message *error) {
-            if (error->getLevel() <= _level) {
-                std::cerr << *error << std::endl;
-            }
-        });
+auto MessageCollector::hasErrors() -> bool {
+    return !_errors.empty();
+}
 
-        _errors.clear();
+auto MessageCollector::printErrors() -> MessageCollector & {
+    std::for_each(_errors.begin(), _errors.end(), [this](const std::unique_ptr<Message> &error) {
+        if (error->getLevel() <= _level) {
+            std::cerr << *error << '\n';
+        }
+    });
 
-        return *this;
-    }
+    _errors.clear();
 
-    auto MessageCollector::printAll() -> MessageCollector & {
-        return printErrors().printMessages();
-    }
+    return *this;
+}
 
-    auto MessageCollector::getCollector(LEVEL level) -> MessageCollector * {
-        static auto *collector = new MessageCollector(level);
+auto MessageCollector::printAll() -> MessageCollector & {
+    return printErrors().printMessages();
+}
 
-        return collector;
-    }
+auto MessageCollector::getCollector(LEVEL level) -> std::shared_ptr<MessageCollector> {
+    static auto collector = std::make_shared<MessageCollector>(level);
 
-    auto MessageCollector::flush() -> void {
-        _errors.clear();
-        _messages.clear();
-    }
+    return collector;
+}
+
+auto MessageCollector::flush() -> void {
+    _errors.clear();
+    _messages.clear();
 }

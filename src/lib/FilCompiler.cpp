@@ -35,7 +35,7 @@ FilCompiler::FilCompiler(grammar::Parser<ast::Program> *parser)
     : _parser(unique_ptr<grammar::Parser<ast::Program>>(parser)) {}
 
 auto FilCompiler::compile() -> int {
-    auto *collector = message::MessageCollector::getCollector(message::ERROR);
+    auto collector = message::MessageCollector::getCollector(message::ERROR);
 
     collector->addMessage(new message::Message(message::SYSTEM, "Begin compilation"));
 
@@ -67,7 +67,7 @@ auto FilCompiler::compile() -> int {
 }
 
 auto FilCompiler::getEntrypoint() -> std::string {
-    auto *collector       = message::MessageCollector::getCollector();
+    auto collector       = message::MessageCollector::getCollector();
     const auto *config    = utils::config::Config::get();
     const auto entrypoint = config->getEntrypoint();
 

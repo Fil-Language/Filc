@@ -94,7 +94,7 @@ class ParserStub final : public filc::grammar::Parser<filc::ast::Program> {
 public:
     ParserStub() = default;
 
-    auto parse(const std::string &filename, filc::message::MessageCollector *collector) -> void override {
+    auto parse(const std::string &filename, std::shared_ptr<filc::message::MessageCollector> collector) -> void override {
         setResult(new filc::ast::Program(filename, {}, {}));
     }
 };
