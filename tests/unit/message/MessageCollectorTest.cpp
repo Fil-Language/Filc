@@ -64,7 +64,7 @@ TEST_F(MessageCollector, hasErrors) {
 
 TEST_F(MessageCollector, printMessages) {
     auto collector = filc::message::MessageCollector::getCollector();
-    collector->addMessage(new filc::message::Message(filc::message::INFO, "Hello"));
+    collector->addMessage(new filc::message::Message(filc::message::FATAL_ERROR, "Hello"));
     collector->printMessages();
 
     ASSERT_FALSE(collector->hasMessages());
