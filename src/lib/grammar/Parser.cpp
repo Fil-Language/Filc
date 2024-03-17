@@ -51,13 +51,13 @@ auto FilParser::parse(const std::string &filename, std::shared_ptr<message::Mess
     parser.removeErrorListeners();
     parser.addErrorListener(error_listener);
 
-    auto program = parser.program()->tree;
+    auto program = std::shared_ptr<ast::Program>(parser.program()->tree);
     program->setFilename(filename);
 
     // Add file in cache to avoid parsing it twice
     _program_cache[filename] = program;
 
-    std::vector<ast::Program *> imports;
+    std::vector<std::shared_ptr<ast::Program>> imports;
     for (const auto &import_module: program->getImports()) {
         try {
             auto import_filename = utils::getFilenameFromModule(import_module);

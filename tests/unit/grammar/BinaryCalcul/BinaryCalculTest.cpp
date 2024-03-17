@@ -30,7 +30,7 @@
 TEST(Parser_BinaryCalcul, parse) {
     filc::grammar::FilParser parser;
     parser.parse(FIXTURES_PATH_GRAMMAR "/binary_calcul1.fil", COLLECTOR);
-    auto *program = parser.getResult();
+    auto program = parser.getResult();
     ASSERT_THAT(program->getExpressions(), SizeIs(1));
     PrinterVisitor visitor;
     program->getExpressions()[0]->accept(&visitor);
@@ -40,7 +40,7 @@ TEST(Parser_BinaryCalcul, parse) {
 TEST(Parser_BinaryCalcul, permissions) {
     filc::grammar::FilParser parser;
     parser.parse(FIXTURES_PATH_GRAMMAR "/binary_calcul2.fil", COLLECTOR);
-    auto *program = parser.getResult();
+    auto program = parser.getResult();
     ASSERT_THAT(program->getExpressions(), SizeIs(4));
     PrinterVisitor visitor;
     program->getExpressions()[0]->accept(&visitor);
@@ -62,7 +62,7 @@ TEST(Parser_BinaryCalcul, permissions) {
 TEST(Parser_BinaryCalcul, assignation) {
     filc::grammar::FilParser parser;
     parser.parse(FIXTURES_PATH_GRAMMAR "/binary_calcul3.fil", COLLECTOR);
-    auto *program = parser.getResult();
+    auto program = parser.getResult();
     ASSERT_THAT(program->getExpressions(), SizeIs(2));
     PrinterVisitor visitor;
     program->getExpressions()[0]->accept(&visitor);

@@ -36,19 +36,19 @@ namespace filc::grammar {
 
         virtual auto parse(const std::string &filename, std::shared_ptr<message::MessageCollector> collector) -> void = 0;
 
-        [[nodiscard]] auto getResult() const -> T * {
+        [[nodiscard]] auto getResult() const -> std::shared_ptr<T> {
             return _result;
         }
 
     protected:
         Parser() = default;
 
-        auto setResult(T *result) -> void {
+        auto setResult(const std::shared_ptr<T> &result) -> void {
             _result = result;
         }
 
     private:
-        T *_result;
+        std::shared_ptr<T> _result;
     };
 
     class FilParser final : public Parser<ast::Program> {
@@ -60,7 +60,7 @@ namespace filc::grammar {
         auto parse(const std::string &filename, std::shared_ptr<message::MessageCollector> collector) -> void override;
 
     private:
-        std::map<std::string, ast::Program *> _program_cache;
+        std::map<std::string, std::shared_ptr<ast::Program>> _program_cache;
     };
 }// namespace filc::grammar
 

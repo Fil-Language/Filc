@@ -53,7 +53,7 @@ auto Program::getImports() const -> const std::vector<std::string> & {
     return _import_modules;
 }
 
-auto Program::setImports(const std::vector<Program *> &imports) -> void {
+auto Program::setImports(const std::vector<std::shared_ptr<Program>> &imports) -> void {
     _imports = imports;
 }
 

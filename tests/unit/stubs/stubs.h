@@ -95,7 +95,7 @@ public:
     ParserStub() = default;
 
     auto parse(const std::string &filename, std::shared_ptr<filc::message::MessageCollector> collector) -> void override {
-        setResult(new filc::ast::Program(filename, {}, {}));
+        setResult(std::shared_ptr<filc::ast::Program>(new filc::ast::Program(filename, {}, {})));
     }
 };
 

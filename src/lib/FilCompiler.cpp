@@ -56,8 +56,7 @@ auto FilCompiler::compile() -> int {
     collector->printAll();
 
     _parser->parse(entrypoint, collector);
-    auto *program = _parser->getResult();
-    delete program;
+    auto program = _parser->getResult();
 
     collector->addError(new message::BasicError(message::FATAL_ERROR, "Compiler not implemented yet!"));
     //collector->addMessage(new filc::message::Message(filc::message::SYSTEM, "Compilation finished"));
