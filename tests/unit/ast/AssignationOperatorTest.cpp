@@ -21,15 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Operator.h"
 #include "test_tools.h"
 
 TEST(AssignationOperator, constructor) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::FRIGHT));
+    filc::ast::AssignationOperator ao1(std::make_shared<filc::ast::ClassicOperator>(filc::ast::ClassicOperator::FRIGHT)
+    );
     ASSERT_CLASSIC_OPERATOR(FRIGHT, ao1.getInnerOperator());
 }
 
 TEST(AssignationOperator, dump) {
-    filc::ast::AssignationOperator ao1(new filc::ast::ClassicOperator(filc::ast::ClassicOperator::MINUS));
+    filc::ast::AssignationOperator ao1(std::make_shared<filc::ast::ClassicOperator>(filc::ast::ClassicOperator::MINUS));
     ASSERT_STREQ("-=", ao1.dump().c_str());
 }

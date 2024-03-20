@@ -51,7 +51,7 @@ auto FilParser::parse(const std::string &filename, std::shared_ptr<message::Mess
     parser.removeErrorListeners();
     parser.addErrorListener(error_listener);
 
-    auto program = std::shared_ptr<ast::Program>(parser.program()->tree);
+    auto program = parser.program()->tree;
     program->setFilename(filename);
 
     // Add file in cache to avoid parsing it twice

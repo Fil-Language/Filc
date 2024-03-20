@@ -21,36 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Body.h"
+#include "Calcul.h"
+#include "Identifier.h"
+#include "Literal.h"
+#include "Loop.h"
+#include "Operator.h"
 #include "test_tools.h"
-#include "Parser.h"
+#include "Type.h"
+#include "VariableDeclaration.h"
 
 TEST(ForI, constructor) {
-    auto *declaration = new filc::ast::VariableDeclaration(
-            false, new filc::ast::Identifier("i"),
-            std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")));
-    declaration->setAssignation(new filc::ast::IntegerLiteral(0));
-    filc::ast::ForI fi1(
-            declaration,
-            new filc::ast::BinaryCalcul(
-                    new filc::ast::Identifier("i"),
-                    new filc::ast::ClassicOperator(filc::ast::ClassicOperator::LESS),
-                    new filc::ast::IntegerLiteral(10)
-            ),
-            new filc::ast::PostUnaryCalcul(
-                    new filc::ast::Identifier("i"),
-                    new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUSPLUS)
-            ),
-            new filc::ast::BlockBody({})
+    auto declaration = std::make_shared<filc::ast::VariableDeclaration>(
+        false,
+        std::make_shared<filc::ast::Identifier>("i"),
+        std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int"))
     );
+    declaration->setAssignation(std::make_shared<filc::ast::IntegerLiteral>(0));
+    filc::ast::ForI fi1(
+        declaration,
+        std::make_shared<filc::ast::BinaryCalcul>(
+            std::make_shared<filc::ast::Identifier>("i"),
+            std::make_shared<filc::ast::ClassicOperator>(filc::ast::ClassicOperator::LESS),
+            std::make_shared<filc::ast::IntegerLiteral>(10)
+        ),
+        std::make_shared<filc::ast::PostUnaryCalcul>(
+            std::make_shared<filc::ast::Identifier>("i"),
+            std::make_shared<filc::ast::ClassicOperator>(filc::ast::ClassicOperator::PLUSPLUS)
+        ),
+        std::shared_ptr<filc::ast::BlockBody>(new filc::ast::BlockBody({}))
+    ); // NOLINT(*-make-shared)
     ASSERT_IDENTIFIER("i", fi1.getDeclaration()->getIdentifier());
     ASSERT_TYPE("int", fi1.getDeclaration()->getType());
     ASSERT_LITERAL(0, IntegerLiteral, fi1.getDeclaration()->getAssignation());
-    auto *condition = dynamic_cast<filc::ast::BinaryCalcul *>(fi1.getCondition());
+    auto condition = std::dynamic_pointer_cast<filc::ast::BinaryCalcul>(fi1.getCondition());
     ASSERT_IDENTIFIER("i", condition->getLeftExpression());
     ASSERT_CLASSIC_OPERATOR(LESS, condition->getOperator());
     ASSERT_LITERAL(10, IntegerLiteral, condition->getRightExpression());
-    auto *iteration = dynamic_cast<filc::ast::PostUnaryCalcul *>(fi1.getIteration());
+    auto iteration = std::dynamic_pointer_cast<filc::ast::PostUnaryCalcul>(fi1.getIteration());
     ASSERT_IDENTIFIER("i", iteration->getVariable());
     ASSERT_CLASSIC_OPERATOR(PLUSPLUS, iteration->getOperator());
     ASSERT_THAT(fi1.getBody()->getExpressions(), IsEmpty());

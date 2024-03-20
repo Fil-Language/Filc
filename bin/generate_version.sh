@@ -35,7 +35,7 @@ echo -e "    \033[32mDone\033[0m"
 
 # Change version in VERSION
 echo -e " -> Change version in VERSION"
-echo -e "$version" > VERSION
+echo -e -n "$version" > VERSION
 echo -e "    \033[32mDone\033[0m"
 
 # Version to change manually

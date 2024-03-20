@@ -60,6 +60,6 @@ namespace filc {
     public:
         virtual auto accept(Visitor *visitor) -> void = 0;
     };
-}// namespace filc
+} // namespace filc
 
-#endif//FILC_VISITOR_H
+#endif // FILC_VISITOR_H

@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Type.h"
+#include "Identifier.h"
 #include "test_tools.h"
 
 TEST(Type, constructor) {
-    filc::ast::Type tp1(new filc::ast::Identifier("int"));
+    filc::ast::Type tp1(std::make_shared<filc::ast::Identifier>("int"));
     ASSERT_STREQ("int", tp1.getName()->getName().c_str());
     ASSERT_STREQ("int", tp1.dump().c_str());
 }

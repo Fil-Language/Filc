@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Body.h"
 #include "test_tools.h"
 
 TEST(BlockBody, constructor) {
-    std::vector<filc::ast::AbstractExpression *> expressions = {
-            new TestExpression(),
-            new TestExpression(),
+    std::vector<std::shared_ptr<filc::ast::AbstractExpression>> expressions = {
+        std::make_shared<TestExpression>(),
+        std::make_shared<TestExpression>(),
     };
     filc::ast::BlockBody bb1(expressions);
     ASSERT_THAT(bb1.getExpressions(), ContainerEq(expressions));

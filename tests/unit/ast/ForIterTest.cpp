@@ -21,16 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Body.h"
+#include "Identifier.h"
+#include "Loop.h"
 #include "test_tools.h"
-#include "Parser.h"
 
 TEST(ForIter, constructor) {
     filc::ast::ForIter fi1(
-            true,
-            new filc::ast::Identifier("item"),
-            new filc::ast::Identifier("my_array"),
-            new filc::ast::BlockBody({})
+        true,
+        std::make_shared<filc::ast::Identifier>("item"),
+        std::make_shared<filc::ast::Identifier>("my_array"),
+        std::shared_ptr<filc::ast::BlockBody>(new filc::ast::BlockBody({})) // NOLINT(*-make-shared)
     );
     ASSERT_TRUE(fi1.isConstant());
     ASSERT_IDENTIFIER("item", fi1.getIdentifier());

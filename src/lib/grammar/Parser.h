@@ -24,9 +24,10 @@
 #ifndef FILC_PARSER_H
 #define FILC_PARSER_H
 
-#include "AST.h"
+#include "program/Program.h"
 #include "MessageCollector.h"
 #include <string>
+#include <map>
 
 namespace filc::grammar {
     template<typename T>

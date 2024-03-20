@@ -1,4 +1,5 @@
 include(cmake/policies.cmake)
+include(cmake/tools.cmake)
 
 cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 
@@ -9,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Don't use e.g. GNU extension (like -std=gnu++11) for portability
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION FILC_VERSION)
+file(READ ${CMAKE_CURRENT_SOURCE_DIR}/VERSION FILC_VERSION)
 
 project(
         Filc

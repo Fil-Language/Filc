@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Function.h"
+#include "Identifier.h"
 #include "test_tools.h"
+#include "Type.h"
 
 TEST(FunctionParameter, constructor) {
     filc::ast::FunctionParameter fp1(
-            new filc::ast::Identifier("n"),
-            std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int"))
+        std::make_shared<filc::ast::Identifier>("n"),
+        std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int"))
     );
     ASSERT_IDENTIFIER("n", fp1.getName());
     ASSERT_TYPE("int", fp1.getType());

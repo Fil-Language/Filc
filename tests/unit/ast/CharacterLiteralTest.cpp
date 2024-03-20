@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
-#include "test_tools.h"
-#include "Parser.h"
 #include "FilLexer.h"
+#include "Literal.h"
+#include "test_tools.h"
 
 TEST(CharacterLiteral, constructor) {
     filc::ast::CharacterLiteral cl1('a');
@@ -43,12 +42,7 @@ TEST(CharacterLiteral, stringToChar) {
     input.loadFromFile(FIXTURES_PATH "/grammar/bool1.fil");
     filc::antlr::FilLexer lexer(&input);
     const auto factory = antlr4::CommonTokenFactory::DEFAULT.get();
-    auto token = factory->create(
-            {&lexer, &input},
-            0,
-            "text",
-            0, 0, 0, 0, 0
-    );
+    auto token         = factory->create({&lexer, &input}, 0, "text", 0, 0, 0, 0, 0);
     ASSERT_EQ('\0', filc::ast::CharacterLiteral::stringToChar("abcdefghijklmnopqrstuvwxyz", token.get()));
     ASSERT_TRUE(COLLECTOR->hasErrors());
     COLLECTOR->flush();

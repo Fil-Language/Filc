@@ -24,7 +24,7 @@
 #ifndef FILC_FILCOMPILER_H
 #define FILC_FILCOMPILER_H
 
-#include "AST.h"
+#include "program/Program.h"
 #include "Compiler.h"
 #include "MessageCollector.h"
 #include "Parser.h"

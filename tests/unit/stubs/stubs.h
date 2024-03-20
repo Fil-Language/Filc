@@ -24,7 +24,7 @@
 #ifndef FILC_STUBS_H
 #define FILC_STUBS_H
 
-#include "AST.h"
+#include "AbstractExpression.h"
 #include "Command.h"
 #include "Compiler.h"
 #include "Parser.h"
@@ -95,7 +95,7 @@ public:
     ParserStub() = default;
 
     auto parse(const std::string &filename, std::shared_ptr<filc::message::MessageCollector> collector) -> void override {
-        setResult(std::shared_ptr<filc::ast::Program>(new filc::ast::Program(filename, {}, {})));
+        setResult(std::shared_ptr<filc::ast::Program>(new filc::ast::Program(filename, {}, {}))); // NOLINT(*-make-shared)
     }
 };
 

@@ -21,22 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Body.h"
+#include "Condition.h"
+#include "Identifier.h"
+#include "Literal.h"
 #include "test_tools.h"
 
 TEST(MatchCase, constructor) {
-    filc::ast::MatchCase mc1(new filc::ast::Identifier("_"), new filc::ast::BlockBody({}));
+    filc::ast::MatchCase mc1(
+        std::make_shared<filc::ast::Identifier>("_"),
+        std::shared_ptr<filc::ast::BlockBody>(new filc::ast::BlockBody({}))
+    ); // NOLINT(*-make-shared)
     ASSERT_IDENTIFIER("_", mc1.getPattern());
     ASSERT_THAT(mc1.getBody()->getExpressions(), IsEmpty());
 }
 
 TEST(MatchCase, isDefault) {
-    filc::ast::MatchCase mc1(new filc::ast::Identifier("_"), {});
+    filc::ast::MatchCase mc1(std::make_shared<filc::ast::Identifier>("_"), {});
     ASSERT_TRUE(mc1.isDefault());
 
-    filc::ast::MatchCase mc2(new filc::ast::Identifier("abcd"), {});
+    filc::ast::MatchCase mc2(std::make_shared<filc::ast::Identifier>("abcd"), {});
     ASSERT_FALSE(mc2.isDefault());
 
-    filc::ast::MatchCase mc3(new filc::ast::IntegerLiteral(2), {});
+    filc::ast::MatchCase mc3(std::make_shared<filc::ast::IntegerLiteral>(2), {});
     ASSERT_FALSE(mc3.isDefault());
 }

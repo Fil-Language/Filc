@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Literal.h"
+#include "Operator.h"
 #include "test_tools.h"
 
 TEST(ArrayOperator, constructor) {
-    auto *il1 = new filc::ast::IntegerLiteral(3);
+    auto il1 = std::make_shared<filc::ast::IntegerLiteral>(3);
     filc::ast::ArrayOperator ao1(il1);
     ASSERT_EQ(il1, ao1.getExpression());
 }

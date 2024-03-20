@@ -21,15 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
-#include "Parser.h"
+#include "Calcul.h"
+#include "Identifier.h"
+#include "Operator.h"
 #include "test_tools.h"
 
 TEST(BinaryCalcul, constructor) {
     filc::ast::BinaryCalcul bc1(
-            new filc::ast::Identifier("a"),
-            new filc::ast::ClassicOperator(filc::ast::ClassicOperator::PLUS),
-            new filc::ast::Identifier("b")
+        std::make_shared<filc::ast::Identifier>("a"),
+        std::make_shared<filc::ast::ClassicOperator>(filc::ast::ClassicOperator::PLUS),
+        std::make_shared<filc::ast::Identifier>("b")
     );
     ASSERT_IDENTIFIER("a", bc1.getLeftExpression());
     ASSERT_IDENTIFIER("b", bc1.getRightExpression());

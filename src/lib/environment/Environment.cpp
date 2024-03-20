@@ -22,7 +22,8 @@
  * SOFTWARE.
  */
 #include "Environment.h"
-#include "AST.h"
+#include "type/Type.h"
+#include "identifier/Identifier.h"
 #include "Error.h"
 #include <algorithm>
 #include <memory>
@@ -156,11 +157,11 @@ namespace filc::environment {
 
     auto Environment::addBasicTypes(Environment *global) -> BasicTypes {
         BasicTypes basic_types;
-        basic_types._int_type = std::make_shared<filc::ast::Type>(new ast::Identifier("int"));
-        basic_types._double_type = std::make_shared<filc::ast::Type>(new ast::Identifier("double"));
-        basic_types._float_type = std::make_shared<filc::ast::Type>(new ast::Identifier("float"));
-        basic_types._char_type = std::make_shared<filc::ast::Type>(new ast::Identifier("char"));
-        basic_types._bool_type = std::make_shared<filc::ast::Type>(new ast::Identifier("bool"));
+        basic_types._int_type = std::make_shared<filc::ast::Type>(std::make_shared<ast::Identifier>("int"));
+        basic_types._double_type = std::make_shared<filc::ast::Type>(std::make_shared<ast::Identifier>("double"));
+        basic_types._float_type = std::make_shared<filc::ast::Type>(std::make_shared<ast::Identifier>("float"));
+        basic_types._char_type = std::make_shared<filc::ast::Type>(std::make_shared<ast::Identifier>("char"));
+        basic_types._bool_type = std::make_shared<filc::ast::Type>(std::make_shared<ast::Identifier>("bool"));
 
         auto is_ok = global->addType(basic_types._int_type)
                      && global->addType(basic_types._double_type)

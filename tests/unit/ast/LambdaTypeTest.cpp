@@ -21,16 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Identifier.h"
 #include "test_tools.h"
+#include "Type.h"
 
 using namespace ::testing;
 
 TEST(LambdaType, constructor) {
-    auto arg1 = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("arg1"));
-    auto arg2 = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("arg2"));
-    auto arg3 = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("arg3"));
-    auto return_type = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("return_type"));
+    auto arg1        = std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("arg1"));
+    auto arg2        = std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("arg2"));
+    auto arg3        = std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("arg3"));
+    auto return_type = std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("return_type"));
     filc::ast::LambdaType lt1({arg1, arg2, arg3}, return_type);
     ASSERT_TYPE("return_type", lt1.getReturnType());
     ASSERT_THAT(lt1.getArgumentTypes(), ElementsAre(arg1, arg2, arg3));

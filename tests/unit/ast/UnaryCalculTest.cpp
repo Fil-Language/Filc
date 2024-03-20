@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Calcul.h"
+#include "Identifier.h"
+#include "Operator.h"
 #include "test_tools.h"
 
 TEST(UnaryCalcul, constructor) {
     filc::ast::UnaryCalcul uc1(
-            new filc::ast::Identifier("var1"),
-            new filc::ast::ClassicOperator(filc::ast::ClassicOperator::AND)
+        std::make_shared<filc::ast::Identifier>("var1"),
+        std::make_shared<filc::ast::ClassicOperator>(filc::ast::ClassicOperator::AND)
     );
     ASSERT_IDENTIFIER("var1", uc1.getVariable());
     ASSERT_CLASSIC_OPERATOR(AND, uc1.getOperator());
