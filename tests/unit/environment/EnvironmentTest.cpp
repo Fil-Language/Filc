@@ -22,7 +22,8 @@
  * SOFTWARE.
  */
 #include "Environment.h"
-#include "AST.h"
+#include "Identifier.h"
+#include "Type.h"
 #include "test_tools.h"
 
 TEST(Environment, constructor) {
@@ -38,7 +39,7 @@ TEST(Environment, constructor) {
 TEST(Environment, names) {
     filc::environment::Environment env1;
     ASSERT_FALSE(env1.hasName("hello", nullptr));
-    ASSERT_TRUE(env1.addName("hello", new filc::ast::Type(new filc::ast::Identifier("int"))));
+    ASSERT_TRUE(env1.addName("hello", std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int"))));
     ASSERT_TRUE(env1.hasName("hello", nullptr));
     ASSERT_FALSE(env1.addName("hello", nullptr));
     ASSERT_TRUE(env1.hasName("hello", nullptr));
@@ -55,14 +56,14 @@ TEST(Environment, names) {
 TEST(Environment, types) {
     filc::environment::Environment env1;
     ASSERT_FALSE(env1.hasType("int"));
-    ASSERT_TRUE(env1.addType(std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int"))));
+    ASSERT_TRUE(env1.addType(std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int"))));
     ASSERT_TRUE(env1.hasType("int"));
-    ASSERT_FALSE(env1.addType(std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int"))));
+    ASSERT_FALSE(env1.addType(std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int"))));
     ASSERT_TRUE(env1.hasType("int"));
     ASSERT_TYPE("int", env1.getType("int"));
 
     filc::environment::Environment parent;
-    parent.addType(std::make_shared<filc::ast::Type>(new filc::ast::Identifier("float")));
+    parent.addType(std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("float")));
     filc::environment::Environment env2("", &parent);
     ASSERT_TRUE(env2.hasType("float"));
     ASSERT_FALSE(env2.hasName("bool", nullptr));
@@ -80,8 +81,8 @@ TEST(Environment, getGlobalEnvironment) {
 
 TEST(Environment, generateIR) {
     filc::environment::Environment env1("env1", filc::environment::Environment::getGlobalEnvironment());
-    auto *context = new llvm::LLVMContext;
-    auto *module = new llvm::Module("module", *context);
+    auto *context    = new llvm::LLVMContext;
+    auto *module     = new llvm::Module("module", *context);
     auto *ir_builder = new llvm::IRBuilder<>(*context);
     env1.generateIR(COLLECTOR, context, module, ir_builder);
     ASSERT_FALSE(COLLECTOR->hasErrors());

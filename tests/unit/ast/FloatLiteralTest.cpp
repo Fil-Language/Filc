@@ -21,9 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Literal.h"
 #include "test_tools.h"
-#include "Parser.h"
 
 TEST(FloatLiteral, constructor) {
     filc::ast::FloatLiteral fl1(42);

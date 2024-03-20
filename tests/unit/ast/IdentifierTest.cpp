@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Identifier.h"
 #include "test_tools.h"
 
 TEST(Identifier, constructor) {
     filc::ast::Identifier id1("identifier 1");
-    ASSERT_IDENTIFIER("identifier 1", (&id1));
+    ASSERT_STREQ("identifier 1", id1.getName().c_str());
 }

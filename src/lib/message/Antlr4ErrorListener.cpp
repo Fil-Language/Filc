@@ -25,16 +25,16 @@
 #include "Error.h"
 #include "Position.h"
 
-namespace filc::message {
-    Antlr4ErrorListener::Antlr4ErrorListener(MessageCollector *collector)
-            : _collector(collector) {}
+using namespace filc::message;
 
-    void Antlr4ErrorListener::syntaxError(antlr4::Recognizer *recognizer,
-                                          antlr4::Token *offendingSymbol,
-                                          size_t line,
-                                          size_t charPositionInLine,
-                                          const std::string &msg,
-                                          std::exception_ptr e) {
-        _collector->addError(new Error(LEVEL::ERROR, msg, new filc::utils::SimplePosition(offendingSymbol)));
-    }
+Antlr4ErrorListener::Antlr4ErrorListener(const std::shared_ptr<MessageCollector> &collector)
+    : _collector(collector) {}
+
+void Antlr4ErrorListener::syntaxError(antlr4::Recognizer *recognizer,
+                                      antlr4::Token *offendingSymbol,
+                                      size_t line,
+                                      size_t charPositionInLine,
+                                      const std::string &msg,
+                                      std::exception_ptr e) {
+    _collector->addError(new Error(LEVEL::ERROR, msg, new filc::utils::SimplePosition(offendingSymbol)));
 }

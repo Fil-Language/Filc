@@ -22,7 +22,8 @@
  * SOFTWARE.
  */
 #include "Environment.h"
-#include "AST.h"
+#include "type/Type.h"
+#include "identifier/Identifier.h"
 #include "Error.h"
 #include <algorithm>
 #include <memory>
@@ -156,11 +157,11 @@ namespace filc::environment {
 
     auto Environment::addBasicTypes(Environment *global) -> BasicTypes {
         BasicTypes basic_types;
-        basic_types._int_type = std::make_shared<filc::ast::Type>(new ast::Identifier("int"));
-        basic_types._double_type = std::make_shared<filc::ast::Type>(new ast::Identifier("double"));
-        basic_types._float_type = std::make_shared<filc::ast::Type>(new ast::Identifier("float"));
-        basic_types._char_type = std::make_shared<filc::ast::Type>(new ast::Identifier("char"));
-        basic_types._bool_type = std::make_shared<filc::ast::Type>(new ast::Identifier("bool"));
+        basic_types._int_type = std::make_shared<filc::ast::Type>(std::make_shared<ast::Identifier>("int"));
+        basic_types._double_type = std::make_shared<filc::ast::Type>(std::make_shared<ast::Identifier>("double"));
+        basic_types._float_type = std::make_shared<filc::ast::Type>(std::make_shared<ast::Identifier>("float"));
+        basic_types._char_type = std::make_shared<filc::ast::Type>(std::make_shared<ast::Identifier>("char"));
+        basic_types._bool_type = std::make_shared<filc::ast::Type>(std::make_shared<ast::Identifier>("bool"));
 
         auto is_ok = global->addType(basic_types._int_type)
                      && global->addType(basic_types._double_type)
@@ -550,7 +551,7 @@ namespace filc::environment {
         }
     }
 
-    auto Environment::generateIR(filc::message::MessageCollector *collector,
+    auto Environment::generateIR(std::shared_ptr<filc::message::MessageCollector> collector,
                                  llvm::LLVMContext *context,
                                  llvm::Module *module,
                                  llvm::IRBuilder<> *builder) const -> void {
@@ -602,7 +603,7 @@ namespace filc::environment {
     getName("operator=", operator_type)->setFunction(function_##var); \
     }
 
-    auto Environment::generateAssignations(filc::message::MessageCollector *collector,
+    auto Environment::generateAssignations(std::shared_ptr<filc::message::MessageCollector> collector,
                                            llvm::LLVMContext *context,
                                            llvm::Module *module,
                                            llvm::IRBuilder<> *builder) const -> void {
@@ -660,7 +661,7 @@ namespace filc::environment {
     getName(operator_name, operator_type)->setFunction(function_##var); \
     }
 
-    auto Environment::generatePrefixUnary(filc::message::MessageCollector *collector,
+    auto Environment::generatePrefixUnary(std::shared_ptr<filc::message::MessageCollector> collector,
                                           llvm::LLVMContext *context,
                                           llvm::Module *module,
                                           llvm::IRBuilder<> *builder) const -> void {
@@ -940,7 +941,7 @@ namespace filc::environment {
         //endregion
     }
 
-    auto Environment::generatePostFixUnary(filc::message::MessageCollector *collector,
+    auto Environment::generatePostFixUnary(std::shared_ptr<filc::message::MessageCollector> collector,
                                            llvm::LLVMContext *context,
                                            llvm::Module *module,
                                            llvm::IRBuilder<> *builder) const -> void {
@@ -1127,7 +1128,7 @@ namespace filc::environment {
         //endregion
     }
 
-    auto Environment::generateBinary(filc::message::MessageCollector *collector,
+    auto Environment::generateBinary(std::shared_ptr<filc::message::MessageCollector> collector,
                                      llvm::LLVMContext *context,
                                      llvm::Module *module,
                                      llvm::IRBuilder<> *builder) const -> void {

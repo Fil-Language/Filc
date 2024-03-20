@@ -21,16 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
-#include <gtest/gtest.h>
+#include "Identifier.h"
 #include "test_tools.h"
+#include "Type.h"
 
 TEST(ArrayType, constructor) {
-    auto inner_type = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("array"));
-    filc::ast::ArrayType at1(
-            inner_type,
-            4
-    );
+    auto inner_type = std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("array"));
+    filc::ast::ArrayType at1(inner_type, 4);
     ASSERT_EQ(inner_type, at1.getInnerType());
     ASSERT_EQ(4, at1.getSize());
     ASSERT_TYPE("array[4]", (&at1));

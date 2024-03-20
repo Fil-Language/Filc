@@ -68,6 +68,8 @@ namespace filc::utils::config {
 
         Config();
 
+        ~Config();
+
         Config(Config &b) = default;
 
         Config(Config &&b) = default;

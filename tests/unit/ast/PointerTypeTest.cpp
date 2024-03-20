@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Identifier.h"
 #include "test_tools.h"
+#include "Type.h"
 
 TEST(PointerType, constructor) {
-    auto inner_type = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("abcd"));
+    auto inner_type = std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("abcd"));
     filc::ast::PointerType pt1(inner_type);
     ASSERT_TYPE("abcd", pt1.getInnerType());
     ASSERT_TYPE("abcd*", (&pt1));

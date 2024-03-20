@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include <utility>
-#include "AST.h"
+#include "Identifier.h"
 #include "test_tools.h"
+#include "Type.h"
 
 TEST(AbstractExpression, position) {
     class : public filc::ast::AbstractExpression {
@@ -31,8 +31,8 @@ TEST(AbstractExpression, position) {
 
     ASSERT_EQ(nullptr, obj1.getPosition());
 
-    obj1.setPosition(new filc::utils::SimplePosition("test.fil", 1, 2));
-    auto *position = dynamic_cast<filc::utils::SimplePosition *>(obj1.getPosition());
+    obj1.setPosition(std::make_shared<filc::utils::SimplePosition>("test.fil", 1, 2));
+    auto position = std::dynamic_pointer_cast<filc::utils::SimplePosition>(obj1.getPosition());
     ASSERT_STREQ("test.fil", position->getFilename().c_str());
     ASSERT_EQ(1, position->getLine());
     ASSERT_EQ(2, position->getColumn());
@@ -51,13 +51,13 @@ TEST(AbstractExpression, exported) {
 TEST(AbstractExpression, expression_type) {
     class : public filc::ast::AbstractExpression {
     public:
-        auto setExpressionTypeO(std::shared_ptr<filc::ast::AbstractType> expression_type) -> void {
-            setExpressionType(std::move(expression_type));
+        auto setExpressionTypeO(const std::shared_ptr<filc::ast::AbstractType> &expression_type) -> void {
+            setExpressionType(expression_type);
         }
     } obj1;
 
     ASSERT_EQ(nullptr, obj1.getExpressionType());
 
-    obj1.setExpressionTypeO(std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")));
+    obj1.setExpressionTypeO(std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int")));
     ASSERT_TYPE("int", obj1.getExpressionType());
 }

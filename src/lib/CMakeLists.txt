@@ -76,6 +76,9 @@ file(GLOB_RECURSE SRC_FILES
 )
 message(SRC_FILES=${SRC_FILES})
 
+SUBDIRLIST(LIB_DIRS "${PROJECT_SOURCE_DIR}/src/lib")
+message(LIB_DIRS=${LIB_DIRS})
+
 add_library(compiler_lib
         ${SRC_FILES}
         ${ANTLR_Lexer_CXX_OUTPUTS}
@@ -83,13 +86,7 @@ add_library(compiler_lib
 )
 target_include_directories(compiler_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
-        utils
-        utils/command
-        utils/config
-        message
-        grammar
-        ast
-        environment
+        ${LIB_DIRS}
         ${ANTLR4_INCLUDE_DIRS}
         ${ANTLR_Lexer_OUTPUT_DIR}
         ${ANTLR_Parser_OUTPUT_DIR}

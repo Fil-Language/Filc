@@ -32,36 +32,10 @@
 #include <stdexcept>
 #include <string>
 
-auto exec_output(const char *cmd) -> std::string {
-    char buffer[128];
-    std::string result;
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+auto exec_output(const char *cmd) -> std::string;
 
-    if (!pipe) {
-        throw std::runtime_error("popen() failed!");
-    }
+#define run_with_args_and_input(args, input) exec_output("echo '" input "' | " FILC_BIN " " args)
 
-    while (fgets(buffer, sizeof buffer, pipe.get()) != nullptr) {
-        result += buffer;
-    }
-
-    return result;
-}
-
-#define run_with_args(args) exec_output(FILC_BIN " " args)
-
-auto exec_input(const char *cmd, const char *input) -> void {
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "w"), pclose);
-
-    if (!pipe) {
-        throw std::runtime_error("popen() failed!");
-    }
-
-    if (fprintf(pipe.get(), "%s", input) < 0) {
-        throw std::runtime_error("fprintf() failed!");
-    }
-}
-
-#define run_with_args_and_input(args, input) exec_input(FILC_BIN " " args, input)
+#define run_with_args(args) run_with_args_and_input(args, "")
 
 #endif//TEST_TOOLS_H

@@ -21,12 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Body.h"
+#include "Identifier.h"
+#include "Loop.h"
 #include "test_tools.h"
-#include "Parser.h"
 
 TEST(While, constructor) {
-    filc::ast::While wh1(new filc::ast::Identifier("isTrue"), new filc::ast::BlockBody({}));
+    filc::ast::While wh1(
+        std::make_shared<filc::ast::Identifier>("isTrue"),
+        std::shared_ptr<filc::ast::BlockBody>(new filc::ast::BlockBody({}))
+    ); // NOLINT(*-make-shared)
     ASSERT_IDENTIFIER("isTrue", wh1.getCondition());
     ASSERT_THAT(wh1.getBody()->getExpressions(), IsEmpty());
 }

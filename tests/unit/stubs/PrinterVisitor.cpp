@@ -22,7 +22,11 @@
  * SOFTWARE.
  */
 #include "PrinterVisitor.h"
-#include "AST.h"
+#include "Body.h"
+#include "Calcul.h"
+#include "Identifier.h"
+#include "Literal.h"
+#include "Operator.h"
 #include <stdexcept>
 
 auto PrinterVisitor::getResult() const -> std::string {
@@ -96,7 +100,7 @@ auto PrinterVisitor::visitIdentifier(filc::ast::Identifier *identifier) -> void 
 }
 
 auto PrinterVisitor::visitAssignationOperator(filc::ast::AssignationOperator *assignation_operator) -> void {
-    auto *inner_operator = assignation_operator->getInnerOperator();
+    auto inner_operator = assignation_operator->getInnerOperator();
     if (inner_operator != nullptr) {
         inner_operator->accept(this);
     }

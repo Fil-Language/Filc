@@ -31,8 +31,7 @@ namespace filc::ast {
 
     class Identifier;
 
-    template<typename T>
-    class AbstractLiteral;
+    template<typename T> class AbstractLiteral;
 
     class BooleanLiteral;
 
@@ -93,6 +92,10 @@ namespace filc::ast {
     class While;
 
     class BlockBody;
-}
+} // namespace filc::ast
 
-#endif //FILC_AST_DECL_H
+auto operator==(const filc::ast::AbstractType &type1, const filc::ast::AbstractType &type2) -> bool;
+
+auto operator!=(const filc::ast::AbstractType &type1, const filc::ast::AbstractType &type2) -> bool;
+
+#endif // FILC_AST_DECL_H

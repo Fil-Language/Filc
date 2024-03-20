@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Condition.h"
+#include "Identifier.h"
 #include "test_tools.h"
-#include "Parser.h"
 
 TEST(Switch, constructor) {
-    filc::ast::Match sw1(new filc::ast::Identifier("abcd"), {});
+    filc::ast::Match sw1(std::make_shared<filc::ast::Identifier>("abcd"), {});
     ASSERT_IDENTIFIER("abcd", sw1.getCondition());
     ASSERT_THAT(sw1.getCases(), IsEmpty());
 }

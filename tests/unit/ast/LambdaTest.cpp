@@ -21,12 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Body.h"
+#include "Function.h"
+#include "Identifier.h"
 #include "test_tools.h"
-#include "Parser.h"
+#include "Type.h"
 
 TEST(Lambda, constructor) {
-    filc::ast::Lambda lb1({}, std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")), new filc::ast::BlockBody({}));
+    filc::ast::Lambda lb1(
+        {},
+        std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int")),
+        std::shared_ptr<filc::ast::BlockBody>(new filc::ast::BlockBody({}))
+    ); // NOLINT(*-make-shared)
     ASSERT_THAT(lb1.getParameters(), IsEmpty());
     ASSERT_TYPE("int", lb1.getReturnType());
     ASSERT_THAT(lb1.getBody()->getExpressions(), IsEmpty());

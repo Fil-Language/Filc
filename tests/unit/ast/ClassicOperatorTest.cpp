@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Operator.h"
 #include "test_tools.h"
 
 TEST(ClassicOperator, operator_constructor) {

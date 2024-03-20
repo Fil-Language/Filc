@@ -31,7 +31,7 @@
 
 using namespace filc::grammar;
 
-auto FilParser::parse(const std::string &filename, message::MessageCollector *collector) -> void {
+auto FilParser::parse(const std::string &filename, std::shared_ptr<message::MessageCollector> collector) -> void {
     // Check if file was already parsed or not
     if (_program_cache.find(filename) != _program_cache.end()) {
         return;
@@ -57,7 +57,7 @@ auto FilParser::parse(const std::string &filename, message::MessageCollector *co
     // Add file in cache to avoid parsing it twice
     _program_cache[filename] = program;
 
-    std::vector<ast::Program *> imports;
+    std::vector<std::shared_ptr<ast::Program>> imports;
     for (const auto &import_module: program->getImports()) {
         try {
             auto import_filename = utils::getFilenameFromModule(import_module);

@@ -21,28 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
-#include "Parser.h"
+#include "VariableDeclaration.h"
+#include "Identifier.h"
+#include "Literal.h"
 #include "test_tools.h"
+#include "Type.h"
 
 TEST(VariableDeclaration, constructor) {
-    auto tp1 = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int"));
-    filc::ast::VariableDeclaration vd1(false, new filc::ast::Identifier("my_var"), tp1);
+    auto tp1 = std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int"));
+    filc::ast::VariableDeclaration vd1(false, std::make_shared<filc::ast::Identifier>("my_var"), tp1);
     ASSERT_FALSE(vd1.isConstant());
     ASSERT_IDENTIFIER("my_var", vd1.getIdentifier());
     ASSERT_TYPE("int", vd1.getType());
 
-    auto tp2 = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("float"));
-    filc::ast::VariableDeclaration vd2(true, new filc::ast::Identifier("my_val"), tp2);
+    auto tp2 = std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("float"));
+    filc::ast::VariableDeclaration vd2(true, std::make_shared<filc::ast::Identifier>("my_val"), tp2);
     ASSERT_TRUE(vd2.isConstant());
     ASSERT_IDENTIFIER("my_val", vd2.getIdentifier());
     ASSERT_TYPE("float", vd2.getType());
 }
 
 TEST(VariableDeclaration, assignation) {
-    auto tp1 = std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int"));
-    filc::ast::VariableDeclaration vd1(false, new filc::ast::Identifier("my_var"), tp1);
-    auto *exp1 = new filc::ast::IntegerLiteral(12);
+    auto tp1 = std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int"));
+    filc::ast::VariableDeclaration vd1(false, std::make_shared<filc::ast::Identifier>("my_var"), tp1);
+    auto exp1 = std::make_shared<filc::ast::IntegerLiteral>(12);
     vd1.setAssignation(exp1);
     ASSERT_EQ(exp1, vd1.getAssignation());
 }

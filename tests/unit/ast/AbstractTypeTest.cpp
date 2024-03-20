@@ -21,9 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
 #include "test_tools.h"
-#include <utility>
+#include "Type.h"
 
 class TypeA : public filc::ast::AbstractType {
 public:
@@ -38,8 +37,7 @@ public:
 
 class TypeB : public filc::ast::AbstractType {
 public:
-    explicit TypeB(std::string name)
-            : _name(std::move(name)) {}
+    explicit TypeB(std::string name): _name(std::move(name)) {}
 
     [[nodiscard]] auto dump() const -> std::string override {
         return _name;
@@ -69,9 +67,8 @@ TEST(AbstractType, equality) {
 TEST(AbstractType, LLVMType) {
     auto type = TypeA();
     ASSERT_EQ(nullptr, type.getLLVMType());
-    auto *context = new llvm::LLVMContext;
-    auto llvm_type = llvm::Type::getInt32Ty(*context);
+    llvm::LLVMContext context;
+    auto llvm_type = llvm::Type::getInt32Ty(context);
     type.setLLVMType(llvm_type);
     ASSERT_EQ(llvm_type, type.getLLVMType());
-    delete context;
 }

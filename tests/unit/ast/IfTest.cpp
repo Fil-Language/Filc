@@ -21,20 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
-#include "Parser.h"
+#include "Body.h"
+#include "Condition.h"
+#include "Identifier.h"
 #include "test_tools.h"
 
 TEST(If, constructor) {
-    filc::ast::If if1(new filc::ast::Identifier("isTrue"), new filc::ast::BlockBody({}));
+    filc::ast::If if1(
+        std::make_shared<filc::ast::Identifier>("isTrue"),
+        std::shared_ptr<filc::ast::BlockBody>(new filc::ast::BlockBody({}))
+    ); // NOLINT(*-make-shared)
     ASSERT_IDENTIFIER("isTrue", if1.getCondition());
     ASSERT_THAT(if1.getBody()->getExpressions(), IsEmpty());
 }
 
 TEST(If, setElse) {
-    filc::ast::If if1(new filc::ast::Identifier("isFalse"), new filc::ast::BlockBody({}));
-    if1.setElse(new filc::ast::BlockBody({}));
-    auto *ielse = if1.getElse();
+    filc::ast::If if1(
+        std::make_shared<filc::ast::Identifier>("isFalse"),
+        std::shared_ptr<filc::ast::BlockBody>(new filc::ast::BlockBody({}))
+    );                                                                                // NOLINT(*-make-shared)
+    if1.setElse(std::shared_ptr<filc::ast::BlockBody>(new filc::ast::BlockBody({}))); // NOLINT(*-make-shared)
+    auto ielse = if1.getElse();
     ASSERT_NE(nullptr, ielse);
     ASSERT_THAT(ielse->getExpressions(), IsEmpty());
 }

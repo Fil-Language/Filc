@@ -35,7 +35,7 @@ FilCompiler::FilCompiler(grammar::Parser<ast::Program> *parser)
     : _parser(unique_ptr<grammar::Parser<ast::Program>>(parser)) {}
 
 auto FilCompiler::compile() -> int {
-    auto *collector = message::MessageCollector::getCollector(message::ERROR);
+    auto collector = message::MessageCollector::getCollector(message::ERROR);
 
     collector->addMessage(new message::Message(message::SYSTEM, "Begin compilation"));
 
@@ -56,8 +56,7 @@ auto FilCompiler::compile() -> int {
     collector->printAll();
 
     _parser->parse(entrypoint, collector);
-    auto *program = _parser->getResult();
-    delete program;
+    auto program = _parser->getResult();
 
     collector->addError(new message::BasicError(message::FATAL_ERROR, "Compiler not implemented yet!"));
     //collector->addMessage(new filc::message::Message(filc::message::SYSTEM, "Compilation finished"));
@@ -67,7 +66,7 @@ auto FilCompiler::compile() -> int {
 }
 
 auto FilCompiler::getEntrypoint() -> std::string {
-    auto *collector       = message::MessageCollector::getCollector();
+    auto collector       = message::MessageCollector::getCollector();
     const auto *config    = utils::config::Config::get();
     const auto entrypoint = config->getEntrypoint();
 

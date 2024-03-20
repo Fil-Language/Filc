@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "AST_decl.h"
 #include "MessageCollector.h"
 #include "stubs.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <memory>
 #include <sstream>
 
 using namespace ::testing;
@@ -43,20 +44,20 @@ using namespace ::testing;
 
 #define ASSERT_TYPE(expected, type) ASSERT_STREQ(expected, type->dump().c_str())
 
-#define ASSERT_IDENTIFIER(expected, identifier) ASSERT_STREQ(expected, dynamic_cast<filc::ast::Identifier *>(identifier)->getName().c_str())
+#define ASSERT_IDENTIFIER(expected, identifier) ASSERT_STREQ(expected, std::dynamic_pointer_cast<filc::ast::Identifier>(identifier)->getName().c_str())
 
-#define ASSERT_CLASSIC_OPERATOR(expected, op) ASSERT_EQ(filc::ast::ClassicOperator::expected, dynamic_cast<filc::ast::ClassicOperator *>(op)->getOperator())
+#define ASSERT_CLASSIC_OPERATOR(expected, op) ASSERT_EQ(filc::ast::ClassicOperator::expected, std::dynamic_pointer_cast<filc::ast::ClassicOperator>(op)->getOperator())
 
 #define ASSERT_ASSIGNATION_OPERATOR(expected, op) ASSERT_CLASSIC_OPERATOR(expected, dynamic_cast<filc::ast::AssignationOperator *>(op)->getInnerOperator())
 
-#define ASSERT_LITERAL(expected, type, literal) ASSERT_EQ(expected, dynamic_cast<filc::ast::type *>(literal)->getValue())
+#define ASSERT_LITERAL(expected, type, literal) ASSERT_EQ(expected, std::dynamic_pointer_cast<filc::ast::type>(literal)->getValue())
 
-#define ASSERT_VARIABLE_DECLARATION(constant, name, type, value, literal, variable)  \
-    auto *var_##variable = dynamic_cast<filc::ast::VariableDeclaration *>(variable); \
-    ASSERT_NE(nullptr, var_##variable);                                              \
-    ASSERT_EQ(constant, var_##variable->isConstant());                               \
-    ASSERT_IDENTIFIER(name, var_##variable->getIdentifier());                        \
-    ASSERT_TYPE(type, var_##variable->getType());                                    \
+#define ASSERT_VARIABLE_DECLARATION(constant, name, type, value, literal, variable)            \
+    auto var_##variable = std::dynamic_pointer_cast<filc::ast::VariableDeclaration>(variable); \
+    ASSERT_NE(nullptr, var_##variable);                                                        \
+    ASSERT_EQ(constant, var_##variable->isConstant());                                         \
+    ASSERT_IDENTIFIER(name, var_##variable->getIdentifier());                                  \
+    ASSERT_TYPE(type, var_##variable->getType());                                              \
     ASSERT_LITERAL(value, literal, var_##variable->getAssignation())
 
 #define ASSERT_MESSAGE_CONTENT(expected, message)                       \
@@ -80,7 +81,7 @@ using namespace ::testing;
         std::cout.rdbuf(oldbuf);                                           \
     }
 
-#define ASSERT_ERR_OUTPUT(expression, assertion)                               \
+#define ASSERT_ERR_OUTPUT(expression, assertion)                           \
     {                                                                      \
         std::stringstream redirect_stream;                                 \
         std::streambuf *oldbuf = std::cerr.rdbuf(redirect_stream.rdbuf()); \

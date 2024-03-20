@@ -24,24 +24,24 @@
 #include "DevWarning.h"
 #include <utility>
 
-namespace filc::message {
-    DevWarning::DevWarning(unsigned int code, filc::utils::AbstractPosition *position, std::string content)
-            : Message(ERROR, std::move(content)), _code(code), _position(position) {}
+using namespace filc::message;
 
-    auto DevWarning::getCode() const -> unsigned int {
-        return _code;
-    }
+DevWarning::DevWarning(unsigned int code, utils::AbstractPosition *position, std::string content)
+    : Message(ERROR, std::move(content)), _code(code), _position(position) {}
 
-    auto DevWarning::print(std::ostream &out) -> std::ostream & {
-        if (_printed) {
-            return out;
-        }
+auto DevWarning::getCode() const -> unsigned int {
+    return _code;
+}
 
-        out << "\033[1;36mDEV WARNING[" << _code << "]\033[0m\033[1m: " << _content << std::endl;
-        out << _position->dump("\033[1;36m");
-
-        _printed = true;
-
+auto DevWarning::print(std::ostream &out) -> std::ostream & {
+    if (_printed) {
         return out;
     }
+
+    out << "\033[1;36mDEV WARNING[" << _code << "]\033[0m\033[1m: " << _content << '\n';
+    out << _position->dump("\033[1;36m");
+
+    _printed = true;
+
+    return out;
 }

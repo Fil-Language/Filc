@@ -21,18 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Function.h"
+#include "Body.h"
+#include "Identifier.h"
 #include "test_tools.h"
-#include "Parser.h"
+#include "Type.h"
 
 using namespace ::testing;
 
 TEST(Function, constructor) {
     filc::ast::Function fun1(
-            new filc::ast::Identifier("fact"),
-            {},
-            std::make_shared<filc::ast::Type>(new filc::ast::Identifier("int")),
-            new filc::ast::BlockBody({})
+        std::make_shared<filc::ast::Identifier>("fact"),
+        {},
+        std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int")),
+        std::shared_ptr<filc::ast::BlockBody>(new filc::ast::BlockBody({})) // NOLINT(*-make-shared)
     );
     ASSERT_IDENTIFIER("fact", fun1.getName());
     ASSERT_THAT(fun1.getParameters(), IsEmpty());

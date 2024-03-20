@@ -26,6 +26,7 @@
 
 #include "Message.h"
 #include <vector>
+#include <memory>
 
 namespace filc::message {
     class MessageCollector final {
@@ -48,14 +49,14 @@ namespace filc::message {
 
         auto printAll() -> MessageCollector &;
 
-        static auto getCollector(LEVEL level = FATAL_ERROR) -> MessageCollector *;
+        static auto getCollector(LEVEL level = FATAL_ERROR) -> std::shared_ptr<MessageCollector>;
 
         auto flush() -> void;
 
     private:
         LEVEL _level;
-        std::vector<Message *> _messages;
-        std::vector<Message *> _errors;
+        std::vector<std::unique_ptr<Message>> _messages;
+        std::vector<std::unique_ptr<Message>> _errors;
     };
 }
 

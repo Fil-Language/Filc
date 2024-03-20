@@ -30,7 +30,7 @@
 namespace filc::message {
     class Antlr4ErrorListener : public antlr4::BaseErrorListener {
     public:
-        explicit Antlr4ErrorListener(MessageCollector *collector);
+        explicit Antlr4ErrorListener(const std::shared_ptr<MessageCollector> &collector);
 
         void syntaxError(antlr4::Recognizer *recognizer,
                          antlr4::Token *offendingSymbol,
@@ -39,7 +39,7 @@ namespace filc::message {
                          const std::string &msg, std::exception_ptr e) override;
 
     private:
-        MessageCollector *_collector;
+        std::shared_ptr<MessageCollector> _collector;
     };
 }
 

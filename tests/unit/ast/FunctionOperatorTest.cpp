@@ -21,17 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "AST.h"
+#include "Literal.h"
+#include "Operator.h"
 #include "test_tools.h"
 
 using namespace ::testing;
 
 TEST(FunctionOperator, constructor) {
-    std::vector<filc::ast::AbstractExpression *> exprs1(
-            {
-                    new filc::ast::IntegerLiteral(12),
-                    new filc::ast::FloatLiteral(5.6)
-            }
+    std::vector<std::shared_ptr<filc::ast::AbstractExpression>> exprs1(
+        {std::make_shared<filc::ast::IntegerLiteral>(12), std::make_shared<filc::ast::FloatLiteral>(5.6)}
     );
     filc::ast::FunctionOperator fo1(exprs1);
     ASSERT_THAT(fo1.getExpressions(), ContainerEq(exprs1));

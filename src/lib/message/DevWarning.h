@@ -38,7 +38,7 @@ namespace filc::message {
 
     private:
         unsigned int _code;
-        filc::utils::AbstractPosition *_position;
+        std::unique_ptr<filc::utils::AbstractPosition> _position;
     };
 }
 
