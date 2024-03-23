@@ -51,7 +51,7 @@ jobs:
         if: startsWith(matrix.job.os, 'ubuntu')
         id: debian_package
         run: |
-          DEB_PKG_NAME=filc_v${{ steps.metadata.outputs.PACKAGE_VERSION }}_${{ matrix.job.pkg-name }}.deb
+          DEB_PKG_NAME=filc-${{ steps.metadata.outputs.PACKAGE_VERSION }}.${{ matrix.job.pkg-name }}.deb
           ${{ github.workspace }}/bin/build_deb_package.sh ${{ steps.metadata.outputs.BINARY_PATH }} ${{ steps.metadata.outputs.PACKAGE_VERSION }} ${{ matrix.job.pkg-name }}
           mv filc.deb $DEB_PKG_NAME
           echo "DEB_PKG_NAME=${DEB_PKG_NAME}" >> $GITHUB_OUTPUT
