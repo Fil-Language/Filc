@@ -40,3 +40,9 @@ Check if there is change in git tree. If so it exits with code 1, else it exits 
 Usage: `bin/build_deb_package.sh <binary path> <version> <architecture>`
 
 Build `.deb` package
+
+## `build_rpm_package.sh`
+
+Usage: `bin/build_rpm_package.sh <binary path> <version>`
+
+Build `.rpm` package
