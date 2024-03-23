@@ -61,7 +61,9 @@ jobs:
         id: rpm_package
         run: |
           ${{ github.workspace }}/bin/build_rpm_package.sh ${{ steps.metadata.outputs.BINARY_PATH }} ${{ steps.metadata.outputs.PACKAGE_VERSION }}
-          RPM_PKG_NAME=$(find ~/rpmbuild/RPMS | grep "\.rpm")
+          RPM_PKG_PATH=$(find ~/rpmbuild/RPMS | grep "\.rpm")
+          RPM_PKG_NAME=$(basename $RPM_PKG_PATH)
+          echo "RPM_PKG_PATH=${RPM_PKG_PATH}" >> $GITHUB_OUTPUT
           echo "RPM_PKG_NAME=${RPM_PKG_NAME}" >> $GITHUB_OUTPUT
 
       - name: "Artifact upload: Debian package"
@@ -72,11 +74,11 @@ jobs:
           path: ${{ github.workspace }}/${{ steps.debian_package.outputs.DEB_PKG_NAME }}
 
       - name: "Artifact upload: RPM package"
-        if: steps.rpm_package.outputs.RPM_PKG_NAME
+        if: steps.rpm_package.outputs.RPM_PKG_PATH
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.rpm_package.outputs.RPM_PKG_NAME }}
-          path: ${{ github.workspace }}/${{ steps.rpm_package.outputs.RPM_PKG_NAME }}
+          path: ${{ steps.rpm_package.outputs.RPM_PKG_PATH }}
 
       - name: Upload to release
         if: startsWith(github.ref, 'refs/tags/v')
