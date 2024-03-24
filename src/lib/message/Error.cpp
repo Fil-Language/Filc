@@ -22,33 +22,34 @@
  * SOFTWARE.
  */
 #include "Error.h"
-#include <utility>
 
-namespace filc::message {
-    auto BasicError::print(std::ostream &out) -> std::ostream & {
-        if (_printed) {
-            return out;
-        }
+using namespace filc::message;
 
-        out << "\033[1;31mERROR\033[0m\033[1m: " << _content << "\033[0m";
-        _printed = true;
+BasicError::BasicError(const std::string &content): Message(content) {}
 
+auto BasicError::print(std::ostream &out) -> std::ostream & {
+    if (_printed) {
         return out;
     }
 
-    Error::Error(filc::message::LEVEL level, std::string content, filc::utils::AbstractPosition *position)
-            : Message(level, std::move(content)), _position(position) {}
+    out << "\033[1;31mERROR\033[0m\033[1m: " << _content << "\033[0m";
+    _printed = true;
 
-    auto Error::print(std::ostream &out) -> std::ostream & {
-        if (_printed) {
-            return out;
-        }
+    return out;
+}
 
-        out << "\033[1;31mERROR\033[0m\033[1m: " << _content << "\033[0m\n";
-        out << _position->dump("\033[1;31m");
+Error::Error(const std::string &content, const std::shared_ptr<utils::AbstractPosition> &position)
+    : Message(content), _position(position) {}
 
-        _printed = true;
-
+auto Error::print(std::ostream &out) -> std::ostream & {
+    if (_printed) {
         return out;
     }
+
+    out << "\033[1;31mERROR\033[0m\033[1m: " << _content << "\033[0m\n";
+    out << _position->dump("\033[1;31m");
+
+    _printed = true;
+
+    return out;
 }

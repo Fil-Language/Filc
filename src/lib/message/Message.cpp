@@ -22,28 +22,20 @@
  * SOFTWARE.
  */
 #include "Message.h"
-#include <utility>
 
-constexpr filc::message::LEVEL MAX_LEVEL = filc::message::SYSTEM;
+using namespace filc::message;
 
-namespace filc::message {
-    Message::Message(LEVEL level, std::string content)
-            : _level(level <= MAX_LEVEL ? level : MAX_LEVEL), _content(std::move(content)), _printed(false) {}
+Message::Message(const std::string &content): _content(content), _printed(false) {}
 
-    auto Message::print(std::ostream &out) -> std::ostream & {
-        if (_printed) {
-            return out;
-        }
-
-        out << _content;
-        _printed = true;
-
+auto Message::print(std::ostream &out) -> std::ostream & {
+    if (_printed) {
         return out;
     }
 
-    auto Message::getLevel() const -> LEVEL {
-        return _level;
-    }
+    out << _content;
+    _printed = true;
+
+    return out;
 }
 
 auto operator<<(std::ostream &out, filc::message::Message &message) -> std::ostream & {

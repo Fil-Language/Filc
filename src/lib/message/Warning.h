@@ -25,15 +25,14 @@
 #define FILC_WARNING_H
 
 #include "Message.h"
-#include <utility>
 
 namespace filc::message {
     class BasicWarning final : public Message {
     public:
-        BasicWarning(LEVEL level, std::string content) : Message(level, std::move(content)) {}
+        explicit BasicWarning(const std::string &content);
 
         auto print(std::ostream &out) -> std::ostream & override;
     };
-}
+} // namespace filc::message
 
-#endif //FILC_WARNING_H
+#endif // FILC_WARNING_H

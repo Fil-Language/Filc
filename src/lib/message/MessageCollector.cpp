@@ -26,8 +26,7 @@
 
 using namespace filc::message;
 
-MessageCollector::MessageCollector(LEVEL level)
-    : _level(level) {}
+MessageCollector::MessageCollector() = default;
 
 MessageCollector::~MessageCollector() = default;
 
@@ -48,10 +47,8 @@ auto MessageCollector::hasMessages() -> bool {
 }
 
 auto MessageCollector::printMessages() -> MessageCollector & {
-    std::for_each(_messages.begin(), _messages.end(), [this](const std::unique_ptr<Message> &message) {
-        if (message->getLevel() <= _level) {
-            std::cout << *message << '\n';
-        }
+    std::for_each(_messages.begin(), _messages.end(), [](const std::unique_ptr<Message> &message) {
+        std::cout << *message << '\n';
     });
 
     _messages.clear();
@@ -64,10 +61,8 @@ auto MessageCollector::hasErrors() -> bool {
 }
 
 auto MessageCollector::printErrors() -> MessageCollector & {
-    std::for_each(_errors.begin(), _errors.end(), [this](const std::unique_ptr<Message> &error) {
-        if (error->getLevel() <= _level) {
-            std::cerr << *error << '\n';
-        }
+    std::for_each(_errors.begin(), _errors.end(), [](const std::unique_ptr<Message> &error) {
+        std::cerr << *error << '\n';
     });
 
     _errors.clear();
@@ -79,8 +74,8 @@ auto MessageCollector::printAll() -> MessageCollector & {
     return printErrors().printMessages();
 }
 
-auto MessageCollector::getCollector(LEVEL level) -> std::shared_ptr<MessageCollector> {
-    static auto collector = std::make_shared<MessageCollector>(level);
+auto MessageCollector::getCollector() -> std::shared_ptr<MessageCollector> {
+    static auto collector = std::make_shared<MessageCollector>();
 
     return collector;
 }

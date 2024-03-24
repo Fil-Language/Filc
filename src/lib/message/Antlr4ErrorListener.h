@@ -32,15 +32,18 @@ namespace filc::message {
     public:
         explicit Antlr4ErrorListener(const std::shared_ptr<MessageCollector> &collector);
 
-        void syntaxError(antlr4::Recognizer *recognizer,
-                         antlr4::Token *offendingSymbol,
-                         size_t line,
-                         size_t charPositionInLine,
-                         const std::string &msg, std::exception_ptr e) override;
+        void syntaxError(
+            antlr4::Recognizer *recognizer,
+            antlr4::Token *offendingSymbol,
+            size_t line,
+            size_t charPositionInLine,
+            const std::string &msg,
+            std::exception_ptr e
+        ) override;
 
     private:
         std::shared_ptr<MessageCollector> _collector;
     };
-}
+} // namespace filc::message
 
-#endif //FILC_ANTLR4ERRORLISTENER_H
+#endif // FILC_ANTLR4ERRORLISTENER_H

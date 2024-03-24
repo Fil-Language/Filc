@@ -63,11 +63,13 @@ auto FilParser::parse(const std::string &filename, std::shared_ptr<message::Mess
             auto import_filename = utils::getFilenameFromModule(import_module);
             parse(import_filename, collector);
             if (_program_cache.find(import_filename) == _program_cache.end()) {
-                collector->addError(new filc::message::BasicError(filc::message::FATAL_ERROR, "Cannot find program attached to file " + import_filename));
+                collector->addError(
+                    new filc::message::BasicError("Cannot find program attached to file " + import_filename)
+                );
             }
             imports.push_back(_program_cache[import_filename]);
         } catch (std::logic_error &e) {
-            collector->addError(new filc::message::BasicError(filc::message::FATAL_ERROR, "Module " + import_module + " not found"));
+            collector->addError(new filc::message::BasicError("Module " + import_module + " not found"));
         }
     }
     program->setImports(imports);

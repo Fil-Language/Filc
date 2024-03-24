@@ -24,13 +24,8 @@
 #include "Warning.h"
 #include "test_tools.h"
 
-TEST(BasicWarning, constructor) {
-    auto basic_warning = filc::message::BasicWarning(filc::message::WARNING, "My warning");
-    ASSERT_EQ(filc::message::WARNING, basic_warning.getLevel());
-}
-
 TEST(BasicWarning, print) {
-    auto basic_warning = filc::message::BasicWarning(filc::message::WARNING, "My warning");
+    auto basic_warning = filc::message::BasicWarning("My warning");
     ASSERT_MESSAGE_CONTENT("\033[1;33mWARNING\033[0m\033[1m: My warning\033[0m", basic_warning);
     ASSERT_MESSAGE_CONTENT("", basic_warning);
 }

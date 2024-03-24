@@ -235,9 +235,8 @@ type returns[std::shared_ptr<filc::ast::AbstractType> tree]
         if (size < 0) {
             filc::message::MessageCollector::getCollector()->addError(
                 new filc::message::Error(
-                    filc::message::ERROR,
                     "Array size must be positive",
-                    new filc::utils::SimplePosition($it)
+                    std::make_shared<filc::utils::SimplePosition>($it)
                 )
             );
         }

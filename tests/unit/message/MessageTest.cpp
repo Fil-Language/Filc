@@ -26,19 +26,17 @@
 
 TEST(Message, constructor) {
     auto expected = "My message";
-    auto message = filc::message::Message(filc::message::WARNING, expected);
-    ASSERT_EQ(filc::message::WARNING, message.getLevel());
+    auto message  = filc::message::Message(expected);
     ASSERT_MESSAGE_CONTENT(expected, message);
 
     expected = "My message 2";
-    message = filc::message::Message((filc::message::LEVEL) 9, expected);
-    ASSERT_EQ(5, message.getLevel());
+    message  = filc::message::Message(expected);
     ASSERT_MESSAGE_CONTENT(expected, message);
 }
 
 TEST(Message, print) {
     auto expected = "My message";
-    auto message = filc::message::Message(filc::message::WARNING, expected);
+    auto message  = filc::message::Message(expected);
     ASSERT_MESSAGE_CONTENT(expected, message);
     ASSERT_MESSAGE_CONTENT("", message);
 }

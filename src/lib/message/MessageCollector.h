@@ -25,13 +25,13 @@
 #define FILC_MESSAGECOLLECTOR_H
 
 #include "Message.h"
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace filc::message {
     class MessageCollector final {
     public:
-        explicit MessageCollector(LEVEL level);
+        MessageCollector();
 
         ~MessageCollector();
 
@@ -49,15 +49,14 @@ namespace filc::message {
 
         auto printAll() -> MessageCollector &;
 
-        static auto getCollector(LEVEL level = FATAL_ERROR) -> std::shared_ptr<MessageCollector>;
+        static auto getCollector() -> std::shared_ptr<MessageCollector>;
 
         auto flush() -> void;
 
     private:
-        LEVEL _level;
         std::vector<std::unique_ptr<Message>> _messages;
         std::vector<std::unique_ptr<Message>> _errors;
     };
-}
+} // namespace filc::message
 
-#endif //FILC_MESSAGECOLLECTOR_H
+#endif // FILC_MESSAGECOLLECTOR_H

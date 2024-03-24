@@ -589,7 +589,6 @@ namespace filc::environment {
     function_##var->getArg(1)->setName("b"); \
     if (!function_##var->empty()) { \
         collector->addError(new filc::message::BasicError( \
-            filc::message::ERROR, \
             "Tried to redefine " name \
         )); \
         return; \
@@ -649,7 +648,6 @@ namespace filc::environment {
     auto *function_##var = llvm::Function::Create(type_##var, llvm::Function::ExternalLinkage, name, *module); \
     if (!function_##var->empty()) { \
         collector->addError(new filc::message::BasicError( \
-                filc::message::ERROR, \
                 "Tried to redefine " name \
         )); \
         return; \

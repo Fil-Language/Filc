@@ -26,25 +26,24 @@
 
 #include "Message.h"
 #include "Position.h"
-#include <utility>
 
 namespace filc::message {
     class BasicError final : public Message {
     public:
-        BasicError(LEVEL level, std::string content) : Message(level, std::move(content)) {}
+        explicit BasicError(const std::string &content);
 
         auto print(std::ostream &out) -> std::ostream & override;
     };
 
     class Error final : public Message {
     public:
-        Error(LEVEL level, std::string content, filc::utils::AbstractPosition *position);
+        Error(const std::string &content, const std::shared_ptr<utils::AbstractPosition> &position);
 
         auto print(std::ostream &out) -> std::ostream & override;
 
     private:
-        filc::utils::AbstractPosition *_position;
+        std::shared_ptr<filc::utils::AbstractPosition> _position;
     };
-}
+} // namespace filc::message
 
-#endif //FILC_ERROR_H
+#endif // FILC_ERROR_H
