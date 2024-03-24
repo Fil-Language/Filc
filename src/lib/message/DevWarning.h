@@ -30,7 +30,9 @@
 namespace filc::message {
     class DevWarning final : public Message {
     public:
-        DevWarning(unsigned int code, filc::utils::AbstractPosition *position, std::string content);
+        DevWarning(
+            unsigned int code, const std::shared_ptr<utils::AbstractPosition> &position, const std::string &content
+        );
 
         [[nodiscard]] auto getCode() const -> unsigned int;
 
@@ -38,8 +40,8 @@ namespace filc::message {
 
     private:
         unsigned int _code;
-        std::unique_ptr<filc::utils::AbstractPosition> _position;
+        std::shared_ptr<utils::AbstractPosition> _position;
     };
-}
+} // namespace filc::message
 
-#endif //FILC_DEVWARNING_H
+#endif // FILC_DEVWARNING_H

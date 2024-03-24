@@ -23,16 +23,18 @@
  */
 #include "Warning.h"
 
-namespace filc::message {
-    auto BasicWarning::print(std::ostream &out) -> std::ostream & {
-        if (_printed) {
-            return out;
-        }
+using namespace filc::message;
 
-        out << "\033[1;33mWARNING\033[0m\033[1m: " << _content << "\033[0m";
+BasicWarning::BasicWarning(const std::string &content): Message(content) {}
 
-        _printed = true;
-
+auto BasicWarning::print(std::ostream &out) -> std::ostream & {
+    if (_printed) {
         return out;
     }
+
+    out << "\033[1;33mWARNING\033[0m\033[1m: " << _content << "\033[0m";
+
+    _printed = true;
+
+    return out;
 }

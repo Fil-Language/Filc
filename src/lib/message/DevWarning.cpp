@@ -22,12 +22,13 @@
  * SOFTWARE.
  */
 #include "DevWarning.h"
-#include <utility>
 
 using namespace filc::message;
 
-DevWarning::DevWarning(unsigned int code, utils::AbstractPosition *position, std::string content)
-    : Message(ERROR, std::move(content)), _code(code), _position(position) {}
+DevWarning::DevWarning(
+    unsigned int code, const std::shared_ptr<utils::AbstractPosition> &position, const std::string &content
+)
+    : Message(content), _code(code), _position(position) {}
 
 auto DevWarning::getCode() const -> unsigned int {
     return _code;

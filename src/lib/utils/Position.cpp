@@ -54,8 +54,7 @@ namespace filc::utils {
         std::ifstream file(_filename);
         if (!file.is_open() || !file.good()) {
             filc::message::MessageCollector::getCollector()->addError(
-                    new filc::message::BasicError(filc::message::ERROR,
-                                                  "File " + _filename + " cannot be open or read")
+                new filc::message::BasicError("File " + _filename + " cannot be open or read")
             );
 
             return "";
@@ -92,11 +91,10 @@ namespace filc::utils {
     DoublePosition::DoublePosition(const antlr4::Token *start_token, const antlr4::Token *end_token)
             : _filename(start_token->getTokenSource()->getSourceName()) {
         if (end_token->getTokenSource()->getSourceName() != _filename) {
-            filc::message::MessageCollector::getCollector()->addError(
-                    new filc::message::BasicError(filc::message::FATAL_ERROR,
-                                                  "Tried to create a double position from two different sources: " +
-                                                  _filename + " and " + end_token->getTokenSource()->getSourceName())
-            );
+            filc::message::MessageCollector::getCollector()->addError(new filc::message::BasicError(
+                "Tried to create a double position from two different sources: " + _filename + " and "
+                + end_token->getTokenSource()->getSourceName()
+            ));
         }
 
         _start_position = std::make_pair(
@@ -129,8 +127,7 @@ namespace filc::utils {
         std::ifstream file(_filename);
         if (!file.is_open() || !file.good()) {
             filc::message::MessageCollector::getCollector()->addError(
-                    new filc::message::BasicError(filc::message::ERROR,
-                                                  "File " + _filename + " cannot be open or read")
+                new filc::message::BasicError("File " + _filename + " cannot be open or read")
             );
 
             return {};
@@ -206,8 +203,7 @@ namespace filc::utils {
         }
 
         filc::message::MessageCollector::getCollector()->addError(
-                new filc::message::BasicError(filc::message::WARNING,
-                                              "Cannot get position content")
+            new filc::message::BasicError("Cannot get position content")
         );
 
         return "";

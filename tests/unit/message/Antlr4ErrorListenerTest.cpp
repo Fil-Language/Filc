@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 #include "Antlr4ErrorListener.h"
-#include "test_tools.h"
 #include "FilLexer.h"
+#include "test_tools.h"
 
 TEST(Antlr4ErrorListener, syntaxError) {
     auto listener = filc::message::Antlr4ErrorListener(COLLECTOR);
@@ -32,19 +32,8 @@ TEST(Antlr4ErrorListener, syntaxError) {
     input.loadFromFile(FIXTURES_PATH "/grammar/bool1.fil");
     filc::antlr::FilLexer lexer(&input);
     const auto factory = antlr4::CommonTokenFactory::DEFAULT.get();
-    auto token = factory->create(
-            {&lexer, &input},
-            0,
-            "text",
-            0, 0, 0, 0, 0
-    );
-    listener.syntaxError(
-            nullptr,
-            token.get(),
-            0, 0,
-            "Message",
-            nullptr
-    );
+    auto token         = factory->create({&lexer, &input}, 0, "text", 0, 0, 0, 0, 0);
+    listener.syntaxError(nullptr, token.get(), 0, 0, "Message", nullptr);
     ASSERT_TRUE(COLLECTOR->hasErrors());
     ASSERT_FALSE(COLLECTOR->hasMessages());
     COLLECTOR->flush();

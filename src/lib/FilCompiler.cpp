@@ -35,9 +35,9 @@ FilCompiler::FilCompiler(grammar::Parser<ast::Program> *parser)
     : _parser(unique_ptr<grammar::Parser<ast::Program>>(parser)) {}
 
 auto FilCompiler::compile() -> int {
-    auto collector = message::MessageCollector::getCollector(message::ERROR);
+    auto collector = message::MessageCollector::getCollector();
 
-    collector->addMessage(new message::Message(message::SYSTEM, "Begin compilation"));
+    collector->addMessage(new message::Message("Begin compilation"));
 
     /*
      * TODO:
@@ -58,7 +58,7 @@ auto FilCompiler::compile() -> int {
     _parser->parse(entrypoint, collector);
     auto program = _parser->getResult();
 
-    collector->addError(new message::BasicError(message::FATAL_ERROR, "Compiler not implemented yet!"));
+    collector->addError(new message::BasicError("Compiler not implemented yet!"));
     //collector->addMessage(new filc::message::Message(filc::message::SYSTEM, "Compilation finished"));
     collector->printAll();
 
@@ -71,7 +71,7 @@ auto FilCompiler::getEntrypoint() -> std::string {
     const auto entrypoint = config->getEntrypoint();
 
     if (entrypoint.empty() || !filesystem::exists(entrypoint) || !filesystem::is_regular_file(entrypoint)) {
-        collector->addError(new message::BasicError(message::FATAL_ERROR, "Entrypoint cannot be found, or is not readable"));
+        collector->addError(new message::BasicError("Entrypoint cannot be found, or is not readable"));
     }
 
     return entrypoint;
