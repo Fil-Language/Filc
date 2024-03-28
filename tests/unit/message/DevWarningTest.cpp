@@ -25,21 +25,19 @@
 #include "test_tools.h"
 
 TEST(DevWarning, constructor) {
-    auto dev_warning = filc::message::DevWarning(5, new filc::utils::SimplePosition(
-            FIXTURES_PATH "/utils/position.txt", 12, 3
-    ), "My dev warning");
-    ASSERT_EQ(filc::message::ERROR, dev_warning.getLevel());
+    auto dev_warning = filc::message::DevWarning(
+        5, std::make_shared<filc::utils::SimplePosition>(FIXTURES_PATH "/utils/position.txt", 12, 3), "My dev warning"
+    );
     ASSERT_EQ(5, dev_warning.getCode());
 }
 
 TEST(DevWarning, print) {
-    auto dev_warning = filc::message::DevWarning(5, new filc::utils::SimplePosition(
-            FIXTURES_PATH "/utils/position.txt", 12, 3
-    ), "My dev warning");
-    auto expected =
-            "\033[1;36mDEV WARNING[5]\033[0m\033[1m: My dev warning\n"
-            "   \033[1;34m--> \033[0m../../../tests/unit/Fixtures/utils/position.txt:12:3\n"
-            "\033[1;34m 12 | \033[0m12;abcd\n"
-            "\033[1;34m    | \033[0m   \033[1;36m^\033[0m\n";
+    auto dev_warning = filc::message::DevWarning(
+        5, std::make_shared<filc::utils::SimplePosition>(FIXTURES_PATH "/utils/position.txt", 12, 3), "My dev warning"
+    );
+    auto expected = "\033[1;36mDEV WARNING[5]\033[0m\033[1m: My dev warning\n"
+                    "   \033[1;34m--> \033[0m../../../tests/unit/Fixtures/utils/position.txt:12:3\n"
+                    "\033[1;34m 12 | \033[0m12;abcd\n"
+                    "\033[1;34m    | \033[0m   \033[1;36m^\033[0m\n";
     ASSERT_MESSAGE_CONTENT(expected, dev_warning);
 }

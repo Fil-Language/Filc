@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 #include "Config.h"
-
 #include "test_tools.h"
 #include <filesystem>
 
@@ -83,7 +82,10 @@ TEST(Config, namespaces) {
     ASSERT_STREQ("src/com/fil/main", Config::get()->getNamespace("com.fil.main").c_str());
     const auto namespaces = Config::get()->getNamespaces();
     ASSERT_THAT(namespaces, SizeIs(2));
-    ASSERT_THAT(namespaces, UnorderedElementsAre(make_pair("project_name", "src"), make_pair("com.fil.main", "src/com/fil/main")));
+    ASSERT_THAT(
+        namespaces,
+        UnorderedElementsAre(make_pair("project_name", "src"), make_pair("com.fil.main", "src/com/fil/main"))
+    );
     Config::clear();
 }
 
@@ -101,34 +103,88 @@ TEST(Config, load) {
     ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_file.yml"));
     Config::clear();
 
-    ASSERT_OUTPUT_EQUAL(
-            ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_1.yml", "File format is invalid, it should be a yaml map"),
-            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_1.yml")))
+    getOutput(
+        []() {
+            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_1.yml"));
+        },
+        [](const string &result) {
+            ASSERT_STREQ(
+                ERROR_MESSAGE(
+                    FIXTURES_PATH "/utils/invalid_module_1.yml", "File format is invalid, it should be a yaml map"
+                ),
+                result.c_str()
+            );
+        }
+    );
+
     Config::clear();
 
-    ASSERT_OUTPUT_EQUAL(
-            ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_2.yml", "Missing name key"),
-            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_2.yml")))
+    getOutput(
+        []() {
+            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_2.yml"));
+        },
+        [](const string &result) {
+            ASSERT_STREQ(
+                ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_2.yml", "Missing name key"), result.c_str()
+            );
+        }
+    );
+
     Config::clear();
 
-    ASSERT_OUTPUT_EQUAL(
-            ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_3.yml", "Missing version key"),
-            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_3.yml")))
+    getOutput(
+        []() {
+            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_3.yml"));
+        },
+        [](const string &result) {
+            ASSERT_STREQ(
+                ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_3.yml", "Missing version key"), result.c_str()
+            );
+        }
+    );
+
     Config::clear();
 
-    ASSERT_OUTPUT_EQUAL(
-            ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_4.yml", "Missing entrypoint key"),
-            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_4.yml")))
+    getOutput(
+        []() {
+            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_4.yml"));
+        },
+        [](const string &result) {
+            ASSERT_STREQ(
+                ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_4.yml", "Missing entrypoint key"), result.c_str()
+            );
+        }
+    );
+
     Config::clear();
 
-    ASSERT_OUTPUT_EQUAL(
-            ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_5.yml", "Missing namespaces key"),
-            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_5.yml")))
+    getOutput(
+        []() {
+            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_5.yml"));
+        },
+        [](const string &result) {
+            ASSERT_STREQ(
+                ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_5.yml", "Missing namespaces key"), result.c_str()
+            );
+        }
+    );
+
     Config::clear();
 
-    ASSERT_OUTPUT_EQUAL(
-            ERROR_MESSAGE(FIXTURES_PATH "/utils/invalid_module_6.yml", "Namespaces value is invalid, it should be a yaml map"),
-            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_6.yml")))
+    getOutput(
+        []() {
+            ASSERT_EQ(false, Config::load(FIXTURES_PATH "/utils/invalid_module_6.yml"));
+        },
+        [](const string &result) {
+            ASSERT_STREQ(
+                ERROR_MESSAGE(
+                    FIXTURES_PATH "/utils/invalid_module_6.yml", "Namespaces value is invalid, it should be a yaml map"
+                ),
+                result.c_str()
+            );
+        }
+    );
+
     Config::clear();
 
     ASSERT_EQ(true, Config::load(FIXTURES_PATH "/utils/module.yml"));

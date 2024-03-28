@@ -45,8 +45,8 @@ auto CharacterLiteral::stringToChar(const std::string &snippet, antlr4::Token *t
 
     // There is a problem with the lexer
     if (token != nullptr) {
-        filc::message::MessageCollector::getCollector()->addError(new filc::message::DevWarning(
-            2, new filc::utils::SimplePosition(token), "Lexer found a character that is not regular: " + snippet
+        message::MessageCollector::getCollector()->addError(new message::DevWarning(
+            2, std::make_shared<utils::SimplePosition>(token), "Lexer found a character that is not regular: " + snippet
         ));
     }
 

@@ -24,54 +24,24 @@
 #ifndef FILC_MESSAGE_H
 #define FILC_MESSAGE_H
 
-#include <string>
 #include <iostream>
+#include <string>
 
 namespace filc::message {
-    using LEVEL = enum LEVEL {
-        /**
-         * Information on the system (# of thread, compilation time, ...)
-         */
-        SYSTEM = 5,
-        /**
-         * Some additional information on the state of the compiler
-         */
-        INFO = 4,
-        /**
-         * Some additional information on the state of the compiler and the code parsed
-         */
-        DEBUG = 3,
-        /**
-         * Something is wrong, but not really important
-         */
-        WARNING = 2,
-        /**
-         * Something is wrong and compiler must terminate
-         */
-        ERROR = 1,
-        /**
-         * Always shown and terminate compiler
-         */
-        FATAL_ERROR = 0,
-    };
-
     class Message {
     public:
-        Message(LEVEL level, std::string content);
+        explicit Message(const std::string &content);
 
         virtual ~Message() = default;
 
         virtual auto print(std::ostream &out) -> std::ostream &;
 
-        [[nodiscard]] auto getLevel() const -> LEVEL;
-
     protected:
-        LEVEL _level;
         std::string _content;
         bool _printed;
     };
-}
+} // namespace filc::message
 
 auto operator<<(std::ostream &out, filc::message::Message &message) -> std::ostream &;
 
-#endif //FILC_MESSAGE_H
+#endif // FILC_MESSAGE_H

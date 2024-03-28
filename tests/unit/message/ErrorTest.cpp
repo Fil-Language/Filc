@@ -24,31 +24,20 @@
 #include "Error.h"
 #include "test_tools.h"
 
-TEST(BasicError, constructor) {
-    auto basic_error = filc::message::BasicError(filc::message::ERROR, "My error");
-    ASSERT_EQ(filc::message::ERROR, basic_error.getLevel());
-}
-
 TEST(BasicError, print) {
-    auto basic_error = filc::message::BasicError(filc::message::ERROR, "My error");
+    auto basic_error = filc::message::BasicError("My error");
     ASSERT_MESSAGE_CONTENT("\033[1;31mERROR\033[0m\033[1m: My error\033[0m", basic_error);
     ASSERT_MESSAGE_CONTENT("", basic_error);
 }
 
-TEST(Error, constructor) {
-    auto error = filc::message::Error(filc::message::ERROR, "My error",
-                                      new filc::utils::SimplePosition(FIXTURES_PATH "/utils/position.txt", 5, 2));
-    ASSERT_EQ(filc::message::ERROR, error.getLevel());
-}
-
 TEST(Error, print) {
-    auto error = filc::message::Error(filc::message::ERROR, "My error",
-                                      new filc::utils::SimplePosition(FIXTURES_PATH "/utils/position.txt", 5, 2));
-    auto expected =
-            "\033[1;31mERROR\033[0m\033[1m: My error\033[0m\n"
-            "  \033[1;34m--> \033[0m../../../tests/unit/Fixtures/utils/position.txt:5:2\n"
-            "\033[1;34m 5 | \033[0m05;abcd\n"
-            "\033[1;34m   | \033[0m  \033[1;31m^\033[0m\n";
+    auto error = filc::message::Error(
+        "My error", std::make_shared<filc::utils::SimplePosition>(FIXTURES_PATH "/utils/position.txt", 5, 2)
+    );
+    auto expected = "\033[1;31mERROR\033[0m\033[1m: My error\033[0m\n"
+                    "  \033[1;34m--> \033[0m../../../tests/unit/Fixtures/utils/position.txt:5:2\n"
+                    "\033[1;34m 5 | \033[0m05;abcd\n"
+                    "\033[1;34m   | \033[0m  \033[1;31m^\033[0m\n";
     ASSERT_MESSAGE_CONTENT(expected, error);
     ASSERT_MESSAGE_CONTENT("", error);
 }

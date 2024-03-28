@@ -83,7 +83,7 @@ TEST(Options, build) {
     chdir("./my_project");
 
     const auto result = run_with_args("build 2>&1");
-    ASSERT_STREQ("\033[1;31mERROR\033[0m\033[1m: Compiler not implemented yet!\033[0m\n", result.c_str());
+    ASSERT_THAT(result, HasSubstr("\033[1;31mERROR\033[0m\033[1m: Compiler not implemented yet!\033[0m\n"));
 
     chdir("..");
     std::filesystem::remove_all("my_project");

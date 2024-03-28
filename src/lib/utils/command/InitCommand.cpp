@@ -60,7 +60,6 @@ auto InitCommand::run(int argc, char **argv) -> int {
     // Create config file
     Config::init(project_name);
     Config::save(project_name + "/module.yml");
-    const auto config = Config::get();
 
     // Create entry point
     const auto source_dir = project_name + "/src";
