@@ -31,3 +31,47 @@ auto redirectCin(const function<void(stringstream &stream)> &function) -> void {
     function(input_stream);
     cin.rdbuf(old);
 }
+
+auto getMessageContent(filc::message::Message &message) -> string {
+    stringstream stream;
+    message.print(stream);
+    string result(istreambuf_iterator<char>(stream), {});
+
+    return result;
+}
+
+auto getOutput(const std::function<void()> &expression, const std::function<void(const std::string &)> &assertion)
+    -> void {
+    stringstream redirect_stream;
+    streambuf *oldbuf = cout.rdbuf(redirect_stream.rdbuf());
+    expression();
+    string result, line;
+    while (getline(redirect_stream, line)) {
+        result += line + "\n";
+    }
+    assertion(result);
+    cout.rdbuf(oldbuf);
+}
+
+auto getErrOutput(const std::function<void()> &expression, const std::function<void(const std::string &)> &assertion)
+    -> void {
+    stringstream redirect_stream;
+    streambuf *oldbuf = cerr.rdbuf(redirect_stream.rdbuf());
+    expression();
+    string result, line;
+    while (getline(redirect_stream, line)) {
+        result += line + "\n";
+    }
+    assertion(result);
+    cerr.rdbuf(oldbuf);
+}
+
+auto toStringArray(const vector<string> &data) -> vector<char *> {
+    vector<char *> strings;
+    strings.reserve(data.size());
+    for (auto &item: data) {
+        strings.push_back(const_cast<char *>(item.c_str()));
+    }
+
+    return strings;
+}

@@ -36,9 +36,7 @@ auto createProject() -> void {
     filesystem::current_path(filesystem::current_path().string() + "/my_project");
     filesystem::create_directory("src");
     ofstream file("src/main.fil");
-    file << "module my_project" << '\n'
-         << '\n'
-         << "fun main(): int = 0" << '\n';
+    file << "module my_project" << '\n' << '\n' << "fun main(): int = 0" << '\n';
     file.flush();
     file.close();
 }
@@ -55,7 +53,14 @@ TEST(FilCompiler_compile, entrypoint_error) {
     config->setEntrypoint("non-existing-file.fil");
 
     FilCompiler compiler(new ParserStub);
-    ASSERT_ERR_OUTPUT_MATCH(".*Entrypoint cannot be found, or is not readable.*", ASSERT_EQ(1, compiler.compile()));
+    getErrOutput(
+        [&compiler]() {
+            ASSERT_EQ(1, compiler.compile());
+        },
+        [](const string &result) {
+            ASSERT_THAT(result, MatchesRegex(".*Entrypoint cannot be found, or is not readable.*"));
+        }
+    );
 
     deleteProject();
 }
@@ -64,7 +69,14 @@ TEST(FilCompiler_compile, good) {
     createProject();
 
     FilCompiler compiler(new ParserStub);
-    ASSERT_ERR_OUTPUT_MATCH(".*Compiler not implemented yet!.*", ASSERT_EQ(2, compiler.compile()));
+    getErrOutput(
+        [&compiler]() {
+            ASSERT_EQ(2, compiler.compile());
+        },
+        [](const string &result) {
+            ASSERT_THAT(result, MatchesRegex(".*Compiler not implemented yet!.*"));
+        }
+    );
 
     deleteProject();
 }

@@ -35,22 +35,18 @@ using namespace ::testing;
 
 #define COLLECTOR filc::message::MessageCollector::getCollector()
 
-#define DEFINE_ENVIRONMENT(name) auto *name = new filc::environment::Environment("name", filc::environment::Environment::getGlobalEnvironment())
-
-#define DEFINE_LLVM                                       \
-    auto *context = new llvm::LLVMContext;                \
-    auto *module  = new llvm::Module("module", *context); \
-    auto *builder = new llvm::IRBuilder<>(*context)
-
 #define ASSERT_TYPE(expected, type) ASSERT_STREQ(expected, type->dump().c_str())
 
-#define ASSERT_IDENTIFIER(expected, identifier) ASSERT_STREQ(expected, std::dynamic_pointer_cast<filc::ast::Identifier>(identifier)->getName().c_str())
+#define ASSERT_IDENTIFIER(expected, identifier) \
+    ASSERT_STREQ(expected, std::dynamic_pointer_cast<filc::ast::Identifier>(identifier)->getName().c_str())
 
-#define ASSERT_CLASSIC_OPERATOR(expected, op) ASSERT_EQ(filc::ast::ClassicOperator::expected, std::dynamic_pointer_cast<filc::ast::ClassicOperator>(op)->getOperator())
+#define ASSERT_CLASSIC_OPERATOR(expected, op)                                                                          \
+    ASSERT_EQ(                                                                                                         \
+        filc::ast::ClassicOperator::expected, std::dynamic_pointer_cast<filc::ast::ClassicOperator>(op)->getOperator() \
+    )
 
-#define ASSERT_ASSIGNATION_OPERATOR(expected, op) ASSERT_CLASSIC_OPERATOR(expected, dynamic_cast<filc::ast::AssignationOperator *>(op)->getInnerOperator())
-
-#define ASSERT_LITERAL(expected, type, literal) ASSERT_EQ(expected, std::dynamic_pointer_cast<filc::ast::type>(literal)->getValue())
+#define ASSERT_LITERAL(expected, type, literal) \
+    ASSERT_EQ(expected, std::dynamic_pointer_cast<filc::ast::type>(literal)->getValue())
 
 #define ASSERT_VARIABLE_DECLARATION(constant, name, type, value, literal, variable)            \
     auto var_##variable = std::dynamic_pointer_cast<filc::ast::VariableDeclaration>(variable); \
@@ -60,44 +56,16 @@ using namespace ::testing;
     ASSERT_TYPE(type, var_##variable->getType());                                              \
     ASSERT_LITERAL(value, literal, var_##variable->getAssignation())
 
-#define ASSERT_MESSAGE_CONTENT(expected, message)                       \
-    {                                                                   \
-        std::stringstream stream;                                       \
-        message.print(stream);                                          \
-        std::string result(std::istreambuf_iterator<char>(stream), {}); \
-        ASSERT_STREQ(expected, result.c_str());                         \
-    }
+auto getMessageContent(filc::message::Message &message) -> std::string;
 
-#define ASSERT_OUTPUT(expression, assertion)                               \
-    {                                                                      \
-        std::stringstream redirect_stream;                                 \
-        std::streambuf *oldbuf = std::cout.rdbuf(redirect_stream.rdbuf()); \
-        expression;                                                        \
-        std::string result, line;                                          \
-        while (std::getline(redirect_stream, line)) {                      \
-            result += line + "\n";                                         \
-        }                                                                  \
-        assertion;                                                         \
-        std::cout.rdbuf(oldbuf);                                           \
-    }
+#define ASSERT_MESSAGE_CONTENT(expected, message) ASSERT_STREQ(expected, getMessageContent(message).c_str())
 
-#define ASSERT_ERR_OUTPUT(expression, assertion)                           \
-    {                                                                      \
-        std::stringstream redirect_stream;                                 \
-        std::streambuf *oldbuf = std::cerr.rdbuf(redirect_stream.rdbuf()); \
-        expression;                                                        \
-        std::string result, line;                                          \
-        while (std::getline(redirect_stream, line)) {                      \
-            result += line + "\n";                                         \
-        }                                                                  \
-        assertion;                                                         \
-        std::cerr.rdbuf(oldbuf);                                           \
-    }
+auto getOutput(const std::function<void()> &expression, const std::function<void(const std::string &)> &assertion)
+    -> void;
 
-#define ASSERT_OUTPUT_EQUAL(expected, expression) ASSERT_OUTPUT(expression, ASSERT_STREQ(expected, result.c_str()))
-
-#define ASSERT_OUTPUT_MATCH(regex, expression) ASSERT_OUTPUT(expression, ASSERT_THAT(result, MatchesRegex(regex)))
-
-#define ASSERT_ERR_OUTPUT_MATCH(regex, expression) ASSERT_ERR_OUTPUT(expression, ASSERT_THAT(result, MatchesRegex(regex)))
+auto getErrOutput(const std::function<void()> &expression, const std::function<void(const std::string &)> &assertion)
+    -> void;
 
 auto redirectCin(const std::function<void(std::stringstream &stream)> &function) -> void;
+
+auto toStringArray(const std::vector<std::string> &data) -> std::vector<char *>;

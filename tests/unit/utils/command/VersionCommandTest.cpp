@@ -35,14 +35,28 @@ TEST(VersionCommand, help) {
 TEST(VersionCommand, run) {
     VersionCommand vc1("1.3.2", 54, "My License");
 
-    ASSERT_OUTPUT_MATCH("     _______ __    \n"
-                        "    / ____\\(_\\) /____\n"
-                        "   / /_  / / / ___/\n"
-                        "  / __/ / / / /__  \n"
-                        " /_/   /_/_/\\\\___/  \n"
-                        "                   \n"
-                        "Filc version 1\\.3\\.2 - 54\n"
-                        "Build time: .*\n"
-                        "Build OS: " + VersionCommand::getOSName() + "\n"
-                        "License: My License\n", ASSERT_EQ(0, vc1.run(0, {})));
+    getOutput(
+        [&vc1]() {
+            ASSERT_EQ(0, vc1.run(0, {}));
+        },
+        [](const std::string &result) {
+            ASSERT_THAT(
+                result,
+                MatchesRegex(
+                    "     _______ __    \n"
+                    "    / ____\\(_\\) /____\n"
+                    "   / /_  / / / ___/\n"
+                    "  / __/ / / / /__  \n"
+                    " /_/   /_/_/\\\\___/  \n"
+                    "                   \n"
+                    "Filc version 1\\.3\\.2 - 54\n"
+                    "Build time: .*\n"
+                    "Build OS: "
+                    + VersionCommand::getOSName()
+                    + "\n"
+                      "License: My License\n"
+                )
+            );
+        }
+    );
 }
