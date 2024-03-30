@@ -24,95 +24,105 @@
 #ifndef FILC_ENVIRONMENT_H
 #define FILC_ENVIRONMENT_H
 
-#include "Name.h"
 #include "MessageCollector.h"
-#include <vector>
+#include "Name.h"
 #include "llvm/IR/IRBuilder.h"
+#include <vector>
 
 namespace filc::environment {
-    using BasicTypes = struct {
-        std::shared_ptr<filc::ast::AbstractType> _int_type;
-        std::shared_ptr<filc::ast::AbstractType> _double_type;
-        std::shared_ptr<filc::ast::AbstractType> _float_type;
-        std::shared_ptr<filc::ast::AbstractType> _char_type;
-        std::shared_ptr<filc::ast::AbstractType> _bool_type;
-    };
+    typedef struct BasicTypes {
+        std::shared_ptr<ast::AbstractType> _int_type;
+        std::shared_ptr<ast::AbstractType> _double_type;
+        std::shared_ptr<ast::AbstractType> _float_type;
+        std::shared_ptr<ast::AbstractType> _char_type;
+        std::shared_ptr<ast::AbstractType> _bool_type;
+    } BasicTypes;
 
     class Environment {
     public:
-        explicit Environment(std::string module = "", const Environment *parent = nullptr);
+        explicit Environment(const std::string &module = "", const std::shared_ptr<Environment> &parent = nullptr);
 
         ~Environment();
 
         [[nodiscard]] auto getModule() const -> const std::string &;
 
-        [[nodiscard]] auto getParent() const -> const Environment *;
+        [[nodiscard]] auto getParent() const -> std::shared_ptr<Environment>;
 
-        [[nodiscard]] auto hasName(const std::string &name,
-                                   const std::shared_ptr<filc::ast::AbstractType> &type = nullptr) const -> bool;
+        [[nodiscard]] auto
+        hasName(const std::string &name, const std::shared_ptr<ast::AbstractType> &type = nullptr) const -> bool;
 
-        [[nodiscard]] auto hasName(const std::string &name, filc::ast::AbstractType *type = nullptr) const -> bool;
+        [[nodiscard]] auto hasName(const std::string &name, ast::AbstractType *type = nullptr) const -> bool;
 
-        auto addName(const std::string &name, const std::shared_ptr<filc::ast::AbstractType> &type) -> bool;
+        auto addName(const std::string &name, const std::shared_ptr<ast::AbstractType> &type) -> bool;
 
-        auto addName(const std::string &name, filc::ast::AbstractType *type) -> bool;
+        auto addName(const std::string &name, ast::AbstractType *type) -> bool;
 
-        [[nodiscard]] auto getName(const std::string &name,
-                                   const std::shared_ptr<filc::ast::AbstractType> &type = nullptr) const -> Name *;
+        [[nodiscard]] auto
+        getName(const std::string &name, const std::shared_ptr<ast::AbstractType> &type = nullptr) const -> Name *;
 
-        [[nodiscard]] auto getName(const std::string &name, filc::ast::AbstractType *type = nullptr) const -> Name *;
+        [[nodiscard]] auto getName(const std::string &name, ast::AbstractType *type = nullptr) const -> Name *;
 
         [[nodiscard]] auto hasType(const std::string &type) const -> bool;
 
-        auto addType(const std::shared_ptr<filc::ast::AbstractType> &type) -> bool;
+        auto addType(const std::shared_ptr<ast::AbstractType> &type) -> bool;
 
-        [[nodiscard]] auto getType(const std::string &type) const -> std::shared_ptr<filc::ast::AbstractType>;
+        [[nodiscard]] auto getType(const std::string &type) const -> std::shared_ptr<ast::AbstractType>;
 
-        static auto getGlobalEnvironment() -> const Environment *;
+        static auto getGlobalEnvironment() -> std::shared_ptr<Environment>;
 
-        auto generateIR(std::shared_ptr<message::MessageCollector> collector,
-                        llvm::LLVMContext *context,
-                        llvm::Module *module,
-                        llvm::IRBuilder<> *builder) const -> void;
+        auto generateIR(
+            const std::shared_ptr<message::MessageCollector> &collector,
+            llvm::LLVMContext *context,
+            llvm::Module *module,
+            llvm::IRBuilder<> *builder
+        ) const -> void;
 
     private:
         std::string _module;
-        const Environment *_parent;
+        std::shared_ptr<Environment> _parent;
         std::vector<Name *> _names;
-        std::vector<std::shared_ptr<filc::ast::AbstractType>> _types;
+        std::vector<std::shared_ptr<ast::AbstractType>> _types;
 
-        static auto addBasicTypes(Environment *global) -> BasicTypes;
+        static auto addBasicTypes(std::shared_ptr<Environment> global) -> BasicTypes;
 
-        static auto addConstants(Environment *global, BasicTypes &basic_types) -> void;
+        static auto addConstants(std::shared_ptr<Environment> global, BasicTypes &basic_types) -> void;
 
-        static auto addAssignations(Environment *global, BasicTypes &basic_types) -> void;
+        static auto addAssignations(std::shared_ptr<Environment> global, BasicTypes &basic_types) -> void;
 
-        static auto addPrefixUnary(Environment *global, BasicTypes &basic_types) -> void;
+        static auto addPrefixUnary(std::shared_ptr<Environment> global, BasicTypes &basic_types) -> void;
 
-        static auto addPostfixUnary(Environment *global, BasicTypes &basic_types) -> void;
+        static auto addPostfixUnary(std::shared_ptr<Environment> global, BasicTypes &basic_types) -> void;
 
-        static auto addBinary(Environment *global, BasicTypes &basic_types) -> void;
+        static auto addBinary(std::shared_ptr<Environment> global, BasicTypes &basic_types) -> void;
 
-        auto generateAssignations(std::shared_ptr<message::MessageCollector> collector,
-                                  llvm::LLVMContext *context,
-                                  llvm::Module *module,
-                                  llvm::IRBuilder<> *builder) const -> void;
+        auto generateAssignations(
+            const std::shared_ptr<message::MessageCollector> &collector,
+            llvm::LLVMContext *context,
+            llvm::Module *module,
+            llvm::IRBuilder<> *builder
+        ) const -> void;
 
-        auto generatePrefixUnary(std::shared_ptr<message::MessageCollector> collector,
-                                 llvm::LLVMContext *context,
-                                 llvm::Module *module,
-                                 llvm::IRBuilder<> *builder) const -> void;
+        auto generatePrefixUnary(
+            const std::shared_ptr<message::MessageCollector> &collector,
+            llvm::LLVMContext *context,
+            llvm::Module *module,
+            llvm::IRBuilder<> *builder
+        ) const -> void;
 
-        auto generatePostFixUnary(std::shared_ptr<message::MessageCollector> collector,
-                                  llvm::LLVMContext *context,
-                                  llvm::Module *module,
-                                  llvm::IRBuilder<> *builder) const -> void;
+        auto generatePostFixUnary(
+            const std::shared_ptr<message::MessageCollector> &collector,
+            llvm::LLVMContext *context,
+            llvm::Module *module,
+            llvm::IRBuilder<> *builder
+        ) const -> void;
 
-        auto generateBinary(std::shared_ptr<message::MessageCollector> collector,
-                            llvm::LLVMContext *context,
-                            llvm::Module *module,
-                            llvm::IRBuilder<> *builder) const -> void;
+        auto generateBinary(
+            const std::shared_ptr<message::MessageCollector> &collector,
+            llvm::LLVMContext *context,
+            llvm::Module *module,
+            llvm::IRBuilder<> *builder
+        ) const -> void;
     };
-}
+} // namespace filc::environment
 
-#endif //FILC_ENVIRONMENT_H
+#endif // FILC_ENVIRONMENT_H
