@@ -23,55 +23,57 @@
  */
 #include "Environment.h"
 #include "Identifier.h"
-#include "Type.h"
 #include "test_tools.h"
+#include "Type.h"
 
 TEST(Environment, constructor) {
-    filc::environment::Environment env1("parent");
-    ASSERT_EQ(nullptr, env1.getParent());
-    ASSERT_STREQ("parent", env1.getModule().c_str());
+    auto env1 = std::make_shared<filc::environment::Environment>("parent");
+    ASSERT_EQ(nullptr, env1->getParent());
+    ASSERT_STREQ("parent", env1->getModule().c_str());
 
-    filc::environment::Environment env2("children", &env1);
-    ASSERT_EQ(&env1, env2.getParent());
-    ASSERT_STREQ("children", env2.getModule().c_str());
+    auto env2 = std::make_shared<filc::environment::Environment>("children", env1);
+    ASSERT_EQ(env1, env2->getParent());
+    ASSERT_STREQ("children", env2->getModule().c_str());
 }
 
 TEST(Environment, names) {
-    filc::environment::Environment env1;
-    ASSERT_FALSE(env1.hasName("hello", nullptr));
-    ASSERT_TRUE(env1.addName("hello", std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int"))));
-    ASSERT_TRUE(env1.hasName("hello", nullptr));
-    ASSERT_FALSE(env1.addName("hello", nullptr));
-    ASSERT_TRUE(env1.hasName("hello", nullptr));
-    ASSERT_STREQ("hello", env1.getName("hello", nullptr)->getName().c_str());
-    ASSERT_TYPE("int", env1.getName("hello", nullptr)->getType());
+    auto env1 = std::make_shared<filc::environment::Environment>();
+    ASSERT_FALSE(env1->hasName("hello", nullptr));
+    ASSERT_TRUE(
+        env1->addName("hello", std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int")))
+    );
+    ASSERT_TRUE(env1->hasName("hello", nullptr));
+    ASSERT_FALSE(env1->addName("hello", nullptr));
+    ASSERT_TRUE(env1->hasName("hello", nullptr));
+    ASSERT_STREQ("hello", env1->getName("hello", nullptr)->getName().c_str());
+    ASSERT_TYPE("int", env1->getName("hello", nullptr)->getType());
 
-    filc::environment::Environment parent;
-    parent.addName("a", nullptr);
-    filc::environment::Environment env2("", &parent);
-    ASSERT_TRUE(env2.hasName("a", nullptr));
-    ASSERT_FALSE(env2.hasName("b", nullptr));
+    auto parent = std::make_shared<filc::environment::Environment>();
+    parent->addName("a", nullptr);
+    auto env2 = std::make_shared<filc::environment::Environment>("", parent);
+    ASSERT_TRUE(env2->hasName("a", nullptr));
+    ASSERT_FALSE(env2->hasName("b", nullptr));
 }
 
 TEST(Environment, types) {
-    filc::environment::Environment env1;
-    ASSERT_FALSE(env1.hasType("int"));
-    ASSERT_TRUE(env1.addType(std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int"))));
-    ASSERT_TRUE(env1.hasType("int"));
-    ASSERT_FALSE(env1.addType(std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int"))));
-    ASSERT_TRUE(env1.hasType("int"));
-    ASSERT_TYPE("int", env1.getType("int"));
+    auto env1 = std::make_shared<filc::environment::Environment>();
+    ASSERT_FALSE(env1->hasType("int"));
+    ASSERT_TRUE(env1->addType(std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int"))));
+    ASSERT_TRUE(env1->hasType("int"));
+    ASSERT_FALSE(env1->addType(std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("int"))));
+    ASSERT_TRUE(env1->hasType("int"));
+    ASSERT_TYPE("int", env1->getType("int"));
 
-    filc::environment::Environment parent;
-    parent.addType(std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("float")));
-    filc::environment::Environment env2("", &parent);
-    ASSERT_TRUE(env2.hasType("float"));
-    ASSERT_FALSE(env2.hasName("bool", nullptr));
+    auto parent = std::make_shared<filc::environment::Environment>();
+    parent->addType(std::make_shared<filc::ast::Type>(std::make_shared<filc::ast::Identifier>("float")));
+    auto env2 = std::make_shared<filc::environment::Environment>("", parent);
+    ASSERT_TRUE(env2->hasType("float"));
+    ASSERT_FALSE(env2->hasName("bool", nullptr));
 }
 
 TEST(Environment, getGlobalEnvironment) {
-    const filc::environment::Environment *env1 = nullptr;
-    const filc::environment::Environment *env2 = nullptr;
+    std::shared_ptr<filc::environment::Environment> env1 = nullptr;
+    std::shared_ptr<filc::environment::Environment> env2 = nullptr;
     ASSERT_NO_THROW(env1 = filc::environment::Environment::getGlobalEnvironment());
     ASSERT_NO_THROW(env2 = filc::environment::Environment::getGlobalEnvironment());
     ASSERT_NE(nullptr, env1);
@@ -80,10 +82,12 @@ TEST(Environment, getGlobalEnvironment) {
 }
 
 TEST(Environment, generateIR) {
-    filc::environment::Environment env1("env1", filc::environment::Environment::getGlobalEnvironment());
+    auto env1 = std::make_shared<filc::environment::Environment>(
+        "env1", filc::environment::Environment::getGlobalEnvironment()
+    );
     auto *context    = new llvm::LLVMContext;
     auto *module     = new llvm::Module("module", *context);
     auto *ir_builder = new llvm::IRBuilder<>(*context);
-    env1.generateIR(COLLECTOR, context, module, ir_builder);
+    env1->generateIR(COLLECTOR, context, module, ir_builder);
     ASSERT_FALSE(COLLECTOR->hasErrors());
 }
