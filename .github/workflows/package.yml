@@ -97,7 +97,18 @@ jobs:
 
       - name: Log into ghcr.io
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u fil-language --password-stdin
+
       - name: Build image
-        run: docker build -t ghcr.io/fil-language/filc:latest bin/docker
+        run: docker build -t ghcr.io/fil-language/filc:devel .
+      - name: Tag latest
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          docker image tag ghcr.io/fil-language/filc:devel ghcr.io/fil-language/filc:latest
+          docker image tag ghcr.io/fil-language/filc:devel ghcr.io/fil-language/filc:$(cat VERSION)
       - name: Publish image
-        run: docker push ghcr.io/fil-language/filc:latest
+        run: docker push ghcr.io/fil-language/filc:devel
+      - name: Publish latest image
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          docker push ghcr.io/fil-language/filc:latest
+          docker push ghcr.io/fil-language/filc:$(cat VERSION)
