@@ -18,7 +18,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Install LLVM
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: "15"
 
@@ -51,7 +51,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Install LLVM
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: "15"
 
@@ -103,7 +103,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Install LLVM
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: "15"
       - name: Install valgrind
