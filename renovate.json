@@ -4,5 +4,5 @@
   "labels": ["dependencies"],
   "baseBranches": ["master"],
   "commitBodyTable": true,
-  "commitMessagePrefix": "chore(deps)"
+  "commitMessagePrefix": "chore(deps):"
 }

@@ -28,7 +28,7 @@ Here are listed all external dependencies used in this project.
 | Codacy coverage report  | https://github.com/marketplace/actions/codacy-coverage-reporter |     ![v1](https://img.shields.io/badge/v1-green)     |
 | Tar action              | https://github.com/marketplace/actions/tar-action               | ![v1.1.3](https://img.shields.io/badge/v1.1.3-green) |
 | Upload to release       | https://github.com/marketplace/actions/upload-to-release        | ![v0.1.1](https://img.shields.io/badge/v0.1.1-green) |
-| Install LLVM            | https://github.com/marketplace/actions/install-llvm-and-clang   |     ![v1](https://img.shields.io/badge/v1-green)     |
+| Install LLVM            | https://github.com/marketplace/actions/install-llvm-and-clang   |     ![v2](https://img.shields.io/badge/v2-green)     |
 | CodeQL                  | https://github.com/github/codeql-action                         |     ![v3](https://img.shields.io/badge/v3-green)     |
 | CppCheck                | https://github.com/marketplace/actions/cppcheck-action          |   ![v3.0](https://img.shields.io/badge/v3.0-green)   |
 | Upload artifact         | https://github.com/marketplace/actions/upload-a-build-artifact  |     ![v4](https://img.shields.io/badge/v4-green)     |
