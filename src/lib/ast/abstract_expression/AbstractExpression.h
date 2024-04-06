@@ -51,6 +51,8 @@ namespace filc::ast {
 
         [[nodiscard]] auto getExpressionType() const -> std::shared_ptr<AbstractType>;
 
+        auto setExpressionType(const std::shared_ptr<AbstractType> &expression_type) -> void;
+
         auto accept(Visitor *visitor) -> void override;
 
     private:
@@ -60,8 +62,6 @@ namespace filc::ast {
 
     protected:
         AbstractExpression() = default;
-
-        auto setExpressionType(const std::shared_ptr<AbstractType> &expression_type) -> void;
     };
 } // namespace filc::ast
 
