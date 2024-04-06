@@ -33,8 +33,8 @@ jobs:
       - name: Show version and help
         if: ${{ matrix.os != 'windows-latest' }}
         run: |
-          filc
-          filc version
+          ${{github.workspace}}/build/filc
+          ${{github.workspace}}/build/filc version
 
   unit-tests:
     name: Unit tests
