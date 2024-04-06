@@ -34,22 +34,13 @@ TEST(CommandCollector, constructor) {
     ASSERT_FALSE(cc1.addCommand(new CustomCommand()));
     ASSERT_THAT(cc1.getCommands(), SizeIs(1));
 
-    char *argv0[] = {"filc"};
-    ASSERT_EQ(0, cc1.run(1, argv0));
-    char *argv1[] = {"filc", "custom"};
-    ASSERT_EQ(0, cc1.run(2, argv1));
-    char *argv2[] = {"filc", "c"};
-    ASSERT_EQ(0, cc1.run(2, argv2));
-    char *argv3[] = {"filc", "custom-command"};
-    ASSERT_EQ(0, cc1.run(2, argv3));
-    char *argv4[] = {"filc", "non-existing-command"};
-    ASSERT_EQ(1, cc1.run(2, argv4));
-    char *argv5[] = {"filc", "help"};
-    ASSERT_EQ(0, cc1.run(2, argv5));
-    char *argv6[] = {"filc", "help", "custom"};
-    ASSERT_EQ(0, cc1.run(3, argv6));
-    char *argv7[] = {"filc", "help", "c"};
-    ASSERT_EQ(0, cc1.run(3, argv7));
-    char *argv8[] = {"filc", "help", "non-existing-command"};
-    ASSERT_EQ(1, cc1.run(3, argv8));
+    ASSERT_EQ(0, cc1.run(1, toStringArray({"filc"}).data()));
+    ASSERT_EQ(0, cc1.run(2, toStringArray({"filc", "custom"}).data()));
+    ASSERT_EQ(0, cc1.run(2, toStringArray({"filc", "c"}).data()));
+    ASSERT_EQ(0, cc1.run(2, toStringArray({"filc", "custom-command"}).data()));
+    ASSERT_EQ(1, cc1.run(2, toStringArray({"filc", "non-existing-command"}).data()));
+    ASSERT_EQ(0, cc1.run(2, toStringArray({"filc", "help"}).data()));
+    ASSERT_EQ(0, cc1.run(3, toStringArray({"filc", "help", "custom"}).data()));
+    ASSERT_EQ(0, cc1.run(3, toStringArray({"filc", "help", "c"}).data()));
+    ASSERT_EQ(1, cc1.run(3, toStringArray({"filc", "help", "non-existing-command"}).data()));
 }
